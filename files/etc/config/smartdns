@@ -1,0 +1,160 @@
+
+config smartdns
+	option server_name 'smartdns'
+	option tcp_server '1'
+	option ipv6_server '0'
+	option port '5555'
+	option redirect 'none'
+	option dualstack_ip_selection '0'
+	option prefetch_domain '1'
+	option coredump '0'
+	option cache_size '5048'
+	option rr_ttl_min '600'
+	option rr_ttl_max '86400'
+	option enabled '1'
+
+config server
+	option name '腾讯'
+	option type 'udp'
+	option enabled '1'
+	option ip '119.29.29.29'
+	option blacklist_ip '1'
+
+config server
+	option name '阿里'
+	option type 'udp'
+	option enabled '1'
+	option ip '223.5.5.5'
+	option blacklist_ip '1'
+
+config server
+	option name '114'
+	option type 'tcp'
+	option enabled '1'
+	option ip '114.114.114.114'
+	option blacklist_ip '1'
+
+config server
+	option name 'Cloudflare'
+	option ip '1.1.1.1'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option name 'opendns'
+	option ip '208.67.222.222'
+	option port '5353'
+	option type 'tcp'
+	option enabled '1'
+
+config server
+	option name 'google'
+	option ip '8.8.8.8'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option name 'IBM'
+	option ip '9.9.9.9'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option type 'tcp'
+	option enabled '1'
+	option ip '210.0.255.250'
+	option blacklist_ip '0'
+	option name '香港环球全域电讯'
+
+config server
+	option type 'udp'
+	option name '广州电信'
+	option ip '202.96.128.86'
+	option blacklist_ip '1'
+	option enabled '0'
+
+config server
+	option name '台湾'
+	option ip '168.95.1.1'
+	option type 'tcp'
+	option enabled '1'
+
+config server
+	option type 'tcp'
+	option ip '218.102.23.228'
+	option blacklist_ip '0'
+	option name '電訊盈科'
+	option enabled '0'
+
+config server
+	option name '澳门'
+	option ip '202.86.191.50'
+	option type 'tcp'
+	option enabled '1'
+
+config server
+	option name '红鱼'
+	option ip 'dns.rubyfish.cn'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option enabled '1'
+	option name 'geekdns 国内'
+	option ip 'https://i.233py.com/dns-query'
+	option type 'https'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name '中科大'
+	option ip '202.141.162.123'
+	option port '5353'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name '清华'
+	option ip '101.6.6.6'
+	option port '5353'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option type 'udp'
+	option name '百度'
+	option ip '180.76.76.76'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name 'Yandex'
+	option ip '77.88.8.8'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name '台湾 Quad101'
+	option ip '101.101.101.101'
+	option type 'tls'
+
+config server
+	option enabled '1'
+	option name 'HK网上行'
+	option ip '203.198.7.66'
+	option type 'tcp'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name '新加坡DNS'
+	option ip '202.56.128.30'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name 'geekdns 国外'
+	option ip 'https://dns.233py.com/dns-query'
+	option type 'https'
+	option blacklist_ip '0'
+

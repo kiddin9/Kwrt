@@ -1,0 +1,170 @@
+bind_host: 0.0.0.0
+bind_port: 100
+users:
+- name: root
+  password: $2y$10$gyxCCCIhoPNGzqPVyQnwzeKeITo.pWYcMWGtUxO2ICiOzPeUroIbm
+language: zh-cn
+rlimit_nofile: 0
+web_session_ttl: 720
+dns:
+  bind_host: 0.0.0.0
+  port: 5335
+  statistics_interval: 90
+  querylog_enabled: true
+  querylog_interval: 7
+  querylog_memsize: 0
+  protection_enabled: true
+  blocking_mode: default
+  blocking_ipv4: ""
+  blocking_ipv6: ""
+  blocked_response_ttl: 300
+  ratelimit: 0
+  ratelimit_whitelist: []
+  refuse_any: true
+  bootstrap_dns:
+  - 8.8.8.8:53
+  - 59.51.78.210:53
+  - 119.29.29.29:53
+  - 127.0.0.1:5555
+  all_servers: true
+  edns_client_subnet: true
+  aaaa_disabled: true
+  allowed_clients: []
+  disallowed_clients: []
+  blocked_hosts: []
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
+  cache_size: 4194304
+  upstream_dns:
+  - 127.0.0.1:5335
+  - tcp://208.67.222.222:5353
+  - tcp://59.51.78.210
+  - tls://1.1.1.1
+  - tls://dns.google
+  - tls://dns.quad9.net
+  - tcp://168.95.1.1
+  - tcp://202.141.162.123:5353
+  - tls://dns.rubyfish.cn
+  - https://i.233py.com/dns-query
+  - https://dns.233py.com/dns-query
+  - tcp://202.86.191.50
+  - tcp://101.6.6.6:5353
+  - tcp://210.0.255.250
+  - tcp://203.198.7.66
+  - tcp://77.88.8.8
+  - tls://101.101.101.101
+  - tcp://203.198.7.66
+  - tcp://202.56.128.30
+  filtering_enabled: true
+  filters_update_interval: 12
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  rewrites: []
+  blocked_services: []
+tls:
+  enabled: false
+  server_name: ""
+  force_https: false
+  port_https: 443
+  port_dns_over_tls: 853
+  allow_unencrypted_doh: false
+  strict_sni_check: false
+  certificate_chain: ""
+  private_key: ""
+  certificate_path: ""
+  private_key_path: ""
+filters:
+- enabled: true
+  url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+  name: AdGuard Simplified Domain Names filter
+  id: 1
+- enabled: false
+  url: https://adaway.org/hosts.txt
+  name: AdAway
+  id: 2
+- enabled: false
+  url: https://hosts-file.net/ad_servers.txt
+  name: hpHosts - Ad and Tracking servers only
+  id: 3
+- enabled: true
+  url: https://www.malwaredomainlist.com/hostslist/hosts.txt
+  name: MalwareDomainList.com Hosts List
+  id: 4
+- enabled: false
+  url: https://github.com/vokins/yhosts/raw/master/hosts.txt
+  name: yhosts
+  id: 1572918261
+- enabled: false
+  url: https://raw.githubusercontent.com/jdlingyu/ad-wars/master/hosts
+  name: ad-wars
+  id: 1572918262
+- enabled: false
+  url: https://gitlab.com/CHEF-KOCH/cks-filterlist/raw/master/hosts/Ads-tracker.txt
+  name: Ad- & Tracker
+  id: 1573389392
+- enabled: false
+  url: https://raw.githubusercontent.com/Goooler/1024_hosts/master/hosts
+  name: "1024"
+  id: 1573404420
+- enabled: false
+  url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
+  name: googlehosts
+  id: 1573404421
+- enabled: true
+  url: http://uujian.cn/browser/txt/metalist.txt
+  name: 荟萃
+  id: 1575015275
+- enabled: true
+  url: https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
+  name: StevenBlack fakenews gambling
+  id: 1577002821
+- enabled: true
+  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-easylist.txt
+  name: anti-AD
+  id: 1580820695
+- enabled: true
+  url: https://raw.githubusercontent.com/jerryn70/GoodbyeAds/master/Hosts/GoodbyeAds.txt
+  name: GoodbyeAds
+  id: 1584350199
+- enabled: true
+  url: https://gitee.com/lhzgl6587/hosts/raw/master/myruler
+  name: 国内手机
+  id: 1584462286
+whitelist_filters: []
+user_rules:
+- '@@||alimama.com^'
+- '@@||weidian.com'
+- '@@s.click.taobao.com'
+- '@@||www.iteye.com^$important'
+- '@@||www.secretchina.com^$important'
+- '@@||www.soundofhope.org^$important'
+- '@@||tv.sohu.com^$important'
+- '@@||ws.mmstat.com^$important'
+- '@@||promotion.aliyun.com^$important'
+- '@@||download.windowsupdate.com'
+- '@@||fonts.gstatic.com^$important'
+- '@@||tce.alicdn.com^$important'
+- '@@||uland.taobao.com^$important'
+- '@@||acs.m.taobao.com^$important'
+- '@@||igetget.com^$important'
+- '@@||acs.youku.com^$important'
+- '@@||static.tongdun.net^$important'
+- ""
+dhcp:
+  enabled: false
+  interface_name: br-lan
+  gateway_ip: 10.0.0.2
+  subnet_mask: 255.255.255.0
+  range_start: 10.0.0.100
+  range_end: 10.0.0.255
+  lease_duration: 86400
+  icmp_timeout_msec: 1000
+clients: []
+log_file: ""
+verbose: false
+schema_version: 6
