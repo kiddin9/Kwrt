@@ -50,7 +50,41 @@ if [ ! -f /etc/config/placeholder ]; then
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='203.198.7.66'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.56.128.30'
   uci commit shadowsocksr
-  
+
+[ -f "/etc/config/black.list" ] && {
+cat >> /etc/config/black.list <<EOF
+dns.google
+dns.quad9.net
+dns.cloudflare.com
+services.googleapis.cn
+dns.233py.com
+EOF
+}
+
+[ -d "/etc/config/passwall" ] && {
+cat >> /etc/config/passwall/blacklist_ip <<EOF
+dns.google
+dns.quad9.net
+dns.cloudflare.com
+services.googleapis.cn
+dns.233py.com
+EOF
+
+cat >> /etc/config/passwall/blacklist_host <<EOF
+1.1.1.1
+9.9.9.9
+208.67.222.222
+218.102.23.228
+210.0.255.250
+168.95.1.1
+202.86.191.50
+77.88.8.8
+101.101.101.101
+203.198.7.66
+202.56.128.30
+EOF
+}
+ 
   uci set AdGuardHome.AdGuardHome.redirect='dnsmasq-upstream'
   uci set AdGuardHome.AdGuardHome.enabled='1'
   uci commit AdGuardHome
