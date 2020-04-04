@@ -19,7 +19,7 @@
 
 [lean](https://github.com/coolsnowwolf/lede/tree/master/package/lean) 源码里的所有插件都有移植过来,增加插件只需在X86_64.config文件中开启然后云编译即可.
 
-X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Snapshot/releases) 下载,周更.
+X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Snapshot/releases) 下载,每周日更新固件.
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序,默认第一个网口eth0为wan口,第二个网eth1口为lan口.)
 
@@ -29,7 +29,7 @@ X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Snap
 
 建议fork此项目,按自己路由器类型与需求调整.config文件来适配路由器与增删插件,再通过github云编译来编译自己的定制化专属固件
 
-云编译需要[在此](https://github.com/settings/tokens)创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法release
+云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法release
 
 点击右上角的Star按钮开始编译
 
@@ -37,8 +37,8 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 ### 默认插件包含:
 
-+ SSR PLUS
-+ PASSWALL
++ SSR Plus
++ PassWall
 + AdguardHome DNS+恶意网址过滤
 + 上网时间控制
 + 微信推送
@@ -75,7 +75,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 3. 默认登陆10.0.0.1, 密码 root
 
 #### 编译命令如下:
--
+
 1. 首先装好 Ubuntu 64bit，推荐  Ubuntu  18 LTS x64
 
 2. 命令行输入 `sudo apt-get update` ，然后输入
