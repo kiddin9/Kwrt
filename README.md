@@ -21,7 +21,7 @@
 
 [lean](https://github.com/coolsnowwolf/lede/tree/master/package/lean) 源码里的所有插件都有移植过来,增加插件只需在X86_64.config文件中开启然后云编译即可.
 
-X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Snapshot/releases) 下载,每周日更新固件.
+X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest) 下载,每周日更新固件.
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序,默认第一个网口eth0为wan口,第二个网eth1口为lan口.)
 
