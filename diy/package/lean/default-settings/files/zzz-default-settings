@@ -127,6 +127,7 @@ echo net.ipv6.conf.lo.disable_ipv6 = 1 >> /etc/sysctl.conf
 
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_REVISION.*/DISTRIB_REVISION=\"Compiled by GaryPang  $date\"/g" /etc/openwrt_release
+sed -i "s/GaryPang$/GaryPang $date/g" /etc/banner
 
 touch /etc/config/placeholder
 
