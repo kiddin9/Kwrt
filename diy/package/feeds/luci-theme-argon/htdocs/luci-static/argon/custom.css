@@ -71,3 +71,10 @@ code,.cbi-progressbar::after{
 	font-family: inherit !important;
     font-size: 0.9em !important;
 }
+[data-page="admin-system-flash"] legend{
+	font-size: 1.1rem !important;
+     padding-bottom:0.6rem !important;
+}
+.node-main-login .main .main-right #maincontent .container .cbi-map .cbi-section .cbi-section-node .cbi-value .cbi-value-field input{
+height:auto !important;	
+}
