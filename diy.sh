@@ -43,7 +43,7 @@ sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i 's/+uhttpd //g' feeds/luci/collections/luci/Makefile
 sed -i '/_redirect2ssl/d' package/feeds/*/nginx/Makefile
 sed -i '/init_lan/d' package/feeds/*/nginx/files/nginx.init
-sed -i "s/sed '\/^$\/d' \"\$config_file_tmp\" >\"\$config_file\"/cd \/usr\/share\/aria2 \&\& .\/tracker.sh\ncat \/usr\/share\/aria2\/aria2.conf > \"\$config_file\"\n\
+sed -i "s/sed '\/^$\/d' \"\$config_file_tmp\" >\"\$config_file\"/cd \/usr\/share\/aria2 \&\& sh .\/tracker.sh\ncat \/usr\/share\/aria2\/aria2.conf > \"\$config_file\"\n\
 echo '' >> \"\$config_file\"\nsed '\/^$\/d' \"\$config_file_tmp\" >> \"\$config_file\"/g" package/feeds/packages/aria2/files/aria2.init
 sed -i 's/runasuser "$config_dir"/runasuser "$config_dir"\nwget -P "$config_dir" -O "$config_dir\/nodes.dat" \
 http:\/\/upd.emule-security.org\/nodes.dat/g' package/*/luci-app-amule/root/etc/init.d/amule
