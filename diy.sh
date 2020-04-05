@@ -17,13 +17,13 @@ cd package/feeds
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon
 git clone https://github.com/pymumu/luci-app-smartdns
+git clone https://github.com/pymumu/openwrt-smartdns
 git clone https://github.com/lisaac/luci-app-diskman
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
 git clone https://github.com/tty228/luci-app-serverchan
 git clone https://github.com/brvphoenix/luci-app-wrtbwmon
 git clone https://github.com/brvphoenix/wrtbwmon
 git clone https://github.com/destan19/OpenAppFilter
-svn co https://github.com/pymumu/smartdns/trunk/package/openwrt smartdns
 svn co https://github.com/jsda/packages2/trunk/ntlf9t/luci-app-advancedsetting
 
 svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-passwall
