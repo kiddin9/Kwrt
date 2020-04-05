@@ -98,3 +98,4 @@ find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed 
 sed -i "/\.po/d" package/feeds/luci-app-diskman/Makefile
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+luci\( \|\$\)//g" {}
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g" {}
+sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
