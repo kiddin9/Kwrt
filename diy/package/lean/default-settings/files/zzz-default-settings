@@ -54,6 +54,7 @@ if [ ! -f /etc/config/placeholder ]; then
   uci del passwall.global[0].dns_forward
   uci commit passwall
   
+  uci set smartdns.smartdns[0].enabled='1'
   uci set smartdns.smartdns[0].port='5555'
   uci set smartdns.smartdns[0].redirect='none'
   uci commit smartdns
