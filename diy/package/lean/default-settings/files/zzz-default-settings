@@ -35,7 +35,6 @@ if [ ! -f /etc/config/placeholder ]; then
   
   uci set shadowsocksr.@global[0].pdnsd_enable='0'
   uci del shadowsocksr.@global[0].tunnel_forward
-  
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='208.67.222.222'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.8.8'
@@ -53,40 +52,11 @@ if [ ! -f /etc/config/placeholder ]; then
 
   uci set passwall.global[0].dns_mode='nonuse'
   uci del passwall.global[0].dns_forward
-
-[ -f "/etc/config/black.list" ] && {
-cat >> /etc/config/black.list <<EOF
-dns.google
-dns.quad9.net
-dns.cloudflare.com
-services.googleapis.cn
-dns.233py.com
-EOF
-}
-
-[ -d "/etc/config/passwall" ] && {
-cat >> /etc/config/passwall/blacklist_ip <<EOF
-dns.google
-dns.quad9.net
-dns.cloudflare.com
-services.googleapis.cn
-dns.233py.com
-EOF
-
-cat >> /etc/config/passwall/blacklist_host <<EOF
-1.1.1.1
-9.9.9.9
-208.67.222.222
-218.102.23.228
-210.0.255.250
-168.95.1.1
-202.86.191.50
-77.88.8.8
-101.101.101.101
-203.198.7.66
-202.56.128.30
-EOF
-}
+  uci commit passwall
+  
+  uci set smartdns.smartdns[0].port='5555'
+  uci set smartdns.smartdns[0].redirect='none'
+  uci commit smartdns
 
   uci set AdGuardHome.AdGuardHome.redirect='dnsmasq-upstream'
   uci set AdGuardHome.AdGuardHome.enabled='1'
@@ -131,6 +101,188 @@ echo net.ipv6.conf.lo.disable_ipv6 = 1 >> /etc/sysctl.conf
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_REVISION.*/DISTRIB_REVISION=\"Compiled by GaryPang  $date\"/g" /etc/openwrt_release
 sed -i "s/GaryPang$/GaryPang $date/g" /etc/banner
+
+[ -f "/etc/config/black.list" ] && {
+cat >> /etc/config/black.list <<EOF
+dns.google
+dns.quad9.net
+dns.cloudflare.com
+services.googleapis.cn
+dns.233py.com
+EOF
+}
+
+[ -d "/etc/config/passwall" ] && {
+cat >> /etc/config/passwall/blacklist_ip <<EOF
+dns.google
+dns.quad9.net
+dns.cloudflare.com
+services.googleapis.cn
+dns.233py.com
+EOF
+cat >> /etc/config/passwall/blacklist_host <<EOF
+1.1.1.1
+9.9.9.9
+208.67.222.222
+218.102.23.228
+210.0.255.250
+168.95.1.1
+202.86.191.50
+77.88.8.8
+101.101.101.101
+203.198.7.66
+202.56.128.30
+EOF
+}
+
+[ -f "/etc/config/smartdns" ] && {
+cat >> /etc/config/smartdns <<EOF
+config server
+	option name '腾讯'
+	option type 'udp'
+	option enabled '1'
+	option ip '119.29.29.29'
+	option blacklist_ip '1'
+
+config server
+	option name '阿里'
+	option type 'udp'
+	option enabled '1'
+	option ip '223.5.5.5'
+	option blacklist_ip '1'
+
+config server
+	option name '114'
+	option type 'tcp'
+	option enabled '1'
+	option ip '114.114.114.114'
+	option blacklist_ip '1'
+
+config server
+	option name 'Cloudflare'
+	option ip '1.1.1.1'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option name 'opendns'
+	option ip '208.67.222.222'
+	option port '5353'
+	option type 'tcp'
+	option enabled '1'
+
+config server
+	option name 'google'
+	option ip '8.8.8.8'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option name 'IBM'
+	option ip '9.9.9.9'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option type 'tcp'
+	option enabled '1'
+	option ip '210.0.255.250'
+	option blacklist_ip '0'
+	option name '香港环球全域电讯'
+
+config server
+	option type 'udp'
+	option name '广州电信'
+	option ip '202.96.128.86'
+	option blacklist_ip '1'
+	option enabled '0'
+
+config server
+	option name '台湾'
+	option ip '168.95.1.1'
+	option type 'tcp'
+	option enabled '1'
+
+config server
+	option type 'tcp'
+	option ip '218.102.23.228'
+	option blacklist_ip '0'
+	option name '電訊盈科'
+	option enabled '0'
+
+config server
+	option name '澳门'
+	option ip '202.86.191.50'
+	option type 'tcp'
+	option enabled '1'
+
+config server
+	option name '红鱼'
+	option ip 'dns.rubyfish.cn'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option enabled '1'
+	option name 'geekdns 国内'
+	option ip 'https://i.233py.com/dns-query'
+	option type 'https'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name '中科大'
+	option ip '202.141.162.123'
+	option port '5353'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name '清华'
+	option ip '101.6.6.6'
+	option port '5353'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option type 'udp'
+	option name '百度'
+	option ip '180.76.76.76'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name 'Yandex'
+	option ip '77.88.8.8'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name '台湾 Quad101'
+	option ip '101.101.101.101'
+	option type 'tls'
+
+config server
+	option enabled '1'
+	option name 'HK网上行'
+	option ip '203.198.7.66'
+	option type 'tcp'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name '新加坡DNS'
+	option ip '202.56.128.30'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name 'geekdns 国外'
+	option ip 'https://dns.233py.com/dns-query'
+	option type 'https'
+	option blacklist_ip '0'
+EOF
+}
 
 touch /etc/config/placeholder
 
