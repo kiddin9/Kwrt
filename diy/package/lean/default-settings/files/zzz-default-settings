@@ -48,6 +48,7 @@ if [ ! -f /etc/config/placeholder ]; then
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='101.101.101.101'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='203.198.7.66'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.56.128.30'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.112'
   uci commit shadowsocksr
 
   uci set passwall.global[0].dns_mode='nonuse'
@@ -103,16 +104,6 @@ date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_REVISION.*/DISTRIB_REVISION=\"Compiled by GaryPang  $date\"/g" /etc/openwrt_release
 sed -i "s/GaryPang$/GaryPang $date/g" /etc/banner
 
-[ -f "/etc/config/black.list" ] && {
-cat >> /etc/config/black.list <<EOF
-dns.google
-dns.quad9.net
-dns.cloudflare.com
-services.googleapis.cn
-dns.233py.com
-EOF
-}
-
 [ -d "/etc/config/passwall" ] && {
 cat >> /etc/config/passwall/blacklist_ip <<EOF
 dns.google
@@ -133,6 +124,7 @@ cat >> /etc/config/passwall/blacklist_host <<EOF
 101.101.101.101
 203.198.7.66
 202.56.128.30
+149.112.112.112
 EOF
 }
 
@@ -174,13 +166,13 @@ config server
 
 config server
 	option name 'google'
-	option ip '8.8.8.8'
+	option ip 'dns.google'
 	option type 'tls'
 	option enabled '1'
 
 config server
 	option name 'IBM'
-	option ip '9.9.9.9'
+	option ip 'dns.quad9.net'
 	option type 'tls'
 	option enabled '1'
 
@@ -222,10 +214,11 @@ config server
 	option ip 'dns.rubyfish.cn'
 	option type 'tls'
 	option enabled '1'
+	option blacklist_ip '1'
 
 config server
 	option enabled '1'
-	option name 'geekdns 国内'
+	option name 'geekdns'
 	option ip 'https://i.233py.com/dns-query'
 	option type 'https'
 	option blacklist_ip '1'
@@ -276,12 +269,6 @@ config server
 	option ip '202.56.128.30'
 	option type 'tcp'
 
-config server
-	option enabled '1'
-	option name 'geekdns 国外'
-	option ip 'https://dns.233py.com/dns-query'
-	option type 'https'
-	option blacklist_ip '0'
 EOF
 }
 
