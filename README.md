@@ -54,7 +54,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + ttyd 网页版终端
 + UPNP 自动端口转发
 + Aria2 全能下载工具
-+ cifsd 网络共享
++ cifsd + NFS 网络共享
 + Netdata 全能性能监控
 + diskman 磁盘管理
 + qBittorrent BT下载工具
@@ -66,6 +66,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + Turbo ACC 网络加速
 + SQM QOS 智能网络优化
 + eqos IP限速
++ AppFilter App过滤
 + nlbwmon 宽带监控
 
 ### 如何在本地编译自己需要的 OpenWrt 固件
