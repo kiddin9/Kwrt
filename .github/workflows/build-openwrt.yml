@@ -26,6 +26,7 @@ env:
   SSH_ACTIONS: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: true
   UPLOAD_COWTRANSFER: false
   TZ: Asia/Shanghai
 
@@ -128,7 +129,7 @@ jobs:
       
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v1-release
-      if: steps.compile.outputs.status == 'success' && !cancelled()
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         repo_token: ${{ secrets.REPO_TOKEN }}
         file: ${{ env.FIRMWARE }}/*
