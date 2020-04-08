@@ -39,7 +39,7 @@ cd -
 cp -Rf ../diy/* ./
 sed -i 's/root\/.aria2/usr\/share\/aria2/g' files/usr/share/aria2/aria2.conf
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
-sed -i '/resolvfile/d' package/feeds/luci-app-adguardhome/root/etc/init.d/AdGuardHome
+sed -i '/resolvfile=/d' package/feeds/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 sed -i 's/+uhttpd //g' feeds/luci/collections/luci/Makefile
 sed -i '/_redirect2ssl/d' package/feeds/*/nginx/Makefile
 sed -i '/init_lan/d' package/feeds/*/nginx/files/nginx.init
