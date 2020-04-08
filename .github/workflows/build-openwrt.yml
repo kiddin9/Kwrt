@@ -140,5 +140,5 @@ jobs:
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
       run: |
-        curl -sL https://git.io/cowtransfer | sh
-        ./cowtransfer-uploader -s -p 8 ${{ env.FIRMWARE }}/*
+        curl -fsSL https://git.io/cowtransfer | sh
+        ./cowtransfer-uploader -b 2621440 -s -p 99 -t 3 --hash --silent ${FIRMWARE}
