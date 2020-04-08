@@ -140,8 +140,6 @@ user_rules:
 - '@@||weidian.com'
 - '@@s.click.taobao.com'
 - '@@||www.iteye.com^$important'
-- '@@||www.secretchina.com^$important'
-- '@@||www.soundofhope.org^$important'
 - '@@||tv.sohu.com^$important'
 - '@@||ws.mmstat.com^$important'
 - '@@||promotion.aliyun.com^$important'
