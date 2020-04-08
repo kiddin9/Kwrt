@@ -23,7 +23,6 @@ dns:
   refuse_any: true
   bootstrap_dns:
   - 8.8.8.8:53
-  - 59.51.78.210:53
   - 119.29.29.29:53
   - 127.0.0.1:5555
   all_servers: true
