@@ -64,9 +64,9 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set AdGuardHome.AdGuardHome.enabled='1'
   uci commit AdGuardHome
   
-  uci del dhcp.@dnsmasq[0].resolvfile
-  uci set dhcp.@dnsmasq[0].noresolv='1'
-  uci commit dhcp
+  #uci del dhcp.@dnsmasq[0].resolvfile
+  #uci set dhcp.@dnsmasq[0].noresolv='1'
+  #uci commit dhcp
   
   uci -q set aria2.main.split="128"
   uci -q set aria2.main.min_split_size="100K"
