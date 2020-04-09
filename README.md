@@ -13,9 +13,9 @@
 
 + 内置AdguardHome搭配SmartDNS综合优化方案, 开箱即用,实现恶意网站过滤+区分国内外域名解析加速+ 防污染+ DNS优选
 
-+ 无需专业知识,无需linux服务器,每个人都可通过云编译定制编译自己的专属固件.
++ 无需专业知识,无需linux服务器,人人皆可通过云编译定制编译自己的专属固件.
 
-+ 持续更新, 每周日零点定时自动云编译更新固件, 保证始终都能用上最新固件, 不用再担心因停更而需要更换固件.
++ 持续更新, 每周日零点定时自动云编译更新固件, 保证始终基于官方最新源码, 不用再担心因停更而需要更换固件.
 
 + SSL兼容,可同时使用http IP访问和绑定域名开启https访问
 
@@ -69,12 +69,12 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + AppFilter App过滤
 + nlbwmon 宽带监控
 
-### 如何在本地编译自己需要的 OpenWrt 固件
+### 如何在本地使用此项目编译自己需要的 OpenWrt 固件
 
 #### 注意：
 
 1. **不**要用 **root** 用户 git 和编译！！！
-2. 国内用户编译前最好准备好梯子
+2. 国内用户编译前请准备好梯子,使用大陆白名单或全局模式
 3. 默认登陆10.0.0.1, 密码 root
 
 #### 编译命令如下:
@@ -83,20 +83,27 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 2. 命令行输入 `sudo apt-get update` ，然后输入
 `
-sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3.5 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib
+sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf
 `
 
-3. 使用 `git clone https://github.com/coolsnowwolf/lede` 命令下载好源代码，然后 `cd lede` 进入目录
-
-4. ```bash
-   ./scripts/feeds update -a && ./scripts/feeds install -a
-   make menuconfig
+3. 执行脚本:
+```bash
+ git clone https://github.com/openwrt/openwrt
+git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
+cp -Rf Actions-OpenWrt-Nginx/* openwrt/
+cd openwrt
+./scripts/feeds update -a && ./scripts/feeds install -a
+../diy.sh
+cp -Rf diy/* ./
+mv X86_64.config .config
+make defconfig
    ```
 
-5. `make -j8 download v=s` 下载dl库（国内请尽量全局科学上网）
+4. 如需修改默认配置比如定制插件等,请执行 `make menuconfig`
 
+5. 执行 `make -j8 download v=s` 下载dl库
 
-6. 输入 `make -j1 V=s` （-j1 后面是线程数。第一次编译推荐用单线程）即可开始编译你要的固件了。
+6. 执行 `make -j$(($(nproc)+1)) || make -j1 V=s` 即可开始编译你要的固件了。
 
 [![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Stars)](https://github.com/P3TERX/Actions-OpenWrt/stargazers)
