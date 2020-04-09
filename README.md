@@ -93,7 +93,7 @@ git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 ./scripts/feeds update -a && ./scripts/feeds install -a
-../diy.sh
+./diy.sh
 cp -Rf diy/* ./
 mv X86_64.config .config
 make defconfig
