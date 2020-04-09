@@ -37,6 +37,7 @@ git clone https://github.com/garypang13/luci-app-eqos
 cd -
 
 cp -Rf ../diy/* ./
+sed -i 's/ @!/ +@!/g' package/feeds/wrtbwmon/Makefile
 sed -i 's/root\/.aria2/usr\/share\/aria2/g' files/usr/share/aria2/aria2.conf
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/feeds/luci-app-adguardhome/root/etc/init.d/AdGuardHome
