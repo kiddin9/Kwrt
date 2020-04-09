@@ -20,8 +20,8 @@ git clone https://github.com/pymumu/luci-app-smartdns -b lede
 git clone https://github.com/lisaac/luci-app-diskman
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
 git clone https://github.com/tty228/luci-app-serverchan
-git clone https://github.com/brvphoenix/luci-app-wrtbwmon
-git clone https://github.com/brvphoenix/wrtbwmon
+svn co https://github.com/brvphoenix/luci-app-wrtbwmon/trunk/luci-app-wrtbwmon
+svn co https://github.com/brvphoenix/wrtbwmon/trunk/wrtbwmon
 git clone https://github.com/destan19/OpenAppFilter
 svn co https://github.com/jsda/packages2/trunk/ntlf9t/luci-app-advancedsetting
 
@@ -96,6 +96,7 @@ find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed 
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "/po2lmo /d" {}
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "/luci\/i18n/d" {}
 sed -i "/\.po/d" package/feeds/luci-app-diskman/Makefile
+sed -i "/\.po/d" package/feeds/luci-app-dockerman/Makefile
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+luci\( \|\$\)//g" {}
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g" {}
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
