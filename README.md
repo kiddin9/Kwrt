@@ -2,7 +2,7 @@
 
 ### 特色:
 
-+ 全网最新,openwrt官方master分支版本,内核升级到5.4. 插件,内核,luci,packages都与官方最新源码同步.
++ 全网最新,openwrt官方master分支版本,内核升级到Linux Kernel 5.4. 插件,内核,luci,packages都与官方最新源码同步.
 
 + 性能,友好度,易用性,插件,以及针对国内特殊环境等的自定义优化
 
