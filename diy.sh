@@ -48,12 +48,12 @@ sed -i "s/sed '\/^$\/d' \"\$config_file_tmp\" >\"\$config_file\"/cd \/usr\/share
 echo '' >> \"\$config_file\"\nsed '\/^$\/d' \"\$config_file_tmp\" >> \"\$config_file\"/g" package/feeds/packages/aria2/files/aria2.init
 sed -i 's/runasuser "$config_dir"/runasuser "$config_dir"\nwget -P "$config_dir" -O "$config_dir\/nodes.dat" \
 http:\/\/upd.emule-security.org\/nodes.dat/g' package/*/luci-app-amule/root/etc/init.d/amule
-sed -i '$a /etc/smartdns' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '$a /www/kod/config' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '$a /etc/qBittorrent' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '$a /root/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '$a /etc/aria2' package/base-files/files/lib/upgrade/keep.d/base-files-essential
+sed -i '$a /etc/smartdns' package/base-files/files/etc/sysupgrade.conf
+sed -i '$a /www/kod/config' package/base-files/files/etc/sysupgrade.conf
+sed -i '$a /etc/qBittorrent' package/base-files/files/etc/sysupgrade.conf
+sed -i '$a /root/amule' package/base-files/files/etc/sysupgrade.conf
+sed -i '$a /etc/amule' package/base-files/files/etc/sysupgrade.conf
+sed -i '$a /etc/aria2' package/base-files/files/etc/sysupgrade.conf
 find target/linux/x86 -name "config*" | xargs -i sed -i '$a CONFIG_64BIT=y\n# CONFIG_WLAN is not set\n# CONFIG_WIRELESS is not set\
 \nCONFIG_NETFILTER=y\nCONFIG_NETFILTER_XTABLES=y\nCONFIG_NETFILTER_XT_MATCH_STRING=y\nCONFIG_HWMON=y\nCONFIG_SENSORS_CORETEMP=y' {}
 sed -i '/continue$/d' package/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
