@@ -20,6 +20,7 @@ on:
 env:
   REPO_URL: https://github.com/openwrt/openwrt
   REPO_BRANCH: master
+  TARGET: x86_64
   CONFIG_FILE: X86_64.config
   DIY_SH: diy.sh
   FREE_UP_DISK: true
@@ -125,17 +126,31 @@ jobs:
         
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%m/%d,%Y')"
+      run: |
+        echo "::set-output name=date::$(date +'%m/%d_%Y_%H/%M')"
+        echo "::set-output name=date2::$(date +'%m/%d %Y')"
       
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v1-release
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1.0.1
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        repo_token: ${{ secrets.REPO_TOKEN }}
-        file: ${{ env.FIRMWARE }}/*
-        tag: ${{steps.date.outputs.date}}
-        overwrite: true
-        file_glob: true
+        tag_name: ${{steps.date.outputs.date}}_$TARGET
+        release_name: ${{steps.date.outputs.date2}} $TARGET
+        draft: false
+        prerelease: false     
+
+    - name: Upload release asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1.0.2
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path:  ${{ env.FIRMWARE }}/
         
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
