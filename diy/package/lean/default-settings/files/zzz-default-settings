@@ -23,6 +23,8 @@ wifi up
 sed -i '/log-facility/d' /etc/dnsmasq.conf
 echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
+sed -i "s/127.0.0.1:53355/127.0.0.1:5555/g" /etc/AdGuardHome.yaml
+
 rm -rf /tmp/luci-*
 
 if [ ! -f /etc/config/placeholder ]; then
