@@ -90,6 +90,7 @@ sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git
 ```bash
 git clone https://github.com/openwrt/openwrt
 git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
+sed -i 's/luci.git$/luci.git;openwrt-19.07/g' openwrt/feeds.conf.default
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 ./scripts/feeds update -a && ./scripts/feeds install -a
