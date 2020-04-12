@@ -52,7 +52,9 @@ jobs:
         curl -fsSL https://raw.githubusercontent.com/P3TERX/dotfiles/master/.bashrc >> ~/.bashrc
 
     - name: Clone source code
-      run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+      run: |
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        sed -i 's/luci.git$/luci.git;openwrt-19.07/g' openwrt/feeds.conf.default
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
