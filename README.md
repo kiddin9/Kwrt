@@ -33,6 +33,8 @@ X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Ngin
 
 云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法release
 
+在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码
+.
 点击右上角的Star按钮开始编译
 
 diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
