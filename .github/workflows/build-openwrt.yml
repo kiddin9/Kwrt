@@ -134,7 +134,7 @@ jobs:
       
     - name: Create release
       id: create_release
-      uses: actions/create-release@latest
+      uses: actions/create-release@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
@@ -145,7 +145,7 @@ jobs:
         prerelease: false     
 
     - name: Upload release asset
-      uses: csexton/release-asset-action@latest
+      uses: csexton/release-asset-action@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         pattern: "${{ env.FIRMWARE }}/*"
