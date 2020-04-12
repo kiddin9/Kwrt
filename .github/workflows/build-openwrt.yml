@@ -80,6 +80,8 @@ jobs:
         chmod +x $DIY_SH
         cd openwrt
         ../$DIY_SH
+        sed -i "s/_username/${{ secrets.PPPOE_NAME }}/g" package/lean/default-settings/files/zzz-default-settings
+        sed -i "s/_password/${{ secrets.PPPOE_PW }}/g" package/lean/default-settings/files/zzz-default-settings
         make defconfig
 
     - name: SSH connection to Actions
