@@ -24,7 +24,7 @@ env:
   CONFIG_FILE: X86_64.config
   DIY_SH: diy.sh
   FREE_UP_DISK: true
-  SSH_ACTIONS: true
+  SSH_ACTIONS: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
   UPLOAD_RELEASE: true
@@ -83,11 +83,14 @@ jobs:
         make defconfig
         
     - name: Default PPPOE Setting
-      if: ${{ secrets.PPPOE_USERNAME }} && ${{ secrets.PPPOE_PASSWD }}
+      env:
+        PPPOE_USERNAME: ${{ secrets.PPPOE_USERNAME }}
+        PPPOE_PASSWD: ${{ secrets.PPPOE_PASSWD }}
+      if: ${{ env.PPPOE_USERNAME }} && ${{ env.PPPOE_PASSWD }}
       run: |
-        sed -i "$i\uci set network.wan.username=\${{ secrets.PPPOE_USERNAME }}" package/lean/default-settings/files/zzz-default-settings
-        sed -i "$i\uci set network.wan.password=\${{ secrets.PPPOE_PASSWD }}" package/lean/default-settings/files/zzz-default-settings
-        sed -i "$i\uci commit network" package/lean/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/lean/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/lean/default-settings/files/zzz-default-settings
+        sed -i '$i uci commit network' openwrt/package/lean/default-settings/files/zzz-default-settings
               
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
@@ -152,7 +155,7 @@ jobs:
         prerelease: false     
 
     - name: Upload release asset
-      uses: release-url@master
+      uses: csexton/release-asset-action@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         pattern: "${{ env.FIRMWARE }}/*"
