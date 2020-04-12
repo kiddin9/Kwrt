@@ -139,20 +139,18 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        tag_name: ${{steps.date.outputs.date}}_$TARGET
-        release_name: ${{steps.date.outputs.date2}} $TARGET
+        tag_name: ${{steps.date.outputs.date}}_${{ env.TARGET }}
+        release_name: ${{steps.date.outputs.date2}} ${{ env.TARGET }}
         draft: false
         prerelease: false     
 
     - name: Upload release asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@latest
+      uses: csexton/release-asset-action@latest
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
+        pattern: "${{ env.FIRMWARE }}/*"
+        github-token: ${{ secrets.REPO_TOKEN }}
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path:  ${{ env.FIRMWARE }}/
         
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
