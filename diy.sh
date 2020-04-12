@@ -103,3 +103,7 @@ sed -i "/\.po/d" package/feeds/luci-app-dockerman/Makefile
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+luci\( \|\$\)//g" {}
 find package/feeds/*/ package/lean/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g" {}
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
+
+date=`date +%m.%d.%Y`
+sed -i "s/DISTRIB_REVISION.*/DISTRIB_REVISION=\"Compiled by GaryPang  $date\"/g" package/base-files/files/etc/openwrt_release
+sed -i "s/GaryPang$/GaryPang $date/g" package/base-files/files/etc/banner
