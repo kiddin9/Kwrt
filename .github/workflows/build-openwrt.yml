@@ -80,10 +80,15 @@ jobs:
         chmod +x $DIY_SH
         cd openwrt
         ../$DIY_SH
-        sed -i "s/_username/${{ secrets.PPPOE_NAME }}/g" package/lean/default-settings/files/zzz-default-settings
-        sed -i "s/_password/${{ secrets.PPPOE_PW }}/g" package/lean/default-settings/files/zzz-default-settings
         make defconfig
-
+        
+    - name: Default PPPOE Setting
+      if: ${{ secrets.PPPOE_USERNAME }} && ${{ secrets.PPPOE_PASSWD }}
+      run: |
+        sed -i "$i\uci set network.wan.username=\${{ secrets.PPPOE_USERNAME }}" package/lean/default-settings/files/zzz-default-settings
+        sed -i "$i\uci set network.wan.password=\${{ secrets.PPPOE_PASSWD }}" package/lean/default-settings/files/zzz-default-settings
+        sed -i "$i\uci commit network" package/lean/default-settings/files/zzz-default-settings
+              
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
