@@ -79,6 +79,9 @@ fi
 
 if [ -f /etc/config/jia ]; then
   sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
+  uci set network.wan.username=_username
+  uci set network.wan.password=_password
+  uci commit network
 fi
 
 /etc/init.d/amule disable
