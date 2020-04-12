@@ -145,12 +145,12 @@ jobs:
         prerelease: false     
 
     - name: Upload release asset
-      uses: csexton/release-asset-action@master
+      uses: release-url@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         pattern: "${{ env.FIRMWARE }}/*"
         github-token: ${{ secrets.REPO_TOKEN }}
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        release-url: ${{ steps.create_release.outputs.upload_url }}
         
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
