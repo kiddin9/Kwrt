@@ -12,6 +12,7 @@ git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded files/usr/share/amu
 git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
 rm -Rf package/lean/antileech/src/*
 git clone https://github.com/persmule/amule-dlp.antiLeech package/lean/antileech/src
+svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 
 cd package/feeds
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
