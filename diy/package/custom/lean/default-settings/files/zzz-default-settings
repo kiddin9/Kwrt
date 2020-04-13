@@ -56,6 +56,9 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set smartdns.smartdns[0].enabled='1'
   uci set smartdns.smartdns[0].port='5555'
   uci set smartdns.smartdns[0].redirect='none'
+  uci set smartdns.smartdns[0].tcp_server='1'
+  uci set smartdns.smartdns[0].prefetch_domain='1'
+  uci set smartdns.smartdns[0].serve_expired='1'
   uci commit smartdns
 
   uci set AdGuardHome.AdGuardHome.redirect='dnsmasq-upstream'
