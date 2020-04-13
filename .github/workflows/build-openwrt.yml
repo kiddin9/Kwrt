@@ -121,7 +121,6 @@ jobs:
 
     - name: Organize files
       id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         mkdir firmware && find openwrt/bin/targets/*/*/* -maxdepth 0 -name "*uefi-gpt*" -or -name "*combined*" -or -name "*.vmdk" -or -name "sha256sums" | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
