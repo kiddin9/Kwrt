@@ -88,8 +88,8 @@ jobs:
         PPPOE_PASSWD: ${{ secrets.PPPOE_PASSWD }}
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
       run: |
-        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/lean/default-settings/files/zzz-default-settings
-        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/lean/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
         sed -i '$i uci commit network' openwrt/package/lean/default-settings/files/zzz-default-settings
               
     - name: SSH connection to Actions
