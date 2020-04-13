@@ -88,7 +88,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl
 `
 
-3. 执行脚本:
+3. 首次编译执行脚本:
 ```bash
 git clone https://github.com/openwrt/openwrt
 git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
@@ -101,12 +101,23 @@ cp -Rf diy/* ./
 mv X86_64.config .config
 make defconfig
    ```
+4. 二次编译执行脚本
+```bash
+cd openwrt && git pull && cd -
+cd Actions-OpenWrt-Nginx && git pull && cd -
+cp -Rf Actions-OpenWrt-Nginx/* openwrt/
+cd openwrt
+./scripts/feeds update -a && ./scripts/feeds install -a
+./diy.sh
+cp -Rf diy/* ./
+mv X86_64.config .config
+make defconfig
+   ```
+5. 如需修改默认配置比如定制插件等,请执行 `make menuconfig`
 
-4. 如需修改默认配置比如定制插件等,请执行 `make menuconfig`
+6. 执行 `make -j8 download v=s` 下载dl库
 
-5. 执行 `make -j8 download v=s` 下载dl库
-
-6. 执行 `make -j$(($(nproc)+1)) || make -j1 V=s` 即可开始编译你要的固件了。
+7. 执行 `make -j$(($(nproc)+1)) || make -j1 V=s` 即可开始编译你要的固件了。
 
 
 [![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/garypang13/Actions-OpenWrt-Nginx/blob/master/LICENSE)
