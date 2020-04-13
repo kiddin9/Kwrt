@@ -52,14 +52,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set passwall.@global[0].dns_mode='nonuse'
   uci del passwall.@global[0].dns_forward
   uci commit passwall
-  
-  uci set smartdns.@smartdns[0].enabled='1'
-  uci set smartdns.@smartdns[0].port='5555'
-  uci set smartdns.@smartdns[0].redirect='none'
-  uci set smartdns.@smartdns[0].tcp_server='1'
-  uci set smartdns.@smartdns[0].prefetch_domain='1'
-  uci set smartdns.@smartdns[0].serve_expired='1'
-  uci commit smartdns
 
   uci set AdGuardHome.AdGuardHome.redirect='dnsmasq-upstream'
   uci set AdGuardHome.AdGuardHome.enabled='1'
@@ -74,6 +66,16 @@ if [ ! -f /etc/config/placeholder ]; then
   uci -q set aria2.main.max_connection_per_server="128"
   uci -q add_list aria2.main.extra_settings="dht-file-path=/usr/share/aria2/dht.dat"
   uci commit aria2
+fi
+
+if [ $(uci get AdGuardHome.AdGuardHome.enabled) == '1' ]; then
+  uci set smartdns.@smartdns[0].enabled='1'
+  uci set smartdns.@smartdns[0].port='5555'
+  uci set smartdns.@smartdns[0].redirect='none'
+  uci set smartdns.@smartdns[0].tcp_server='1'
+  uci set smartdns.@smartdns[0].prefetch_domain='1'
+  uci set smartdns.@smartdns[0].serve_expired='1'
+  uci commit smartdns
 fi
 
 if [ -f /etc/config/jia ]; then
