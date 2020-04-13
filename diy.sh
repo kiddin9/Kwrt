@@ -94,7 +94,7 @@ find package/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 find package/*/*/ -maxdepth 2 -path "*luci-app*" -name "Makefile" | xargs -i sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' {}
-find package/*/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
+find package/*/*/ -maxdepth 3 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/bin\/upx/d" {}
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/po2lmo /d" {}
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/luci\/i18n/d" {}
