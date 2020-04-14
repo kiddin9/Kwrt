@@ -22,7 +22,7 @@ mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
 git clone https://github.com/tty228/luci-app-serverchan
 svn co https://github.com/brvphoenix/luci-app-wrtbwmon/trunk/luci-app-wrtbwmon
 svn co https://github.com/brvphoenix/wrtbwmon/trunk/wrtbwmon
-git clone https://github.com/destan19/OpenAppFilter
+git clone https://github.com/destan19/OpenAppFilter && mv -f OpenAppFilter/* ./
 svn co https://github.com/jsda/packages2/trunk/ntlf9t/luci-app-advancedsetting
 
 svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-passwall
