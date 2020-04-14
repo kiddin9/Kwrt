@@ -25,6 +25,7 @@ git clone https://github.com/destan19/OpenAppFilter && mv -f OpenAppFilter/* ./
 svn co https://github.com/jsda/packages2/trunk/ntlf9t/luci-app-advancedsetting
 git clone https://github.com/lisaac/luci-app-dockerman
 svn co https://github.com/coolsnowwolf/packages/trunk/sound/forked-daapd
+svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 
 svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
