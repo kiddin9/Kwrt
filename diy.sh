@@ -12,7 +12,6 @@ rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://
 rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/custom/lean/antileech/src
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-rm -Rf feeds/packages/sound/forked-daapd && svn co https://github.com/coolsnowwolf/packages/trunk/sound/forked-daapd feeds/packages/sound/forked-daapd
 mkdir package/custom/first && cd package/custom/first
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon -b 19.07_stable
@@ -24,13 +23,14 @@ svn co https://github.com/brvphoenix/luci-app-wrtbwmon/trunk/luci-app-wrtbwmon
 svn co https://github.com/brvphoenix/wrtbwmon/trunk/wrtbwmon
 git clone https://github.com/destan19/OpenAppFilter && mv -f OpenAppFilter/* ./
 svn co https://github.com/jsda/packages2/trunk/ntlf9t/luci-app-advancedsetting
+git clone https://github.com/lisaac/luci-app-dockerman
+svn co https://github.com/coolsnowwolf/packages/trunk/sound/forked-daapd
 
 svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
 svn co https://github.com/Lienol/openwrt-package/trunk/package/chinadns-ng
 svn co https://github.com/Lienol/openwrt-package/trunk/package/brook
 
-git clone https://github.com/lisaac/luci-app-dockerman
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-php-kodexplorer
 git clone https://github.com/garypang13/luci-app-eqos
