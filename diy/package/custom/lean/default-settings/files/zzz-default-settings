@@ -25,9 +25,9 @@ rm -rf /tmp/luci-*
 
 if [ ! -f /etc/config/placeholder ]; then
   sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
-  uci set network.lan.ipaddr="10.0.0.1"
-  uci set network.lan.ifname="eth1"
-  uci set network.wan.ifname="eth0"
+  uci set network.lan.ipaddr="192.168.8.99"
+  uci set network.lan.ifname="eth0"
+  uci set network.wan.ifname="eth1"
   uci set network.wan.proto=pppoe
   uci commit network
   
