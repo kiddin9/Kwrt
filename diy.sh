@@ -12,6 +12,8 @@ rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://
 rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/custom/lean/antileech/src
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/custom/lean/default-settings/po/zh_Hans
+
 mkdir package/custom/first && cd package/custom/first
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon -b 19.07_stable
@@ -95,8 +97,9 @@ find package/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefil
 | xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
 find package/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS=/M=/g" {}
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
-sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
+# sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 find package/*/*/ -maxdepth 2 -path "*luci-app*" -name "Makefile" | xargs -i sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' {}
+find package/*/*/ -maxdepth 2 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
 find package/*/*/ -maxdepth 3 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/bin\/upx/d" {}
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/po2lmo /d" {}
