@@ -99,9 +99,8 @@ find package/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefil
 find package/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS=/M=/g" {}
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
-find package/*/*/*/ -maxdepth 1 -path "*luci-app*" -name "Makefile" | xargs -i sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' {}
+sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/*/luci-app-*/Makefile
 sed -i "/foreach pkg/d" feeds/luci/luci.mk;
-
 sed -i "/foreach pkg/d" package/*/*/luci-app-*/Makefile
 sed -i '$a $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))' package/*/*/luci-app-*/Makefile
 find package/*/*/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
