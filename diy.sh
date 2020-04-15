@@ -105,8 +105,7 @@ find package/*/*/ -maxdepth 3 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/bin\/upx/d" {}
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/po2lmo /d" {}
 find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/luci\/i18n/d" {}
-sed -i "/\.po/d" package/*/*/luci-app-diskman/Makefile
-sed -i "/\.po/d" package/*/*/luci-app-dockerman/Makefile
+sed -i "/*\.po/d" package/*/*/luci-app-*/Makefile
 find package/*/*/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+luci\( \|\$\)//g" {}
 find package/*/*/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g" {}
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
