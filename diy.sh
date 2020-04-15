@@ -98,16 +98,20 @@ find package/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefil
 | xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
 find package/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS=/M=/g" {}
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
-# sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
-find package/*/*/ -maxdepth 2 -path "*luci-app*" -name "Makefile" | xargs -i sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' {}
-find package/*/*/ -maxdepth 2 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
-find package/*/*/ -maxdepth 3 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
-find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/bin\/upx/d" {}
-find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/po2lmo /d" {}
-find package/*/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "/luci\/i18n/d" {}
+sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
+find package/*/*/*/ -maxdepth 1 -path "*luci-app*" -name "Makefile" | xargs -i sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' {}
+sed -i "/foreach pkg/d" feeds/luci/luci.mk;
+
+sed -i "/foreach pkg/d" package/*/*/luci-app-*/Makefile
+sed -i '$a $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))' package/*/*/luci-app-*/Makefile
+find package/*/*/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
+find package/*/*/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
+sed -i "/bin\/upx/d" package/*/*/*/Makefile
+sed -i "/po2lmo /d" package/*/*/*/Makefile
+sed -i "/luci\/i18n/d" package/*/*/*/Makefile
 sed -i "/*\.po/d" package/*/*/luci-app-*/Makefile
-find package/*/*/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+luci\( \|\$\)//g" {}
-find package/*/*/ -maxdepth 3 -name "Makefile" | xargs -i sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g" {}
+sed -i "s/+luci\( \|\$\)//g"  package/*/*/*/Makefile
+sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
 
 date=`date +%m.%d.%Y`
