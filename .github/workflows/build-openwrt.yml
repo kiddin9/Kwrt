@@ -122,7 +122,23 @@ jobs:
     - name: Organize files
       id: organize
       run: |
-        mkdir firmware && find openwrt/bin/targets/*/*/* -maxdepth 0 -name "*uefi-gpt*" -or -name "*combined*" -or -name "*.vmdk" -or -name "sha256sums" | xargs -i mv -f {} ./firmware/
+        mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
+        -name "*combined*" \
+        -or -name "sha256sums" \
+        -or -name "*adbyby*" \
+        -or -name "*baidupcs*" \
+        -or -name "*cifs-mount*" \
+        -or -name "*music-remote-center*" \
+        -or -name "*airplay2*" \
+        -or -name "*openclash*" \
+        -or -name "*softethervpn*" \
+        -or -name "*syncdial*" \
+        -or -name "*usb-printer*" \
+        -or -name "*verysync*" \
+        -or -name "*vsftpd*" \
+        -or -name "*xlnetacc*" \
+        -or -name "*zerotier*" \
+        | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
         echo "::set-env name=FIRMWARE::$PWD"
