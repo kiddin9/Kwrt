@@ -1,16 +1,5 @@
 #!/bin/sh
 
-uci set luci.main.lang=zh_cn
-uci set luci.main.mediaurlbase=/luci-static/argon
-uci commit luci
-
-uci set system.@system[0].timezone=CST-8
-uci set system.@system[0].zonename=Asia/Shanghai
-uci commit system
-
-uci set fstab.@global[0].anon_mount=1
-uci commit fstab
-
 ln -sf /sbin/ip /usr/bin/ip
 
 sed -i 's/http/https/g' /etc/opkg/distfeeds.conf
@@ -24,12 +13,27 @@ sed -i "s/127.0.0.1:5335/127.0.0.1:5555/g" /etc/AdGuardHome.yaml
 rm -rf /tmp/luci-*
 
 if [ ! -f /etc/config/placeholder ]; then
+  uci set luci.main.lang=zh_cn
+  uci set luci.main.mediaurlbase=/luci-static/argon
+  uci commit luci
+
+  uci set system.@system[0].timezone=CST-8
+  uci set system.@system[0].zonename=Asia/Shanghai
+  uci commit system
+
+  uci set fstab.@global[0].anon_mount=1
+  uci commit fstab
   sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
   uci set network.lan.ipaddr="10.0.0.1"
   uci set network.lan.ifname="eth1"
   uci set network.wan.ifname="eth0"
   uci set network.wan.proto=pppoe
   uci commit network
+  
+  sed -i '/ipv6.conf/d' /etc/sysctl.conf
+  echo net.ipv6.conf.all.disable_ipv6=1 >> /etc/sysctl.conf
+  echo net.ipv6.conf.default.disable_ipv6=1 >> /etc/sysctl.conf
+  echo net.ipv6.conf.lo.disable_ipv6 = 1 >> /etc/sysctl.conf
   
   uci set shadowsocksr.@global[0].pdnsd_enable='0'
   uci del shadowsocksr.@global[0].tunnel_forward
@@ -66,52 +70,16 @@ if [ ! -f /etc/config/placeholder ]; then
   uci -q set aria2.main.max_connection_per_server="128"
   uci -q add_list aria2.main.extra_settings="dht-file-path=/usr/share/aria2/dht.dat"
   uci commit aria2
-fi
-
-if [ $(uci get AdGuardHome.AdGuardHome.enabled) == '1' ]; then
-  uci set smartdns.@smartdns[0].enabled='1'
-  uci set smartdns.@smartdns[0].port='5555'
-  uci set smartdns.@smartdns[0].redirect='none'
-  uci set smartdns.@smartdns[0].tcp_server='1'
-  uci set smartdns.@smartdns[0].prefetch_domain='1'
-  uci set smartdns.@smartdns[0].serve_expired='1'
-  uci commit smartdns
-fi
-
-if [ -f /etc/config/jia ]; then
-  sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
-fi
-
-/etc/init.d/amule disable
-find /www -type f -exec chmod 644 {} \;
-find /www -type d -exec chmod 755 {} \;
-cp -R /www/cgi-bin/* /www/
-chmod +x /www/luci
-chmod +x /usr/share/aria2/*.sh
-
-
-ln -sf /usr/bin/python3 /usr/bin/python
-ln -sf /usr/bin/python /usr/bin/py
-ln -sf /usr/lib/netdata/conf.d /etc/netdata/conf.d
-ln /usr/lib/netdata/conf.d/charts.d.conf /etc/netdata/charts.d.conf
-ln /usr/lib/netdata/conf.d/python.d.conf /etc/netdata/python.d.conf
-ln -f /etc/netdata/charts.d.conf /usr/lib/netdata/conf.d/charts.d.conf
-ln -f /etc/netdata/python.d.conf /usr/lib/netdata/conf.d/python.d.conf
-
-sed -i '/ipv6.conf/d' /etc/sysctl.conf
-echo net.ipv6.conf.all.disable_ipv6=1 >> /etc/sysctl.conf
-echo net.ipv6.conf.default.disable_ipv6=1 >> /etc/sysctl.conf
-echo net.ipv6.conf.lo.disable_ipv6 = 1 >> /etc/sysctl.conf
-
+  
 [ -d "/etc/config/passwall" ] && {
-cat >> /etc/config/passwall/blacklist_ip <<EOF
+cat >> /etc/passwall/blacklist_ip <<EOF
 dns.google
 dns.quad9.net
 dns.cloudflare.com
 services.googleapis.cn
 dns.233py.com
 EOF
-cat >> /etc/config/passwall/blacklist_host <<EOF
+cat >> /etc/passwall/blacklist_host <<EOF
 1.1.1.1
 9.9.9.9
 208.67.222.222
@@ -270,6 +238,37 @@ config server
 
 EOF
 }
+fi
+
+if [ $(uci get AdGuardHome.AdGuardHome.enabled) == '1' ]; then
+  uci set smartdns.@smartdns[0].enabled='1'
+  uci set smartdns.@smartdns[0].port='5555'
+  uci set smartdns.@smartdns[0].redirect='none'
+  uci set smartdns.@smartdns[0].tcp_server='1'
+  uci set smartdns.@smartdns[0].prefetch_domain='1'
+  uci set smartdns.@smartdns[0].serve_expired='1'
+  uci commit smartdns
+fi
+
+if [ -f /etc/config/jia ]; then
+  sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
+fi
+
+#/etc/init.d/amule disable
+find /www -type f -exec chmod 644 {} \;
+find /www -type d -exec chmod 755 {} \;
+cp -R /www/cgi-bin/* /www/
+chmod +x /www/luci
+chmod +x /usr/share/aria2/*.sh
+
+
+ln -sf /usr/bin/python3 /usr/bin/python
+ln -sf /usr/bin/python /usr/bin/py
+ln -sf /usr/lib/netdata/conf.d /etc/netdata/conf.d
+ln /usr/lib/netdata/conf.d/charts.d.conf /etc/netdata/charts.d.conf
+ln /usr/lib/netdata/conf.d/python.d.conf /etc/netdata/python.d.conf
+ln -f /etc/netdata/charts.d.conf /usr/lib/netdata/conf.d/charts.d.conf
+ln -f /etc/netdata/python.d.conf /usr/lib/netdata/conf.d/python.d.conf
 
 touch /etc/config/placeholder
 
