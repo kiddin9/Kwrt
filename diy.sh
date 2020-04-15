@@ -109,7 +109,7 @@ sed -i "/bin\/upx/d" package/*/*/*/Makefile
 sed -i "/po2lmo /d" package/*/*/*/Makefile
 sed -i "/luci\/i18n/d" package/*/*/*/Makefile
 sed -i "/*\.po/d" package/*/*/luci-app-*/Makefile
-# sed -i "s/+luci\( \|\$\)//g"  package/*/*/*/Makefile
+sed -i "s/+luci\( \|\$\)//g"  package/*/*/*/Makefile
 sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
 
