@@ -127,7 +127,7 @@ jobs:
         -or -name "sha256sums" \
         | xargs -i mv -f {} ./firmware/
         find openwrt/bin/*/*/*/ -maxdepth 1 \
-        -or -name "*adbyby*" \
+        -name "*adbyby*" \
         -or -name "*baidupcs*" \
         -or -name "*cifs-mount*" \
         -or -name "*music-remote-center*" \
