@@ -148,7 +148,7 @@ jobs:
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
-        rename -v "s/openwrt-/${{steps.date.outputs.date3}}-openwrt-/" *img.gz
+        rename -v "s/^openwrt/${{steps.date.outputs.date3}}-openwrt/" *img.gz
         zip -r luci-app-adbyby-plus.zip *adbyby*
         zip -r luci-app-baidupcs-web.zip *baidupcs*
         zip -r luci-app-cifs-mount.zip *cifs-mount*
