@@ -119,15 +119,20 @@ jobs:
         name: OpenWrt_bin
         path: openwrt/bin
 
+    - name: Get current date
+      id: date
+      run: |
+        echo "::set-output name=date::$(date +'%m/%d_%Y_%H/%M')"
+        echo "::set-output name=date2::$(date +'%m/%d %Y')"
+        echo "::set-output name=date3::$(date +'%n.%j')"
+
     - name: Organize files
       id: organize
       run: |
         mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
         -name "*combined*" \
         -or -name "sha256sums" \
-        | xargs -i mv -f {} ./firmware/
-        find openwrt/bin/*/*/*/ -maxdepth 1 \
-        -name "*adbyby*" \
+        -or -name "*adbyby*" \
         -or -name "*baidupcs*" \
         -or -name "*cifs-mount*" \
         -or -name "*music-remote-center*" \
@@ -140,10 +145,25 @@ jobs:
         -or -name "*vsftpd*" \
         -or -name "*xlnetacc*" \
         -or -name "*zerotier*" \
-        | xargs -i zip -r 插件补充包.zip {}
-        mv -f 插件补充包.zip ./firmware/
+        | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
+        mv openwrt-x86-64-generic-squashfs-combined.img.gz ${{steps.date.outputs.date3}}-x86-64-squashfs-combined.img.gz
+        mv openwrt-x86-64-generic-squashfs-combined-efi.img.gz ${{steps.date.outputs.date3}}-x86-64-squashfs-uefi-gpt.img.gz
+        zip -r luci-app-adbyby-plus.zip *adbyby*
+        zip -r luci-app-baidupcs-web.zip *baidupcs*
+        zip -r luci-app-cifs-mount.zip *cifs-mount*
+        zip -r luci-app-music-remote-center.zip *music-remote-center*
+        zip -r luci-app-airplay2.zip *airplay2*
+        zip -r luci-app-openclash.zip *openclash*
+        zip -r luci-app-softethervpn.zip *softethervpn*
+        zip -r luci-app-syncdial.zip *syncdial*
+        zip -r luci-app-usb-printer.zip *usb-printer*
+        zip -r luci-app-verysync.zip *verysync*
+        zip -r luci-app-vsftpd.zip *vsftpd*
+        zip -r luci-app-xlnetacc.zip *xlnetacc*
+        zip -r luci-app-zerotier.zip *zerotier*
+        rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
       
@@ -153,12 +173,6 @@ jobs:
       with:
         name: OpenWrt_firmware
         path: ${{ env.FIRMWARE }}
-        
-    - name: Get current date
-      id: date
-      run: |
-        echo "::set-output name=date::$(date +'%m/%d_%Y_%H/%M')"
-        echo "::set-output name=date2::$(date +'%m/%d %Y')"
       
     - name: Create release
       id: create_release
