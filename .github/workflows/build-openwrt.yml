@@ -135,7 +135,7 @@ jobs:
         -or -name "*adbyby*" \
         -or -name "*baidupcs*" \
         -or -name "*cifs-mount*" \
-        -or -name "*music-remote-center*" \
+        -or -name "*music-remote-center*" -or -name "*forked-daapd*" \
         -or -name "*airplay2*" \
         -or -name "*openclash*" \
         -or -name "*softethervpn*" \
@@ -152,7 +152,7 @@ jobs:
         zip -r luci-app-adbyby-plus.zip *adbyby*
         zip -r luci-app-baidupcs-web.zip *baidupcs*
         zip -r luci-app-cifs-mount.zip *cifs-mount*
-        zip -r luci-app-music-remote-center.zip *music-remote-center*
+        zip -r luci-app-music-remote-center.zip *music-remote-center* "*forked-daapd*"
         zip -r luci-app-airplay2.zip *airplay2*
         zip -r luci-app-openclash.zip *openclash*
         zip -r luci-app-softethervpn.zip *softethervpn*
