@@ -47,7 +47,7 @@ sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
 sed -i 's/root\/.aria2/usr\/share\/aria2/g' files/usr/share/aria2/aria2.conf
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
-sed -i 's/LUCI_DEPENDS:=/LUCI_DEPENDS:=+transmission-daemon-openssl +transmission-web-control /g' package/*/*/luci-app-transmission/Makefile
+sed -i 's/LUCI_DEPENDS:=/LUCI_DEPENDS:=+transmission-daemon-openssl /g' package/*/*/luci-app-transmission/Makefile
 sed -i 's/+uhttpd //g' package/*/*/luci/Makefile
 sed -i '/_redirect2ssl/d' package/*/*/nginx/Makefile
 sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
