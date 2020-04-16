@@ -125,6 +125,8 @@ jobs:
         mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
         -name "*combined*" \
         -or -name "sha256sums" \
+        | xargs -i mv -f {} ./firmware/
+        find openwrt/bin/*/*/*/ -maxdepth 1 \
         -or -name "*adbyby*" \
         -or -name "*baidupcs*" \
         -or -name "*cifs-mount*" \
@@ -138,7 +140,8 @@ jobs:
         -or -name "*vsftpd*" \
         -or -name "*xlnetacc*" \
         -or -name "*zerotier*" \
-        | xargs -i mv -f {} ./firmware/
+        | xargs -i zip -r 插件补充包.zip {}
+        mv -f 插件补充包.zip ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
         echo "::set-env name=FIRMWARE::$PWD"
