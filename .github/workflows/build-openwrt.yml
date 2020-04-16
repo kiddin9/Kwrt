@@ -124,7 +124,7 @@ jobs:
       run: |
         echo "::set-output name=date::$(date +'%m/%d_%Y_%H/%M')"
         echo "::set-output name=date2::$(date +'%m/%d %Y')"
-        echo "::set-output name=date3::$(date +'%n.%j')"
+        echo "::set-output name=date3::$(date +'%m.%d')"
 
     - name: Organize files
       id: organize
@@ -148,8 +148,7 @@ jobs:
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
-        mv openwrt-x86-64-generic-squashfs-combined.img.gz ${{steps.date.outputs.date3}}-x86-64-squashfs-combined.img.gz
-        mv openwrt-x86-64-generic-squashfs-combined-efi.img.gz ${{steps.date.outputs.date3}}-x86-64-squashfs-uefi-gpt.img.gz
+        rename -v "s/openwrt-/${{steps.date.outputs.date3}}-openwrt-/" *img.gz
         zip -r luci-app-adbyby-plus.zip *adbyby*
         zip -r luci-app-baidupcs-web.zip *baidupcs*
         zip -r luci-app-cifs-mount.zip *cifs-mount*
