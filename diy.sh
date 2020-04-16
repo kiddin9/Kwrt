@@ -16,6 +16,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/
 
 mkdir package/custom/first && cd package/custom/first
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
+svn co https://github.com/garypang13/openwrt-packages/trunk/luci-app-passwall
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon -b 19.07_stable
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
