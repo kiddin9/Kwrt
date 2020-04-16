@@ -43,7 +43,7 @@ cd -
 
 cp -Rf ../diy/* ./
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
-sed -i 's/ @!/ +@!/g' package/*/*/wrtbwmon/Makefile
+sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +ip-full/g' package/*/*/wrtbwmon/Makefile
 sed -i 's/root\/.aria2/usr\/share\/aria2/g' files/usr/share/aria2/aria2.conf
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
