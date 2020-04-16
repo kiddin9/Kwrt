@@ -16,7 +16,6 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/
 
 mkdir package/custom/first && cd package/custom/first
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
-svn co https://github.com/garypang13/openwrt-packages/trunk/luci-app-passwall
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon -b 19.07_stable
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
@@ -31,10 +30,9 @@ git clone https://github.com/lisaac/luci-app-dockerman
 svn co https://github.com/coolsnowwolf/packages/trunk/sound/forked-daapd
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 
-svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-passwall
+svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
-svn co https://github.com/Lienol/openwrt-package/trunk/package/chinadns-ng
-svn co https://github.com/Lienol/openwrt-package/trunk/package/brook
+git clone https://github.com/pexcn/openwrt-chinadns-ng.git chinadns-ng
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
 svn co https://github.com/solidus1983/luci-theme-opentomato/branches/dev-v19.07/luci/themes/luci-theme-opentomato
 
