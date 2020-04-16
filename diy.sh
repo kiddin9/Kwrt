@@ -106,9 +106,9 @@ sed -i '$a $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg
 find package/*/*/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
 find package/*/*/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
 sed -i "/bin\/upx/d" package/*/*/*/Makefile
-sed -i "/po2lmo /d" package/*/*/*/Makefile
-sed -i "/luci\/i18n/d" package/*/*/*/Makefile
-sed -i "/*\.po/d" package/*/*/luci-app-*/Makefile
+sed -i "/po2lmo /d" package/custom/*/*/Makefile
+sed -i "/luci\/i18n/d" package/custom/*/*/Makefile
+sed -i "/*\.po/d" package/custom/*/*/Makefile
 sed -i "s/+luci\( \|\$\)//g"  package/*/*/*/Makefile
 sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
