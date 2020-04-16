@@ -15,6 +15,7 @@ rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx 
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/custom/lean/default-settings/po/zh_Hans
 
 mkdir package/custom/first && cd package/custom/first
+svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon -b 19.07_stable
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
