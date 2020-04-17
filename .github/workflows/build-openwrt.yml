@@ -135,7 +135,7 @@ jobs:
         -or -name "*adbyby*" \
         -or -name "*baidupcs*" \
         -or -name "*cifs-mount*" \
-        -or -name "*music-remote-center*" -or -name "*forked-daapd*" \
+        -or -name "*music-remote-center*" -or -name *forked-daapd* \
         -or -name "*airplay2*" \
         -or -name "*openclash*" \
         -or -name "*softethervpn*" \
