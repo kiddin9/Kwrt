@@ -27,7 +27,7 @@ git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-php-kodexplorer
 git clone https://github.com/garypang13/luci-app-eqos
 cd -
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
+echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 cp -Rf ../diy/* ./
 ./scripts/feeds update -a && ./scripts/feeds install -a
 
