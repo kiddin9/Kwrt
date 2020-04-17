@@ -40,7 +40,7 @@ rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf f
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/custom/lean/antileech/src
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/custom/lean/default-settings/po/zh_Hans
-
+./scripts/feeds update -a && ./scripts/feeds install -a
 cp -Rf ../diy/* ./
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
@@ -116,4 +116,3 @@ sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_REVISION.*/DISTRIB_REVISION=\"Compiled by GaryPang  $date\"/g" package/base-files/files/etc/openwrt_release
 sed -i "s/GaryPang$/GaryPang $date/g" package/base-files/files/etc/banner
-./scripts/feeds update -a && ./scripts/feeds install -a
