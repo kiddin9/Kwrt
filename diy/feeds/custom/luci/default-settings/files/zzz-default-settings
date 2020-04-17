@@ -1,7 +1,6 @@
 #!/bin/sh
 
-uci set luci.main.mediaurlbase=/luci-static/argon
-uci commit luci
+
 ln -sf /sbin/ip /usr/bin/ip
 sed -i 's/downloads.openwrt.org/openwrt.proxy.ustclug.org/g' /etc/opkg/distfeeds.conf
 sed -i 's/http/https/g' /etc/opkg/distfeeds.conf
