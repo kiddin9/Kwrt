@@ -149,19 +149,19 @@ jobs:
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
         rename -v "s/^openwrt/${{steps.date.outputs.date3}}-openwrt/" *img.gz
-        zip -r luci-app-adbyby-plus.zip *adbyby*
-        zip -r luci-app-baidupcs-web.zip *baidupcs*
-        zip -r luci-app-cifs-mount.zip *cifs-mount*
-        zip -r luci-app-music-remote-center.zip *music-remote-center* "*forked-daapd*"
-        zip -r luci-app-airplay2.zip *airplay2*
-        zip -r luci-app-openclash.zip *openclash*
-        zip -r luci-app-softethervpn.zip *softethervpn*
-        zip -r luci-app-syncdial.zip *syncdial*
-        zip -r luci-app-usb-printer.zip *usb-printer*
-        zip -r luci-app-verysync.zip *verysync*
-        zip -r luci-app-vsftpd.zip *vsftpd*
-        zip -r luci-app-xlnetacc.zip *xlnetacc*
-        zip -r luci-app-zerotier.zip *zerotier*
+        zip -r luci-app-adbyby-plus.zip *adbyby* 2>&1 >/dev/null
+        zip -r luci-app-baidupcs-web.zip *baidupcs* 2>&1 >/dev/null
+        zip -r luci-app-cifs-mount.zip *cifs-mount* 2>&1 >/dev/null
+        zip -r luci-app-music-remote-center.zip *music-remote-center* "*forked-daapd*" 2>&1 >/dev/null
+        zip -r luci-app-airplay2.zip *airplay2* 2>&1 >/dev/null
+        zip -r luci-app-openclash.zip *openclash* 2>&1 >/dev/null
+        zip -r luci-app-softethervpn.zip *softethervpn* 2>&1 >/dev/null
+        zip -r luci-app-syncdial.zip *syncdial* 2>&1 >/dev/null
+        zip -r luci-app-usb-printer.zip *usb-printer* 2>&1 >/dev/null
+        zip -r luci-app-verysync.zip *verysync* 2>&1 >/dev/null
+        zip -r luci-app-vsftpd.zip *vsftpd* 2>&1 >/dev/null
+        zip -r luci-app-xlnetacc.zip *xlnetacc* 2>&1 >/dev/null
+        zip -r luci-app-zerotier.zip *zerotier* 2>&1 >/dev/null
         rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
