@@ -1,20 +1,7 @@
 #!/bin/bash
 #=================================================
-rm -Rf package/custom/*
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean package/custom/lean
-rm -Rf package/*/*/qBittorrent/patches
-sed -i 's/PKG_SOURCE_URL:=.*/PKG_SOURCE_URL:=https:\/\/github.com\/c0re100\/qBittorrent-Enhanced-Edition/g' package/*/*/qBittorrent/Makefile
-sed -i 's/PKG_HASH.*/PKG_SOURCE_PROTO:=git\nPKG_SOURCE_VERSION:=latest/g' package/*/*/qBittorrent/Makefile
-sed -i '/PKG_BUILD_DIR/d' package/*/*/qBittorrent/Makefile
-sed -i 's/+python$/+python3/g' package/*/*/luci-app-qbittorrent/Makefile
-rm -Rf feeds/packages/lang/php7 && svn co https://github.com/openwrt/packages/branches/openwrt-19.07/lang/php7 feeds/packages/lang/php7
-rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded files/usr/share/amule/webserver/AmuleWebUI-Reloaded
-rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
-rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/custom/lean/antileech/src
-rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/custom/lean/default-settings/po/zh_Hans
-
-mkdir package/custom/first && cd package/custom/first
+rm -Rf feeds/custom/luci/*
+cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon -b 19.07_stable
@@ -40,6 +27,19 @@ git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-php-kodexplorer
 git clone https://github.com/garypang13/luci-app-eqos
 cd -
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
+
+rm -Rf package/*/*/qBittorrent/patches
+sed -i 's/PKG_SOURCE_URL:=.*/PKG_SOURCE_URL:=https:\/\/github.com\/c0re100\/qBittorrent-Enhanced-Edition/g' package/*/*/qBittorrent/Makefile
+sed -i 's/PKG_HASH.*/PKG_SOURCE_PROTO:=git\nPKG_SOURCE_VERSION:=latest/g' package/*/*/qBittorrent/Makefile
+sed -i '/PKG_BUILD_DIR/d' package/*/*/qBittorrent/Makefile
+sed -i 's/+python$/+python3/g' package/*/*/luci-app-qbittorrent/Makefile
+rm -Rf feeds/packages/lang/php7 && svn co https://github.com/openwrt/packages/branches/openwrt-19.07/lang/php7 feeds/packages/lang/php7
+rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded files/usr/share/amule/webserver/AmuleWebUI-Reloaded
+rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
+rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/custom/lean/antileech/src
+rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/custom/lean/default-settings/po/zh_Hans
 
 cp -Rf ../diy/* ./
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
@@ -93,22 +93,22 @@ sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion cifsd-team/cifsd-tools)/g" p
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=v$(getversion AdguardTeam/AdGuardHome)/g" package/*/*/openwrt-adguardhome/Makefile
 find package/*/*/aria2/ package/*/*/acme/ package/*/*/netdata/ package/*/*/ttyd/ package/*/*/docker-ce/ package/*/*/v2ray/ \
 package/*/*/ksmbd/ package/*/*/ksmbd-tools/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" {}
-sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/custom/*/*/Makefile
-find package/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefile" ! -path "*rblibtorrent1*" -name "Makefile" \
+sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/*/*/Makefile
+find package/*/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefile" ! -path "*rblibtorrent1*" -name "Makefile" \
 | xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
-find package/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS=/M=/g" {}
+find package/*/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS=/M=/g" {}
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/*/luci-app-*/Makefile
 sed -i "/foreach pkg/d" feeds/luci/luci.mk;
 sed -i "/foreach pkg/d" package/*/*/luci-*/Makefile
 sed -i '$a $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))' package/*/*/luci-*/Makefile
-find package/custom/*/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
-find package/custom/*/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
+find package/*/custom/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
+find package/*/custom/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
 sed -i "/bin\/upx/d" package/*/*/*/Makefile
-sed -i "/po2lmo /d" package/custom/*/*/Makefile
-sed -i "/luci\/i18n/d" package/custom/*/*/Makefile
-sed -i "/*\.po/d" package/custom/*/*/Makefile
+sed -i "/po2lmo /d" package/*/custom/*/Makefile
+sed -i "/luci\/i18n/d" package/*/custom/*/Makefile
+sed -i "/*\.po/d" package/*/custom/*/Makefile
 sed -i "s/+luci\( \|\$\)//g"  package/*/*/*/Makefile
 sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
