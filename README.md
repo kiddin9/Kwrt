@@ -71,6 +71,8 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + AppFilter App过滤
 + nlbwmon 宽带监控
 
+其他插件请在[Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
+
 ### 如何在本地使用此项目编译自己需要的 OpenWrt 固件
 
 #### 注意：
