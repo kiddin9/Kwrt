@@ -64,8 +64,6 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + qBittorrent BT下载工具
 + 可道云 做NAS必备
 + PHP 建站与可道云必备
-+ 微力同步
-+ baidupcs-web 百度网盘下载管理工具
 + aMule 电骡下载 ed2k必备
 + Turbo ACC 网络加速
 + SQM QOS 智能网络优化
