@@ -116,3 +116,4 @@ sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_REVISION.*/DISTRIB_REVISION=\"Compiled by GaryPang  $date\"/g" package/base-files/files/etc/openwrt_release
 sed -i "s/GaryPang$/GaryPang $date/g" package/base-files/files/etc/banner
+./scripts/feeds update -a && ./scripts/feeds install -a
