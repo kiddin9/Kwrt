@@ -116,5 +116,5 @@ sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
 sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
-sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C By GaryPang'/g" package/base-files/files/etc/openwrt_release
+sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by GaryPang'/g" package/base-files/files/etc/openwrt_release
 sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
