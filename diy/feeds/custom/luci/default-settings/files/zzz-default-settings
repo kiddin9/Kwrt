@@ -271,6 +271,7 @@ ln /usr/lib/netdata/conf.d/python.d.conf /etc/netdata/python.d.conf
 ln -f /etc/netdata/charts.d.conf /usr/lib/netdata/conf.d/charts.d.conf
 ln -f /etc/netdata/python.d.conf /usr/lib/netdata/conf.d/python.d.conf
 
+sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 touch /etc/config/placeholder
 
 exit 0
