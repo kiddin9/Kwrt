@@ -79,7 +79,7 @@ jobs:
         chmod +x $DIY_SH
         cd openwrt
         ../$DIY_SH
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        [ -e ../$CONFIG_FILE ] && mv ../$CONFIG_FILE .config
         make defconfig
         
     - name: Default PPPOE Setting
