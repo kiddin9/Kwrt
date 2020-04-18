@@ -48,6 +48,8 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
 sed -i 's/root\/.aria2/usr\/share\/aria2/g' files/usr/share/aria2/aria2.conf
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
+sed -i 's/var\/etc/usr\/share/g' feeds/packages/net/aria2/files/aria2.conf
+sed -i 's/#rpc-secure/rpc-secure/g' files/usr/share/aria2/aria2.conf
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 sed -i 's/LUCI_DEPENDS:=/LUCI_DEPENDS:=+transmission-daemon-openssl /g' package/*/*/luci-app-transmission/Makefile
 sed -i 's/+uhttpd //g' package/*/*/luci/Makefile
