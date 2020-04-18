@@ -119,3 +119,4 @@ date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_REVISION.*/DISTRIB_REVISION=\"Compiled by GaryPang\"/g" package/base-files/files/etc/openwrt_release
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION=\"OpenWrt SNAPSHOT $date\"/g" package/base-files/files/etc/openwrt_release
 sed -i "s/GaryPang$/GaryPang $date/g" package/base-files/files/etc/banner
+sed -i "s/%V/%V $date/g" package/base-files/files/etc/banner
