@@ -24,7 +24,7 @@ env:
   CONFIG_FILE: X86_64.config
   DIY_SH: diy.sh
   FREE_UP_DISK: true
-  SSH_ACTIONS: true
+  SSH_ACTIONS: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
