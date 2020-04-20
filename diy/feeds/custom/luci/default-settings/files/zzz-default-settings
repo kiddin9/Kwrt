@@ -241,7 +241,7 @@ EOF
 }
 fi
 
-if [ $(uci get AdGuardHome.AdGuardHome.enabled) ]; then
+if [ $(uci get AdGuardHome.AdGuardHome.enabled) == '1' ]; then
   uci set smartdns.@smartdns[0].enabled='1'
   uci set smartdns.@smartdns[0].port='5555'
   uci set smartdns.@smartdns[0].redirect='none'
