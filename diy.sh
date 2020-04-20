@@ -93,7 +93,7 @@ sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion docker/docker-ce)/g" package
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion cifsd-team/cifsd)/g" package/*/*/ksmbd/Makefile
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion cifsd-team/cifsd-tools)/g" package/*/*/ksmbd-tools/Makefile
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=v$(getversion AdguardTeam/AdGuardHome)/g" package/*/*/openwrt-adguardhome/Makefile
-sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=v$(getversion Erope/baidupcs-web)/g" package/*/*/baidupcs-web/Makefile
+sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=3.7.0-fix3/g" package/*/*/baidupcs-web/Makefile
 find package/*/*/aria2/ package/*/*/acme/ package/*/*/netdata/ package/*/*/ttyd/ package/*/*/docker-ce/ package/*/*/v2ray/ \
 package/*/*/ksmbd/ package/*/*/ksmbd-tools/ -maxdepth 1 -name "Makefile" | xargs -i sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" {}
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/*/*/Makefile
