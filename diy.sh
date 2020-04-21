@@ -37,6 +37,7 @@ sed -i 's/PKG_SOURCE_URL:=.*/PKG_SOURCE_URL:=https:\/\/github.com\/c0re100\/qBit
 sed -i 's/PKG_HASH.*/PKG_SOURCE_PROTO:=git\nPKG_SOURCE_VERSION:=latest/g' package/*/*/qBittorrent/Makefile
 sed -i '/PKG_BUILD_DIR/d' package/*/*/qBittorrent/Makefile
 sed -i 's/+python$/+python3/g' package/*/*/luci-app-qbittorrent/Makefile
+sed -i 's/liuzhuoling2011/garypang13/g' package/*/*/baidupcs-web/Makefile
 rm -Rf feeds/packages/lang/php7 && svn co https://github.com/openwrt/packages/branches/openwrt-19.07/lang/php7 feeds/packages/lang/php7
 rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded files/usr/share/amule/webserver/AmuleWebUI-Reloaded
 rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
@@ -95,6 +96,7 @@ sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion docker/docker-ce)/g" package
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion cifsd-team/cifsd)/g" package/*/*/ksmbd/Makefile
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion cifsd-team/cifsd-tools)/g" package/*/*/ksmbd-tools/Makefile
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=v$(getversion AdguardTeam/AdGuardHome)/g" package/*/*/openwrt-adguardhome/Makefile
+sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=v$(getversion garypang13/baidupcs-web)/g" package/*/*/baidupcs-web/Makefile
 find package/*/*/aria2/ package/*/*/acme/ package/*/*/netdata/ package/*/*/ttyd/ package/*/*/docker-ce/ package/*/*/v2ray/ \
 package/*/*/ksmbd/ package/*/*/ksmbd-tools/ -maxdepth 1 -name "Makefile" | xargs -i sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" {}
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/*/*/Makefile
