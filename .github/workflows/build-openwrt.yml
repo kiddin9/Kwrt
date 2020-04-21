@@ -187,6 +187,7 @@ jobs:
         prerelease: false     
 
     - name: Upload release asset
+      continue-on-error: true
       uses: csexton/release-asset-action@master
       if: steps.compile.outputs.status == 'success' && env.REPO_TOKEN && env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
