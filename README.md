@@ -58,6 +58,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + ttyd 网页版终端
 + UPNP 自动端口转发
 + Aria2 全能下载工具
++ BaiduPCS-Web 百度网盘web客户端(修复登录)
 + cifsd + NFS 网络共享
 + Netdata 全能性能监控
 + diskman 磁盘管理
