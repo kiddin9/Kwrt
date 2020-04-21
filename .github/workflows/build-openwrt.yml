@@ -128,6 +128,7 @@ jobs:
 
     - name: Organize files
       id: organize
+      continue-on-error: true
       run: |
         mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
         -name "*combined*" \
