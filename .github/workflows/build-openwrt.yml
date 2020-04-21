@@ -134,7 +134,6 @@ jobs:
         -name "*combined*" \
         -or -name "sha256sums" \
         -or -name "*adbyby*" \
-        -or -name "*baidupcs*" \
         -or -name "*cifs-mount*" \
         -or -name "*music-remote-center*" -or -name "*forked-daapd*" \
         -or -name "*airplay2*" \
