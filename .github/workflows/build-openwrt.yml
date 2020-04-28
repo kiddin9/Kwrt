@@ -89,6 +89,11 @@ jobs:
         chmod +x $DIY_SH
         cd openwrt
         ../$DIY_SH
+        if [ -n "$(ls -A "../patches" 2>/dev/null)" ]; then
+        (
+          find "patches" -type f -name '*.patch'| xargs -i git apply {}
+        )
+        fi
         [ -e ../$CONFIG_FILE ] && mv ../$CONFIG_FILE .config
         make defconfig
         
