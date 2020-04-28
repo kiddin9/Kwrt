@@ -37,6 +37,8 @@ X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Ngin
 
 在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.
 
+在仓库Settings->Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com)推送编译结果到微信
+
 点击右上角的Star按钮开始编译
 
 diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
@@ -63,6 +65,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + Netdata 全能性能监控
 + diskman 磁盘管理
 + qBittorrent BT下载工具
++ Transmission BT/PT下載工具
 + 可道云 做NAS必备
 + PHP 建站与可道云必备
 + aMule 电骡下载 ed2k必备
