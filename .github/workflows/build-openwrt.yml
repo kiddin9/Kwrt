@@ -130,6 +130,7 @@ jobs:
       if: steps.compile.outputs.status != 'success'
       run: |
         curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${{steps.date.outputs.date2}} ${{ env.TARGET }} 编译失败
+        echo "编译失败,请查看Compile日志"
         exit 1
       
 
