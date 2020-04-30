@@ -128,7 +128,7 @@ jobs:
     - name: WeChat notification
       if: env.SCKEY && !cancelled()
       run: |
-        [ ${status} == 'success' ] && curl https://sc.ftqq.com/${secrets.SCKEY}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译完成 || curl https://sc.ftqq.com/${secrets.SCKEY}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译失败
+        [ ${status} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译完成 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译失败
       
 
     - name: Upload bin directory
@@ -189,7 +189,7 @@ jobs:
       uses: actions/create-release@master
       if: env.UPLOAD_RELEASE == 'true'
       env:
-        GITHUB_TOKEN: ${secrets.REPO_TOKEN}
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         tag_name: ${date}_${DEVICE_NAME}
         release_name: ${date2} ${DEVICE_NAME}
@@ -201,7 +201,7 @@ jobs:
       if: env.REPO_TOKEN && env.UPLOAD_RELEASE == 'true'
       with:
         pattern: "${FIRMWARE}/*"
-        github-token: ${secrets.REPO_TOKEN}
+        github-token: ${{ secrets.REPO_TOKEN }}
         release-url: ${steps.create_release.outputs.upload_url}
         
     - name: Upload firmware to cowtransfer
