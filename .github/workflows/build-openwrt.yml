@@ -31,6 +31,7 @@ env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
   PPPOE_USERNAME: ${{ secrets.PPPOE_USERNAME }}
   PPPOE_PASSWD: ${{ secrets.PPPOE_PASSWD }}
+  SCKEY: ${{ secrets.SCKEY }}
   TZ: Asia/Shanghai
 
 jobs:
@@ -56,9 +57,9 @@ jobs:
     - name: Get current date
       id: date
       run: |
-        echo "::set-output name=date::$(date +'%m/%d_%Y_%H/%M')"
-        echo "::set-output name=date2::$(date +'%m/%d %Y')"
-        echo "::set-output name=date3::$(date +'%m.%d')"
+        echo "::set-env name=date::$(date +'%m/%d_%Y_%H/%M')"
+        echo "::set-env name=date2::$(date +'%m/%d %Y')"
+        echo "::set-env name=date3::$(date +'%m.%d')"
 
     - name: Clone source code
       run: |
@@ -94,13 +95,15 @@ jobs:
         )
         fi
         [ -e ../$CONFIG_FILE ] && mv ../$CONFIG_FILE .config
+        [ _$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=_$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=_$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+        [ -s DEVICE_NAME ] && echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
         make defconfig
         
     - name: Default PPPOE Setting
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
       run: |
-        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
-        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.username=${PPPOE_USERNAME}' openwrt/package/*/*/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.password=${PPPOE_PASSWD}' openwrt/package/*/*/default-settings/files/zzz-default-settings
         sed -i '$i uci commit network' openwrt/package/*/*/default-settings/files/zzz-default-settings
               
     - name: SSH connection to Actions
@@ -116,28 +119,21 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
-      id: compile
-      continue-on-error: true
       run: |
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
-        echo "::set-output name=status::success"
-        [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
-        [ -s DEVICE_NAME ] && echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
-        curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${{steps.date.outputs.date2}} ${{ env.DEVICE_NAME }} 编译完成
+        echo "::set-env name=status::success"
 
     - name: WeChat notification
-      if: steps.compile.outputs.status != 'success'
+      if: env.SCKEY && !cancelled()
       run: |
-        curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${{steps.date.outputs.date2}} ${{ env.DEVICE_NAME }} 编译失败
-        echo "编译失败,请查看Compile日志"
-        exit 1
+        [ ${status} == 'success' ] && curl https://sc.ftqq.com/${secrets.SCKEY}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译完成 || curl https://sc.ftqq.com/${secrets.SCKEY}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译失败
       
 
     - name: Upload bin directory
       uses: actions/upload-artifact@master
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      if: env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin
         path: openwrt/bin
@@ -164,7 +160,7 @@ jobs:
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
-        rename -v "s/^openwrt/${{steps.date.outputs.date3}}-openwrt/" *img.gz
+        rename -v "s/^openwrt/${date3}-openwrt/" *img.gz
         zip -r luci-app-adbyby-plus.zip *adbyby* || true
         zip -r luci-app-baidupcs-web.zip *baidupcs* || true
         zip -r luci-app-cifs-mount.zip *cifs-mount* || true
@@ -180,37 +176,36 @@ jobs:
         zip -r luci-app-zerotier.zip *zerotier* || true
         rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
-        echo "::set-output name=status::success"
       
     - name: Upload firmware directory
       uses: actions/upload-artifact@master
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      if: env.UPLOAD_FIRMWARE == 'true'
       with:
         name: OpenWrt_firmware
-        path: ${{ env.FIRMWARE }}
+        path: ${FIRMWARE}
       
     - name: Create release
       id: create_release
       uses: actions/create-release@master
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.UPLOAD_RELEASE == 'true'
       env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        GITHUB_TOKEN: ${secrets.REPO_TOKEN}
       with:
-        tag_name: ${{steps.date.outputs.date}}_${{ env.DEVICE_NAME }}
-        release_name: ${{steps.date.outputs.date2}} ${{ env.DEVICE_NAME }}
+        tag_name: ${date}_${DEVICE_NAME}
+        release_name: ${date2} ${DEVICE_NAME}
         draft: false
         prerelease: false     
 
     - name: Upload release asset
       uses: csexton/release-asset-action@master
-      if: steps.compile.outputs.status == 'success' && env.REPO_TOKEN && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.REPO_TOKEN && env.UPLOAD_RELEASE == 'true'
       with:
-        pattern: "${{ env.FIRMWARE }}/*"
-        github-token: ${{ secrets.REPO_TOKEN }}
-        release-url: ${{ steps.create_release.outputs.upload_url }}
+        pattern: "${FIRMWARE}/*"
+        github-token: ${secrets.REPO_TOKEN}
+        release-url: ${steps.create_release.outputs.upload_url}
         
     - name: Upload firmware to cowtransfer
-      if: env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+      if: env.UPLOAD_COWTRANSFER == 'true'
       run: |
         curl -fsSL https://git.io/cowtransfer | sh
         ./cowtransfer-uploader -b 2621440 -s -p 99 -t 3 --hash --silent ${FIRMWARE}
