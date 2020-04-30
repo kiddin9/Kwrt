@@ -128,7 +128,7 @@ jobs:
     - name: WeChat notification
       if: env.SCKEY && !cancelled()
       run: |
-        [ ${status} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译完成 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${date2} ${DEVICE_NAME} 编译失败
+        [ ${status} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt-${date3}-${DEVICE_NAME}编译完成 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt-${date3}-${DEVICE_NAME}编译失败
       
 
     - name: Upload bin directory
