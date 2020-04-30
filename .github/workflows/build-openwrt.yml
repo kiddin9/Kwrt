@@ -202,7 +202,7 @@ jobs:
       with:
         pattern: "${FIRMWARE}/*"
         github-token: ${{ secrets.REPO_TOKEN }}
-        release-url: ${steps.create_release.outputs.upload_url}
+        release-url: ${{ steps.create_release.outputs.upload_url }}
         
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_COWTRANSFER == 'true'
