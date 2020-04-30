@@ -95,15 +95,15 @@ jobs:
         )
         fi
         [ -e ../$CONFIG_FILE ] && mv ../$CONFIG_FILE .config
-        [ _$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=_$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=_$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+        [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
         echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
         make defconfig
         
     - name: Default PPPOE Setting
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
       run: |
-        sed -i '$i uci set network.wan.username=${PPPOE_USERNAME}' openwrt/package/*/*/default-settings/files/zzz-default-settings
-        sed -i '$i uci set network.wan.password=${PPPOE_PASSWD}' openwrt/package/*/*/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
         sed -i '$i uci commit network' openwrt/package/*/*/default-settings/files/zzz-default-settings
               
     - name: SSH connection to Actions
@@ -128,7 +128,7 @@ jobs:
     - name: WeChat notification
       if: env.SCKEY && !cancelled()
       run: |
-        [ ${status} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt-${date3}-${DEVICE_NAME}编译完成 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt-${date3}-${DEVICE_NAME}编译失败
+        [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt-${{ env.date3 }}-${{ env.DEVICE_NAME }}编译完成 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt-${{ env.date3 }}-${{ env.DEVICE_NAME }}编译失败
       
 
     - name: Upload bin directory
@@ -160,7 +160,7 @@ jobs:
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
-        rename -v "s/^openwrt/${date3}-openwrt/" *img.gz
+        rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *img.gz
         zip -r luci-app-adbyby-plus.zip *adbyby* || true
         zip -r luci-app-baidupcs-web.zip *baidupcs* || true
         zip -r luci-app-cifs-mount.zip *cifs-mount* || true
@@ -182,7 +182,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true'
       with:
         name: OpenWrt_firmware
-        path: ${FIRMWARE}
+        path: ${{ env.FIRMWARE }}
       
     - name: Create release
       id: create_release
@@ -191,8 +191,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        tag_name: ${date}_${DEVICE_NAME}
-        release_name: ${date2} ${DEVICE_NAME}
+        tag_name: ${{ env.date }}_${{ env.DEVICE_NAME }}
+        release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }}
         draft: false
         prerelease: false     
 
@@ -200,7 +200,7 @@ jobs:
       uses: csexton/release-asset-action@master
       if: env.REPO_TOKEN && env.UPLOAD_RELEASE == 'true'
       with:
-        pattern: "${FIRMWARE}/*"
+        pattern: "${{ env.FIRMWARE }}/*"
         github-token: ${{ secrets.REPO_TOKEN }}
         release-url: ${{ steps.create_release.outputs.upload_url }}
         
@@ -208,4 +208,4 @@ jobs:
       if: env.UPLOAD_COWTRANSFER == 'true'
       run: |
         curl -fsSL https://git.io/cowtransfer | sh
-        ./cowtransfer-uploader -b 2621440 -s -p 99 -t 3 --hash --silent ${FIRMWARE}
+        ./cowtransfer-uploader -b 2621440 -s -p 99 -t 3 --hash --silent ${{ env.FIRMWARE }}
