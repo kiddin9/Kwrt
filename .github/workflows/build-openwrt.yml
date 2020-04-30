@@ -96,7 +96,7 @@ jobs:
         fi
         [ -e ../$CONFIG_FILE ] && mv ../$CONFIG_FILE .config
         [ _$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=_$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=_$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
-        [ -s DEVICE_NAME ] && echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
+        echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
         make defconfig
         
     - name: Default PPPOE Setting
