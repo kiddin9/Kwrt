@@ -20,7 +20,6 @@ on:
 env:
   REPO_URL: https://github.com/openwrt/openwrt
   REPO_BRANCH: master
-  TARGET: x86_64
   CONFIG_FILE: X86_64.config
   DIY_SH: diy.sh
   FREE_UP_DISK: true
@@ -124,12 +123,14 @@ jobs:
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
         echo "::set-output name=status::success"
-        curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${{steps.date.outputs.date2}} ${{ env.TARGET }} 编译完成
+        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/' > DEVICE_NAME
+        [ -s DEVICE_NAME ] && echo "::set-env name=DEVICE_NAME::_$(cat DEVICE_NAME)"
+        curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${{steps.date.outputs.date2}} ${{ env.DEVICE_NAME }} 编译完成
 
     - name: WeChat notification
       if: steps.compile.outputs.status != 'success'
       run: |
-        curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${{steps.date.outputs.date2}} ${{ env.TARGET }} 编译失败
+        curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt ${{steps.date.outputs.date2}} ${{ env.DEVICE_NAME }} 编译失败
         echo "编译失败,请查看Compile日志"
         exit 1
       
@@ -195,8 +196,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        tag_name: ${{steps.date.outputs.date}}_${{ env.TARGET }}
-        release_name: ${{steps.date.outputs.date2}} ${{ env.TARGET }}
+        tag_name: ${{steps.date.outputs.date}}_${{ env.DEVICE_NAME }}
+        release_name: ${{steps.date.outputs.date2}} ${{ env.DEVICE_NAME }}
         draft: false
         prerelease: false     
 
