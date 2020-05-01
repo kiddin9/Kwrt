@@ -100,8 +100,9 @@ git clone https://github.com/openwrt/openwrt
 git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
-./scripts/feeds update -a && ./scripts/feeds install -a
+./scripts/feeds update -a
 ./diy.sh
+find "patches" -type f -name '*.patch'| xargs -i git apply {}
 cp -Rf diy/* ./
 mv X86_64.config .config
 make defconfig
@@ -112,8 +113,9 @@ cd openwrt && git pull && cd -
 cd Actions-OpenWrt-Nginx && git pull && cd -
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
-./scripts/feeds update -a && ./scripts/feeds install -a
+./scripts/feeds update -a
 ./diy.sh
+find "patches" -type f -name '*.patch'| xargs -i git apply {}
 cp -Rf diy/* ./
 make defconfig
    ```
