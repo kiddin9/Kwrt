@@ -24,7 +24,7 @@ env:
   DIY_SH: diy.sh
   FREE_UP_DISK: true
   SSH_ACTIONS: false
-  UPLOAD_BIN_DIR: false
+  UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   UPLOAD_COWTRANSFER: false
