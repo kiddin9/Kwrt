@@ -115,7 +115,6 @@ cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 ./scripts/feeds update -a
 ./diy.sh
-find "patches" -type f -name '*.patch'| xargs -i git apply {}
 cp -Rf diy/* ./
 make defconfig
    ```
