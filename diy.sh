@@ -30,7 +30,7 @@ git clone https://github.com/garypang13/luci-app-php-kodexplorer
 git clone https://github.com/garypang13/luci-app-eqos
 cd -
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
-cp -Rf ../diy/* ./
+cp -Rf ./diy/* ./
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/*/*/*/Makefile
 ./scripts/feeds update -a && ./scripts/feeds install -a
 
