@@ -83,8 +83,8 @@ jobs:
     - name: Load custom configuration
       run: |
         cp -Rf * openwrt/
-        chmod +x $DIY_SH
         cd openwrt
+        chmod +x $DIY_SH
         ./$DIY_SH
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE .config
         make defconfig
