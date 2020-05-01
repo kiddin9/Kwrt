@@ -123,6 +123,6 @@ sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by GaryPang'/g" package/base-files/files/etc/openwrt_release
 sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
-if [ -n "$(ls -A "../patches" 2>/dev/null)" ]; then
-   find "../patches" -type f -name '*.patch'| xargs -i git apply {}
+if [ -n "$(ls -A "patches" 2>/dev/null)" ]; then
+   find "patches" -type f -name '*.patch'| xargs -i git apply {}
 fi
