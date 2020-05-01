@@ -77,6 +77,9 @@ jobs:
         ln -s /mnt/openwrt/dl openwrt/dl
         ln -s /mnt/openwrt/staging_dir openwrt/staging_dir
 
+    - name: Update feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
