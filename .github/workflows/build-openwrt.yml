@@ -82,7 +82,7 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        cp -Rf * openwrt/
+        cp -Rf * openwrt/ || true
         cd openwrt
         chmod +x $DIY_SH
         ./$DIY_SH
