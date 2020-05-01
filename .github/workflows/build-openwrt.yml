@@ -77,12 +77,6 @@ jobs:
         ln -s /mnt/openwrt/dl openwrt/dl
         ln -s /mnt/openwrt/staging_dir openwrt/staging_dir
 
-    - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
-
-    - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
-
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
@@ -130,7 +124,6 @@ jobs:
       run: |
         [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译完成 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译失败
       
-
     - name: Upload bin directory
       uses: actions/upload-artifact@master
       if: env.UPLOAD_BIN_DIR == 'true'
