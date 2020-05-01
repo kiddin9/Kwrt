@@ -102,7 +102,6 @@ cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 ./scripts/feeds update -a
 ./diy.sh
-cp -Rf diy/* ./
 mv X86_64.config .config
 make defconfig
    ```
@@ -115,7 +114,6 @@ cd openwrt
 rm -Rf feeds
 ./scripts/feeds update -a
 ./diy.sh
-cp -Rf diy/* ./
 make defconfig
    ```
 5. 如需修改默认配置比如定制插件等,请执行 `make menuconfig`
