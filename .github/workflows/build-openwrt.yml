@@ -28,6 +28,10 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   UPLOAD_COWTRANSFER: false
+  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+  PPPOE_USERNAME: ${{ secrets.PPPOE_USERNAME }}
+  PPPOE_PASSWD: ${{ secrets.PPPOE_PASSWD }}
+  SCKEY: ${{ secrets.SCKEY }}
   TZ: Asia/Shanghai
 
 jobs:
@@ -49,9 +53,18 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         curl -fsSL https://raw.githubusercontent.com/P3TERX/dotfiles/master/.bashrc >> ~/.bashrc
+    
+    - name: Get current date
+      id: date
+      run: |
+        echo "::set-env name=date::$(date +'%m/%d_%Y_%H/%M')"
+        echo "::set-env name=date2::$(date +'%m/%d %Y')"
+        echo "::set-env name=date3::$(date +'%m.%d')"
 
     - name: Clone source code
-      run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+      run: |
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        mv feeds.conf openwrt/
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
@@ -67,18 +80,24 @@ jobs:
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
-    - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
-
     - name: Load custom configuration
       run: |
-        [ -e files ] && mv files openwrt/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x $DIY_SH
+        cp -Rf * openwrt/
         cd openwrt
-        ../$DIY_SH
+        chmod +x $DIY_SH
+        ./$DIY_SH
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE .config
         make defconfig
-
+        [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+        echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
+        
+    - name: Default PPPOE Setting
+      if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
+      run: |
+        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
+        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
+        sed -i '$i uci commit network' openwrt/package/*/*/default-settings/files/zzz-default-settings
+              
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
@@ -92,53 +111,92 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
-      id: compile
       run: |
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
-        echo "::set-output name=status::success"
+        echo "::set-env name=status::success"
 
+    - name: WeChat notification
+      if: env.SCKEY && !cancelled()
+      run: |
+        [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译完成 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译失败
+      
     - name: Upload bin directory
       uses: actions/upload-artifact@master
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      if: env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin
         path: openwrt/bin
 
     - name: Organize files
       id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      continue-on-error: true
       run: |
-        mkdir firmware && find openwrt/bin/targets/*/*/* -maxdepth 0 -name "*uefi-gpt*" -or -name "*combined*" -or -name "*.vmdk" -or -name "sha256sums" | xargs -i mv -f {} ./firmware/
+        mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
+        -name "*combined*" \
+        -or -name "sha256sums" \
+        -or -name "*adbyby*" \
+        -or -name "*cifs-mount*" \
+        -or -name "*music-remote-center*" -or -name "*forked-daapd*" \
+        -or -name "*airplay2*" \
+        -or -name "*openclash*" \
+        -or -name "*softethervpn*" \
+        -or -name "*syncdial*" \
+        -or -name "*usb-printer*" \
+        -or -name "*verysync*" \
+        -or -name "*vsftpd*" \
+        -or -name "*xlnetacc*" \
+        -or -name "*zerotier*" \
+        | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
+        rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *img.gz
+        zip -r luci-app-adbyby-plus.zip *adbyby* || true
+        zip -r luci-app-baidupcs-web.zip *baidupcs* || true
+        zip -r luci-app-cifs-mount.zip *cifs-mount* || true
+        zip -r luci-app-music-remote-center.zip *music-remote-center* *forked-daapd* || true
+        zip -r luci-app-airplay2.zip *airplay2* || true
+        zip -r luci-app-openclash.zip *openclash* || true
+        zip -r luci-app-softethervpn.zip *softethervpn* || true
+        zip -r luci-app-syncdial.zip *syncdial* || true
+        zip -r luci-app-usb-printer.zip *usb-printer* || true
+        zip -r luci-app-verysync.zip *verysync* || true
+        zip -r luci-app-vsftpd.zip *vsftpd* || true
+        zip -r luci-app-xlnetacc.zip *xlnetacc* || true
+        zip -r luci-app-zerotier.zip *zerotier* || true
+        rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
-        echo "::set-output name=status::success"
       
     - name: Upload firmware directory
       uses: actions/upload-artifact@master
-      if: steps.organize.outputs.status == 'success' && !cancelled()
+      if: env.UPLOAD_FIRMWARE == 'true'
       with:
         name: OpenWrt_firmware
         path: ${{ env.FIRMWARE }}
-        
-    - name: Get current date
-      id: date
-      run: echo "::set-output name=date::$(date +'%m/%d,%Y')"
       
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v1-release
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@master
+      if: env.UPLOAD_RELEASE == 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        repo_token: ${{ secrets.REPO_TOKEN }}
-        file: ${{ env.FIRMWARE }}/*
-        tag: ${{steps.date.outputs.date}}
-        overwrite: true
-        file_glob: true
+        tag_name: ${{ env.date }}_${{ env.DEVICE_NAME }}
+        release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }}
+        draft: false
+        prerelease: false     
+
+    - name: Upload release asset
+      uses: csexton/release-asset-action@master
+      if: env.REPO_TOKEN && env.UPLOAD_RELEASE == 'true'
+      with:
+        pattern: "${{ env.FIRMWARE }}/*"
+        github-token: ${{ secrets.REPO_TOKEN }}
+        release-url: ${{ steps.create_release.outputs.upload_url }}
         
     - name: Upload firmware to cowtransfer
-      if: env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+      if: env.UPLOAD_COWTRANSFER == 'true'
       run: |
         curl -fsSL https://git.io/cowtransfer | sh
-        ./cowtransfer-uploader -b 2621440 -s -p 99 -t 3 --hash --silent ${FIRMWARE}
+        ./cowtransfer-uploader -b 2621440 -s -p 99 -t 3 --hash --silent ${{ env.FIRMWARE }}

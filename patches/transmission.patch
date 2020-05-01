@@ -1,0 +1,9 @@
+--- /feeds/luci/applications/luci-app-transmission/luasrc/controller/transmission.lua
++++ /feeds/luci/applications/luci-app-transmission/luasrc/controller/transmission.lua
+@@ -9,4 +9,5 @@
+ 	end
+ 
+-	local page = entry({"admin", "services", "transmission"}, cbi("transmission"), _("Transmission"))
++	entry({"admin", "nas"}, firstchild(), "NAS", 45).dependent = false
++	local page = entry({"admin", "nas", "transmission"}, cbi("transmission"), _("Transmission"))
+ 	page.dependent = true
