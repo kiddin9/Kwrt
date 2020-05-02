@@ -38,7 +38,6 @@ rm -Rf package/*/*/qBittorrent/patches
 sed -i 's/PKG_SOURCE_URL:=.*/PKG_SOURCE_URL:=https:\/\/github.com\/c0re100\/qBittorrent-Enhanced-Edition/g' package/*/*/qBittorrent/Makefile
 sed -i 's/PKG_HASH.*/PKG_SOURCE_PROTO:=git\nPKG_SOURCE_VERSION:=latest/g' package/*/*/qBittorrent/Makefile
 sed -i '/PKG_BUILD_DIR/d' package/*/*/qBittorrent/Makefile
-sed -i 's/+python\( \|\$\)/+python3/g' package/*/*/*/Makefile
 sed -i 's/liuzhuoling2011/garypang13/g' package/*/*/baidupcs-web/Makefile
 rm -Rf feeds/packages/lang/php7 && svn co https://github.com/openwrt/packages/branches/openwrt-19.07/lang/php7 feeds/packages/lang/php7
 rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded files/usr/share/amule/webserver/AmuleWebUI-Reloaded
@@ -118,6 +117,8 @@ sed -i "/luci\/i18n/d" package/*/custom/*/Makefile
 sed -i "/*\.po/d" package/*/custom/*/Makefile
 sed -i "s/+luci\( \|\$\)//g"  package/*/*/*/Makefile
 sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
+sed -i 's/+python\( \|\$\)/+python3/g' package/*/*/*/Makefile
+sed -i 's/@IPV6\( \|\$\)//g' package/*/*/*/netfilter.mk
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
 sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
