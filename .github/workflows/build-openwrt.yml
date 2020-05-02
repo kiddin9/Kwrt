@@ -41,6 +41,20 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
+  
+    - name: Load Settings.ini
+      run: |    
+        source "${GITHUB_WORKSPACE}/settings.ini"
+        echo "::set-env name=REPO_URL::${REPO_URL}"
+        echo "::set-env name=REPO_BRANCH::${REPO_BRANCH}"
+        echo "::set-env name=CONFIG_FILE::${CONFIG_FILE}"
+        echo "::set-env name=DIY_SH::${DIY_SH}"
+        echo "::set-env name=FREE_UP_DISK::${FREE_UP_DISK}"
+        echo "::set-env name=SSH_ACTIONS::${SSH_ACTIONS}"
+        echo "::set-env name=UPLOAD_BIN_DIR_FOR_ARTIFACT::${UPLOAD_BIN_DIR_FOR_ARTIFACT}"
+        echo "::set-env name=UPLOAD_FIRMWARE_FOR_ARTIFACT::${UPLOAD_FIRMWARE_FOR_ARTIFACT}"
+        echo "::set-env name=UPLOAD_FIRMWARE_FOR_RELEASE::${UPLOAD_FIRMWARE_FOR_RELEASE}"
+        echo "::set-env name=UPLOAD_FIRMWARE_TO_COWTRANSFER::${UPLOAD_FIRMWARE_TO_COWTRANSFER}"
 
     - name: Initialization environment
       env:
@@ -125,7 +139,7 @@ jobs:
       
     - name: Upload bin directory
       uses: actions/upload-artifact@master
-      if: env.UPLOAD_BIN_DIR == 'true'
+      if: env.UPLOAD_BIN_DIR_FOR_ARTIFACT == 'true'
       with:
         name: OpenWrt_bin
         path: openwrt/bin
@@ -169,9 +183,9 @@ jobs:
         rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
       
-    - name: Upload firmware directory
+    - name: Upload firmware to Artifacts
       uses: actions/upload-artifact@master
-      if: env.UPLOAD_FIRMWARE == 'true'
+      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: OpenWrt_firmware
         path: ${{ env.FIRMWARE }}
@@ -179,7 +193,7 @@ jobs:
     - name: Create release
       id: create_release
       uses: actions/create-release@master
-      if: env.UPLOAD_RELEASE == 'true'
+      if: env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
@@ -190,7 +204,7 @@ jobs:
 
     - name: Upload release asset
       uses: csexton/release-asset-action@master
-      if: env.REPO_TOKEN && env.UPLOAD_RELEASE == 'true'
+      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       with:
         pattern: "${{ env.FIRMWARE }}/*"
         github-token: ${{ secrets.REPO_TOKEN }}
