@@ -18,16 +18,6 @@ on:
     types: started
 
 env:
-  REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: master
-  CONFIG_FILE: X86_64.config
-  DIY_SH: diy.sh
-  FREE_UP_DISK: true
-  SSH_ACTIONS: false
-  UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: true
-  UPLOAD_COWTRANSFER: false
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
   PPPOE_USERNAME: ${{ secrets.PPPOE_USERNAME }}
   PPPOE_PASSWD: ${{ secrets.PPPOE_PASSWD }}
@@ -183,7 +173,7 @@ jobs:
         rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
       
-    - name: Upload firmware to Artifacts
+    - name: Upload firmware for artifact
       uses: actions/upload-artifact@master
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
@@ -202,7 +192,7 @@ jobs:
         draft: false
         prerelease: false     
 
-    - name: Upload release asset
+    - name: Upload firmware for release
       uses: csexton/release-asset-action@master
       if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       with:
@@ -211,7 +201,7 @@ jobs:
         release-url: ${{ steps.create_release.outputs.upload_url }}
         
     - name: Upload firmware to cowtransfer
-      if: env.UPLOAD_COWTRANSFER == 'true'
+      if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
