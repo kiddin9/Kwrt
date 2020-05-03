@@ -71,8 +71,6 @@ sed -i 's/ +kmod-fs-exfat//g' package/*/*/automount/Makefile
 sed -i 's/net.netfilter.nf_conntrack_max=16384/net.netfilter.nf_conntrack_max=105535/g' package/kernel/linux/files/sysctl-nf-conntrack.conf
 rm -Rf package/network/config/firewall/patches/fullconenat.patch
 wget -P package/network/config/firewall/patches/ https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
-sed -i "s/option forward		REJECT/option forward		REJECT\n	option fullcone	1/g" package/network/config/firewall/files/firewall.config
-sed -i "s/option bbr '0'/option bbr '1'/g" package/*/*/luci-app-flowoffload/root/etc/config/flowoffload
 sed -i 's/getElementById("cbid.amule.main/getElementById("widget.cbid.amule.main/g' package/*/*/luci-app-amule/luasrc/view/amule/overview_status.htm
 getversion(){
 ver=$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/$1/releases/latest) | grep -o -E "[0-9.]+")
