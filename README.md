@@ -64,6 +64,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + cifsd + NFS 网络共享
 + Netdata 全能性能监控
 + diskman 磁盘管理
++ dockerman 玩转docker必备
 + qBittorrent BT下载工具
 + Transmission BT/PT下載工具
 + 可道云 做NAS必备
