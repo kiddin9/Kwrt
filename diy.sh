@@ -55,9 +55,6 @@ sed -i 's/LUCI_DEPENDS:=/LUCI_DEPENDS:=+transmission-daemon-openssl /g' package/
 sed -i 's/+uhttpd //g' package/*/*/luci/Makefile
 sed -i '/_redirect2ssl/d' package/*/*/nginx/Makefile
 sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
-sed -i "s/sed '\/^$\/d' \"\$config_file_tmp\" >\"\$config_file\"/cd \/usr\/share\/aria2 \&\& sh .\/tracker.sh\ncat \/usr\/share\/aria2\/aria2.conf > \"\$config_file\"\n\
-echo '' >> \"\$config_file\"\nsed '\/^$\/d' \"\$config_file_tmp\" >> \"\$config_file\"/g" package/*/*/aria2/files/aria2.init
-sed -i 's/runasuser "$config_dir"/runasuser "$config_dir"\nwget -P "$config_dir" -O "$config_dir\/nodes.dat" http:\/\/upd.emule-security.org\/nodes.dat/g' package/*/*/luci-app-amule/root/etc/init.d/amule
 sed -i '$a /etc/smartdns' package/base-files/files/etc/sysupgrade.conf
 sed -i '$a /www/kod/config' package/base-files/files/etc/sysupgrade.conf
 sed -i '$a /etc/qBittorrent' package/base-files/files/etc/sysupgrade.conf
@@ -74,8 +71,6 @@ sed -i 's/ +kmod-fs-exfat//g' package/*/*/automount/Makefile
 sed -i 's/net.netfilter.nf_conntrack_max=16384/net.netfilter.nf_conntrack_max=105535/g' package/kernel/linux/files/sysctl-nf-conntrack.conf
 rm -Rf package/network/config/firewall/patches/fullconenat.patch
 wget -P package/network/config/firewall/patches/ https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
-sed -i "s/('Drop invalid packets'));/('Drop invalid packets'));\n o = s.option(form.Flag, 'fullcone', _('Enable FullCone NAT'));/g" \
-package/*/*/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
 sed -i "s/option forward		REJECT/option forward		REJECT\n	option fullcone	1/g" package/network/config/firewall/files/firewall.config
 sed -i "s/option bbr '0'/option bbr '1'/g" package/*/*/luci-app-flowoffload/root/etc/config/flowoffload
 sed -i 's/getElementById("cbid.amule.main/getElementById("widget.cbid.amule.main/g' package/*/*/luci-app-amule/luasrc/view/amule/overview_status.htm
