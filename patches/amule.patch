@@ -1,0 +1,5 @@
+--- /feeds/custom/luci/luci-app-amule/root/etc/init.d/amule
++++ /feeds/custom/luci/luci-app-amule/root/etc/init.d/amule
+@@ -124,1 +124,2 @@ amule() {
+		chown $group:$runasuser "$config_dir"
+		wget -P "$config_dir" -O "$config_dir/nodes.dat" http://upd.emule-security.org/nodes.dat
