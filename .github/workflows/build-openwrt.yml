@@ -172,6 +172,10 @@ jobs:
         zip -r luci-app-zerotier.zip *zerotier* || true
         rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
+        Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
+        RANDOM=$$$(date +%s)
+        rand=$[$RANDOM % ${#Emoji[@]}]
+        echo "::set-env name=EMOJI::${Emoji[$rand]}"
       
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@master
@@ -188,7 +192,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         tag_name: ${{ env.date }}_${{ env.DEVICE_NAME }}
-        release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }}
+        release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
         draft: false
         prerelease: false     
 
