@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Build OpenWrt
+name: Build OpenWrt x86_64
 
 on: 
   # push: 
@@ -181,7 +181,7 @@ jobs:
       uses: actions/upload-artifact@master
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
-        name: OpenWrt_firmware
+        name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
         path: ${{ env.FIRMWARE }}
       
     - name: Create release
