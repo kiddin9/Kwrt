@@ -1,0 +1,6 @@
+--- /feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
++++ /feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
+@@ -45,2 +45,3 @@
+ 		o = s.option(form.Flag, 'drop_invalid', _('Drop invalid packets'));
++		o = s.option(form.Flag, 'fullcone', _('Enable FullCone NAT'));
+ 
