@@ -37,6 +37,12 @@ if [ ! -f /etc/config/placeholder ]; then
   uci del dockerman.local.daemon_ea
   uci commit dockerman
   
+  uci set firewall.@defaults[0].fullcone='1'
+  uci commit firewall
+  
+  uci set flowoffload.@flow[0].bbr='1'
+  uci commit flowoffload
+  
   uci set shadowsocksr.@global[0].pdnsd_enable='0'
   uci del shadowsocksr.@global[0].tunnel_forward
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
