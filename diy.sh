@@ -127,4 +127,4 @@ sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
 if [ -n "$(ls -A "patches" 2>/dev/null)" ]; then
    find "patches" -type f -name '*.patch'| xargs -i git apply {}
 fi
-cp -f default-settings package/*/*/*/files/zzz-default-settings
+cp -f default-settings package/*/*/default-settings/files/zzz-default-settings
