@@ -135,6 +135,7 @@ jobs:
       run: |
         mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
         -name "*combined*" \
+         -name "*vmdk*" \
         -or -name "sha256sums" \
         -or -name "*adbyby*" \
         -or -name "*cifs-mount*" \
