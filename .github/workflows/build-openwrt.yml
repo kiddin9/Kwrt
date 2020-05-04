@@ -194,9 +194,10 @@ jobs:
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@master
+      continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
-        name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
+        name: ${{ env.date3 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
         path: ${{ env.FIRMWARE }}
 
     - name: Upload firmware to cowtransfer
