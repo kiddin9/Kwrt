@@ -95,7 +95,7 @@ sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/*/luci-app-*/Makefile
 sed -i "/foreach pkg/d" feeds/luci/luci.mk;
 sed -i "/foreach pkg/d" package/*/*/luci-*/Makefile
-find package/*/luci/luci-*/ package/*/luci/luci/ -maxdepth 1 -name Makefile | xargs -i sed -i '$a $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))' {}
+find package/*/*/luci-*/ package/*/*/luci/ -maxdepth 1 -name Makefile | xargs -i sed -i '$a $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))' {}
 find package/*/custom/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
 find package/*/custom/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
 sed -i "/bin\/upx/d" package/*/*/*/Makefile
