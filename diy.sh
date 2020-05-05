@@ -60,6 +60,7 @@ sed -i '$a /etc/qBittorrent' package/base-files/files/etc/sysupgrade.conf
 sed -i '$a /root/amule' package/base-files/files/etc/sysupgrade.conf
 sed -i '$a /etc/amule' package/base-files/files/etc/sysupgrade.conf
 sed -i '$a /etc/aria2' package/base-files/files/etc/sysupgrade.conf
+sed -i '$a /etc/rclone' package/base-files/files/etc/sysupgrade.conf
 find target/linux/x86 -name "config*" | xargs -i sed -i '$a CONFIG_64BIT=y\n# CONFIG_WLAN is not set\n# CONFIG_WIRELESS is not set\
 \nCONFIG_NETFILTER=y\nCONFIG_NETFILTER_XTABLES=y\nCONFIG_NETFILTER_XT_MATCH_STRING=y\nCONFIG_HWMON=y\nCONFIG_SENSORS_CORETEMP=y\nCONFIG_X86_ACPI_CPUFREQ_CPB=y' {}
 sed -i '/continue$/d' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
