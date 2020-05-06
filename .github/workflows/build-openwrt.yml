@@ -173,7 +173,18 @@ jobs:
         RANDOM=$$$(date +%s)
         rand=$[$RANDOM % ${#Emoji[@]}]
         echo "::set-env name=EMOJI::${Emoji[$rand]}"
-      
+ 
+    - name: Upload firmware to cowtransfer
+      if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
+      run: |
+        cowname=$(OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }})
+        zip -r "$cowname.zip" *combined* || true
+        curl -fsSL git.io/file-transfer | sh
+        cowurl=$(./transfer cow --block 2621440 -s -p 64 --no-progress "$cowname.zip")
+        cowurl=$(echo $download | grep -o -E "https[^ ]*")
+        echo "::set-env name=COWURL::$cowurl"
+        echo "::warning file=cowtransfer.com::$(cowurl)" 
+ 
     - name: Create release
       id: create_release
       uses: actions/create-release@master
@@ -183,6 +194,9 @@ jobs:
       with:
         tag_name: ${{ env.date }}_${{ env.DEVICE_NAME }}
         release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
+        body: |
+            国内加速下载:
+            ${{ env.EMOJI }} ${{ env.COWURL }} ${{ env.EMOJI }}
         draft: false
         prerelease: false     
 
@@ -201,13 +215,6 @@ jobs:
       with:
         name: ${{ env.date3 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
         path: ${{ env.FIRMWARE }}
-
-    - name: Upload firmware to cowtransfer
-      if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
         
     - name: WeChat notification
       if: env.SCKEY && !cancelled()
