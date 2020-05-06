@@ -46,7 +46,6 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 ### 默认插件包含:
 
 + SSR Plus
-+ PassWall
 + AdguardHome DNS+恶意网址过滤
 + 上网时间控制
 + 微信推送
