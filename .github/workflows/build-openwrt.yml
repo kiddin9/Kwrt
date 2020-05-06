@@ -138,6 +138,7 @@ jobs:
         -or -name "*vmdk*" \
         -or -name "sha256sums" \
         -or -name "*adbyby*" \
+        -or -name "*passwall*" \
         -or -name "*cifs-mount*" \
         -or -name "*music-remote-center*" -or -name "*forked-daapd*" \
         -or -name "*airplay2*" \
