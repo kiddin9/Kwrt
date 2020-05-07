@@ -71,6 +71,7 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set smartdns.@smartdns[0].tcp_server='1'
   uci set smartdns.@smartdns[0].prefetch_domain='1'
   uci set smartdns.@smartdns[0].serve_expired='1'
+  uci set smartdns.@smartdns[0].ipv6_server='0'
   uci commit smartdns
   
   #uci del dhcp.@dnsmasq[0].resolvfile
