@@ -131,7 +131,6 @@ jobs:
 
     - name: Organize files
       id: organize
-      continue-on-error: true
       run: |
         mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
         -name "*combined*" \
@@ -176,6 +175,7 @@ jobs:
  
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
+      continue-on-error: true
       run: |
         cowname="OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }}"
         zip -r "$cowname.zip" *combined* || true
