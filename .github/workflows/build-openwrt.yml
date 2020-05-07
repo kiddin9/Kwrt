@@ -153,7 +153,7 @@ jobs:
         cd firmware
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *combined*
         zip -r luci-app-adbyby-plus.zip *adbyby* || true
-        zip -r luci-app-passwall.zip *passwall* *ChinaDNS* *haproxy* || true
+        zip -r luci-app-passwall.zip *passwall* *chinadns* *haproxy* || true
         zip -r luci-app-baidupcs-web.zip *baidupcs* || true
         zip -r luci-app-cifs-mount.zip *cifs-mount* || true
         zip -r luci-app-music-remote-center.zip *music-remote-center* *forked-daapd* || true
