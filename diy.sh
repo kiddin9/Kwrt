@@ -77,7 +77,7 @@ ver=$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/$1
 }
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion v2ray/v2ray-core)/g" package/*/*/v2ray/Makefile
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion AdguardTeam/AdGuardHome)/g" package/*/*/openwrt-adguardhome/Makefile
-sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion Erope/baidupcs-web)/g" package/*/*/baidupcs-web/Makefile
+sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=v$(getversion Erope/baidupcs-web)/g" package/*/*/baidupcs-web/Makefile
 sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" package/feeds/custom/*/Makefile
 find package/*/*/v2ray/ package/*/*/openwrt-adguardhome/ package/*/*/baidupcs-web/ -maxdepth 1 -name "Makefile" | xargs -i sed -i "s/v\$(PKG_VERSION)/\$(PKG_VERSION)/g" {}
 find package/*/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefile" ! -path "*rclone*" -name "Makefile" \
