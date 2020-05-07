@@ -177,13 +177,14 @@ jobs:
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
       continue-on-error: true
       run: |
+        cd firmware
         cowname="OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }}"
         zip -r "$cowname.zip" *combined* || true
         curl -fsSL git.io/file-transfer | sh
         cowurl=$(./transfer cow --block 2621440 -s -p 64 --no-progress "$cowname.zip")
         cowurl=$(echo $cowurl | grep -o -E "https[^ ]*")
         echo "::set-env name=COWURL::$cowurl"
-        echo "::warning file=cowtransfer.com::$(cowurl)" 
+        echo "Download url:${{ env.EMOJI }} ${{ env.COWURL }} ${{ env.EMOJI }}"
  
     - name: Create release
       id: create_release
@@ -196,7 +197,7 @@ jobs:
         release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
         body: |
             国内加速下载:
-            ${{ env.EMOJI }} ${{ env.COWURL }} ${{ env.EMOJI }}
+            ${{ env.COWURL }} ${{ env.EMOJI }}
         draft: false
         prerelease: false     
 
