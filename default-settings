@@ -13,6 +13,9 @@ sed -i "s/127.0.0.1:5335/127.0.0.1:5555/g" /etc/AdGuardHome.yaml
 
 rm -rf /tmp/luci-*
 
+uci set smartdns.@smartdns[0].ipv6_server='0'
+uci commit smartdns
+  
 if [ ! -f /etc/config/placeholder ]; then
   uci set luci.main.lang=zh_cn
   uci set luci.main.mediaurlbase=/luci-static/argon
@@ -71,7 +74,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set smartdns.@smartdns[0].tcp_server='1'
   uci set smartdns.@smartdns[0].prefetch_domain='1'
   uci set smartdns.@smartdns[0].serve_expired='1'
-  uci set smartdns.@smartdns[0].ipv6_server='0'
   uci commit smartdns
   
   #uci del dhcp.@dnsmasq[0].resolvfile
