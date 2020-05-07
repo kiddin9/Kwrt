@@ -177,7 +177,7 @@ jobs:
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
       run: |
-        cowname=$(OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }})
+        cowname="OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }}"
         zip -r "$cowname.zip" *combined* || true
         curl -fsSL git.io/file-transfer | sh
         cowurl=$(./transfer cow --block 2621440 -s -p 64 --no-progress "$cowname.zip")
