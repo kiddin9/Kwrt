@@ -1,0 +1,6 @@
+--- /package/network/services/dnsmasq/files/dnsmasq.init
++++ /package/network/services/dnsmasq/files/dnsmasq.init
+@@ -868,2 +868,3 @@
+ 	append_bool "$cfg" rapidcommit "--dhcp-rapid-commit"
++	append_bool "$cfg" filter_aaaa "--filter-aaaa"
+ 	append_bool "$cfg" scriptarp "--script-arp"
