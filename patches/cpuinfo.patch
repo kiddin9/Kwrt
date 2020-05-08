@@ -50,9 +50,6 @@
 +			cpuinfo     = data[2],
 +		    luciversion = data[3];
  
-
---- /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-+++ /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 @@ -60,2 +67,3 @@
  			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,
 +			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp,
