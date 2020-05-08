@@ -1,0 +1,59 @@
+--- /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
++++ /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
+@@ -45,2 +45,12 @@
+ 
++    getCPUInfo = {
++        call = function()
++            local sys = require "luci.sys"
++            local rv = {}
++            rv.cpufreq      = sys.exec("grep 'MHz' /proc/cpuinfo | cut -c11- | sed -n '1p' | tr -d '\n'")
++            rv.cputemp      = sys.exec("sensors|grep Core|awk '{print $1,$2,$3}'|tr '\n' ' '")
++            return rv
++        end
++    },
++
+ 	setLocaltime = {
+
+--- /feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
++++ /feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
+@@ -63,3 +63,3 @@
+ 				"iwinfo": [ "assoclist", "freqlist", "txpowerlist", "countrylist" ],
+-				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints" ],
++				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints", "getCPUInfo" ],
+ 				"luci-rpc": [ "getBoardJSON", "getDHCPLeases", "getDSLStatus", "getDUIDHints", "getHostHints", "getNetworkDevices", "getWirelessDevices" ],
+
+--- /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+@@ -15,17 +15,24 @@
+ 
++var callCPUInfo = rpc.declare({
++    object: 'luci',
++    method: 'getCPUInfo'
++});
++
+ return baseclass.extend({
+ 	title: _('System'),
+ 
+ 	load: function() {
+ 		return Promise.all([
+ 			L.resolveDefault(callSystemBoard(), {}),
+ 			L.resolveDefault(callSystemInfo(), {}),
++			L.resolveDefault(callCPUInfo(), {}),
+ 			fs.lines('/usr/lib/lua/luci/version.lua')
+ 		]);
+ 	},
+ 
+ 	render: function(data) {
+ 		var boardinfo   = data[0],
+ 		    systeminfo  = data[1],
+-		    luciversion = data[2];
++			cpuinfo     = data[2],
++		    luciversion = data[3];
+ 
+
+--- /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+@@ -60,2 +67,3 @@
+ 			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,
++			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp,
+ 			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
