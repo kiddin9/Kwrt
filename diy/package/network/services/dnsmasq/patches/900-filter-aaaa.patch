@@ -13,16 +13,10 @@
  #define LOPT_SCRIPT_TIME   360
 +#define LOPT_FILTER_AAAA   361
   
-
---- a/src/option.c
-+++ b/src/option.c
 @@ -341,2 +342,3 @@
      { "dhcp-ignore-clid", 0, 0,  LOPT_IGNORE_CLID },
 +    { "filter-aaaa", 0, 0, LOPT_FILTER_AAAA },
      { NULL, 0, 0, 0 }
-
---- a/src/option.c
-+++ b/src/option.c
 @@ -520,2 +522,3 @@
    { LOPT_SCRIPT_TIME, OPT_LEASE_RENEW, NULL, gettext_noop("Call dhcp-script when lease expiry changes."), NULL },
 +  { LOPT_FILTER_AAAA, OPT_FILTER_AAAA, NULL, gettext_noop("Filter all AAAA requests."), NULL },
