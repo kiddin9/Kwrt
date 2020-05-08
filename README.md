@@ -109,7 +109,7 @@ make defconfig
 4. 二次编译执行脚本
 ```bash
 cd openwrt && git pull && cd -
-cd Actions-OpenWrt-Nginx && git pull && cd -
+rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 rm -Rf feeds
