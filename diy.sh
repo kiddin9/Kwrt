@@ -26,6 +26,7 @@ svn co https://github.com/ElonH/Rclone-OpenWrt/trunk/rclone-webui-react
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
 git clone https://github.com/pexcn/openwrt-chinadns-ng.git chinadns-ng
+svn co https://github.com/Lienol/openwrt-package/trunk/package/brook
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
 svn co https://github.com/solidus1983/luci-theme-opentomato/branches/v19.07/luci/themes/luci-theme-opentomato
 
