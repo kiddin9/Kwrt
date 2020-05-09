@@ -1,0 +1,20 @@
+--- package/feeds/packages/netdata/Makefile
++++ package/feeds/packages/netdata/Makefile 
+@@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/package.mk
+ define Package/netdata
+   SECTION:=admin
+   CATEGORY:=Administration
+-  DEPENDS:=+zlib +libuuid +libmnl +libjson-c +libuv
++  DEPENDS:=+zlib +libuuid +libmnl +libjson-c +libuv +libopenssl +liblz4 +libJudy
+   TITLE:=Real-time performance monitoring tool
+   URL:=https://www.netdata.cloud/
+ endef
+@@ -52,8 +52,6 @@ CONFIGURE_ARGS += \
+ 	--with-math \
+ 	--enable-lto \
+ 	--without-libcap \
+-	--disable-https \
+-	--disable-dbengine \
+ 	--disable-plugin-nfacct \
+ 	--disable-plugin-freeipmi \
+ 	--disable-plugin-cups \
