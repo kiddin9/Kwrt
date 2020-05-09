@@ -3,8 +3,8 @@
 @@ -343,2 +343,9 @@
  
 +		o = s.taboption("advanced", form.Value, "mini_ttl",
-+			_("Minimum TTL to send to clients"),
-+			_("Modify DNS entries minimum TTL (max is 86400, 0 is no modify)"))
++			_('Minimum TTL to send to clients'),
++			_('Modify DNS entries minimum TTL (max is 86400, 0 is no modify)'))
 +		o.optional = true
 +		o.datatype = "range(0,86400)"
 +		o.placeholder = 0
