@@ -181,7 +181,7 @@ jobs:
         cowurl=$(./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE})
         cowurl=$(echo $cowurl | grep -o -E "https[^ ]*")
         echo "::set-env name=COWURL::$cowurl"
-        echo "Download Link: ${{ env.EMOJI }} ${{ env.COWURL }} ${{ env.EMOJI }}"
+        echo "Download Link: ${{ env.EMOJI }} $cowurl ${{ env.EMOJI }}"
  
     - name: Create release
       id: create_release
