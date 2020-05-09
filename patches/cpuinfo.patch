@@ -53,5 +53,5 @@
  
 @@ -60,2 +67,3 @@
  			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,
-+			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp + '  ' +_('CPU usage:') +'  ' +cpuinfo.cpuusage,
++			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp + '　' + _('CPU usage:') +' ' + cpuinfo.cpuusage,
  			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
