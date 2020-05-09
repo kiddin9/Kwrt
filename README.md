@@ -98,7 +98,7 @@ sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git
 3. 首次编译执行脚本:
 ```bash
 git clone https://github.com/openwrt/openwrt
-git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
+https://github.com/yangxiangguo/Actions-OpenWrt-Nginx.git
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 ./scripts/feeds update -a
