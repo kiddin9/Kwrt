@@ -90,7 +90,7 @@ jobs:
         cp -Rf * openwrt/ || true
         cd openwrt
         chmod +x $DIY_SH
-        ./$DIY_SH
+        ./$DIY_SH >dev/null
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE .config
         make defconfig
         [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
