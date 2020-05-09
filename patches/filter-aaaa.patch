@@ -4,7 +4,7 @@
  			_('Additional Hosts files')).optional = true;
 +			
 +		o = s.taboption("advanced", form.Flag, "filter_aaaa",
-+	  _("Disable IPv6 DNS forwards"),
-+	  _("Filter IPv6(AAAA) DNS Query Name Resolve"));
-+		o.optional = true
++			_("Disable IPv6 DNS forwards"),
++			_("Filter IPv6(AAAA) DNS Query Name Resolve"));
++		o.optional = true;
  
