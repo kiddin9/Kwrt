@@ -4,17 +4,14 @@
  define Package/netdata
    SECTION:=admin
    CATEGORY:=Administration
--  DEPENDS:=+zlib +libuuid +libmnl +libjson-c +libuv
-+  DEPENDS:=+zlib +libuuid +libmnl +libjson-c +libuv +libopenssl +liblz4 +libJudy
+-  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c
++  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c +libopenssl +liblz4 +libJudy
    TITLE:=Real-time performance monitoring tool
    URL:=https://www.netdata.cloud/
  endef
-@@ -52,8 +52,6 @@ CONFIGURE_ARGS += \
- 	--with-math \
- 	--enable-lto \
+@@ -55,4 +55,2 @@ CONFIGURE_ARGS += \
  	--without-libcap \
 -	--disable-https \
 -	--disable-dbengine \
  	--disable-plugin-nfacct \
- 	--disable-plugin-freeipmi \
- 	--disable-plugin-cups \
+
