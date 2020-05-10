@@ -233,7 +233,6 @@ EOF
 fi
 
 if [ -f /etc/config/jia ]; then
-  /etc/init.d/amule disable
   sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
 fi
 
@@ -241,7 +240,6 @@ if [ ! -f /usr/bin/ssr-server ]; then
   sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
 fi
 
-#/etc/init.d/amule disable
 find /www -type f -exec chmod 644 {} \;
 find /www -type d -exec chmod 755 {} \;
 cp -R /www/cgi-bin/* /www/
