@@ -79,3 +79,7 @@ code,.cbi-progressbar::after{
 .node-main-login .main .main-right #maincontent .container .cbi-map .cbi-section .cbi-section-node .cbi-value .cbi-value-field input{
 height:auto !important;	
 }
+.main .main-left .nav li.slide .menu[data-title=Docker]:before {
+  content: "\e911";
+  color: #6699ff;
+}
