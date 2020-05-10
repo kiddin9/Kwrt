@@ -102,7 +102,7 @@ git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 ./scripts/feeds update -a
-./diy.sh
+sh ./diy.sh
 mv X86_64.config .config
 make defconfig
    ```
@@ -112,9 +112,10 @@ rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 rm -Rf feeds package
+svn co https://github.com/openwrt/openwrt/trunk/package
 git pull
 ./scripts/feeds update -a
-./diy.sh
+sh ./diy.sh
 make defconfig
    ```
 5. 如需修改默认配置比如定制插件等,请执行 `make menuconfig`
