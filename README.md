@@ -111,8 +111,8 @@ make defconfig
 rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
-git pull 
-rm -Rf feeds
+rm -Rf feeds package
+git pull
 ./scripts/feeds update -a
 ./diy.sh
 make defconfig
