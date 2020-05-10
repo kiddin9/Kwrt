@@ -1,5 +1,5 @@
---- package/feeds/packages/netdata/files/netdata.init
-+++ package/feeds/packages/netdata/files/netdata.init
+--- /feeds/packages/admin/netdata/files/netdata.init
++++ /feeds/packages/admin/netdata/files/netdata.init
 @@ -9,13 +9,14 @@
  start_service() {
  	mkdir -m 0755 -p /var/cache/netdata
