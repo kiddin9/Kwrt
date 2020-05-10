@@ -1,0 +1,13 @@
+--- /feeds/custom/luci/luci-app-amule/root/etc/init.d/amule
++++ /feeds/custom/luci/luci-app-amule/root/etc/init.d/amule
+@@ -167,8 +168,6 @@
+ 	config_foreach amule 'amule'
+ }
+ 
+-restart() {
+-	stop
+-	sleep 2
+-	start
++service_triggers() {
++    procd_add_reload_trigger "amule"
+ }
