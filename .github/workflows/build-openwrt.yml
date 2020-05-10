@@ -194,10 +194,8 @@ jobs:
         tag_name: ${{ env.date }}_${{ env.DEVICE_NAME }}
         release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
         body: |
-            [ ${{ env.COWURL }} ] && {
             国内加速下载:
             ${{ env.COWURL }} ${{ env.EMOJI }}
-            }
         draft: false
         prerelease: false     
 
