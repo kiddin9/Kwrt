@@ -45,7 +45,6 @@ dns:
   - tcp://202.141.162.123:5353
   - tls://dns.rubyfish.cn
   - https://i.233py.com/dns-query
-  - https://dns.233py.com/dns-query
   - tcp://202.86.191.50
   - tcp://101.6.6.6:5353
   - tcp://210.0.255.250
