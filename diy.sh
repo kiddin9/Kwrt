@@ -70,6 +70,7 @@ sed -i 's/ +kmod-fs-exfat//g' package/*/*/automount/Makefile
 sed -i 's/net.netfilter.nf_conntrack_max=16384/net.netfilter.nf_conntrack_max=105535/g' package/kernel/linux/files/sysctl-nf-conntrack.conf
 rm -Rf package/network/config/firewall/patches/fullconenat.patch
 wget -P package/network/config/firewall/patches/ https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
+sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' package/*/custom/*/luasrc/view/*/*.htm
 getversion(){
 ver=$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/$1/releases/latest) | grep -o -E "[0-9].+")
 [ $ver ] && echo $ver || git ls-remote --tags git://github.com/$1 | cut -d/ -f3- | sort -t. -nk1,2 -k3 | awk '/^[^{]*$/{version=$1}END{print version}' | grep -o -E "[0-9].+"
