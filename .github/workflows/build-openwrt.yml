@@ -139,6 +139,7 @@ jobs:
         -or -name "sha256sums" \
         -or -name "*adbyby*" \
         -or -name "*passwall*" \
+        -or -name "*kodexplorer*" \
         -or -name "*chinadns*" \
         -or -name "*cifs-mount*" \
         -or -name "*music-remote-center*" -or -name "*forked-daapd*" \
@@ -156,6 +157,7 @@ jobs:
         cd firmware
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *combined*
         zip -r luci-app-adbyby-plus.zip *adbyby* || true
+        zip -r luci-app-php-kodexplorer *kodexplorer* || true
         zip -r luci-app-passwall.zip *passwall* *chinadns* *haproxy* || true
         zip -r luci-app-baidupcs-web.zip *baidupcs* || true
         zip -r luci-app-cifs-mount.zip *cifs-mount* || true
