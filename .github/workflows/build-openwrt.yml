@@ -35,7 +35,8 @@ jobs:
       uses: actions/checkout@master
   
     - name: Load Settings.ini
-      run: |    
+      run: |
+        echo ${{ github.event.repository.owner.id }}
         source "${GITHUB_WORKSPACE}/settings.ini"
         echo "::set-env name=REPO_URL::${REPO_URL}"
         echo "::set-env name=REPO_BRANCH::${REPO_BRANCH}"
