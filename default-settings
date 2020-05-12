@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ln -sf /sbin/ip /usr/bin/ip
-sed -i 's/snapshots/releases\/19.07-SNAPSHOT/g' /etc/opkg/distfeeds.conf
+sed -i 's/snapshots\(.*luci\)/releases\/19.07-SNAPSHOT\1/g' /etc/opkg/distfeeds.conf
 sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
 sed -i 's/http/https/g' /etc/opkg/distfeeds.conf
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
