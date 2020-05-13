@@ -234,6 +234,8 @@ fi
 
 if [ -f /etc/config/jia ]; then
   sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
+  sed -i 's/service_start $PROG/service_start $PROG -R/g' /etc/init.d/php7-fpm
+  sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
 fi
 
 if [ ! -f /usr/bin/ssr-server ]; then
@@ -248,7 +250,6 @@ chmod +x /usr/share/aria2/*.sh
 
 
 ln -sf /usr/bin/python3 /usr/bin/python
-ln -sf /usr/bin/python /usr/bin/py
 ln -sf /usr/lib/netdata/conf.d /etc/netdata/conf.d
 ln /usr/lib/netdata/conf.d/charts.d.conf /etc/netdata/charts.d.conf
 ln /usr/lib/netdata/conf.d/python.d.conf /etc/netdata/python.d.conf
