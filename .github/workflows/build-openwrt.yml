@@ -189,12 +189,13 @@ jobs:
         cowurl=$(./transfer cow --block 2621440 -s --no-progress ${FIRMWARE})
         cowurl=$(echo $cowurl | grep -o -E "https[^ ]*")
         echo "::set-env name=COWURL::$cowurl"
-        echo "Download Link: ${{ env.EMOJI }} $cowurl ${{ env.EMOJI }}"
+        echo "Download Link: ${{ env.EMOJI }} $cowurl ${{ env.EMOJI }} 🚀"
  
     - name: Create release
       id: create_release
       uses: actions/create-release@master
-      if: env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
+      continue-on-error: true
+      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
@@ -208,6 +209,7 @@ jobs:
 
     - name: Upload firmware for release
       uses: csexton/release-asset-action@master
+      continue-on-error: true
       if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       with:
         pattern: "${{ env.FIRMWARE }}/*"
