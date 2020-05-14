@@ -221,7 +221,7 @@ jobs:
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
-        name: ${{ env.date3 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
+        name: ${{ env.date3 }} ${{ env.DEVICE_NAME }}
         path: ${{ env.FIRMWARE }}
         
     - name: WeChat notification
