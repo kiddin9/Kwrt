@@ -6,9 +6,9 @@ svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
-svn co https://github.com/apollo-ng/luci-theme-darkmatter/branches/openwrt-19/luci/themes/luci-theme-darkmatter
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
 git clone https://github.com/lisaac/luci-app-diskman
+https://github.com/garypang13/openwrt-filerun
 git clone https://github.com/garypang13/luci-app-baidupcs-web
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
 git clone https://github.com/tty228/luci-app-serverchan
@@ -20,9 +20,7 @@ git clone https://github.com/lisaac/luci-app-dockerman
 svn co https://github.com/coolsnowwolf/packages/trunk/sound/forked-daapd
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
-svn co https://github.com/ElonH/Rclone-OpenWrt/trunk/luci-app-rclone
-svn co https://github.com/ElonH/Rclone-OpenWrt/trunk/rclone
-svn co https://github.com/ElonH/Rclone-OpenWrt/trunk/rclone-webui-react
+git clone https://github.com/ElonH/Rclone-OpenWrt
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
@@ -35,6 +33,7 @@ git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-php-kodexplorer
 git clone https://github.com/garypang13/luci-app-eqos
 cd -
+
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 cp -Rf ./diy/* ./
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/*/*/*/Makefile
