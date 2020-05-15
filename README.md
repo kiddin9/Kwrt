@@ -119,6 +119,7 @@ svn co https://github.com/openwrt/openwrt/trunk/package
 git pull
 ./scripts/feeds update -a
 sh ./diy.sh
+[ -f ".config" ] || mv X86_64.config .config
 make defconfig
    ```
 5. 如需修改默认配置比如定制插件等,请执行 `make menuconfig`
