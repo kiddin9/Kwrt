@@ -202,7 +202,7 @@ jobs:
         tag_name: ${{ env.date }}_${{ env.DEVICE_NAME }}
         release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
         body: |
-            国内加速下载🔥:
+            墙内加速下载🔥:
             ${{ env.COWURL }} 🚀
         draft: false
         prerelease: false     
