@@ -61,7 +61,7 @@ if [ ! -f /etc/config/placeholder ]; then
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='218.102.23.228'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='210.0.255.250'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='168.95.1.1'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.86.191.50'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.175.82.46'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='77.88.8.8'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='101.101.101.101'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='203.198.7.66'
@@ -164,7 +164,7 @@ config server
 
 config server
 	option name '澳门'
-	option ip '202.86.191.50'
+	option ip '202.175.82.46'
 	option type 'tcp'
 	option enabled '1'
 
@@ -174,20 +174,6 @@ config server
 	option type 'tls'
 	option enabled '1'
 	option blacklist_ip '1'
-
-config server
-	option enabled '1'
-	option name 'geekdns'
-	option ip 'https://i.233py.com/dns-query'
-	option type 'https'
-	option blacklist_ip '1'
-
-config server
-	option enabled '1'
-	option name '中科大'
-	option ip '202.141.162.123'
-	option port '5353'
-	option type 'tcp'
 
 config server
 	option enabled '1'
