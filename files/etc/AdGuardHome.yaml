@@ -25,7 +25,8 @@ dns:
   - 8.8.8.8:53
   - 119.29.29.29:53
   - 127.0.0.1:5555
-  all_servers: true
+  all_servers: false
+  fastest_addr: true
   edns_client_subnet: true
   aaaa_disabled: true
   allowed_clients: []
@@ -34,6 +35,8 @@ dns:
   parental_block_host: family-block.dns.adguard.com
   safebrowsing_block_host: standard-block.dns.adguard.com
   cache_size: 4194304
+  cache_ttl_min: 1800
+  cache_ttl_max: 86400
   upstream_dns:
   - 127.0.0.1:5555
   - tcp://208.67.222.222:5353
@@ -42,10 +45,8 @@ dns:
   - tls://dns.google
   - tls://dns.quad9.net
   - tcp://168.95.1.1
-  - tcp://202.141.162.123:5353
   - tls://dns.rubyfish.cn
-  - https://i.233py.com/dns-query
-  - tcp://202.86.191.50
+  - tcp://202.175.82.46
   - tcp://101.6.6.6:5353
   - tcp://210.0.255.250
   - tcp://203.198.7.66
