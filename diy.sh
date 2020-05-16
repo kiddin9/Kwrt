@@ -35,7 +35,7 @@ git clone https://github.com/garypang13/luci-app-eqos
 cd -
 
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
-cp --parents -Rf ./diy/* ./
+cp -Rf ./diy/* ./
 ./scripts/feeds update -a && ./scripts/feeds install -a
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
 
