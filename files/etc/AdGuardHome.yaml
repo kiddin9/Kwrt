@@ -25,8 +25,8 @@ dns:
   - 8.8.8.8:53
   - 119.29.29.29:53
   - 127.0.0.1:5555
-  all_servers: false
-  fastest_addr: true
+  all_servers: true
+  fastest_addr: false
   edns_client_subnet: true
   aaaa_disabled: true
   allowed_clients: []
