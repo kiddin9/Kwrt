@@ -27,6 +27,7 @@ svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
 git clone https://github.com/pexcn/openwrt-chinadns-ng.git chinadns-ng
 svn co https://github.com/Lienol/openwrt-package/trunk/package/brook
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
+svn co https://github.com/Lienol/openwrt-package/trunk/package/ipt2socks
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 
 git clone https://github.com/garypang13/openwrt-adguardhome
@@ -77,7 +78,7 @@ sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion v2ray/v2ray-core)/g" package
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion AdguardTeam/AdGuardHome)/g" package/*/*/openwrt-adguardhome/Makefile
 sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" package/feeds/custom/*/Makefile
 find package/*/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefile" ! -path "*rclone*" -name "Makefile" \
-| xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
+! -path "*ipt2socks*" -name "Makefile" | xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
 find package/*/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS=/M=/g" {}
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i '/PKG_BUILD_DIR.*(PKG_NAME)/d' feeds/luci/luci.mk
@@ -100,7 +101,7 @@ sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by GaryPang'/g" package/base-files/files/etc/openwrt_release
 sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
+cp -f default-settings package/*/*/default-settings/files/zzz-default-settings
 if [ -n "$(ls -A "patches" 2>/dev/null)" ]; then
    find "patches" -type f -name '*.patch'| xargs -i git apply {}
 fi
-cp -f default-settings package/*/*/default-settings/files/zzz-default-settings
