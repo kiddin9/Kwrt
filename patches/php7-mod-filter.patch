@@ -1,5 +1,15 @@
 --- /feeds/packages/lang/php7/Makefile
 +++ /feeds/packages/lang/php7/Makefile
+--- 
++++ 
+@@ -28,6 +28,5 @@
+ 	calendar ctype curl \
+-	fileinfo \
+ 	dom \
+ 	exif \
+-	ftp \
++	fileinfo filter ftp\
+ 	gettext gd gmp \
 @@ -469,4 +469,4 @@
  
 -ifneq ($(SDK)$(CONFIG_PHP7_FILTER),)
