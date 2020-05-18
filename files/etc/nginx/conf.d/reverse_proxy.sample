@@ -4,7 +4,7 @@ server
         server_name netdata.com;
 		
         location / {
-		proxy_pass              https://127.0.0.1:19999/;
+		proxy_pass              http://127.0.0.1:19999/;
 		proxy_http_version      1.1;
 		proxy_set_header        X-Forwarded-Host        $server_name:$server_port;
 		proxy_hide_header       Referer;
