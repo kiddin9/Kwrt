@@ -1,0 +1,13 @@
+--- /feeds/packages/lang/php7/Makefile
++++ /feeds/packages/lang/php7/Makefile
+@@ -469,4 +469,4 @@
+ 
+-ifneq ($(SDK)$(CONFIG_PHP7_FILTER),)
+-  CONFIGURE_ARGS+= --enable-filter
++ifneq ($(SDK)$(CONFIG_PACKAGE_php7-mod-filter),)
++  CONFIGURE_ARGS+= --enable-filter=shared,"$(STAGING_DIR)/usr"
+ else
+@@ -618,2 +618,3 @@
+ $(eval $(call BuildModule,fileinfo,Fileinfo))
++$(eval $(call BuildModule,filter,Filter))
+ $(eval $(call BuildModule,ftp,FTP,+PACKAGE_php7-mod-ftp:libopenssl))
