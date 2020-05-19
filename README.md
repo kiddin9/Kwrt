@@ -79,9 +79,9 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 其他插件请在[Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
 
-### 默认后台地址 10.0.0.1, 密码 root
+#### 默认后台地址 10.0.0.1, 密码 root
 
-### 请分配不低于1G 的内存和磁盘空间.
+#### 请分配不低于1G 的内存和磁盘空间.
 
 ### 如何在本地使用此项目编译自己需要的 OpenWrt 固件
 
