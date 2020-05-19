@@ -7,7 +7,7 @@
 + 性能,友好度,易用性,插件,以及针对国内特殊环境等的自定义优化
 
 + uhttpd替换为nginx,大大增加可玩性:
-     + nginx搭配PHP与可道云,建站,NAS两不误,基本可替换群晖等专业NAS系统
+     + Nginx+PHP+MariaDB, 用于搭建FileRun,可道云等云盘,建站等.
      + 通过nginx实现Webdav 自建共享同步网盘神器
      + nginx反向代理 实现后台每个页面与服务都可通过自定义域名访问
 
@@ -49,6 +49,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 + SSR Plus
 + AdguardHome DNS+恶意网址过滤
++ FileRun  google drive风格多功能网盘
 + 上网时间控制
 + 微信推送
 + ACME自动SSL证书生成
