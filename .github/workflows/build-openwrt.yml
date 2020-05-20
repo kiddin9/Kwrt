@@ -109,7 +109,7 @@ jobs:
         sed -i '$i uci commit network' openwrt/package/*/*/default-settings/files/zzz-default-settings
               
     - name: SSH connection to Actions
-      uses: P3TERX/debugger-action@master
+      uses: garypang13/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
 
     - name: Download package
