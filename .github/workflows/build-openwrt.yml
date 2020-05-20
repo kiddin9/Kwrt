@@ -204,6 +204,7 @@ jobs:
         body: |
             墙内加速下载🔥:
             ${{ env.COWURL }} 🚀
+            请分配不低于1G 的内存和存储空间💾.
         draft: false
         prerelease: false     
 
