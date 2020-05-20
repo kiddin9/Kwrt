@@ -74,6 +74,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + Turbo ACC 网络加速
 + SQM QOS 智能网络优化
 + eqos IP限速
++ Mwan3 负载均衡
 + AppFilter App过滤
 + nlbwmon 宽带监控
 
