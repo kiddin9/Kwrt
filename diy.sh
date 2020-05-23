@@ -51,6 +51,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
 sed -i 's/extra_setting\"/extra_settings\"/g' package/*/*/luci-app-aria2/luasrc/model/cbi/aria2/config.lua
+sed -i 's/services\/aria2/nas\/aria2/g' package/*/*/luci-app-aria2/luasrc/view/aria2/*
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 sed -i 's/LUCI_DEPENDS:=/LUCI_DEPENDS:=+transmission-daemon-openssl /g' package/*/*/luci-app-transmission/Makefile
