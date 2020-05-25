@@ -200,7 +200,7 @@ jobs:
       run: |
         curl -fsSL git.io/file-transfer | sh
         wetrans=$(./transfer wet -s -p 16 --no-progress ${FIRMWARE})
-        wetrans=$(echo $cowurl | grep -o -E "https[^ ]*")
+        wetrans=$(echo $wetrans | grep -o -E "https[^ ]*")
         echo "::set-env name=WETRANS::$wetrans"
         echo "Download Link: ${{ env.EMOJI }} $wetrans ${{ env.EMOJI }} 🚀"
 
