@@ -217,9 +217,9 @@ jobs:
         body: |
             墙内加速下载🔥:
             
-            ${{ env.COWURL }} 🚀
+            奶牛快传: ${{ env.COWURL }} 🚀
             
-            ${{ env.WETRANS }} 🗽
+            WeTransfer: ${{ env.WETRANS }} 🗽
             
             请分配不低于1G 的内存和存储空间 💾
         draft: false
