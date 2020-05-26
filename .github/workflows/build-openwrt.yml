@@ -117,7 +117,7 @@ jobs:
       uses: garypang13/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
       continue-on-error: true
-      timeout-minutes: 90
+      timeout-minutes: 60
 
     - name: Download package
       id: package
