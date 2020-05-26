@@ -78,10 +78,30 @@ tls:
   certificate_path: ""
   private_key_path: ""
 filters:
-- enabled: true
+- enabled: false
   url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
   name: AdGuard Simplified Domain Names filter
   id: 1
+- enabled: true
+  url: https://block.energized.pro/blu/formats/filter
+  name: Energized Protection Blu
+  id: 1590467081
+- enabled: true
+  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-easylist.txt
+  name: anti-AD
+  id: 1580820695
+- enabled: true
+  url: http://uujian.cn/browser/txt/metalist.txt
+  name: 荟萃
+  id: 1575015275
+- enabled: true
+  url: https://gitee.com/lhzgl6587/hosts/raw/master/myruler
+  name: 国内手机
+  id: 1584462286
+- enabled: false
+  url: https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
+  name: StevenBlack fakenews gambling
+  id: 1577002821
 - enabled: false
   url: https://adaway.org/hosts.txt
   name: AdAway
@@ -90,7 +110,7 @@ filters:
   url: https://hosts-file.net/ad_servers.txt
   name: hpHosts - Ad and Tracking servers only
   id: 3
-- enabled: true
+- enabled: false
   url: https://www.malwaredomainlist.com/hostslist/hosts.txt
   name: MalwareDomainList.com Hosts List
   id: 4
@@ -114,26 +134,10 @@ filters:
   url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
   name: googlehosts
   id: 1573404421
-- enabled: true
-  url: http://uujian.cn/browser/txt/metalist.txt
-  name: 荟萃
-  id: 1575015275
-- enabled: true
-  url: https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
-  name: StevenBlack fakenews gambling
-  id: 1577002821
-- enabled: true
-  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-easylist.txt
-  name: anti-AD
-  id: 1580820695
-- enabled: true
+- enabled: false
   url: https://raw.githubusercontent.com/jerryn70/GoodbyeAds/master/Hosts/GoodbyeAds.txt
   name: GoodbyeAds
   id: 1584350199
-- enabled: true
-  url: https://gitee.com/lhzgl6587/hosts/raw/master/myruler
-  name: 国内手机
-  id: 1584462286
 whitelist_filters:
 - enabled: true
   url: https://raw.githubusercontent.com/garypang13/dns_whitelist/master/whitelist
