@@ -1,0 +1,61 @@
+From 66524bee738e98742c908d93c993d0a78a2d9891 Mon Sep 17 00:00:00 2001
+From: myfreeer <myfreeer@users.noreply.github.com>
+Date: Sat, 18 Nov 2017 11:55:04 +0800
+Subject: [PATCH 3/4] download: retry on slow speed and conection close
+
+This would provide better speed on bad network conditions
+---
+ src/DownloadCommand.cc | 2 +-
+ src/SocketBuffer.cc    | 3 ++-
+ src/SocketCore.cc      | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/DownloadCommand.cc b/src/DownloadCommand.cc
+index 2db41e4..f49eb80 100644
+--- a/src/DownloadCommand.cc
++++ b/src/DownloadCommand.cc
+@@ -306,7 +306,7 @@ void DownloadCommand::checkLowestDownloadSpeed() const
+           startupIdleTime_) {
+     int nowSpeed = peerStat_->calculateDownloadSpeed();
+     if (nowSpeed <= lowestDownloadSpeedLimit_) {
+-      throw DL_ABORT_EX2(fmt(EX_TOO_SLOW_DOWNLOAD_SPEED, nowSpeed,
++      throw DL_RETRY_EX2(fmt(EX_TOO_SLOW_DOWNLOAD_SPEED, nowSpeed,
+                              lowestDownloadSpeedLimit_,
+                              getRequest()->getHost().c_str()),
+                          error_code::TOO_SLOW_DOWNLOAD_SPEED);
+diff --git a/src/SocketBuffer.cc b/src/SocketBuffer.cc
+index 62862ff..1906173 100644
+--- a/src/SocketBuffer.cc
++++ b/src/SocketBuffer.cc
+@@ -39,6 +39,7 @@
+ 
+ #include "SocketCore.h"
+ #include "DlAbortEx.h"
++#include "DlRetryEx.h"
+ #include "message.h"
+ #include "fmt.h"
+ #include "LogFactory.h"
+@@ -158,7 +159,7 @@ ssize_t SocketBuffer::send()
+     }
+     ssize_t slen = socket_->writeVector(iov, num);
+     if (slen == 0 && !socket_->wantRead() && !socket_->wantWrite()) {
+-      throw DL_ABORT_EX(fmt(EX_SOCKET_SEND, "Connection closed."));
++      throw DL_RETRY_EX(fmt(EX_SOCKET_SEND, "Connection closed."));
+     }
+     // A2_LOG_NOTICE(fmt("num=%zu, amount=%d, bufq.size()=%zu, SEND=%d",
+     //                   num, amount, bufq_.size(), slen));
+diff --git a/src/SocketCore.cc b/src/SocketCore.cc
+index 77dc30c..537375a 100644
+--- a/src/SocketCore.cc
++++ b/src/SocketCore.cc
+@@ -1009,7 +1009,7 @@ bool SocketCore::tlsHandshake(TLSContext* tlsctx, const std::string& hostname)
+ 
+     if (rv == TLS_ERR_ERROR) {
+       // Damn those error.
+-      throw DL_ABORT_EX(fmt("SSL/TLS handshake failure: %s",
++      throw DL_RETRY_EX(fmt("SSL/TLS handshake failure: %s",
+                             handshakeError.empty()
+                                 ? tlsSession_->getLastErrorString().c_str()
+                                 : handshakeError.c_str()));
+-- 
+2.17.1
