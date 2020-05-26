@@ -116,6 +116,8 @@ jobs:
     - name: SSH connection to Actions
       uses: garypang13/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
+      continue-on-error: true
+      timeout-minutes: 90
 
     - name: Download package
       id: package
