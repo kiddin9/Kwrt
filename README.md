@@ -1,6 +1,8 @@
-# Actions OpenWrt Snapshot With Nginx 
+# Actions-iKuai-SideRoute-OpenWrt-Nginx
 
 ### 特色:
+
+#### 由 (https://github.com/garypang13/Actions-OpenWrt-Nginx) 修改面来，主要用于爱快虚拟机中的旁路由.
 
 + 全网最新,openwrt官方master分支版本,内核升级到Linux Kernel 5.4. 插件,内核,luci,packages都与官方最新源码同步.
 
@@ -23,9 +25,9 @@
 
 [lean](https://github.com/coolsnowwolf/lede/tree/master/package/lean) 源码里的所有插件都有移植过来,增加插件只需在X86_64.config文件中开启然后云编译即可.
 
-X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest) 下载,每周日更新固件.
+X86_64固件在此 [Releases](https://github.com/ethan-www/Actions-iKuai-SideRoute-OpenWrt-Nginx/releases/latest) 下载,每周日更新固件.
 
-后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
+后台入口 10.1.1.2 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
 
 默认密码 root
 
@@ -78,9 +80,9 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + AppFilter App过滤
 + nlbwmon 宽带监控
 
-其他插件请在[Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
+其他插件请在[Releases](https://github.com/ethan-www/Actions-iKuai-SideRoute-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
 
-#### 默认后台地址 10.0.0.1, 密码 root
+#### 默认后台地址 10.1.1.2, 密码 root
 
 #### 请分配不低于1G 的内存和磁盘空间.
 
@@ -147,6 +149,7 @@ Build OpenWrt using GitHub Actions
 - When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
 
 ### Acknowledgments
+- [garypang13](https://github.com/garypang13/Actions-OpenWrt-Nginx)
 - [OpenWrt](https://github.com/openwrt/openwrt)
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
