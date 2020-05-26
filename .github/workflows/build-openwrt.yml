@@ -1,12 +1,4 @@
-#=================================================
-# https://github.com/P3TERX/Actions-OpenWrt
-# Description: Build OpenWrt using GitHub Actions
-# Lisence: MIT
-# Author: P3TERX
-# Blog: https://p3terx.com
-#=================================================
-
-name: Build OpenWrt x86_64
+name: Build iKuai-SideRoute-OpenWrt-Nginx
 
 on: 
   # push: 
@@ -60,7 +52,12 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
-        curl -fsSL https://raw.githubusercontent.com/P3TERX/dotfiles/master/.bashrc >> ~/.bashrc
+        echo 'PS1="\[\e[1;34m\]# \[\e[1;36m\]\u \[\e[1;0m\]@ \[\e[1;32m\]\h \[\e[1;0m\]in \[\e[1;33m\]\w \[\e[1;0m\][\[\e[1;0m\]\t\[\e[1;0m\]]\n\[\e[1;31m\]\$\[\e[0m\] "' >> ~/.bashrc
+        echo "" >> ~/.bashrc
+        echo "alias l='ls -lFh'" >> ~/.bashrc
+        echo "alias la='ls -lAFh'" >> ~/.bashrc
+        echo "alias ll='ls -l'" >> ~/.bashrc
+        echo "" >> ~/.bashrc
     
     - name: Get current date
       id: date
@@ -97,9 +94,9 @@ jobs:
         chmod +x $DIY_SH
         ./$DIY_SH >/dev/null
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE .config
-        [ ${{ github.event.repository.owner.id }} != '48883331' ] && {
-        sed -i "s/=m/=n/g" .config
-        }
+        #[ ${{ github.event.repository.owner.id }} != 'github.event.sender.id' ] && {
+        #sed -i "s/=m/=n/g" .config
+        #}
         make defconfig
         [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
         echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
@@ -110,7 +107,12 @@ jobs:
         sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
         sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/default-settings/files/zzz-default-settings
         sed -i '$i uci commit network' openwrt/package/*/*/default-settings/files/zzz-default-settings
-              
+    
+    - name: SSH connection notification
+      if: env.SSH_ACTIONS == 'true' && env.SCKEY
+      run: |
+        curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=➡🔄OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}等待SSH连接⬅
+    
     - name: SSH connection to Actions
       uses: garypang13/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
