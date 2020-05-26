@@ -2,7 +2,7 @@
 
 ### 特色:
 
-#### 由 (https://github.com/garypang13/Actions-OpenWrt-Nginx) 修改面来，主要用于爱快虚拟机中的旁路由.
+#### 由 (https://github.com/garypang13/Actions-OpenWrt-Nginx) 修改而来，主要用于爱快虚拟机中的旁路由.
 
 + 全网最新,openwrt官方master分支版本,内核升级到Linux Kernel 5.4. 插件,内核,luci,packages都与官方最新源码同步.
 
