@@ -88,7 +88,6 @@ jobs:
       run: cd openwrt && ./scripts/feeds update custom -a
 
     - name: Load custom configuration
-      continue-on-error: true
       run: |
         cp -Rf * openwrt/ || true
         cd openwrt
