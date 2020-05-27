@@ -8,8 +8,6 @@ git clone https://github.com/jerrykuku/luci-theme-argon
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
 git clone https://github.com/lisaac/luci-app-diskman
-git clone https://github.com/garypang13/openwrt-filerun
-git clone https://github.com/garypang13/luci-app-baidupcs-web
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
 git clone https://github.com/tty228/luci-app-serverchan
 git clone https://github.com/brvphoenix/luci-app-wrtbwmon
@@ -34,6 +32,9 @@ svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/lu
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-php-kodexplorer
 git clone https://github.com/garypang13/luci-app-eqos
+git clone https://github.com/garypang13/openwrt-qbittorrent
+git clone https://github.com/garypang13/openwrt-filerun
+git clone https://github.com/garypang13/luci-app-baidupcs-web
 cd -
 
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
