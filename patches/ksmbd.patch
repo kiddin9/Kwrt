@@ -1,7 +1,7 @@
 --- /feeds/luci/applications/luci-app-ksmbd/luasrc/controller/ksmbd.lua
 +++ /feeds/luci/applications/luci-app-ksmbd/luasrc/controller/ksmbd.lua
 
-@@ -7,5 +7,5 @@ function index()
+@@ -7,5 +7,5 @@
  		return
  	end
  
