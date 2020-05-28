@@ -66,19 +66,12 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + Aria2 全能下载工具
 + BaiduPCS-Web 百度网盘web客户端(Aria2+修复登录)
 + cifsd + NFS 网络共享
-+ Netdata 全能性能监控
 + diskman 磁盘管理
-+ dockerman 玩转docker必备
 + Rclone 网盘挂载,同步工具
 + qBittorrent BT下载工具
 + Transmission BT/PT下載工具
 + aMule 电骡下载 ed2k必备
 + Turbo ACC 网络加速
-+ SQM QOS 智能网络优化
-+ eqos IP限速
-+ Mwan3 负载均衡
-+ AppFilter App过滤
-+ nlbwmon 宽带监控
 
 其他插件请在[Releases](https://github.com/ethan-www/Actions-iKuai-SideRoute-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
 
