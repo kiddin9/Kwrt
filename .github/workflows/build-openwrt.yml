@@ -163,6 +163,7 @@ jobs:
         -or -name "*xlnetacc*" \
         -or -name "*zerotier*" \
         -or -name "*koolproxyR*" \
+         -or -name "*oaf*" \
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
@@ -183,6 +184,7 @@ jobs:
         zip -r luci-app-xlnetacc.zip *xlnetacc* || true
         zip -r luci-app-zerotier.zip *zerotier* || true
         zip -r luci-app-koolproxyR.zip *koolproxyR* || true
+        zip -r luci-app-oaf.zip *oaf* || true
         rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
