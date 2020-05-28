@@ -51,10 +51,8 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 + SSR Plus
 + AdguardHome DNS+恶意网址过滤
-+ FileRun  google drive风格多功能网盘
 + 上网时间控制
 + 微信推送
-+ ACME自动SSL证书生成
 + 网易云音乐解锁
 + 动态DDNS
 + SmartDNS 域名解析加速+抗污染
@@ -63,15 +61,17 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + vlmcsd KMS微软相关激活工具
 + ttyd 网页版终端
 + UPNP 自动端口转发
-+ Aria2 全能下载工具
-+ BaiduPCS-Web 百度网盘web客户端(Aria2+修复登录)
-+ cifsd + NFS 网络共享
++ Turbo ACC 网络加速
++ ACME自动SSL证书生成
 + diskman 磁盘管理
++ cifsd + NFS 网络共享
++ BaiduPCS-Web 百度网盘web客户端(Aria2+修复登录)
++ FileRun  google drive风格多功能网盘
 + Rclone 网盘挂载,同步工具
++ Aria2 全能下载工具
 + qBittorrent BT下载工具
 + Transmission BT/PT下載工具
 + aMule 电骡下载 ed2k必备
-+ Turbo ACC 网络加速
 
 其他插件请在[Releases](https://github.com/ethan-www/Actions-iKuai-SideRoute-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
 
