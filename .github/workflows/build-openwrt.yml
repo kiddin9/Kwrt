@@ -244,11 +244,11 @@ jobs:
         path: ${{ env.FIRMWARE }}
         
     - name: WeChat notification
-      if: env.SCKEY && !cancelled()
+      if: env.SCKEY
       run: |
         [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=🎉OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译完成😋 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=❌OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译失败😂
 
     - name: Telegram notification
-      if: env.TELEGRAM_BOT_URL && !cancelled()
+      if: env.TELEGRAM_BOT_URL
       run: |
         [ ${{ env.status }} == 'success' ] && curl -X GET ${{ secrets.TELEGRAM_BOT_URL }}?text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋 || curl -X GET ${{ secrets.TELEGRAM_BOT_URL }}?text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂
