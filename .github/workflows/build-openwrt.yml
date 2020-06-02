@@ -251,4 +251,4 @@ jobs:
     - name: Telegram notification
       if: env.TELEGRAM_BOT_URL && !cancelled()
       run: |
-        [ ${{ env.status }} == 'success' ] && ${{ secrets.TELEGRAM_BOT_URL }}?text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋 || ${{ secrets.TELEGRAM_BOT_URL }}?text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂
+        [ ${{ env.status }} == 'success' ] && curl -X GET ${{ secrets.TELEGRAM_BOT_URL }}?text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋 || curl -X GET ${{ secrets.TELEGRAM_BOT_URL }}?text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂
