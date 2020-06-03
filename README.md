@@ -51,10 +51,8 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 + SSR Plus
 + AdguardHome DNS+恶意网址过滤
-+ 上网时间控制
 + 微信推送
 + 网易云音乐解锁
-+ 动态DDNS
 + SmartDNS 域名解析加速+抗污染
 + 硬盘休眠
 + WatchCat 网络连通性监控
@@ -64,7 +62,10 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + Turbo ACC 网络加速
 + ACME自动SSL证书生成
 + diskman 磁盘管理
-+ cifsd + NFS 网络共享
++ ksmbd + NFS +FTP 网络共享
++ Fileassistant 文件传输
++ Familycloud 天翼云提速
++ usb-printer USB打印服务
 + BaiduPCS-Web 百度网盘web客户端(Aria2+修复登录)
 + FileRun  google drive风格多功能网盘
 + Rclone 网盘挂载,同步工具
@@ -72,6 +73,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 + qBittorrent BT下载工具
 + Transmission BT/PT下載工具
 + aMule 电骡下载 ed2k必备
++ Nginx + php7 + mariadb
 
 其他插件请在[Releases](https://github.com/ethan-www/Actions-iKuai-SideRoute-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
 
