@@ -22,6 +22,7 @@ git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
+svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-fileassistant
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
 git clone https://github.com/pexcn/openwrt-chinadns-ng.git chinadns-ng
 svn co https://github.com/Lienol/openwrt-package/trunk/package/brook
