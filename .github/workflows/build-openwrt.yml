@@ -132,6 +132,7 @@ jobs:
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
         echo "::set-env name=status::success"
+      timeout-minutes: 600
       
     - name: Upload bin directory
       uses: actions/upload-artifact@master
