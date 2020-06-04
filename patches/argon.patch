@@ -3,5 +3,5 @@
 @@ -263,3 +263,3 @@
  			<div class="darkMask"></div>
 -			<div class="login-bg" style="background-image:url(<%=media%>/img/bg<%=math.random(1,bgcount)%>.jpg)"></div>
-+			<div class="login-bg" style="background-image:url(https://source.unsplash.com/featured/1624x1067/daily?wallpaper)"></div>
++			<div class="login-bg" style="background:#fff url(https://source.unsplash.com/featured/1624x1067/daily?wallpaper) no-repeat top center;"></div>
  			<div id="maincontent">
