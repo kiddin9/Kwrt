@@ -29,7 +29,12 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set system.@system[0].timezone=CST-8
   uci set system.@system[0].zonename=Asia/Shanghai
   uci commit system
+  
+  ethtool -s eth0 speed 1000 duplex full
+  sed -i '/^ethtool/d'  /etc/rc.local
+  sed -i '/^exit 0/i ethtool -s eth0 speed 1000 duplex full' /etc/rc.local
 
+  for i in $(seq 10);do uci -q delete fstab.@mount[];done
   uci set fstab.@global[0].anon_mount=1
   uci commit fstab
   sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
