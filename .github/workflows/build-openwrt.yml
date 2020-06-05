@@ -163,7 +163,10 @@ jobs:
         -or -name "*xlnetacc*" \
         -or -name "*zerotier*" \
         -or -name "*koolproxyR*" \
-         -or -name "*oaf*" \
+        -or -name "*oaf*" \
+        -or -name "*filerun*" \
+        -or -name "*php7*" \
+        -or -name "*mariadb*" \
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/config.txt
         cd firmware
@@ -185,6 +188,9 @@ jobs:
         zip -r luci-app-zerotier.zip *zerotier* || true
         zip -r luci-app-koolproxyR.zip *koolproxyR* || true
         zip -r luci-app-oaf.zip *oaf* || true
+        zip -r luci-app-filerun.zip *filerun* || true
+        zip -r php7.zip *php7* || true
+        zip -r mariadb.zip *mariadb* || true
         rm -Rf *.ipk
         echo "::set-env name=FIRMWARE::$PWD"
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
