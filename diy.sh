@@ -37,6 +37,8 @@ git clone https://github.com/garypang13/openwrt-filerun
 git clone https://github.com/garypang13/luci-app-baidupcs-web
 cd -
 
+git clone https://github.com/librespeed/speedtest files/www/
+mv files/www/speedtest/example-singleServer-full.html files/www/speedtest/index.html
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion feeds/packages/libs/libdouble-conversion
 ./scripts/feeds update -a && ./scripts/feeds install -a
