@@ -41,7 +41,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.lan.ipaddr='10.1.1.2'
   uci set network.lan.netmask='255.255.255.0'
   uci set network.lan.gateway='10.1.1.1'
-  uci set network.lan.dns='180.76.76.76 119.29.29.29'
   uci set network.wan.proto=pppoe
   uci commit network
   
