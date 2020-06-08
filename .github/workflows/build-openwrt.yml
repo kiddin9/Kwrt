@@ -50,12 +50,6 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
-        echo 'PS1="\[\e[1;34m\]# \[\e[1;36m\]\u \[\e[1;0m\]@ \[\e[1;32m\]\h \[\e[1;0m\]in \[\e[1;33m\]\w \[\e[1;0m\][\[\e[1;0m\]\t\[\e[1;0m\]]\n\[\e[1;31m\]\$\[\e[0m\] "' >> ~/.bashrc
-        echo "" >> ~/.bashrc
-        echo "alias l='ls -lFh'" >> ~/.bashrc
-        echo "alias la='ls -lAFh'" >> ~/.bashrc
-        echo "alias ll='ls -l'" >> ~/.bashrc
-        echo "" >> ~/.bashrc
     
     - name: Get current date
       id: date
