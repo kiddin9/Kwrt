@@ -51,11 +51,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.wan.proto=pppoe
   uci commit network
   
-  sed -i '/ipv6.conf/d' /etc/sysctl.conf
-  echo net.ipv6.conf.all.disable_ipv6=1 >> /etc/sysctl.conf
-  echo net.ipv6.conf.default.disable_ipv6=1 >> /etc/sysctl.conf
-  echo net.ipv6.conf.lo.disable_ipv6 = 1 >> /etc/sysctl.conf
-  
   uci del dockerman.local.daemon_ea
   uci commit dockerman
   
