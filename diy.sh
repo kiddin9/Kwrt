@@ -18,7 +18,7 @@ git clone https://github.com/lisaac/luci-app-dockerman
 svn co https://github.com/coolsnowwolf/packages/trunk/sound/forked-daapd
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
-git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
+#git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
