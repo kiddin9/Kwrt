@@ -1,5 +1,5 @@
---- /feeds/package/base-files/files/etc/profile
-+++ /feeds/package/base-files/files/etc/profile
+--- /package/base-files/files/etc/profile
++++ /package/base-files/files/etc/profile
 @@ -4,2 +4,3 @@
  [ -n "$FAILSAFE" ] && cat /etc/banner.failsafe
 +[ -f /etc/sysinfo.sh ] && env -i bash /etc/sysinfo.sh
