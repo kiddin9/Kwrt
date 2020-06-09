@@ -18,7 +18,7 @@ git clone https://github.com/lisaac/luci-app-dockerman
 svn co https://github.com/coolsnowwolf/packages/trunk/sound/forked-daapd
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
-#git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
+git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
@@ -42,6 +42,7 @@ mv files/www/speedtest/example-singleServer-full.html files/www/speedtest/index.
 
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion feeds/packages/libs/libdouble-conversion
+svn co https://github.com/coolsnowwolf/packages/trunk/net/strongswan feeds/packages/net/strongswan
 ./scripts/feeds update -a && ./scripts/feeds install -a
 cp -Rf ./diy/* ./
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
@@ -74,7 +75,6 @@ sed -i 's/if test_proxy/sleep 3600\nif test_proxy/g' package/*/*/luci-app-ssr-pl
 sed -i 's/ uci.cursor/ luci.model.uci.cursor/g' package/*/*/luci-app-ssr-plus/root/usr/share/shadowsocksr/subscribe.lua
 sed -i 's/service_start $PROG/service_start $PROG -R/g' package/*/*/php7/files/php7-fpm.init
 sed -i 's/ +kmod-fs-exfat//g' package/*/*/automount/Makefile
-sed -i 's/net.netfilter.nf_conntrack_max=16384/net.netfilter.nf_conntrack_max=105535/g' package/kernel/linux/files/sysctl-nf-conntrack.conf
 rm -Rf package/network/config/firewall/patches/fullconenat.patch
 wget -P package/network/config/firewall/patches/ https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' package/*/custom/*/luasrc/view/*/*.htm
