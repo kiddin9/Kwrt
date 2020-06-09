@@ -51,6 +51,9 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.wan.proto=pppoe
   uci commit network
   
+  uci set mwan3.wan.enabled='0'
+  uci commit mwan3
+  
   uci del dockerman.local.daemon_ea
   uci commit dockerman
   
