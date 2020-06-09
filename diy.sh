@@ -42,6 +42,7 @@ mv files/www/speedtest/example-singleServer-full.html files/www/speedtest/index.
 
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion feeds/packages/libs/libdouble-conversion
+svn co https://github.com/coolsnowwolf/packages/trunk/net/strongswan feeds/packages/net/strongswan
 ./scripts/feeds update -a && ./scripts/feeds install -a
 cp -Rf ./diy/* ./
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
