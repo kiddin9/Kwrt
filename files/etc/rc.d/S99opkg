@@ -1,13 +1,22 @@
 #!/bin/sh
+if [ ! -f /etc/inited ]; then
 count=0
 while :
 do
 	httping -c 1 www.baidu.com 1>/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 opkg update
+if [ -f /etc/config/jia ]; then
+  opkg upgrade php7 php7-fpm php7-mod-dom php7-mod-fileinfo php7-mod-filter php7-mod-iconv php7-mod-json php7-mod-zip
+  sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
+  sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
+  service php7-fpm restart
+  opkg update
+fi
 	for ipk in $(cat /etc/installed-opkg); do
 			opkg upgrade $ipk
 	done
+	touch /etc/inited
 	break
 	fi
 	sleep 5
@@ -17,4 +26,5 @@ opkg update
 	fi
 done
 rm -Rf /lib/upgrade/keep.d/php7*
+fi
 exit 0
