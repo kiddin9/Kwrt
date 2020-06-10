@@ -24,6 +24,9 @@ sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/log-facility/d' /etc/dnsmasq.conf
 echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
+sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
+sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
+
 sed -i "s/127.0.0.1:5335/127.0.0.1:5555/g" /etc/AdGuardHome.yaml
 
 rm -rf /tmp/luci-*
