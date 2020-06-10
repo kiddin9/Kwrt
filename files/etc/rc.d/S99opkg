@@ -1,0 +1,20 @@
+#!/bin/sh
+count=0
+while :
+do
+	httping -c 1 www.baidu.com 1>/dev/null 2>&1
+	if [ "$?" == "0" ]; then
+opkg update
+	for ipk in $(cat /etc/installed-opkg); do
+			opkg upgrade $ipk
+	done
+	break
+	fi
+	sleep 5
+	count=$((count+1))
+	if [ $count -gt 20 ]; then
+		break
+	fi
+done
+
+exit 0
