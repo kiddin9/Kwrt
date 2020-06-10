@@ -16,5 +16,5 @@ opkg update
 		break
 	fi
 done
-
+rm -Rf /lib/upgrade/keep.d/php7*
 exit 0
