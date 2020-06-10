@@ -12,7 +12,7 @@ opkg update
 	fi
 	sleep 5
 	count=$((count+1))
-	if [ $count -gt 20 ]; then
+	if [ $count -gt 60 ]; then
 		break
 	fi
 done
