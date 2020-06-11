@@ -60,6 +60,10 @@ rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx 
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/feeds/custom/default-settings/po/zh_Hans
 
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
+sed -i 's/\"services\"/\"nas\"/g' package/*/*/luci-app-aria2/luasrc/controller/aria2.lua
+sed -i 's/services/nas/g' package/*/*/luci-app-aria2/luasrc/view/aria2/overview_status.htm
+sed -i 's/\"services\"/\"nas\"/g' package/*/*/luci-app-xlnetacc/controller/xunlei.lua
+
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Makefile
 sed -i 's/+rclone\( \|\$\)/+rclone +fuse-utils\1/g' package/*/*/luci-app-rclone/Makefile
