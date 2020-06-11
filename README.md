@@ -4,6 +4,8 @@
 
 + 全网最新,openwrt官方master分支版本,内核升级到Linux Kernel 5.4. 插件,内核,luci,packages都与官方最新源码同步.
 
++ 自建插件仓库服务器,固件默认只包含最基础插件,其他插件全部在后台自选安装,系统升级不丢失插件.
+
 + 性能,友好度,易用性,插件,以及针对国内特殊环境等的自定义优化
 
 + uhttpd替换为nginx,大大增加可玩性:
@@ -16,8 +18,6 @@
 + 无需专业知识,无需linux服务器,人人皆可通过云编译定制编译自己的专属固件.
 
 + 持续更新, 每周日零点定时自动云编译更新固件, 始终基于官方最新源码, 不用再担心因停更而需要更换固件.
-
-+ 自选插件,对于未编译进固件且官方仓库中没有的插件将以ipk文件形式提供下载.方便自行安装.
 
 + SSL兼容,可同时使用http IP访问和绑定域名开启https访问
 
@@ -49,36 +49,11 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 + SSR Plus
 + AdguardHome DNS+恶意网址过滤
-+ FileRun  google drive风格多功能网盘
-+ 上网时间控制
-+ 微信推送
-+ ACME自动SSL证书生成
-+ 网易云音乐解锁
-+ 动态DDNS
 + SmartDNS 域名解析加速+抗污染
-+ 硬盘休眠
-+ WatchCat 网络连通性监控
-+ vlmcsd KMS微软相关激活工具
-+ ttyd 网页版终端
 + UPNP 自动端口转发
-+ Aria2 全能下载工具
-+ BaiduPCS-Web 百度网盘web客户端(Aria2+修复登录)
-+ cifsd + NFS 网络共享
-+ Netdata 全能性能监控
-+ diskman 磁盘管理
-+ dockerman 玩转docker必备
-+ Rclone 网盘挂载,同步工具
-+ qBittorrent BT下载工具
-+ Transmission BT/PT下載工具
-+ aMule 电骡下载 ed2k必备
 + Turbo ACC 网络加速
-+ SQM QOS 智能网络优化
-+ eqos IP限速
-+ Mwan3 负载均衡
-+ AppFilter App过滤
-+ nlbwmon 宽带监控
 
-其他插件请在[Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest)中下载对应的ipk文件,自行安装.
+其他插件请自行在 后台->软件包 中安装,几乎囊括了所有主流插件.系统升级不会丢失插件.每次系统升级完成连接网络后,会自动安装所有已自选安装的插件.
 
 #### 默认后台地址 10.0.0.1, 密码 root
 
