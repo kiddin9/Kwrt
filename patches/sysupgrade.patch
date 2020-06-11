@@ -1,8 +1,9 @@
 --- /package/base-files/files/sbin/sysupgrade
 +++ /package/base-files/files/sbin/sysupgrade
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
  #!/bin/sh
 -
 +opkg list-installed luci-* | grep -o -E "luci-(i18n|theme|app)-[a-zA-Z0-9_-]+" > /etc/installed-opkg
 +opkg list-installed transmission-web-control* | grep -o -E "transmission-web-control" >> /etc/installed-opkg
++opkg list-installed ddns-scripts* | grep -o -E "ddns-scripts_[a-zA-Z0-9_-]+" >> /etc/installed-opkg
  . /lib/functions.sh
