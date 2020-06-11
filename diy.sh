@@ -58,7 +58,7 @@ rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx 
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/feeds/custom/default-settings/po/zh_Hans
 
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
-sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' packages/*/*/php7/Makefile
+sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's/+rclone/+rclone +fuse-utils/g' package/*/*/luci-app-rclone/Makefile
 sed -i 's/+acme/+acme +acme-dnsapi/g' package/*/*/luci-app-acme/Makefile
 sed -i 's/+amule/+amule +antileech/g' package/*/*/luci-app-amule/Makefile
