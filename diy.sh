@@ -59,6 +59,8 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/
 
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' packages/*/*/php7/Makefile
+sed -i 's/+acme/+acme +acme-dnsapi/g' package/*/*/luci-app-acme/Makefile
+sed -i 's/+amule/+amule +antileech/g' package/*/*/luci-app-amule/Makefile
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
 sed -i 's/extra_setting\"/extra_settings\"/g' package/*/*/luci-app-aria2/luasrc/model/cbi/aria2/config.lua
 sed -i 's/services\/aria2/nas\/aria2/g' package/*/*/luci-app-aria2/luasrc/view/aria2/*
