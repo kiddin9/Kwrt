@@ -57,7 +57,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/
 
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
-sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*strongswan/Makefile
+sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Makefile
 sed -i 's/+rclone\( \|\$\)/+rclone +fuse-utils\1/g' package/*/*/luci-app-rclone/Makefile
 sed -i 's/+acme\( \|\$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i 's/+amule\( \|\$\)/+amule +antileech\1/g' package/*/*/luci-app-amule/Makefile
