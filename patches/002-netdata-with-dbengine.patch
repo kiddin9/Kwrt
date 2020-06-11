@@ -5,7 +5,7 @@
    SECTION:=admin
    CATEGORY:=Administration
 -  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c
-+  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c +libopenssl +liblz4
++  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c +libopenssl +liblz4 +python3 +python3-yaml +python3-urllib3 +python3-pip
    TITLE:=Real-time performance monitoring tool
    URL:=https://www.netdata.cloud/
  endef
