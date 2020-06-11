@@ -4,4 +4,5 @@
  #!/bin/sh
 -
 +opkg list-installed luci-* | grep -o -E "luci-(i18n|theme|app)-[a-zA-Z0-9_-]+" > /etc/installed-opkg
++opkg list-installed transmission-web-control* | grep -o -E "transmission-web-control" >> /etc/installed-opkg
  . /lib/functions.sh
