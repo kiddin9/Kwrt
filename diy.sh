@@ -41,6 +41,8 @@ svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble
 svn co https://github.com/coolsnowwolf/packages/trunk/net/strongswan
 cd -
 
+mv -f feeds/luci/applications/luci-app-aria2 feeds/custom/luci/luci-app-aria2
+mv -f feeds/packages/net/aria2 feeds/packages/net/aria2
 git clone https://github.com/librespeed/speedtest files/www/speedtest
 mv files/www/speedtest/example-singleServer-full.html files/www/speedtest/index.html
 
