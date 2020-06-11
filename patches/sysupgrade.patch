@@ -1,6 +1,6 @@
 --- /package/base-files/files/sbin/sysupgrade
 +++ /package/base-files/files/sbin/sysupgrade
-@@ -1,3 +1,3 @@
+@@ -1,4 +1,4 @@
  #!/bin/sh
 -
 +opkg list-installed luci-* | grep -o -E "luci-(i18n|theme|app)-[a-zA-Z0-9_-]+" > /etc/installed-opkg
