@@ -58,11 +58,11 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/
 
 # wget https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/luci.mk -O feeds/luci/luci.mk
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
-sed -i 's/+rclone\( \|\$\)/+rclone +fuse-utils/g' package/*/*/luci-app-rclone/Makefile
-sed -i 's/+acme\( \|\$\)/+acme +acme-dnsapi/g' package/*/*/luci-app-acme/Makefile
-sed -i 's/+amule\( \|\$\)/+amule +antileech/g' package/*/*/luci-app-amule/Makefile
+sed -i 's/+rclone\( \|\$\)/+rclone +fuse-utils\1/g' package/*/*/luci-app-rclone/Makefile
+sed -i 's/+acme\( \|\$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
+sed -i 's/+amule\( \|\$\)/+amule +antileech\1/g' package/*/*/luci-app-amule/Makefile
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
-sed -i 's/+aria2\( \|\$\)/+aria2 +ariang-nginx/g' package/*/*/luci-app-aria2/Makefile
+sed -i 's/+aria2\( \|\$\)/+aria2 +ariang-nginx\1/g' package/*/*/luci-app-aria2/Makefile
 sed -i 's/extra_setting\"/extra_settings\"/g' package/*/*/luci-app-aria2/luasrc/model/cbi/aria2/config.lua
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
