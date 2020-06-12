@@ -242,7 +242,7 @@ if [ -f /etc/config/jia ]; then
   opkg update
 fi
 	for ipk in $(cat /etc/installed-opkg); do
-			opkg upgrade $ipk
+			opkg upgrade --force-depends $ipk
 	done
 	touch /etc/inited
 	break
