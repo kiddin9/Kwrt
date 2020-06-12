@@ -66,8 +66,6 @@ sed -i 's/+rclone\( \|\$\)/+rclone +fuse-utils\1/g' package/*/*/luci-app-rclone/
 sed -i 's/+acme\( \|\$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i 's/+amule\( \|\$\)/+amule +antileech\1/g' package/*/*/luci-app-amule/Makefile
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
-sed -i 's/+aria2\( \|\$\)/+aria2 +ariang-nginx\1/g' package/*/*/luci-app-aria2/Makefile
-sed -i 's/extra_setting\"/extra_settings\"/g' package/*/*/luci-app-aria2/luasrc/model/cbi/aria2/config.lua
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 sed -i 's/LUCI_DEPENDS:=/LUCI_DEPENDS:=+transmission-daemon-openssl /g' package/*/*/luci-app-transmission/Makefile
