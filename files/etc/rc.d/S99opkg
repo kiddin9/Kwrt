@@ -67,4 +67,6 @@ if [ ! -f /etc/config/placeholder ]; then
 fi
 
 rm -Rf /tmp
+touch /etc/config/placeholder
+
 fi
