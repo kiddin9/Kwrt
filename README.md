@@ -91,11 +91,11 @@ make defconfig
 rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
-rm -Rf feeds package tmp
+rm -Rf feeds package
 svn co https://github.com/openwrt/openwrt/trunk/package
 git pull
 [ -f ".config" ] && mv .config .config.bak
-./scripts/feeds update custom -a
+./scripts/feeds update -a
 sh ./diy.sh
 [ -f ".config.bak" ] && mv .config.bak .config || mv X86_64.config .config
 make defconfig
