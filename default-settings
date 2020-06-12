@@ -227,7 +227,6 @@ cp -R /www/cgi-bin/* /www/
 chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
-touch /etc/config/placeholder
 
 count=0
 while :
@@ -294,5 +293,8 @@ if [ ! -f /etc/config/placeholder ]; then
   uci -q add_list aria2.main.extra_settings="dht-file-path=/usr/share/aria2/dht.dat"
   uci commit aria2
 fi
+
+rm -Rf /tmp
+touch /etc/config/placeholder
 
 exit 0
