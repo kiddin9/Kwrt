@@ -225,6 +225,8 @@ if [ ! -f /usr/bin/ssr-server ]; then
 fi
 
 cp -R /www/cgi-bin/* /www/
+find /www -type f -exec chmod 644 {} \;
+find /www -type d -exec chmod 755 {} \;
 chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
