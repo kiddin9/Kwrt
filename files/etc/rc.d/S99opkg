@@ -25,7 +25,6 @@ fi
 		break
 	fi
 done
-rm -Rf /tmp
 fi
 
 rm -Rf /lib/upgrade/keep.d/php7*
@@ -68,5 +67,4 @@ if [ ! -f /etc/config/placeholder ]; then
   uci -q add_list aria2.main.extra_settings="dht-file-path=/usr/share/aria2/dht.dat"
   uci commit aria2
 fi
-
 touch /etc/config/placeholder
