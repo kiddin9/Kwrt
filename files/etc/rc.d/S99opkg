@@ -10,7 +10,10 @@ if [ -f /etc/config/jia ]; then
   opkg upgrade php7 php7-fpm php7-mod-dom php7-mod-fileinfo php7-mod-filter php7-mod-iconv php7-mod-json php7-mod-zip
   sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
   sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
-  service php7-fpm restart
+  /etc/init.d/php7-fpm restart
+  [ "`pgrep php-fpm`" ] || {
+	/etc/init.d/php7-fpm restart
+	}
   opkg update
 fi
 	for ipk in $(cat /etc/installed-opkg); do
@@ -35,6 +38,7 @@ sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
 find /www -type f -exec chmod 644 {} \;
 find /www -type d -exec chmod 755 {} \;
 chmod +x /usr/share/aria2/*.sh
+chmod +x /www/luci
 
 ln -sf /usr/bin/python3 /usr/bin/python
 ln -sf /usr/lib/netdata/conf.d /etc/netdata/conf.d
