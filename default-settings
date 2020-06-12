@@ -228,6 +228,4 @@ chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
-touch /etc/config/placeholder
-
 exit 0
