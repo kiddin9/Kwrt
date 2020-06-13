@@ -43,7 +43,6 @@ git clone https://github.com/librespeed/speedtest files/www/speedtest
 mv files/www/speedtest/example-singleServer-full.html files/www/speedtest/index.html
 
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
-mv -f feeds/luci/applications/luci-app-aria2 feeds/custom/luci/luci-app-aria2
 mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
 
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
