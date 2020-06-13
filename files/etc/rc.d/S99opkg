@@ -52,7 +52,7 @@ ln -f /etc/netdata/charts.d.conf /usr/lib/netdata/conf.d/charts.d.conf
 ln -f /etc/netdata/python.d.conf /usr/lib/netdata/conf.d/python.d.conf
 
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/aria2.lua
-sed -i 's/services/nas/g' /usr/lib/lua/luci/view/aria2/overview_status.htm
+sed -i 's/services/nas/g' /usr/lib/lua/luci/view/aria2/*.htm
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/hd_idle.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/samba4.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/ksmbd.lua
