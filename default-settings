@@ -10,7 +10,7 @@ sed -i 's/downloads.openwrt.org/mirrors.cloud.tencent.com\/openwrt/g' /etc/opkg/
 sed -i 's/http/https/g' /etc/opkg/distfeeds.conf
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/sysinfo.sh/d' /etc/profile
-sed -i 's?banner.failsafe?banner.failsafe\n[ -f /etc/sysinfo.sh ] && env -i bash /etc/sysinfo.sh?g' /etc/profile
+sed -i 's?banner.failsafe?banner.failsafe\n[ -f /etc/sysinfo.sh ] \&\& env -i bash /etc/sysinfo.sh?g' /etc/profile
 sed -i '/log-facility/d' /etc/dnsmasq.conf
 echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
