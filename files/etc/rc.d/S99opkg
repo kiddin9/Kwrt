@@ -23,6 +23,9 @@ cp -r /etc/config /etc/config.bak
 rsync -av /etc/config.bak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
 rm -Rf /etc/config.bak
 	touch /etc/inited
+	  [ "`pgrep php-fpm`" ] || {
+	/etc/init.d/unblockmusic restart
+	}
 	break
 	fi
 	sleep 5
