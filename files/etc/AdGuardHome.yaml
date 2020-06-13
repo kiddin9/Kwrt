@@ -115,28 +115,12 @@ filters:
   name: MalwareDomainList.com Hosts List
   id: 4
 - enabled: false
-  url: https://github.com/vokins/yhosts/raw/master/hosts.txt
-  name: yhosts
-  id: 1572918261
-- enabled: false
-  url: https://raw.githubusercontent.com/jdlingyu/ad-wars/master/hosts
-  name: ad-wars
-  id: 1572918262
-- enabled: false
-  url: https://gitlab.com/CHEF-KOCH/cks-filterlist/raw/master/hosts/Ads-tracker.txt
-  name: Ad- & Tracker
-  id: 1573389392
-- enabled: false
-  url: https://raw.githubusercontent.com/Goooler/1024_hosts/master/hosts
-  name: "1024"
-  id: 1573404420
-- enabled: false
   url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
   name: googlehosts
   id: 1573404421
 - enabled: false
-  url: https://raw.githubusercontent.com/jerryn70/GoodbyeAds/master/Hosts/GoodbyeAds.txt
-  name: GoodbyeAds
+  url: https://github.com/jerryn70/GoodbyeAds/raw/master/Extension/GoodbyeAds-YouTube-AdBlock.txt
+  name: YouTube-AdBlock
   id: 1584350199
 whitelist_filters:
 - enabled: true
