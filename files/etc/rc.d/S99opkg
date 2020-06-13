@@ -58,18 +58,3 @@ sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/transmission.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
-
-if [ ! -f /etc/config/placeholder ]; then
-  uci set mwan3.wan.enabled='0'
-  uci commit mwan3
-  
-  uci del dockerman.local.daemon_ea
-  uci commit dockerman
-  
-  uci -q set aria2.main.split="128"
-  uci -q set aria2.main.min_split_size="100K"
-  uci -q set aria2.main.max_connection_per_server="128"
-  uci -q add_list aria2.main.extra_settings="dht-file-path=/usr/share/aria2/dht.dat"
-  uci commit aria2
-fi
-touch /etc/config/placeholder
