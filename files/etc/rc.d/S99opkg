@@ -16,9 +16,12 @@ if [ -f /etc/config/jia ]; then
 	}
   opkg update
 fi
+cp -r /etc/config /etc/config.bak
 	for ipk in $(cat /etc/installed-opkg); do
 			opkg upgrade --force-depends $ipk
 	done
+rsync -av /etc/config.bak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
+rm -Rf /etc/config.bak
 	touch /etc/inited
 	break
 	fi
