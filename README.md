@@ -48,8 +48,6 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 ### 默认插件包含:
 
 + SSR Plus
-+ AdguardHome DNS+恶意网址过滤
-+ SmartDNS 域名解析加速+抗污染
 + UPNP 自动端口转发
 + Turbo ACC 网络加速
 
