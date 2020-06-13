@@ -37,10 +37,10 @@ jobs:
     - name: Load Settings.ini
       run: |
         source "${GITHUB_WORKSPACE}/settings.ini"
-        echo "::set-env name=REPO_URL::${REPO_URL}"
-        echo "::set-env name=REPO_BRANCH::${REPO_BRANCH}"
-        echo "::set-env name=CONFIG_FILE::${CONFIG_FILE}"
-        echo "::set-env name=DIY_SH::${DIY_SH}"
+        echo "::set-env name=REPO_URL::${REPO_URL}"#https://github.com/openwrt/openwrt
+        echo "::set-env name=REPO_BRANCH::${REPO_BRANCH}"#master
+        echo "::set-env name=CONFIG_FILE::${CONFIG_FILE}"#X86_64.config
+        echo "::set-env name=DIY_SH::${DIY_SH}"#diy.sh
         echo "::set-env name=FREE_UP_DISK::${FREE_UP_DISK}"
         echo "::set-env name=SSH_ACTIONS::${SSH_ACTIONS}"
         echo "::set-env name=UPLOAD_BIN_DIR_FOR_ARTIFACT::${UPLOAD_BIN_DIR_FOR_ARTIFACT}"
@@ -49,7 +49,7 @@ jobs:
         echo "::set-env name=UPLOAD_FIRMWARE_TO_COWTRANSFER::${UPLOAD_FIRMWARE_TO_COWTRANSFER}"
         echo "::set-env name=UPLOAD_FIRMWARE_TO_WETRANSFER::${UPLOAD_FIRMWARE_TO_WETRANSFER}"
 
-    - name: Initialization environment
+    - name: Initialization environment#初始化环境
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
@@ -60,17 +60,17 @@ jobs:
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
     
-    - name: Get current date
+    - name: Get current date#获取当前时间
       id: date
       run: |
         echo "::set-env name=date::$(date +'%m/%d_%Y_%H/%M')"
         echo "::set-env name=date2::$(date +'%m/%d %Y')"
         echo "::set-env name=date3::$(date +'%m.%d')"
 
-    - name: Clone source code
+    - name: Clone source code#克隆源代码
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        mv feeds.conf openwrt/
+        mv feeds.conf openwrt/  #移动feeds.conf到openwrt
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
@@ -88,7 +88,7 @@ jobs:
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
-    - name: Load custom configuration
+    - name: Load custom configuration#加载自定义配置
       run: |
         cp -Rf * openwrt/ || true
         cd openwrt
