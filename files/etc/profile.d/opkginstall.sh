@@ -1,63 +1,31 @@
-#!/bin/sh
-if [ ! -f /etc/inited ]; then
-count=0
-while :
-do
-	httping -c 1 www.baidu.com 1>/dev/null 2>&1
-	if [ "$?" == "0" ]; then
-opkg update
-if [ -f /etc/config/jia ]; then
-  opkg upgrade php7 php7-fpm php7-mod-dom php7-mod-fileinfo php7-mod-filter php7-mod-iconv php7-mod-json php7-mod-zip
-  sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
-  sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
-  /etc/init.d/php7-fpm restart
-  [ "`pgrep php-fpm`" ] || {
-	/etc/init.d/php7-fpm restart
-	}
-  opkg update
-fi
-cp -r /etc/config /etc/config.bak
-	for ipk in $(cat /etc/installed-opkg); do
-			opkg upgrade --force-depends $ipk
-	done
-rsync -av /etc/config.bak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
-rm -Rf /etc/config.bak
-	touch /etc/inited
-	  [ "`pgrep php-fpm`" ] || {
-	/etc/init.d/unblockmusic restart
-	}
-	break
-	fi
-	sleep 5
-	count=$((count+1))
-	if [ $count -gt 60 ]; then
-		break
-	fi
-done
-fi
-
+opkg() {
+    if [[ $@ =~ ^install.* ]]; then
+	command opkg $@
 rm -Rf /lib/upgrade/keep.d/php7*
-
 sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
 sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
+/etc/init.d/php7-fpm restart
 sed -i 's/extra_setting\"/extra_settings\"/g' /usr/lib/lua/luci/model/cbi/aria2/config.lua
-
 chmod +x /usr/share/aria2/*.sh
-
 ln -sf /usr/bin/python3 /usr/bin/python
 ln -sf /usr/lib/netdata/conf.d /etc/netdata/conf.d
 ln /usr/lib/netdata/conf.d/charts.d.conf /etc/netdata/charts.d.conf
 ln /usr/lib/netdata/conf.d/python.d.conf /etc/netdata/python.d.conf
 ln -f /etc/netdata/charts.d.conf /usr/lib/netdata/conf.d/charts.d.conf
 ln -f /etc/netdata/python.d.conf /usr/lib/netdata/conf.d/python.d.conf
-
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/aria2.lua
+sed -i 's/entry({"admin", "nas", "aria2"}/entry({"admin", "nas"}, firstchild(), _("NAS") , 45).dependent = false\nentry({"admin", "nas", "aria2"}/g' /usr/lib/lua/luci/controller/aria2.lua
 sed -i 's/services/nas/g' /usr/lib/lua/luci/view/aria2/*.htm
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/hd_idle.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/samba4.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/ksmbd.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/minidlna.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/transmission.lua
+sed -i 's/local page = entry/entry({"admin", "nas"}, firstchild(), _("NAS") , 45).dependent = false\nlocal page = entry/g' /usr/lib/lua/luci/controller/transmission.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
+    else
+        command opkg $@
+    fi
+}

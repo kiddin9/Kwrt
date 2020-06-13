@@ -9,8 +9,6 @@ sed -i '$a src/gz openwrt_custom https://openwrt.supes.top:888/opkg' /etc/opkg/c
 sed -i 's/downloads.openwrt.org/mirrors.cloud.tencent.com\/openwrt/g' /etc/opkg/distfeeds.conf
 sed -i 's/http/https/g' /etc/opkg/distfeeds.conf
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
-sed -i '/sysinfo.sh/d' /etc/profile
-sed -i 's?banner.failsafe?banner.failsafe\n[ -f /etc/sysinfo.sh ] \&\& env -i bash /etc/sysinfo.sh?g' /etc/profile
 sed -i '/log-facility/d' /etc/dnsmasq.conf
 echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
@@ -84,5 +82,40 @@ chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
+count=0
+while :
+do
+	httping -c 1 www.baidu.com 1>/dev/null 2>&1
+	if [ "$?" == "0" ]; then
+opkg update
+if [ -f /etc/config/jia ]; then
+  opkg upgrade php7 php7-fpm php7-mod-dom php7-mod-fileinfo php7-mod-filter php7-mod-iconv php7-mod-json php7-mod-zip
+  sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
+  sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
+  /etc/init.d/php7-fpm restart
+  [ "`pgrep php-fpm`" ] || {
+	/etc/init.d/php7-fpm restart
+	}
+  opkg update
+fi
+cp -r /etc/config /etc/config.bak
+	for ipk in $(cat /etc/installed-opkg); do
+			opkg upgrade --force-depends $ipk
+	done
+rsync -av /etc/config.bak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
+rm -Rf /etc/config.bak
+	  [ "`pgrep unblockmusic`" ] || {
+	/etc/init.d/unblockmusic restart
+	}
+	break
+	fi
+	sleep 5
+	count=$((count+1))
+	if [ $count -gt 60 ]; then
+		break
+	fi
+done
+
 touch /etc/config/placeholder
+
 exit 0
