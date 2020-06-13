@@ -48,6 +48,7 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 ### 默认插件包含:
 
 + SSR Plus
++ Opkg 软件包管理
 + UPNP 自动端口转发
 + Turbo ACC 网络加速
 
