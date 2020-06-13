@@ -17,7 +17,7 @@ config smartdns
 	option port '5555'
 	option force_aaaa_soa '0'
 	option serve_expired '1'
-	option enabled '0'
+	option enabled '1'
 	option tcp_server '1'
 	option prefetch_domain '1'
 	option coredump '1'
