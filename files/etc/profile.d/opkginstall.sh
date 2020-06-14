@@ -25,6 +25,8 @@ sed -i 's/local page = entry/entry({"admin", "nas"}, firstchild(), _("NAS") , 45
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
+
+rm -Rf /tmp/luci-modulecache
     else
         command opkg $@
     fi
