@@ -13,7 +13,7 @@
      + 通过nginx实现Webdav 自建共享同步网盘神器
      + nginx反向代理 实现后台每个页面与服务都可通过自定义域名访问
 
-+ 内置AdguardHome搭配SmartDNS综合优化方案, 开箱即用,实现恶意网站过滤+区分国内外域名解析加速+ 防污染+ DNS优选
++ 内置AdguardHome搭配SmartDNS综合优化方案, 开箱即用,实现恶意网站过滤+区分国内外域名解析加速+ 防污染+ DNS优选 (需在后台安装luci-app-adguardhome和luci-app-smartdns)
 
 + 无需专业知识,无需linux服务器,人人皆可通过云编译定制编译自己的专属固件.
 
