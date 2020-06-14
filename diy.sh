@@ -39,9 +39,6 @@ git clone https://github.com/garypang13/luci-app-baidupcs-web
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion
 cd -
 
-git clone https://github.com/librespeed/speedtest files/www/speedtest
-mv files/www/speedtest/example-singleServer-full.html files/www/speedtest/index.html
-
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
 
