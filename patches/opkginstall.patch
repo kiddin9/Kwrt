@@ -10,4 +10,3 @@
 +	luci.sys.exec("source /etc/profile.d/opkginstall.sh")
  	luci.http.write_json(sys.process.exec(cmd, true, true))
  end
-
