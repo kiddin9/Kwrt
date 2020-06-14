@@ -217,4 +217,4 @@ jobs:
       if: env.TELEGRAM_BOT_URL
       continue-on-error: true
       run: |
-        [ ${{ env.status }} == 'success' ] && curl -d "text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋" -X POST ${{ secrets.TELEGRAM_BOT_URL }} || curl -d "text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂" -X POST ${{ secrets.TELEGRAM_BOT_URL }}
+        [ ${{ env.status }} == 'success' ] && curl -d "text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋 ${{ env.COWURL }} 🚀" -X POST ${{ secrets.TELEGRAM_BOT_URL }} || curl -d "text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂" -X POST ${{ secrets.TELEGRAM_BOT_URL }}
