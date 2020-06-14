@@ -4,5 +4,5 @@
  #!/bin/sh
 -
 +opkg list-installed luci-* | grep -o -E "luci-(i18n|theme|app)-[a-zA-Z0-9_-]+" > /etc/installed-opkg
-+opkg list-installed | grep -o -E "(ddns-scripts_[a-zA-Z0-9_-]+|ksmbd-utils|transmission-web-control|ariang-nginx)" >> /etc/installed-opkg
++opkg list-installed | grep -o -E "(ddns-scripts_[a-zA-Z0-9_-]+|ksmbd-utils|transmission-web-control|ariang-nginx|acme-dnsapi)" >> /etc/installed-opkg
  . /lib/functions.sh
