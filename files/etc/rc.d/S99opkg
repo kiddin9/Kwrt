@@ -22,7 +22,7 @@ rm -Rf /etc/config.bak
 	[[ ! `pgrep rclone` && `uci get rclone.global.enabled` == 1 ]] && {
 	/etc/init.d/rclone restart
 	}
-source /etc/profile.d/opkginstall.sh; opkg >/dev/null 2>&1
+source /etc/profile.d/opkginstall.sh; opkg install >/dev/null 2>&1
 	break
 	fi
 	sleep 5
