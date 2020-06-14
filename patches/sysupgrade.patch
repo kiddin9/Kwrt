@@ -1,8 +1,7 @@
 --- /feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
 +++ /feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
-@@ -285,2 +285,5 @@
+@@ -285,2 +285,4 @@
  	handleSysupgradeConfirm: function(btn, keep, force, ev) {
-+		fs.exec('opkg list-installed luci-* | grep -o -E "luci-(i18n|theme|app)-[a-zA-Z0-9_-]+" > /etc/installed-opkg')
-+		fs.exec('opkg list-installed | grep -o -E "(ddns-scripts_[a-zA-Z0-9_-]+|ksmbd-utils|transmission-web-control|ariang-nginx|acme-dnsapi)" >> /etc/installed-opkg')
++		fs.exec("ls /overlay/upper/usr/lib/opkg/info/*.list | sed -e 's/.*\///' | sed -e 's/\.list//' > /etc/installed-opkg")
 +		fs.exec('rm -Rf /etc/profile.d/opkginstall.sh /etc/profile.d/sysinfo.sh')
  		btn.firstChild.data = _('Flashing…');
