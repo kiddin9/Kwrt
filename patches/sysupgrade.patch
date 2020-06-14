@@ -1,8 +1,8 @@
---- /package/base-files/files/sbin/sysupgrade
-+++ /package/base-files/files/sbin/sysupgrade
-@@ -1,3 +1,4 @@
- #!/bin/sh
--
-+opkg list-installed luci-* | grep -o -E "luci-(i18n|theme|app)-[a-zA-Z0-9_-]+" > /etc/installed-opkg
-+opkg list-installed | grep -o -E "(ddns-scripts_[a-zA-Z0-9_-]+|ksmbd-utils|transmission-web-control|ariang-nginx|acme-dnsapi)" >> /etc/installed-opkg
- . /lib/functions.sh
+--- /feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ /feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+@@ -285,2 +285,5 @@
+ 	handleSysupgradeConfirm: function(btn, keep, force, ev) {
++		opkg list-installed luci-* | grep -o -E "luci-(i18n|theme|app)-[a-zA-Z0-9_-]+" > /etc/installed-opkg
++		opkg list-installed | grep -o -E "(ddns-scripts_[a-zA-Z0-9_-]+|ksmbd-utils|transmission-web-control|ariang-nginx|acme-dnsapi)" >> /etc/installed-opkg
++		rm -Rf /etc/profile.d/opkginstall.sh /etc/profile.d/sysinfo.sh
+ 		btn.firstChild.data = _('Flashing…');
