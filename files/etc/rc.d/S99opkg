@@ -19,6 +19,7 @@ rm -Rf /etc/config.bak
 	  [ "`pgrep unblockmusic`" ] || {
 	/etc/init.d/unblockmusic restart
 	}
+source /etc/profile.d/opkginstall.sh; opkg >/dev/null 2>&1
 	break
 	fi
 	sleep 5
