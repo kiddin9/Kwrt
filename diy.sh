@@ -55,6 +55,7 @@ rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amul
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/feeds/custom/default-settings/po/zh_Hans
 
+sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/g' /etc/profile
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's?/etc/config/AdGuardHome?/etc/config/AdGuardHome\n/etc/config/AdGuardHome/AdGuardHome.yaml?g'  package/*/*/luci-app-adguardhome/Makefile
 sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Makefile
