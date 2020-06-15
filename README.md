@@ -1,5 +1,5 @@
-# Actions OpenWrt Snapshot With Nginx 
-
+# Actions OpenWrt Snapshot With Nginx
+[Telegram](https://t.me/openwrt_nginx)
 ### 特色:
 
 + 全网最新,openwrt官方master分支版本,内核升级到Linux Kernel 5.4. 插件,内核,luci,packages都与官方最新源码同步.
