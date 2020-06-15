@@ -5,8 +5,7 @@
 -	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages" }
 +	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages", "--force-depends" }
  	local pkg = luci.http.formvalue("package")
-@@ -59,3 +59,4 @@
- 	luci.http.prepare_content("application/json")
-+	luci.sys.exec("source /etc/profile.d/opkginstall.sh")
+@@ -60,2 +60,3 @@
  	luci.http.write_json(sys.process.exec(cmd, true, true))
++	luci.sys.exec("source /etc/profile.d/opkginstall.sh;opkg install>/dev/null 2>&1")
  end
