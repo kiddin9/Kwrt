@@ -51,7 +51,7 @@ ifeq ($(ARCH),aarch64)
 endif
 
 
-PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB).tar.xz
+PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB).zip
 
 PKG_SOURCE_URL:=https://github.com/garypang13/luci-app-baidupcs-web/releases/download/$(PKG_VERSION)/
 
