@@ -45,7 +45,7 @@ endif
 
 PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB).tgz
 PKG_SOURCE_URL:=https://github.com/garypang13/luci-app-baidupcs-web/releases/download/$(PKG_VERSION)/
-PKG_BUILD_DIR:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB)
+PKG_BUILD_DIR:=$(BUILD_DIR)/BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB)
 PKG_HASH:=skip
 
 include $(INCLUDE_DIR)/package.mk
