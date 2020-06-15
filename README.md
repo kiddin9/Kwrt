@@ -1,5 +1,5 @@
 # Actions OpenWrt Snapshot With Nginx
-[Telegram](https://t.me/openwrt_nginx)
+[Telegram](https://t.me/openwrt_nginx){:target="_blank"}
 ### 特色:
 
 + 全网最新,openwrt官方master分支版本,内核升级到Linux Kernel 5.4. 插件,内核,luci,packages都与官方最新源码同步.
@@ -21,9 +21,9 @@
 
 + SSL兼容,可同时使用http IP访问和绑定域名开启https访问
 
-[lean](https://github.com/coolsnowwolf/lede/tree/master/package/lean) 源码里的所有插件都有移植过来,增加插件只需在X86_64.config文件中开启然后云编译即可.
+[lean](https://github.com/coolsnowwolf/lede/tree/master/package/lean){:target="_blank"} 源码里的所有插件都有移植过来,增加插件只需在X86_64.config文件中开启然后云编译即可.
 
-X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest) 下载,每周日更新固件.
+X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases/latest){:target="_blank"} 下载,每周日更新固件.
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
 
@@ -33,17 +33,17 @@ X86_64固件在此 [Releases](https://github.com/garypang13/Actions-OpenWrt-Ngin
 
 建议fork此项目,按自己路由器类型与需求调整.config文件来适配路由器与增删插件,再通过github云编译来编译自己的定制化专属固件
 
-云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法release
+云编译需要 [在此](https://github.com/settings/tokens){:target="_blank"} 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法release
 
 在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.
 
-Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com)推送编译结果到微信
+Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com){:target="_blank"} 推送编译结果到微信
 
-Secrets中添加 TELEGRAM_BOT_URL 可推送编译结果到Telegram Bot. [获取机器人](https://t.me/notificationme_bot)
+Secrets中添加 TELEGRAM_BOT_URL 可推送编译结果到Telegram Bot. [获取机器人](https://t.me/notificationme_bot){:target="_blank"}
 
 点击右上角的Star按钮开始编译
 
-diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
+diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html){:target="_blank"}
 
 ### 默认插件包含:
 
