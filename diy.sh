@@ -48,6 +48,7 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean fe
 cp -Rf ./diy/* ./
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
 
+rm -Rf package/*/*/autocore
 rm -Rf package/*/*/qBittorrent/patches
 rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded files/usr/share/amule/webserver/AmuleWebUI-Reloaded
 rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
