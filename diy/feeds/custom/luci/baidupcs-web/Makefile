@@ -43,14 +43,18 @@ ifeq ($(ARCH),mips)
 endif
 
 ifeq ($(ARCH),arm)
-	PKG_ARCH_BAIDUPCS-WEB:=arm
+ifeq ($(BOARD),bcm53xx)
+	PKG_ARCH_BAIDUPCS-WEB:=armv5
+else ifeq ($(BOARD),kirkwood)
+	PKG_ARCH_BAIDUPCS-WEB:=armv5
+else
+	PKG_ARCH_BAIDUPCS-WEB:=armv7
+endif
 endif
 
 ifeq ($(ARCH),aarch64)
 	PKG_ARCH_BAIDUPCS-WEB:=arm64
 endif
-
-
 PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB).zip
 
 PKG_SOURCE_URL:=https://github.com/garypang13/luci-app-baidupcs-web/releases/download/$(PKG_VERSION)/
