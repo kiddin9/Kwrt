@@ -187,7 +187,7 @@ jobs:
             
             WeTransfer: ${{ env.WETRANS }} 🗽
             
-            请分配不低于1G 的存储空间 💾
+            请分配不低于700M 的存储空间 💾
         draft: false
         prerelease: false     
 
