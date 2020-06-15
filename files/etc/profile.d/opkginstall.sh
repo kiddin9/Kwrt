@@ -1,5 +1,5 @@
 opkg() {
-    if [[ $@ =~ ^install.* ]]; then
+    if [[ `echo $@ | grep -o -E 'install'` ]]; then
 	command opkg $@
 rm -Rf /lib/upgrade/keep.d/php7*
 sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
