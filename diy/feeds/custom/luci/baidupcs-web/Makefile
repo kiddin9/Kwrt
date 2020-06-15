@@ -10,19 +10,6 @@ PKG_NAME:=baidupcs-web
 PKG_VERSION:=v3.7.1
 PKG_RELEASE:=1
 
-include $(INCLUDE_DIR)/package.mk
-
-define Package/$(PKG_NAME)
-	SECTION:=net
-	CATEGORY:=Network
-	TITLE:=BaiduPCS-Web is a web controller for BaiduPCS-Go
-endef
-
-
-define Package/$(PKG_NAME)/description
-BaiduPCS-Web is a web controller for BaiduPCS-Go
-endef
-
 # 禁止OpenWrt对二进制文件进行strip
 STRIP:=true
 
@@ -55,13 +42,26 @@ endif
 ifeq ($(ARCH),aarch64)
 	PKG_ARCH_BAIDUPCS-WEB:=arm64
 endif
+
 PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB).tgz
-
 PKG_SOURCE_URL:=https://github.com/garypang13/luci-app-baidupcs-web/releases/download/$(PKG_VERSION)/
-
 PKG_BUILD_DIR:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB)
-
 PKG_HASH:=skip
+
+include $(INCLUDE_DIR)/package.mk
+
+define Package/$(PKG_NAME)
+	SECTION:=net
+	CATEGORY:=Network
+	TITLE:=BaiduPCS-Web is a web controller for BaiduPCS-Go
+endef
+
+
+define Package/$(PKG_NAME)/description
+BaiduPCS-Web is a web controller for BaiduPCS-Go
+endef
+
+
 
 define Build/Compile
 endef
