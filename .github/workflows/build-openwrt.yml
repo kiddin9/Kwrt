@@ -211,7 +211,7 @@ jobs:
     - name: WeChat notification
       if: env.SCKEY
       run: |
-        [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=🎉OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译完成😋 || curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=❌OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译失败😂
+        [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=🎉OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译完成😋 ${{ env.COWURL }}|| curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=❌OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译失败😂
 
     - name: Telegram notification
       if: env.TELEGRAM_BOT_URL
