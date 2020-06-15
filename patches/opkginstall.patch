@@ -7,5 +7,5 @@
  	local pkg = luci.http.formvalue("package")
 @@ -60,2 +60,3 @@
  	luci.http.write_json(sys.process.exec(cmd, true, true))
-+	luci.sys.exec("source /etc/profile.d/opkginstall.sh;opkg install>/dev/null 2>&1")
++	luci.sys.exec("source /etc/profile.d/opkginstall.sh;opkg >/dev/null 2>&1")
  end
