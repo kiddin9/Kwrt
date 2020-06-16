@@ -1,5 +1,6 @@
 #!/bin/sh
 if [ ! -f /etc/inited ]; then
+source /etc/profile.d/opkginstall.sh;
 count=0
 while :
 do
@@ -16,14 +17,6 @@ cp -r /etc/config /etc/config.bak
 rsync -av /etc/config.bak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
 rm -Rf /etc/config.bak
 	touch /etc/inited
-source /etc/profile.d/opkginstall.sh; opkg install >/dev/null 2>&1
-	sleep 2;
-	[[ ! `pgrep UnblockNeteaseMusic` && `uci get unblockmusic.@unblockmusic[0].enabled` == 1 ]] && {
-	/etc/init.d/unblockmusic restart
-	}
-	[[ ! `pgrep rclone` && `uci get rclone.global.enabled` == 1 ]] && {
-	/etc/init.d/rclone restart
-	}
 	break
 	fi
 	sleep 5
