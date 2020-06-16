@@ -1,5 +1,7 @@
 #!/bin/sh
 if [ ! -f /etc/inited ]; then
+uci del dhcp.@dnsmasq[0].noresolv
+uci commit dhcp
 count=0
 while :
 do
