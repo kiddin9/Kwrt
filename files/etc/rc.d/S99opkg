@@ -17,7 +17,7 @@ source /etc/profile.d/opkginstall.sh; opkg install >/dev/null 2>&1
 	fi
 	sleep 5
 	count=$((count+1))
-	if [ $count -gt 60 ]; then
+	if [ $count -gt 120 ]; then
 		break
 	fi
 done
