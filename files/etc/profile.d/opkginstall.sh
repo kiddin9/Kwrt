@@ -55,7 +55,6 @@ fi
 }
 rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
 
-sleep 2
 	[[ ! `pgrep UnblockNeteaseMusic` && `uci get unblockmusic.@unblockmusic[0].enabled` == 1 ]] && {
 	/etc/init.d/unblockmusic restart
 	}
