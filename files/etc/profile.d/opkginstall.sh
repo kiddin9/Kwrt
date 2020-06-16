@@ -1,5 +1,8 @@
 opkg() {
     if [[ `echo $@ | grep -o -E '^install'` ]]; then
+    if [ -f /etc/config/shadowsocksr ] && {
+shadowsocksr=true;
+}
 	command opkg $@
 rm -Rf /lib/upgrade/keep.d/php7*
 sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
@@ -26,7 +29,43 @@ sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
 
+if [ -f /etc/config/jia ]; then
+  sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
+fi
+    if [ ! $shadowsocksr ] && {
+    if [ -f /etc/config/AdGuardHome ] && {
+      uci set shadowsocksr.@global[0].pdnsd_enable='0'
+  uci del shadowsocksr.@global[0].tunnel_forward
+  }
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='208.67.222.222'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.8.8'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.4.4'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.9'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='218.102.23.228'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='210.0.255.250'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='168.95.1.1'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.175.82.46'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='77.88.8.8'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='101.101.101.101'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='203.198.7.66'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.56.128.30'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.112'
+  uci commit shadowsocksr
+}
 rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
+
+sleep 2
+	[[ ! `pgrep UnblockNeteaseMusic` && `uci get unblockmusic.@unblockmusic[0].enabled` == 1 ]] && {
+	/etc/init.d/unblockmusic restart
+	}
+	[[ ! `pgrep rclone` && `uci get rclone.global.enabled` == 1 ]] && {
+	/etc/init.d/rclone restart
+	}
+	[[ ! `pgrep ssr-redir` && `uci get shadowsocksr.@shadowsocksr[0].global_server` != 'nil' ]] && {
+	/etc/init.d/shadowsocksr restart
+	}
+	rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
     else
         command opkg $@
     fi
