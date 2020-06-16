@@ -1,8 +1,5 @@
 opkg() {
     if [[ `echo $@ | grep -o -E '^install'` ]]; then
-    [ -f /etc/config/shadowsocksr ] && {
-shadowsocksr=true;
-}
 	command opkg $@
 rm -Rf /lib/upgrade/keep.d/php7*
 sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
@@ -35,7 +32,7 @@ fi
 if [ ! -f /usr/bin/ssr-server ]; then
   sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
 fi
-    [ ! $shadowsocksr ] && {
+    [ ! -f /etc/confbak/shadowsocksr ] && {
     [ -f /etc/config/AdGuardHome ] && {
       uci set shadowsocksr.@global[0].pdnsd_enable='0'
   uci del shadowsocksr.@global[0].tunnel_forward
