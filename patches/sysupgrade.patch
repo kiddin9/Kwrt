@@ -1,7 +1,0 @@
---- /feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
-+++ /feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
-@@ -285,2 +285,4 @@
- 	handleSysupgradeConfirm: function(btn, keep, force, ev) {
-+		fs.exec("ls /overlay/upper/usr/lib/opkg/info/*.list | sed -e 's/.*\///' | sed -e 's/\.list//' > /etc/installed-opkg")
-+		fs.exec('rm -Rf /etc/profile.d/opkginstall.sh /etc/profile.d/sysinfo.sh')
- 		btn.firstChild.data = _('Flashing…');
