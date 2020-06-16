@@ -45,6 +45,7 @@ if [ ! -f /etc/config/placeholder ]; then
   
   uci set flowoffload.@flow[0].bbr='1'
   uci commit flowoffload
+fi
 
 cp -R /www/cgi-bin/* /www/
 find /www -type f -exec chmod 644 {} \;
