@@ -58,7 +58,7 @@ rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx 
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/feeds/custom/default-settings/po/zh_Hans
 
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/g' package/base-files/files/etc/profile
-sed -i "s?json_init?ls /overlay/upper/usr/lib/opkg/info/*.list | sed -e 's/.*\///' | sed -e 's/\.list//' > /etc/installed-opkg\njson_init?g" package/base-files/files/sbin/sysupgrade
+sed -i "s?json_init?ls /overlay/upper/usr/lib/opkg/info/*.list | sed -e 's/.*\\\///' | sed -e 's/\\\.list//' > /etc/installed-opkg\nrm /etc/profile.d/opkginstall.sh /etc/profile.d/sysinfo.sh\njson_init?g" package/base-files/files/sbin/sysupgrade
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's?/etc/config/AdGuardHome?/etc/config/AdGuardHome\n/etc/config/AdGuardHome/AdGuardHome.yaml?g'  package/*/*/luci-app-adguardhome/Makefile
 sed -i 's?\(include $(TOPDIR)/feeds/luci/luci.mk\)?define Package/luci-app-ssr-plus/conffiles\n/etc/config/shadowsocksr\nendef\n\1?g'  package/*/*/luci-app-ssr-plus/Makefile
