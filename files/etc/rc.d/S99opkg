@@ -1,21 +1,18 @@
 #!/bin/sh
 if [ ! -f /etc/inited ]; then
-source /etc/profile.d/opkginstall.sh;
 count=0
 while :
 do
 	httping -c 1 www.baidu.com 1>/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 opkg update
-if [ -f /etc/config/jia ]; then
-  opkg upgrade php7 php7-fpm php7-mod-dom php7-mod-fileinfo php7-mod-filter php7-mod-iconv php7-mod-json php7-mod-zip
-fi
 cp -r /etc/config /etc/config.bak
 	for ipk in $(cat /etc/installed-opkg); do
 			opkg upgrade --force-depends $ipk
 	done
 rsync -av /etc/config.bak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
 rm -Rf /etc/config.bak
+source /etc/profile.d/opkginstall.sh; opkg install >/dev/null 2>&1
 	touch /etc/inited
 	break
 	fi
