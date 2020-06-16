@@ -32,6 +32,9 @@ sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
 if [ -f /etc/config/jia ]; then
   sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
 fi
+if [ ! -f /usr/bin/ssr-server ]; then
+  sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
+fi
     if [ ! $shadowsocksr ] && {
     if [ -f /etc/config/AdGuardHome ] && {
       uci set shadowsocksr.@global[0].pdnsd_enable='0'
