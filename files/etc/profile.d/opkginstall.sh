@@ -61,7 +61,7 @@ rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
 	[[ ! `pgrep rclone` && `uci get rclone.global.enabled` == 1 ]] && {
 	/etc/init.d/rclone restart
 	}
-	[[ ! `pgrep ssr-redir` && `uci get shadowsocksr.@shadowsocksr[0].global_server` != 'nil' ]] && {
+	[[ ! `pgrep ssr-redir` && `uci get shadowsocksr.@global[0].global_server` != 'nil' ]] && {
 	/etc/init.d/shadowsocksr restart
 	}
 	rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
