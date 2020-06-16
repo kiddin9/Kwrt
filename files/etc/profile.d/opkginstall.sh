@@ -1,6 +1,6 @@
 opkg() {
     if [[ `echo $@ | grep -o -E '^install'` ]]; then
-    if [ -f /etc/config/shadowsocksr ] && {
+    [ -f /etc/config/shadowsocksr ] && {
 shadowsocksr=true;
 }
 	command opkg $@
@@ -35,8 +35,8 @@ fi
 if [ ! -f /usr/bin/ssr-server ]; then
   sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
 fi
-    if [ ! $shadowsocksr ] && {
-    if [ -f /etc/config/AdGuardHome ] && {
+    [ ! $shadowsocksr ] && {
+    [ -f /etc/config/AdGuardHome ] && {
       uci set shadowsocksr.@global[0].pdnsd_enable='0'
   uci del shadowsocksr.@global[0].tunnel_forward
   }
