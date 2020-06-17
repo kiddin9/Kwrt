@@ -80,7 +80,8 @@ sed -i '$a /www/speedtest/results/telemetry_settings.php' package/base-files/fil
 sed -i '$a /etc/installed-opkg' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/php7/custom.ini' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 find target/linux/x86 -name "config*" | xargs -i sed -i '$a CONFIG_64BIT=y\n# CONFIG_WLAN is not set\n# CONFIG_WIRELESS is not set\
-\nCONFIG_NETFILTER=y\nCONFIG_NETFILTER_XTABLES=y\nCONFIG_NETFILTER_XT_MATCH_STRING=y\nCONFIG_HWMON=y\nCONFIG_SENSORS_CORETEMP=y\nCONFIG_X86_ACPI_CPUFREQ_CPB=y' {}
+\nCONFIG_NETFILTER=y\nCONFIG_NETFILTER_XTABLES=y\nCONFIG_NETFILTER_XT_MATCH_STRING=y\nCONFIG_IKCONFIG=m\nCONFIG_IKCONFIG_PROC=y\n \
+CONFIG_BRIDGE_NETFILTER=m\nCONFIG_NETFILTER_FAMILY_BRIDGE=y\nCONFIG_NETFILTER_XT_MATCH_ADDRTYPE=m\nCONFIG_NETFILTER_XT_MATCH_IPVS=m\nCONFIG_VETH=m' {}
 sed -i '/continue$/d' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/if test_proxy/sleep 3600\nif test_proxy/g' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/ uci.cursor/ luci.model.uci.cursor/g' package/*/*/luci-app-ssr-plus/root/usr/share/shadowsocksr/subscribe.lua
