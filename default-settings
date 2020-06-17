@@ -12,7 +12,7 @@ sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/log-facility/d' /etc/dnsmasq.conf
 echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
-sed -i "s/127.0.0.1:5335/127.0.0.1:5555/g" /etc/AdGuardHome.yaml
+sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/g' /etc/profile
 
 rm -rf /tmp/luci-*
 
