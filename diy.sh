@@ -81,7 +81,8 @@ sed -i '$a /etc/installed-opkg' package/base-files/files/lib/upgrade/keep.d/base
 sed -i '$a /etc/php7/custom.ini' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 find target/linux/x86 -name "config*" | xargs -i sed -i '$a CONFIG_64BIT=y\n# CONFIG_WLAN is not set\n# CONFIG_WIRELESS is not set\
 \nCONFIG_NETFILTER=y\nCONFIG_NETFILTER_XTABLES=y\nCONFIG_NETFILTER_XT_MATCH_STRING=y\nCONFIG_IKCONFIG=m\nCONFIG_IKCONFIG_PROC=y\n \
-CONFIG_BRIDGE_NETFILTER=m\nCONFIG_NETFILTER_FAMILY_BRIDGE=y\nCONFIG_NETFILTER_XT_MATCH_ADDRTYPE=m\nCONFIG_NETFILTER_XT_MATCH_IPVS=m\nCONFIG_VETH=m' {}
+CONFIG_BRIDGE_NETFILTER=m\nCONFIG_NETFILTER_FAMILY_BRIDGE=y\nCONFIG_NETFILTER_XT_MATCH_ADDRTYPE=m\nCONFIG_NETFILTER_XT_MATCH_IPVS=m\n \
+CONFIG_VETH=m\nCONFIG_CRYPTO_SHA512_SSSE3=m' {}
 sed -i '/continue$/d' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/if test_proxy/sleep 3600\nif test_proxy/g' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/ uci.cursor/ luci.model.uci.cursor/g' package/*/*/luci-app-ssr-plus/root/usr/share/shadowsocksr/subscribe.lua
