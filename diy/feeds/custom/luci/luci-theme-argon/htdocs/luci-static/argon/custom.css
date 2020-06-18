@@ -90,3 +90,6 @@ height:auto !important;
 .main .main-left .nav li.slide .menu::before{
 	font-size:1.1rem !important;
 }
+.td.version{
+word-break: normal !important;	
+}
