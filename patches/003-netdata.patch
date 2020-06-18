@@ -1,5 +1,5 @@
---- /feeds/packages/admin/netdata/files/netdata.init
-+++ /feeds/packages/admin/netdata/files/netdata.init
+--- /feeds/custom/luci/netdata/files/netdata.init
++++ /feeds/custom/luci/netdata/files/netdata.init
 @@ -9,13 +9,14 @@
  start_service() {
  	mkdir -m 0755 -p /var/cache/netdata
@@ -16,14 +16,14 @@
  	procd_close_instance
  }
  
---- /feeds/packages/admin/netdata/Makefile
-+++ /feeds/packages/admin/netdata/Makefile 
+--- /feeds/custom/luci/netdata/Makefile
++++ /feeds/custom/luci/netdata/Makefile 
 @@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/package.mk
  define Package/netdata
    SECTION:=admin
    CATEGORY:=Administration
 -  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c
-+  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c +libopenssl +python3 +python3-yaml +python3-urllib3 +python3-pip
++  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c +libopenssl +python3 +python3-yaml +python3-urllib3
    TITLE:=Real-time performance monitoring tool
    URL:=https://www.netdata.cloud/
  endef
