@@ -12,10 +12,10 @@ do
 	if [ "$?" == "0" ]; then
 opkg update
 cp -r /etc/config /etc/confbak
-	for ipk in $(cat /etc/installed-opkg); do
+	for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | sed -e "s/overlay//"); do
 			opkg upgrade --force-depends --force-checksum $ipk
 	done
-rsync -av /etc/config.bak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
+rsync -av /etc/confbak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
 source /etc/profile.d/opkginstall.sh; opkg install >/dev/null 2>&1
 	touch /etc/inited
 	break
