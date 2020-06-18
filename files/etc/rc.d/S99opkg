@@ -1,4 +1,7 @@
 #!/bin/sh
+
+exec > /var/persist-packages.log 2>&1
+
 if [ ! -f /etc/inited ]; then
 [ uci get dhcp.@dnsmasq[0].noresolv ] && {
 uci del dhcp.@dnsmasq[0].noresolv
