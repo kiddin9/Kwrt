@@ -30,6 +30,7 @@ svn co https://github.com/Lienol/openwrt-package/trunk/package/ipt2socks
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-control-timewol
+svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-pptp-vpnserver-manyusers
 
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
