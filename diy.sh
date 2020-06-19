@@ -82,7 +82,6 @@ sed -i '$a /etc/smartdns' package/base-files/files/lib/upgrade/keep.d/base-files
 sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /www/speedtest/results/telemetry_settings.php' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/php7/custom.ini' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '/profile.d/d' package/base-files/files/lib/upgrade/keep.d/base-files
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
 sed -i '/continue$/d' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/if test_proxy/sleep 3600\nif test_proxy/g' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
