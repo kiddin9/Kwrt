@@ -53,8 +53,8 @@ fi
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.112'
   uci commit shadowsocksr
 }
-rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
 
+sleep 2
 	[[ ! `pgrep UnblockNeteaseMusic` && `uci get unblockmusic.@unblockmusic[0].enabled` == 1 ]] && {
 	/etc/init.d/unblockmusic restart
 	}
