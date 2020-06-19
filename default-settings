@@ -12,6 +12,7 @@ sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/log-facility/d' /etc/dnsmasq.conf
 echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
+sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/g' /etc/profile
 
 rm -rf /tmp/luci-*
