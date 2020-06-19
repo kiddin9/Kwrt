@@ -11,7 +11,7 @@ service dnsmasq reload
 count=0
 while :
 do
-	httping -c 1 www.baidu.com 1>/dev/null 2>&1
+	httping -c 1 www.baidu.com >/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 opkg update
 cp -r /etc/config /etc/confbak
@@ -28,7 +28,10 @@ cp -r /etc/config /etc/confbak
 rsync -av /etc/confbak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
 rm /etc/config/.*-opkg
 source /etc/profile.d/opkginstall.sh; opkg install >/dev/null 2>&1
+httping -c 1 https://openwrt.supes.top:888 >/dev/null 2>&1
+if [ "$?" == "0" ]; then
 	touch /etc/inited
+fi
 	break
 	fi
 	sleep 5
