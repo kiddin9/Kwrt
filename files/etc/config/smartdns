@@ -57,6 +57,7 @@ config server
 	option port '5353'
 	option type 'tcp'
 	option enabled '1'
+	option blacklist_ip '1'
 
 config server
 	option name 'google'
