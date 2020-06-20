@@ -40,7 +40,6 @@ dns:
   upstream_dns:
   - 127.0.0.1:5555
   - tcp://208.67.222.222:5353
-  - tcp://59.51.78.210
   - tls://1.1.1.1
   - tls://dns.google
   - tls://dns.quad9.net
