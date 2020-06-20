@@ -5,7 +5,7 @@ svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/jerrykuku/luci-theme-argon
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
-git clone https://github.com/pymumu/luci-app-smartdns -b lede
+git clone https://github.com/pymumu/luci-app-smartdns
 git clone https://github.com/lisaac/luci-app-diskman
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
 git clone https://github.com/tty228/luci-app-serverchan
@@ -19,6 +19,7 @@ svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
 git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
+git clone https://github.com/garypang13/openwrt-qbittorrent
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
@@ -42,6 +43,7 @@ svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-kodexplor
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
 cd -
 
+mv feeds/custom/luci/openwrt-qbittorrent/* feeds/custom/luci/
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
