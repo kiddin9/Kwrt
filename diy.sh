@@ -19,7 +19,8 @@ svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
 git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
-git clone https://github.com/garypang13/openwrt-qbittorrent
+git clone https://github.com/KryptonLee/qBittorrent-openwrt-package
+https://github.com/garypang13/luci-app-qbittorrent
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
@@ -43,7 +44,7 @@ svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-kodexplor
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
 cd -
 
-mv feeds/custom/luci/openwrt-qbittorrent/* feeds/custom/luci/
+mv feeds/custom/luci/qBittorrent-openwrt-package/* feeds/custom/luci/
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
