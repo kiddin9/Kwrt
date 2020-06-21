@@ -33,8 +33,9 @@ while :; do
 			if [ "$?" == "0" ]; then
 				touch /etc/inited
 			fi
-			break
+
 		fi
+		break
 	fi
 	sleep 5
 	count=$((count + 1))
