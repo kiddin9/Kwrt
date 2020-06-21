@@ -1,43 +1,44 @@
 #!/bin/sh
 
-exec > /var/persist-packages.log 2>&1
+exec >/var/persist-packages.log 2>&1
 
-if [ ! -f /etc/inited ]; then
-[ uci get dhcp.@dnsmasq[0].noresolv ] && {
-uci del dhcp.@dnsmasq[0].noresolv
-uci commit dhcp
-service dnsmasq reload
-}
 count=0
-while :
-do
+while :; do
 	httping -c 1 www.baidu.com >/dev/null 2>&1
 	if [ "$?" == "0" ]; then
-opkg update
-cp -r /etc/config /etc/confbak
-	for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
-			opkg upgrade --force-depends --force-checksum $ipk
-	done
+		opkg update && opkg upgrade
+		if [ ! -f /etc/inited ]; then
+			[ uci get dhcp.@dnsmasq[0].noresolv ] && {
+				uci del dhcp.@dnsmasq[0].noresolv
+				uci commit dhcp
+				service dnsmasq reload
+			}
 
-	[ -f "/etc/installed-opkg" ] && {
-	for ipk in $(cat /etc/installed-opkg); do
-			opkg upgrade --force-depends --force-checksum $ipk
-	done
-	}
+			cp -r /etc/config /etc/confbak
+			for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+				opkg upgrade --force-depends --force-checksum $ipk
+			done
 
-rsync -av /etc/confbak/* /etc/config --exclude='ucitrack'  --exclude='dhcp'  --exclude='firewall'  --exclude='network'  --exclude='system'
-rm /etc/config/.*-opkg
-source /etc/profile.d/opkginstall.sh; opkg install >/dev/null 2>&1
-httping -c 1 https://openwrt.supes.top:888 >/dev/null 2>&1
-if [ "$?" == "0" ]; then
-	touch /etc/inited
-fi
-	break
+			[ -f "/etc/installed-opkg" ] && {
+				for ipk in $(cat /etc/installed-opkg); do
+					opkg upgrade --force-depends --force-checksum $ipk
+				done
+			}
+
+			rsync -av /etc/confbak/* /etc/config --exclude='ucitrack' --exclude='dhcp' --exclude='firewall' --exclude='network' --exclude='system'
+			rm /etc/config/.*-opkg
+			source /etc/profile.d/opkginstall.sh
+			opkg install >/dev/null 2>&1
+			httping -c 1 https://openwrt.supes.top:888 >/dev/null 2>&1
+			if [ "$?" == "0" ]; then
+				touch /etc/inited
+			fi
+			break
+		fi
 	fi
 	sleep 5
-	count=$((count+1))
+	count=$((count + 1))
 	if [ $count -gt 120 ]; then
 		break
 	fi
 done
-fi
