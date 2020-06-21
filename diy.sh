@@ -44,6 +44,7 @@ svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-kodexplor
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
 cd -
 
+rm -Rf feeds/custom/luci/qBittorrent-openwrt-package/qt5
 mv feeds/custom/luci/qBittorrent-openwrt-package/* feeds/custom/luci/
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
