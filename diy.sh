@@ -52,7 +52,7 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean fe
 ./scripts/feeds update -a && ./scripts/feeds install -a
 cp -Rf ./diy/* ./
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
-sed -i 's/std=\(gnu\|c\)++\(11\|14\)/std=\1++17/g' package/feeds/*/*/Makefile
+sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
 
 rm -Rf package/*/*/autocore
 rm -Rf package/*/*/qBittorrent/patches
