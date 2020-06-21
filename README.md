@@ -2,7 +2,7 @@
 <a href="https://t.me/openwrt_nginx" target="_blank">Telegram</a>
 ### 特色:
 
-+ 全网最新,openwrt官方master分支版本,内核升级到5.4. 与官方最新源码同步.
++ Cutting edge,openwrt官方master分支版本,内核升级到5.4. 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能,后台在线选装插件,自建插件仓库囊括了市面上主流开源插件,系统升级不丢失插件和配置.
 
