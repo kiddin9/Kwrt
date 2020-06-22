@@ -5,15 +5,19 @@
 [4]: https://github.com/garypang13/Actions-OpenWrt-Nginx/pulls
 [5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg
 [6]: https://github.com/garypang13/Actions-OpenWrt-Nginx/issues/new
-[7]: https://img.shields.io/github/release/garypang13/Actions-OpenWrt-Nginx/all.svg
+[7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
 [8]: https://github.com/garypang13/Actions-OpenWrt-Nginx/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
 [11]: https://t.me/openwrt_nginx
+[12]: https://github.com/garypang13/Actions-OpenWrt-Nginx/workflows/Openwrt-AutoBuild/badge.svg
+[13]: https://github.com/garypang13/Actions-OpenWrt-Nginx/actions
+
 [![license][1]][2]
 [![PRs Welcome][3]][4]
 [![Issue Welcome][5]][6]
 [![Release Version][7]][8]
 [![Contact Me][10]][11]
+[![AutoBuild][12]][13]
 
 <a href="https://t.me/openwrt_nginx" target="_blank">Telegram</a>
 ### 特色:
