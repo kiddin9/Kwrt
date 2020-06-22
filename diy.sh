@@ -50,6 +50,7 @@ mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
 
 echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/lienol feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 
 #svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion feeds/packages/libs/libdouble-conversion
