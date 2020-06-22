@@ -63,6 +63,7 @@ rm -Rf package/*/*/qBittorrent/patches
 rm -Rf package/*/*/luci-app-zerotier/root/etc/init.d/zerotier
 rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded files/usr/share/amule/webserver/AmuleWebUI-Reloaded
 rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
+chmod +x files/usr/share/aria2/*.sh
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/feeds/custom/antileech/src
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/feeds/custom/default-settings/po/zh_Hans
