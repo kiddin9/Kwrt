@@ -35,7 +35,6 @@ svn co https://github.com/Lienol/openwrt-package/trunk/package/ipt2socks
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-control-timewol
-svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-pptp-vpnserver-manyusers
 
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
@@ -43,7 +42,6 @@ git clone https://github.com/garypang13/luci-app-eqos
 git clone https://github.com/garypang13/openwrt-filerun
 git clone https://github.com/garypang13/luci-app-baidupcs-web
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion
-svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-kodexplorer
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
 cd -
 
@@ -52,6 +50,8 @@ mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
 
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
+rm -Rf luci-app-guest-wifi luci-app-kodexplorer
+echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/lienol feeds/custom/luci
 #svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion feeds/packages/libs/libdouble-conversion
 ./scripts/feeds update -a && ./scripts/feeds install -a
 cp -Rf ./diy/* ./
