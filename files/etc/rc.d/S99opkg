@@ -43,3 +43,13 @@ while :; do
 		break
 	fi
 done
+
+if [ `uci get network.wan.ipv6` == 0 ]; then
+	sysctl -w net.ipv6.conf.all.disable_ipv6=1
+	echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+	sysctl -w net.ipv6.conf.default.disable_ipv6=1
+else
+	sysctl -w net.ipv6.conf.all.disable_ipv6=0
+	echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+	sysctl -w net.ipv6.conf.default.disable_ipv6=0
+fi
