@@ -22,7 +22,6 @@ git clone https://github.com/garypang13/luci-app-qbittorrent
 git clone https://github.com/jerrykuku/luci-app-vssr
 git clone https://github.com/jerrykuku/lua-maxminddb
 git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
-git clone https://github.com/peter-tank/openwrt-minisign
 git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
