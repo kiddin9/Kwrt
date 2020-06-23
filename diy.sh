@@ -122,7 +122,6 @@ sed -i "/*\.po/d" package/*/custom/*/Makefile
 sed -i "s/+luci\( \|\$\)//g"  package/*/*/*/Makefile
 sed -i "s/+nginx\( \|\$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i 's/+python\( \|\$\)/+python3/g' package/*/*/*/Makefile
-sed -i 's/@IPV6 //g' package/*/*/*/netfilter.mk
 sed -i "s/askfirst/respawn/g" target/linux/x86/base-files/etc/inittab
 sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
