@@ -25,7 +25,7 @@ while :; do
 				done
 			}
 
-			rsync -av /etc/confbak/* /etc/config --exclude='ucitrack' --exclude='dhcp' --exclude='firewall' --exclude='network' --exclude='system'
+			find /etc/confbak -type f ! -path '*/ucitrack' ! -path '*/dhcp' ! -path '*/firewall' ! -path '*/network' ! -path '*/system' -exec cp '{}' '/etc/config/{}' \;
 			rm /etc/config/.*-opkg
 			source /etc/profile.d/opkginstall.sh
 			opkg install >/dev/null 2>&1
