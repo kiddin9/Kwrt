@@ -1,0 +1,145 @@
+
+config smartdns
+	option server_name 'smartdns'
+	option ipv6_server '0'
+	option dualstack_ip_selection '0'
+	option cache_size '5048'
+	option seconddns_port '7053'
+	option seconddns_tcp_server '1'
+	option seconddns_no_speed_check '0'
+	option seconddns_no_rule_addr '0'
+	option seconddns_no_rule_nameserver '0'
+	option seconddns_no_rule_ipset '0'
+	option seconddns_no_rule_soa '0'
+	option seconddns_no_dualstack_selection '0'
+	option seconddns_no_cache '0'
+	option rr_ttl_max '86400'
+	option port '5335'
+	option force_aaaa_soa '0'
+	option serve_expired '1'
+	option enabled '1'
+	option tcp_server '1'
+	option prefetch_domain '1'
+	option coredump '1'
+	option redirect 'dnsmasq-upstream'
+	option rr_ttl_min '1800'
+
+config server
+	option name '腾讯'
+	option type 'udp'
+	option enabled '1'
+	option ip '119.29.29.29'
+	option blacklist_ip '1'
+
+config server
+	option name '阿里'
+	option type 'udp'
+	option enabled '1'
+	option ip '223.5.5.5'
+	option blacklist_ip '1'
+
+config server
+	option name '114'
+	option type 'tcp'
+	option enabled '1'
+	option ip '114.114.114.114'
+	option blacklist_ip '1'
+
+config server
+	option name 'Cloudflare'
+	option ip '1.1.1.1'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option name 'opendns'
+	option ip '208.67.222.222'
+	option port '5353'
+	option type 'tcp'
+	option enabled '1'
+	option blacklist_ip '1'
+
+config server
+	option name 'google'
+	option ip 'dns.google'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option name 'IBM'
+	option ip 'dns.quad9.net'
+	option type 'tls'
+	option enabled '1'
+
+config server
+	option type 'tcp'
+	option enabled '1'
+	option ip '210.0.255.250'
+	option blacklist_ip '0'
+	option name '香港环球全域电讯'
+
+config server
+	option name '台湾'
+	option ip '168.95.1.1'
+	option type 'tcp'
+	option enabled '1'
+
+config server
+	option type 'tcp'
+	option ip '218.102.23.228'
+	option blacklist_ip '0'
+	option name '電訊盈科'
+	option enabled '0'
+
+config server
+	option name '澳门'
+	option type 'tcp'
+	option enabled '1'
+	option ip '202.175.82.46'
+
+config server
+	option name '红鱼'
+	option ip 'dns.rubyfish.cn'
+	option type 'tls'
+	option enabled '1'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name '清华'
+	option ip '101.6.6.6'
+	option port '5353'
+	option type 'tcp'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option type 'udp'
+	option name '百度'
+	option ip '180.76.76.76'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name 'Yandex'
+	option ip '77.88.8.8'
+	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name '台湾 Quad101'
+	option ip '101.101.101.101'
+	option type 'tls'
+
+config server
+	option enabled '1'
+	option name 'HK网上行'
+	option ip '203.198.7.66'
+	option type 'tcp'
+	option blacklist_ip '1'
+
+config server
+	option enabled '1'
+	option name '新加坡DNS'
+	option ip '202.56.128.30'
+	option type 'tcp'
