@@ -131,6 +131,12 @@ fi
 if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
 	cp -Rf x86_64/diy/* ./
 fi
+if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
+	find "common/patches" -type f -name '*.patch' | xargs -i git apply {}
+fi
+if [ -n "$(ls -A "x86_64/patches" 2>/dev/null)" ]; then
+	find "x86_64/patches" -type f -name '*.patch' | xargs -i git apply {}
+fi
 mv x86_64/.config .config
 make defconfig
    ```
@@ -176,6 +182,12 @@ if [ -f "x86_64/diy.sh" ]; then
 		chmod +x x86_64/diy.sh
 		/bin/bash "x86_64/diy.sh"
 	)
+fi
+if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
+	find "common/patches" -type f -name '*.patch' | xargs -i git apply {}
+fi
+if [ -n "$(ls -A "x86_64/patches" 2>/dev/null)" ]; then
+	find "x86_64/patches" -type f -name '*.patch' | xargs -i git apply {}
 fi
 [ -f ".config.bak" ] && mv .config.bak .config || mv x86_64/.config .config
 make defconfig
