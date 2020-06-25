@@ -96,3 +96,9 @@ word-break: normal !important;
 .node-main-login .main .main-right .login-bg{
 background-color:white !important;	
 }
+.node-main-login .main .main-right #maincontent .container{
+	background-color: #8f8fffa6 !important;
+}
+.node-main-login .main .main-right #maincontent .container .cbi-map .cbi-map-descr{
+	color:white !important;
+}
