@@ -187,7 +187,7 @@ jobs:
       run: |
         mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
         -name "*combined*" \
-        -or -name "*k2p*bin" \
+        -or -name "*sysupgrade.bin" \
         -or -name "sha256sums" \
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
