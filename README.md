@@ -93,6 +93,7 @@ sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git
 
 3. 首次编译执行脚本(以x64为例):
 ```bash
+#!/bin/bash
 git clone https://github.com/openwrt/openwrt
 git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
@@ -134,10 +135,12 @@ make defconfig
    ```
 4. 二次编译执行脚本
 ```bash
+#!/bin/bash
 rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 rm -Rf feeds package
+[ -f ".config" ] && mv .config .config.bak
 svn co https://github.com/openwrt/openwrt/trunk/package
 git fetch --all
 git reset --hard origin/master
