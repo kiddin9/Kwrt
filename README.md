@@ -153,10 +153,10 @@ if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
 	cp -rf x86_64/files/* files/
 fi
 if [ -f "common/default-settings" ]; then
-	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+	cp -f common/default-settings package/feeds/custom/default-settings/files/zzz-default-settings
 fi
 if [ -f "x86_64/default-settings" ]; then
-	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
+	cp -f x86_64/default-settings package/feeds/custom/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
 	cp -Rf common/diy/* ./
