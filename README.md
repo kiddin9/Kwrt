@@ -159,12 +159,6 @@ fi
 if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
 	cp -rf x86_64/files/* files/
 fi
-if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
-	cp -Rf common/diy/* ./
-fi
-if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
-	cp -Rf x86_64/diy/* ./
-fi
 if [ -f "common/diy.sh" ]; then
 	(
 		chmod +x common/diy.sh
@@ -176,6 +170,12 @@ if [ -f "x86_64/diy.sh" ]; then
 		chmod +x x86_64/diy.sh
 		/bin/bash "x86_64/diy.sh"
 	)
+fi
+if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
+	cp -Rf common/diy/* ./
+fi
+if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
+	cp -Rf x86_64/diy/* ./
 fi
 if [ -f "common/default-settings" ]; then
 	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
