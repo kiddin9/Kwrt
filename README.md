@@ -99,38 +99,37 @@ cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 mv x86_64/feeds.conf .
 ./scripts/feeds update -a
-        if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
-         cp -rf common/files files
-        fi
-        if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
-         cp -rf x86_64/files/* files/
-        fi
-        if [ -f "common/diy.sh" ]; then
-        (
-          chmod +x common/diy.sh
-          /bin/bash "common/diy.sh"
-        )
-        fi       
-        if [ -f "x86_64/diy.sh" ]; then
-        (
-          chmod +x x86_64/diy.sh
-          /bin/bash "x86_64/diy.sh"
-        )
-        fi
-         mv x86_64/.config .config
-        if [ -f "common/default-settings" ]; then
-         cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
-        fi
-        if [ -f "x86_64/default-settings" ]; then
-         cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
-        fi
-        if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
-         cp -Rf common/diy/* ./
-        fi
-        if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
-         cp -Rf x86_64/diy/* ./
-        fi
-mv X86_64.config .config
+if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
+	cp -rf common/files files
+fi
+if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
+	cp -rf x86_64/files/* files/
+fi
+if [ -f "common/diy.sh" ]; then
+	(
+		chmod +x common/diy.sh
+		/bin/bash "common/diy.sh"
+	)
+fi
+if [ -f "x86_64/diy.sh" ]; then
+	(
+		chmod +x x86_64/diy.sh
+		/bin/bash "x86_64/diy.sh"
+	)
+fi
+if [ -f "common/default-settings" ]; then
+	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+fi
+if [ -f "x86_64/default-settings" ]; then
+	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
+fi
+if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
+	cp -Rf common/diy/* ./
+fi
+if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
+	cp -Rf x86_64/diy/* ./
+fi
+mv x86_64/.config .config
 make defconfig
    ```
 4. 二次编译执行脚本
@@ -144,36 +143,36 @@ git fetch --all
 git reset --hard origin/master
 git pull
 ./scripts/feeds update -a
-        if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
-         cp -rf common/files files
-        fi
-        if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
-         cp -rf x86_64/files/* files/
-        fi
-        if [ -f "common/default-settings" ]; then
-         cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
-        fi
-        if [ -f "x86_64/default-settings" ]; then
-         cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
-        fi
-        if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
-         cp -Rf common/diy/* ./
-        fi
-        if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
-         cp -Rf x86_64/diy/* ./
-        fi
-        if [ -f "common/diy.sh" ]; then
-        (
-          chmod +x common/diy.sh
-          /bin/bash "common/diy.sh"
-        )
-        fi       
-        if [ -f "x86_64/diy.sh" ]; then
-        (
-          chmod +x x86_64/diy.sh
-          /bin/bash "x86_64/diy.sh"
-        )
-        fi
+if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
+	cp -rf common/files files
+fi
+if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
+	cp -rf x86_64/files/* files/
+fi
+if [ -f "common/default-settings" ]; then
+	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+fi
+if [ -f "x86_64/default-settings" ]; then
+	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
+fi
+if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
+	cp -Rf common/diy/* ./
+fi
+if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
+	cp -Rf x86_64/diy/* ./
+fi
+if [ -f "common/diy.sh" ]; then
+	(
+		chmod +x common/diy.sh
+		/bin/bash "common/diy.sh"
+	)
+fi
+if [ -f "x86_64/diy.sh" ]; then
+	(
+		chmod +x x86_64/diy.sh
+		/bin/bash "x86_64/diy.sh"
+	)
+fi
 [ -f ".config.bak" ] && mv .config.bak .config || mv x86_64/.config .config
 make defconfig
    ```
