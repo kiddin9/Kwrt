@@ -76,7 +76,7 @@ jobs:
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        mv /${{matrix.target}}/feeds.conf openwrt/
+        mv ${{matrix.target}}/feeds.conf openwrt/
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
@@ -99,36 +99,36 @@ jobs:
         cp -Rf * openwrt/ || true
         cd openwrt
         echo "Apply files..."
-        if [ -n "$(ls -A "/common/files" 2>/dev/null)" ]; then
-         cp -rf /common/files files
+        if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
+         cp -rf common/files files
         fi
-        if [ -n "$(ls -A "/${{matrix.target}}/files" 2>/dev/null)" ]; then
-         cp -rf /${{matrix.target}}/files/* files/
+        if [ -n "$(ls -A "${{matrix.target}}/files" 2>/dev/null)" ]; then
+         cp -rf ${{matrix.target}}/files/* files/
         fi
-        if [ -f "/common/$DIY_SH" ]; then
+        if [ -f "common/$DIY_SH" ]; then
         (
-          chmod +x /common/$DIY_SH
-          /bin/bash "/common/$DIY_SH"
+          chmod +x common/$DIY_SH
+          /bin/bash "common/$DIY_SH"
         )
         fi       
-        if [ -f "/${{matrix.target}}/$DIY_SH" ]; then
+        if [ -f "${{matrix.target}}/$DIY_SH" ]; then
         (
-          chmod +x /${{matrix.target}}/$DIY_SH
-          /bin/bash "/${{matrix.target}}/$DIY_SH"
+          chmod +x ${{matrix.target}}/$DIY_SH
+          /bin/bash "${{matrix.target}}/$DIY_SH"
         )
         fi
-         mv /${{matrix.target}}/$CONFIG_FILE .config
-        if [ -f "/common/default-settings" ]; then
-         cp -f /common/default-settings package/*/*/default-settings/files/zzz-default-settings
+         mv ${{matrix.target}}/$CONFIG_FILE .config
+        if [ -f "common/default-settings" ]; then
+         cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
         fi
-        if [ -f "/${{matrix.target}}/default-settings" ]; then
-         cp -f /${{matrix.target}}/default-settings package/*/*/default-settings/files/zzz-default-settings
+        if [ -f "${{matrix.target}}/default-settings" ]; then
+         cp -f ${{matrix.target}}/default-settings package/*/*/default-settings/files/zzz-default-settings
         fi
-        if [ -n "$(ls -A "/common/diy" 2>/dev/null)" ]; then
-         cp -Rf /common/diy/* ./
+        if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
+         cp -Rf common/diy/* ./
         fi
-        if [ -n "$(ls -A "/${{matrix.target}}/diy" 2>/dev/null)" ]; then
-         cp -Rf /${{matrix.target}}/diy/* ./
+        if [ -n "$(ls -A "${{matrix.target}}/diy" 2>/dev/null)" ]; then
+         cp -Rf ${{matrix.target}}/diy/* ./
         fi
         make defconfig
         [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
@@ -138,14 +138,14 @@ jobs:
       run: |
         echo "Apply patches"
         cd openwrt
-        if [ -n "$(ls -A "/common/patches" 2>/dev/null)" ]; then
+        if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
         (
-          find "/common/patches" -type f -name '*.patch'| xargs -i git apply {}
+          find "common/patches" -type f -name '*.patch'| xargs -i git apply {}
         )
         fi
-        if [ -n "$(ls -A "/${{matrix.target}}/patches" 2>/dev/null)" ]; then
+        if [ -n "$(ls -A "${{matrix.target}}/patches" 2>/dev/null)" ]; then
         (
-          find "/${{matrix.target}}/patches" -type f -name '*.patch'| xargs -i git apply {}
+          find "${{matrix.target}}/patches" -type f -name '*.patch'| xargs -i git apply {}
         )
         fi
         
