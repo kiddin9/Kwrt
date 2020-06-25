@@ -31,6 +31,8 @@ fi
     [ -f /etc/config/AdGuardHome ] && {
       uci set shadowsocksr.@global[0].pdnsd_enable='0'
   uci del shadowsocksr.@global[0].tunnel_forward
+  uci set shadowsocksr.@global[0].adblock='1'
+  uci set shadowsocksr.@global[0].adblock_url='https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf'
   }
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='208.67.222.222'
