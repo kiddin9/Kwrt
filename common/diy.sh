@@ -51,6 +51,8 @@ echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/lienol fee
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 
+rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
+rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's/zip zstd/zip zstd ucl upx/g' tools/Makefile
 sed -i 's? dependencies? dependencies\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 ./scripts/feeds update -a && ./scripts/feeds install -a
@@ -64,7 +66,6 @@ rm -Rf files/usr/share/amule/webserver/AmuleWebUI-Reloaded && git clone https://
 rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
 chmod +x files/usr/share/aria2/*.sh
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/feeds/custom/antileech/src
-rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/feeds/custom/default-settings/po/zh_Hans
 rm -Rf package/*/*/luci-theme-argon/htdocs/luci-static/argon/img/*
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/g' package/base-files/files/etc/profile
