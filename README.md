@@ -73,6 +73,115 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 #### X64设备请分配不低于800M 的磁盘空间.
 
+#### 请分配不低于800M 的内存和磁盘空间.
+
+### 如何在本地使用此项目编译自己需要的 OpenWrt 固件
+
+#### 注意：
+
+1. **不**要用 **root** 用户 git 和编译！！！
+2. 国内用户编译前请准备好梯子,使用大陆白名单或全局模式
+
+#### 编译命令如下:
+
+1. 首先装好 Ubuntu 64bit，推荐  Ubuntu  18 LTS x64
+
+2. 命令行输入 `sudo apt-get update` ，然后输入
+`
+sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl
+`
+
+3. 首次编译执行脚本(以x64为例):
+```bash
+git clone https://github.com/openwrt/openwrt
+git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
+cp -Rf Actions-OpenWrt-Nginx/* openwrt/
+cd openwrt
+mv x86_64/feeds.conf .
+./scripts/feeds update -a
+        if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
+         cp -rf common/files files
+        fi
+        if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
+         cp -rf x86_64/files/* files/
+        fi
+        if [ -f "common/diy.sh" ]; then
+        (
+          chmod +x common/diy.sh
+          /bin/bash "common/diy.sh"
+        )
+        fi       
+        if [ -f "x86_64/diy.sh" ]; then
+        (
+          chmod +x x86_64/diy.sh
+          /bin/bash "x86_64/diy.sh"
+        )
+        fi
+         mv x86_64/.config .config
+        if [ -f "common/default-settings" ]; then
+         cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+        fi
+        if [ -f "x86_64/default-settings" ]; then
+         cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
+        fi
+        if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
+         cp -Rf common/diy/* ./
+        fi
+        if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
+         cp -Rf x86_64/diy/* ./
+        fi
+mv X86_64.config .config
+make defconfig
+   ```
+4. 二次编译执行脚本
+```bash
+rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
+cp -Rf Actions-OpenWrt-Nginx/* openwrt/
+cd openwrt
+rm -Rf feeds package
+svn co https://github.com/openwrt/openwrt/trunk/package
+git fetch --all
+git reset --hard origin/master
+git pull
+./scripts/feeds update -a
+        if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
+         cp -rf common/files files
+        fi
+        if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
+         cp -rf x86_64/files/* files/
+        fi
+        if [ -f "common/default-settings" ]; then
+         cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+        fi
+        if [ -f "x86_64/default-settings" ]; then
+         cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
+        fi
+        if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
+         cp -Rf common/diy/* ./
+        fi
+        if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
+         cp -Rf x86_64/diy/* ./
+        fi
+        if [ -f "common/diy.sh" ]; then
+        (
+          chmod +x common/diy.sh
+          /bin/bash "common/diy.sh"
+        )
+        fi       
+        if [ -f "x86_64/diy.sh" ]; then
+        (
+          chmod +x x86_64/diy.sh
+          /bin/bash "x86_64/diy.sh"
+        )
+        fi
+[ -f ".config.bak" ] && mv .config.bak .config || mv x86_64/.config .config
+make defconfig
+   ```
+5. 如需修改默认配置比如定制插件等,请执行 `make menuconfig`
+
+6. 执行 `make -j8 download v=s` 下载dl库
+
+7. 执行 `make -j$(($(nproc)+1)) || make -j1 V=s` 即可开始编译你要的固件了。
 
 [![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/garypang13/Actions-OpenWrt-Nginx/blob/master/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Stars)](https://github.com/P3TERX/Actions-OpenWrt/stargazers)
