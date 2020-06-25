@@ -120,10 +120,10 @@ if [ -f "x86_64/diy.sh" ]; then
 	)
 fi
 if [ -f "common/default-settings" ]; then
-	cp -f common/default-settings package/feeds/custom/default-settings/files/zzz-default-settings
+	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -f "x86_64/default-settings" ]; then
-	cp -f x86_64/default-settings package/feeds/custom/default-settings/files/zzz-default-settings
+	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
 	cp -Rf common/diy/* ./
@@ -159,12 +159,6 @@ fi
 if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
 	cp -rf x86_64/files/* files/
 fi
-if [ -f "common/default-settings" ]; then
-	cp -f common/default-settings package/feeds/custom/default-settings/files/zzz-default-settings
-fi
-if [ -f "x86_64/default-settings" ]; then
-	cp -f x86_64/default-settings package/feeds/custom/default-settings/files/zzz-default-settings
-fi
 if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
 	cp -Rf common/diy/* ./
 fi
@@ -182,6 +176,12 @@ if [ -f "x86_64/diy.sh" ]; then
 		chmod +x x86_64/diy.sh
 		/bin/bash "x86_64/diy.sh"
 	)
+fi
+if [ -f "common/default-settings" ]; then
+	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+fi
+if [ -f "x86_64/default-settings" ]; then
+	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
 	find "common/patches" -type f -name '*.patch' | xargs -i git apply {}
