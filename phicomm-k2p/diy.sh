@@ -1,1 +1,1 @@
-rm -Rf package/*/*/luci-theme-argon/htdocs/luci-static/argon/img/bg2.jpg package/*/*/luci-theme-argon/htdocs/luci-static/argon/img/bg3.jpg package/*/*/luci-theme-argon/htdocs/luci-static/argon/img/bg4.jpg
+rm -Rf package/*/*/luci-theme-argon/htdocs/luci-static/argon/img/*
