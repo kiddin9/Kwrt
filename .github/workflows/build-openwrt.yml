@@ -130,14 +130,6 @@ jobs:
         if [ -n "$(ls -A "${{matrix.target}}/diy" 2>/dev/null)" ]; then
          cp -Rf ${{matrix.target}}/diy/* ./
         fi
-        make defconfig
-        [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
-        echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
-        
-    - name: Apply Patches
-      run: |
-        echo "Apply patches"
-        cd openwrt
         if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
         (
           find "common/patches" -type f -name '*.patch'| xargs -i git apply {}
@@ -148,6 +140,9 @@ jobs:
           find "${{matrix.target}}/patches" -type f -name '*.patch'| xargs -i git apply {}
         )
         fi
+        make defconfig
+        [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+        echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
         
     - name: Default PPPOE Setting
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
