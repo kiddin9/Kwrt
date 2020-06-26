@@ -51,7 +51,9 @@
 -		    luciversion = data[2];
 +		    cpuinfo     = data[2],
 +		    luciversion = data[3];
-@@ -55,7 +55,8 @@
+ 
+@@ -54,9 +56,10 @@
+ 			_('Hostname'),         boardinfo.hostname,
 -			_('Model'),            boardinfo.model,
 +			_('Model'),            boardinfo.model + ' ' + cpuinfo.cpumark,
  			_('Architecture'),     boardinfo.system,
@@ -62,3 +64,4 @@
 -			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
 +			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp + '　' + _('CPU usage:') + ' ' + cpuinfo.cpuusage,
 +			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
+ 				systeminfo.load[0] / 65535.0,
