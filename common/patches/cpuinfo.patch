@@ -1,6 +1,6 @@
 --- /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
 +++ /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
-@@ -45,2 +45,13 @@
+@@ -45,2 +45,14 @@
  
 +    getCPUInfo = {
 +        call = function()
@@ -9,6 +9,7 @@
 +            rv.cpufreq      = sys.exec("grep 'MHz' /proc/cpuinfo | cut -c11- | sed -n '1p' | tr -d '\n'")
 +            rv.cputemp      = sys.exec("sensors|grep Core|awk '{print $1,$2,$3}'|tr '\n' ' '")
 +            rv.cpuusage      = (sys.exec("expr 100 - $(top -n 1 | grep 'CPU:' | awk -F '%' '{print$4}' | awk -F ' ' '{print$2}')") or "6") .. "%"
++            rv.cpumark      = sys.exec("cat /etc/bench.log")
 +            return rv
 +        end
 +    },
@@ -48,10 +49,16 @@
  		var boardinfo   = data[0],
  		    systeminfo  = data[1],
 -		    luciversion = data[2];
-+			cpuinfo     = data[2],
++		    cpuinfo     = data[2],
 +		    luciversion = data[3];
- 
-@@ -60,2 +67,3 @@
+@@ -55,7 +55,8 @@
+-			_('Model'),            boardinfo.model,
++			_('Model'),            boardinfo.model + ' ' + cpuinfo.cpumark,
+ 			_('Architecture'),     boardinfo.system,
+ 			_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),
+ 			_('Kernel Version'),   boardinfo.kernel,
+ 			_('Local Time'),       datestr,
  			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,
-+			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp + '　' + _('CPU usage:') +' ' + cpuinfo.cpuusage,
- 			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
+-			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
++			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp + '　' + _('CPU usage:') + ' ' + cpuinfo.cpuusage,
++			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
