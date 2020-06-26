@@ -35,6 +35,7 @@ while :; do
 			fi
 
 		fi
+		rm -f /var/lock/opkg.lock
 		break
 	fi
 	sleep 5
