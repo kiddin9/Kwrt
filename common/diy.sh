@@ -51,7 +51,6 @@ echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/lienol fee
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 
-rm -Rf feeds/packages/utils/coremark
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's/zip zstd/zip zstd ucl upx/g' tools/Makefile
