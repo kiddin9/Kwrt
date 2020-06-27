@@ -101,6 +101,7 @@ cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 mv x86_64/feeds.conf .
 ./scripts/feeds update -a
+./scripts/feeds install -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
 	cp -rf common/files files
 fi
