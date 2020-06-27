@@ -6,6 +6,8 @@ count=0
 while :; do
 	httping -c 1 www.baidu.com >/dev/null 2>&1
 	if [ "$?" == "0" ]; then
+	httping -c 1 http://op.supes.top:66 >/dev/null 2>&1
+	if [ "$?" == "0" ]; then
 		opkg update
 		if [ ! -f /etc/inited ]; then
 			[ uci get dhcp.@dnsmasq[0].noresolv ] && {
@@ -29,14 +31,15 @@ while :; do
 			rm /etc/config/.*-opkg
 			source /etc/profile.d/opkginstall.sh
 			opkg install >/dev/null 2>&1
-			httping -c 1 https://openwrt.supes.top:888 >/dev/null 2>&1
-			if [ "$?" == "0" ]; then
-				touch /etc/inited
-			fi
-
 		fi
 		rm -f /var/lock/opkg.lock
+		touch /etc/inited
+		/bin/coremark > /tmp/coremark.log
+		cat /tmp/coremark.log | grep "CoreMark 1.0" | cut -d  "/"  -f 1 > /etc/bench.log
+		sed -i 's/CoreMark 1.0/(CpuMark/g'  /etc/bench.log
+		echo " Scores)" >> /etc/bench.log
 		break
+	fi
 	fi
 	sleep 5
 	count=$((count + 1))
