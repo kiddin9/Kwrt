@@ -92,7 +92,10 @@ jobs:
         #ln -s /mnt/openwrt/staging_dir openwrt/
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
 
     - name: Load custom configuration
       run: |
