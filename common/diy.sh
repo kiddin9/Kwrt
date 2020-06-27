@@ -53,8 +53,7 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean fe
 
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
-sed -i 's/zip zstd/zip zstd ucl upx/g' tools/Makefile
-sed -i 's?\($(curdir)/bison/compile := $(curdir)/flex/compile\)?$(curdir)/upx/compile := $(curdir)/ucl/compile\n\1?g' tools/Makefile
+sed -i 's?zip zstd$?zip zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 ./scripts/feeds update -a && ./scripts/feeds install -a
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
