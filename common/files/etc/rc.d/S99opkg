@@ -22,6 +22,7 @@ while :; do
 				for ipk in $(cat /etc/installed-opkg); do
 					opkg upgrade --force-depends --force-overwrite --force-checksum $ipk
 				done
+				rm -f /etc/installed-opkg
 			} || {
 			for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 				opkg upgrade --force-depends --force-overwrite --force-checksum $ipk
