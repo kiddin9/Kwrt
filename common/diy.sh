@@ -23,6 +23,7 @@ git clone https://github.com/jerrykuku/luci-app-vssr
 git clone https://github.com/jerrykuku/lua-maxminddb
 git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
 git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
+git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
 
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
 svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
