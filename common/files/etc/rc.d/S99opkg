@@ -18,11 +18,11 @@ while :; do
 
 			cp -r /etc/config /etc/confbak
 
-			[ -f "/etc/installed-opkg" ] && {
-				for ipk in $(cat /etc/installed-opkg); do
+			[ -f "/etc/config/installed-opkg" ] && {
+				for ipk in $(cat /etc/config/installed-opkg); do
 					opkg upgrade --force-depends --force-overwrite --force-checksum $ipk
 				done
-				rm -f /etc/installed-opkg
+				rm -f /etc/config/installed-opkg
 			} || {
 			for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 				opkg upgrade --force-depends --force-overwrite --force-checksum $ipk
