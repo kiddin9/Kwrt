@@ -35,8 +35,7 @@ git clone https://github.com/frainzy1477/luci-app-clash
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-control-timewol
-svn export https://github.com/Lienol/openwrt/branches/dev-master/package/lean/MTK7615-DBDC-LINUX5.4
-mv -f MTK7615-DBDC-LINUX5.4/* ./
+svn export https://github.com/Lienol/openwrt/branches/dev-master/package/lean/MTK7615-DBDC-LINUX5.4 mt
 
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
