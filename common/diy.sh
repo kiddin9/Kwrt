@@ -60,7 +60,6 @@ sed -i 's?zip zstd$?zip zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/com
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
 
-wget -P target/linux/generic/hack-5.4/ https://github.com/coolsnowwolf/lede/raw/master/target/linux/generic/hack-5.4/999-shortcut-fe-support.patch
 wget -P target/linux/generic/hack-5.4/ https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/hack-5.4/999-thermal-tristate.patch
 rm -Rf package/*/*/autocore
 rm -Rf package/*/*/qBittorrent/patches
