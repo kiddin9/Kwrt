@@ -1,3 +1,5 @@
+#!/bin/sh
+
 opkg() {
     if [[ `echo $@ | grep -o -E '^install'` ]]; then
 	command opkg $@
