@@ -57,6 +57,7 @@ rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl 
 sed -i 's?zip zstd$?zip zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 ./scripts/feeds update -a && ./scripts/feeds install -a
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
+sed -i 's/$(MAKE)/$(MAKE) XCFLAGS="-DMULTITHREAD=16 -DUSE_PTHREAD"/g' package/*/*/coremark/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
 rm -f target/linux/generic/hack-5.4/999-shortcut-fe-support.patch target/linux/generic/hack-5.4/999-thermal-tristate.patch  target/linux/generic/hack-5.4/952-net-conntrack-events-support-multiple-registrant.patch
 wget -P target/linux/generic/hack-5.4/ https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/hack-5.4/999-shortcut-fe-support.patch
@@ -80,7 +81,7 @@ sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Ma
 sed -i 's/+rclone\( \|\$\)/+rclone +fuse-utils\1/g' package/*/*/luci-app-rclone/Makefile
 sed -i 's/+acme\( \|\$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i 's/+amule\( \|\$\)/+amule +antileech\1/g' package/*/*/luci-app-amule/Makefile
-sed -i 's/ @LINUX_4_19//g' package/*/*/luci-app-flowoffload/Makefile
+sed -i 's/sysinit/respawn/g' package/base-files/files/etc/inittab
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
