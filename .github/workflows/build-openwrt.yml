@@ -30,7 +30,7 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
     runs-on: ubuntu-latest
     
-    name: Build ${{x86_64,matrix.target}}
+    name: Build ${{matrix.target}}
     strategy:
       fail-fast: false
       matrix:
