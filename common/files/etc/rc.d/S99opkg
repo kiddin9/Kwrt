@@ -2,48 +2,54 @@
 
 exec >/var/persist-packages.log 2>&1
 
+if [ $(uci get network.wan.ipv6) == 0 ]; then
+	sysctl -w net.ipv6.conf.all.disable_ipv6=1
+	sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+	sysctl -w net.ipv6.conf.default.disable_ipv6=1
+	echo 1 >/proc/sys/net/ipv6/conf/all/disable_ipv6
+else
+	sysctl -w net.ipv6.conf.all.disable_ipv6=0
+	sysctl -w net.ipv6.conf.lo.disable_ipv6=0
+	sysctl -w net.ipv6.conf.default.disable_ipv6=0
+	echo 0 >/proc/sys/net/ipv6/conf/all/disable_ipv6
+fi
+
 count=0
 while :; do
 	httping -c 1 www.baidu.com >/dev/null 2>&1
 	if [ "$?" == "0" ]; then
-	httping -c 1 http://op.supes.top:66 >/dev/null 2>&1
-	if [ "$?" == "0" ]; then
-		opkg update
-		if [ ! -f /etc/inited ]; then
-			[ uci get dhcp.@dnsmasq[0].noresolv ] && {
-				uci del dhcp.@dnsmasq[0].noresolv
-				uci commit dhcp
-				service dnsmasq reload
-			}
+		httping -c 1 http://op.supes.top:66 >/dev/null 2>&1
+		if [ "$?" == "0" ]; then
+			opkg update
+			if [ ! -f /etc/inited ]; then
+				[ uci get dhcp.@dnsmasq[0].noresolv ] && {
+					uci del dhcp.@dnsmasq[0].noresolv
+					uci commit dhcp
+					service dnsmasq reload
+				}
 
-			cp -r /etc/config /etc/confbak
+				cp -r /etc/config /etc/confbak
 
-			[ -f "/etc/config/installed-opkg" ] && {
-				for ipk in $(cat /etc/config/installed-opkg); do
-					opkg upgrade --force-overwrite --force-depends --force-checksum $ipk
-				done
-				rm -f /etc/config/installed-opkg
-			} || {
-			for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
-				opkg upgrade --force-overwrite --force-depends --force-checksum $ipk
-			done	
-			}
+				[ -f "/etc/config/installed-opkg" ] && {
+					for ipk in $(cat /etc/config/installed-opkg); do
+						opkg upgrade --force-overwrite --force-depends --force-checksum $ipk
+					done
+					rm -f /etc/config/installed-opkg
+				} || {
+					for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+						opkg upgrade --force-overwrite --force-depends --force-checksum $ipk
+					done
+				}
 
-			find /etc/confbak -type f ! -path '*/ucitrack' ! -path '*/dhcp' ! -path '*/firewall' ! -path '*/network' ! -path '*/system' -exec cp -f '{}' '/etc/config/' \;
-			rm /etc/config/.*-opkg
-			source /etc/profile.d/opkginstall.sh
-			opkg install >/dev/null 2>&1
+				find /etc/confbak -type f ! -path '*/ucitrack' ! -path '*/dhcp' ! -path '*/firewall' ! -path '*/network' ! -path '*/system' -exec cp -f '{}' '/etc/config/' \;
+				rm /etc/config/.*-opkg
+				source /etc/profile.d/opkginstall.sh
+				opkg install >/dev/null 2>&1
+			fi
+			rm -f /var/lock/opkg.lock
+			touch /etc/inited
+			break
 		fi
-		rm -f /var/lock/opkg.lock
-		touch /etc/inited
-		[ -f "/bin/coremark" ] && {
-		/bin/coremark > /tmp/coremark.log
-		cat /tmp/coremark.log | grep "CoreMark 1.0" | cut -d  "/"  -f 1 > /etc/bench.log
-		sed -i 's/CoreMark 1.0/(CpuMark/g'  /etc/bench.log
-		echo " Scores)" >> /etc/bench.log
-		}
-		break
-	fi
 	fi
 	sleep 5
 	count=$((count + 1))
@@ -52,14 +58,10 @@ while :; do
 	fi
 done
 
-if [ `uci get network.wan.ipv6` == 0 ]; then
-	sysctl -w net.ipv6.conf.all.disable_ipv6=1
-	sysctl -w net.ipv6.conf.lo.disable_ipv6=1
-	sysctl -w net.ipv6.conf.default.disable_ipv6=1
-	echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
-else
-	sysctl -w net.ipv6.conf.all.disable_ipv6=0
-	sysctl -w net.ipv6.conf.lo.disable_ipv6=0
-	sysctl -w net.ipv6.conf.default.disable_ipv6=0
-	echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6
-fi
+[ -f "/bin/coremark" ] && [ ! -f "/etc/bench.log" ] && {
+	sleep 10
+	/bin/coremark >/tmp/coremark.log
+	cat /tmp/coremark.log | grep "CoreMark 1.0" | cut -d "/" -f 1 >/etc/bench.log
+	sed -i 's/CoreMark 1.0/(CpuMark/g' /etc/bench.log
+	echo " Scores)" >>/etc/bench.log
+}
