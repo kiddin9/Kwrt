@@ -18,7 +18,7 @@ count=0
 while :; do
 	httping -c 1 www.baidu.com >/dev/null 2>&1
 	if [ "$?" == "0" ]; then
-		httping -c 1 http://op.supes.top:66 >/dev/null 2>&1
+		httping -c 1 https://op.supes.top:88 >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
 			opkg update
 			if [ ! -f /etc/inited ]; then
