@@ -14,38 +14,38 @@ PKG_RELEASE:=1
 STRIP:=true
 
 ifeq ($(ARCH),i386)
-	PKG_ARCH_BAIDUPCS-WEB:=86
+	PKG_ARCH:=86
 endif
 
 ifeq ($(ARCH),x86_64)
-	PKG_ARCH_BAIDUPCS-WEB:=amd64
+	PKG_ARCH:=amd64
 endif
 
 ifeq ($(ARCH),mipsel)
-	PKG_ARCH_BAIDUPCS-WEB:=mipsle
+	PKG_ARCH:=mipsle
 endif
 
 ifeq ($(ARCH),mips)
-	PKG_ARCH_BAIDUPCS-WEB:=mipsle
+	PKG_ARCH:=mipsle
 endif
 
 ifeq ($(ARCH),arm)
 ifeq ($(BOARD),bcm53xx)
-	PKG_ARCH_BAIDUPCS-WEB:=armv5
+	PKG_ARCH:=armv5
 else ifeq ($(BOARD),kirkwood)
-	PKG_ARCH_BAIDUPCS-WEB:=armv5
+	PKG_ARCH:=armv5
 else
-	PKG_ARCH_BAIDUPCS-WEB:=armv7
+	PKG_ARCH:=armv7
 endif
 endif
 
 ifeq ($(ARCH),aarch64)
-	PKG_ARCH_BAIDUPCS-WEB:=arm64
+	PKG_ARCH:=arm64
 endif
 
-PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB).tgz
+PKG_SOURCE:=BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH).tgz
 PKG_SOURCE_URL:=https://github.com/garypang13/luci-app-baidupcs-web/releases/download/$(PKG_VERSION)/
-PKG_BUILD_DIR:=$(BUILD_DIR)/BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH_BAIDUPCS-WEB)
+PKG_BUILD_DIR:=$(BUILD_DIR)/BaiduPCS-Go-$(PKG_VERSION)-linux-$(PKG_ARCH)
 PKG_HASH:=skip
 
 include $(INCLUDE_DIR)/package.mk
