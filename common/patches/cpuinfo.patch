@@ -1,6 +1,6 @@
 --- /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
 +++ /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
-@@ -45,2 +45,14 @@
+@@ -45,2 +45,22 @@
  
 +    getCPUInfo = {
 +        call = function()
@@ -14,6 +14,14 @@
 +        end
 +    },
 +
++	getEthInfo = {
++		call = function()
++			local sys = require "luci.sys"
++			local result = sys.exec("ethinfo 2>/dev/null")
++			return { result = result }
++		end
++	},
++
  	setLocaltime = {
 
 --- /feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
@@ -21,7 +29,7 @@
 @@ -63,3 +63,3 @@
  				"iwinfo": [ "assoclist", "freqlist", "txpowerlist", "countrylist" ],
 -				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints" ],
-+				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints", "getCPUInfo" ],
++				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints", "getCPUInfo", "getEthInfo" ],
  				"luci-rpc": [ "getBoardJSON", "getDHCPLeases", "getDSLStatus", "getDUIDHints", "getHostHints", "getNetworkDevices", "getWirelessDevices" ],
 
 --- /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
@@ -62,6 +70,6 @@
  			_('Local Time'),       datestr,
  			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,
 -			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
-+			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + cpuinfo.cputemp + '　' + _('CPU usage:') + ' ' + cpuinfo.cpuusage,
++			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + ' ' + cpuinfo.cputemp,
 +			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
  				systeminfo.load[0] / 65535.0,
