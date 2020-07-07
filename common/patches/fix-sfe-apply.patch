@@ -1,0 +1,10 @@
+--- /feeds/custom/luci/luci-app-sfe/root/etc/init.d/sfe
++++ /feeds/custom/luci/luci-app-sfe/root/etc/init.d/sfe
+@@ -146,3 +146,7 @@
+ }
++
++service_triggers() {
++	procd_add_reload_trigger sfe
++}
+ 
+ start_service() {
