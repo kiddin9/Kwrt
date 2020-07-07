@@ -8,7 +8,7 @@
 +            local rv = {}
 +            rv.cpufreq      = sys.exec("grep 'MHz' /proc/cpuinfo | cut -c11- | sed -n '1p' | tr -d '\n'")
 +            rv.cputemp      = sys.exec("sensors|grep Core|awk '{print $1,$2,$3}'|tr '\n' ' '")
-+            rv.cpuusage      = (sys.exec("expr 100 - $(top -n 1 | grep 'CPU:' | awk -F '%' '{print$4}' | awk -F ' ' '{print$2}')") or "6") .. "%"
++            rv.cpuusage      = sys.exec("echo -n $(top -n 1 | grep CPU | grep -v grep | head -n 1 | awk '{print $8}' | sed 's/\\(.*\\)\\(.\\)$/\\1/')")
 +            rv.cpumark      = sys.exec("cat /etc/bench.log")
 +            return rv
 +        end
