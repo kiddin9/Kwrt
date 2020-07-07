@@ -151,7 +151,6 @@ rm -Rf feeds package
 svn co https://github.com/openwrt/openwrt/trunk/package
 git fetch --all
 git reset --hard origin/master
-git pull
 ./scripts/feeds update -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
 	cp -rf common/files files
