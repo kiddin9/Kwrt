@@ -33,7 +33,7 @@ index 6a64fe0a9..6e5bfef8c 100644
  		
  		so = ss.option(form.Value, 'comments', _('Comments'));
  		so.rmempty  = true;
-+		
++
 +		s.taboption('general', form.Flag, 'dns_redirect',
 +			_('DNS Redirect'),
 +			_('Redirect client DNS to dnsmasq'));
