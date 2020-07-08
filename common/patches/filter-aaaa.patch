@@ -1,3 +1,19 @@
+--- a/modules/luci-base/po/zh_Hans/base.po
++++ b/modules/luci-base/po/zh_Hans/base.po
+@@ -5047,6 +5047,12 @@ msgstr "强"
+ msgid "Submit"
+ msgstr "提交"
+ 
++msgid "Disable IPv6 DNS forwards"
++msgstr "禁止解析 IPv6 DNS 记录"
++
++msgid "Filter IPv6(AAAA) DNS Query Name Resolve"
++msgstr "过滤掉 IPv6(AAAA) ，只返回 IPv4 DNS 域名记录"
++
+ #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:203
+ msgid "Suppress logging"
+ msgstr "不记录日志"
+
 --- /feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 +++ /feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 @@ -185,2 +185,7 @@
