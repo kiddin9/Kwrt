@@ -40,7 +40,7 @@ index ea9596d3f..6a64fe0a9 100644
  		s.tab('advanced', _('Advanced Settings'));
  		s.tab('leases', _('Static Leases'));
 +		s.tab('custom_domain', _('Custom domain'));
-+	
++
 +		o = s.taboption('custom_domain', form.SectionValue, 'domain', form.GridSection, 'domain', null,
 +			_('Define a custom domain name and the corresponding PTR record'));
 +
