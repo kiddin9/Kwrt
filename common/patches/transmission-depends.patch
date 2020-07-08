@@ -10,8 +10,8 @@ Subject: [PATCH] transmission: fix depends
 
 diff --git a/net/transmission-web-control/Makefile b/net/transmission-web-control/Makefile
 index 7547dbde2..fd131a1aa 100644
---- a/net/transmission-web-control/Makefile
-+++ b/net/transmission-web-control/Makefile
+--- a/feeds/luci/net/transmission-web-control/Makefile
++++ b/feeds/luci/net/transmission-web-control/Makefile
 @@ -19,7 +19,7 @@ define Package/transmission-web-control
    SECTION:=net
    CATEGORY:=Network
@@ -23,8 +23,8 @@ index 7547dbde2..fd131a1aa 100644
    URL:=https://github.com/ronggang/transmission-web-control
 diff --git a/net/transmission/Makefile b/net/transmission/Makefile
 index 2ec11f54c..f953b8919 100644
---- a/net/transmission/Makefile
-+++ b/net/transmission/Makefile
+--- a/feeds/luci/net/transmission/Makefile
++++ b/feeds/luci/net/transmission/Makefile
 @@ -85,7 +85,7 @@ endef
  define Package/transmission-web
    $(call Package/transmission/template)
