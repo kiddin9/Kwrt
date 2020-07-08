@@ -10,8 +10,8 @@ Subject: [PATCH] dhcp: add hijack domain
 
 diff --git a/modules/luci-base/po/zh_Hans/base.po b/modules/luci-base/po/zh_Hans/base.po
 index 414c6699c..c9e3cfb84 100644
---- a/modules/luci-base/po/zh_Hans/base.po
-+++ b/modules/luci-base/po/zh_Hans/base.po
+--- a/feeds/luci/modules/luci-base/po/zh_Hans/base.po
++++ b/feeds/luci/modules/luci-base/po/zh_Hans/base.po
 @@ -5906,6 +5906,18 @@ msgstr ""
  "选字段，可为每个主机单独设定 DHCP 租期的时长，例如：12h、3d、infinite，分别表"
  "示 12 小时、3 天、永久。"
@@ -33,8 +33,8 @@ index 414c6699c..c9e3cfb84 100644
  msgid "Used"
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 index ea9596d3f..6a64fe0a9 100644
---- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-+++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+--- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
++++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 @@ -163,6 +163,26 @@ return view.extend({
  		s.tab('tftp', _('TFTP Settings'));
  		s.tab('advanced', _('Advanced Settings'));
