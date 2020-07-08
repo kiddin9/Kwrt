@@ -10,8 +10,8 @@ Subject: [PATCH] dnsmasq: add dns redirect option
 
 diff --git a/modules/luci-base/po/zh_Hans/base.po b/modules/luci-base/po/zh_Hans/base.po
 index 7008452b6..f70f1b275 100644
---- a/modules/luci-base/po/zh_Hans/base.po
-+++ b/modules/luci-base/po/zh_Hans/base.po
+--- a/feeds/luci/modules/luci-base/po/zh_Hans/base.po
++++ b/feeds/luci/modules/luci-base/po/zh_Hans/base.po
 @@ -1644,6 +1644,12 @@ msgstr "您真的要清除所有设置吗？"
  msgid "Do you really want to recursively delete the directory \"%s\" ?"
  msgstr "您真的要删除目录“%s”吗？"
@@ -27,8 +27,8 @@ index 7008452b6..f70f1b275 100644
  msgstr "忽略空域名解析"
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 index 6a64fe0a9..6e5bfef8c 100644
---- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-+++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+--- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
++++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 @@ -183,6 +183,10 @@ return view.extend({
  		
  		so = ss.option(form.Value, 'comments', _('Comments'));
