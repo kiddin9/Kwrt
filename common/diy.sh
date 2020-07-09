@@ -26,9 +26,6 @@ git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
 
-svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
-git clone https://github.com/pexcn/openwrt-chinadns-ng.git chinadns-ng
-svn co https://github.com/Lienol/openwrt-package/trunk/package/brook
 svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
 git clone https://github.com/frainzy1477/luci-app-clash
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
@@ -51,6 +48,8 @@ mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
 echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/lienol feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
+echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/package feeds/custom/luci
 
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
