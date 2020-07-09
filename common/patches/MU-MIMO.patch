@@ -15,7 +15,7 @@ index 80b695519..933561bbc 100644
  
  					o = ss.taboption('advanced', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'));
  					o.default = o.enabled;
-+					
++
 +					o = ss.taboption("advanced", form.Flag, 'mu_beamformer', _('MU-MIMO'));
 +					o.rmempty = false;
 +					o.default = '0';
