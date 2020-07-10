@@ -3,11 +3,22 @@
 cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
-git clone https://github.com/jerrykuku/luci-theme-argon
-svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
+
+#svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
+git clone https://github.com/kannychak/luci-app-syncthing
+
+git clone https://github.com/jerrykuku/luci-app-vssr
+svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
+git clone https://github.com/frainzy1477/luci-app-clash
+git clone https://github.com/garypang13/openwrt-adguardhome
+
+git clone https://github.com/garypang13/luci-app-baidupcs-web
+svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
+
 git clone https://github.com/lisaac/luci-app-diskman
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
+
 git clone https://github.com/tty228/luci-app-serverchan
 git clone https://github.com/brvphoenix/luci-app-wrtbwmon
 git clone https://github.com/brvphoenix/wrtbwmon
@@ -19,26 +30,24 @@ git clone https://github.com/garypang13/r8125
 git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
 git clone https://github.com/garypang13/luci-app-qbittorrent
-git clone https://github.com/jerrykuku/luci-app-vssr
 git clone https://github.com/jerrykuku/lua-maxminddb
 git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
 git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
 
-svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
-git clone https://github.com/frainzy1477/luci-app-clash
-svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
-svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-control-timewol
 
-git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
 # git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
 git clone https://github.com/garypang13/openwrt-filerun
-git clone https://github.com/garypang13/luci-app-baidupcs-web
+
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
+
+git clone https://github.com/jerrykuku/luci-theme-argon
+svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
+
 cd -
 
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
