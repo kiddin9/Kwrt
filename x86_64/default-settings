@@ -29,7 +29,7 @@ uci commit smartdns
   
 if [ ! -f /etc/config/placeholder ]; then
   uci set luci.main.lang=zh_cn
-  uci set luci.main.mediaurlbase=/luci-static/argon
+  uci set luci.main.mediaurlbase=/luci-static/edge
   uci commit luci
 
   uci set system.@system[0].timezone=CST-8
