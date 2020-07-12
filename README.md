@@ -55,7 +55,7 @@
 
 Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com) 推送编译结果到微信
 
-Secrets中添加 TELEGRAM_BOT_URL 可推送编译结果到Telegram Bot. [获取机器人](https://t.me/notificationme_bot)
+Secrets中添加 TELEGRAM_CHAT_ID, TELEGRAM_TOKEN 可推送编译结果到Telegram Bot. [教程](https://longnight.github.io/2018/12/12/Telegram-Bot-notifications)
 
 fork后点击右上角的Star按钮开始编译
 
