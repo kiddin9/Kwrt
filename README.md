@@ -1,22 +1,4 @@
 # Actions OpenWrt Snapshot With Nginx
-[1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
-[2]: /LICENSE
-[3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
-[4]: https://github.com/kannychak/Actions-OpenWrt-Nginx/pulls
-[5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg
-[6]: https://github.com/kannychak/Actions-OpenWrt-Nginx/issues/new
-[7]: https://github.com/kannychak/Actions-OpenWrt-Nginx/releases
-[8]: https://img.shields.io/badge/Contact-telegram-blue
-[9]: https://t.me/openwrt_nginx
-[10]: https://github.com/kannychak/Actions-OpenWrt-Nginx/workflows/Openwrt-AutoBuild/badge.svg
-[11]: https://github.com/kannychak/Actions-OpenWrt-Nginx/actions
-
-[![license][1]][2]
-[![PRs Welcome][3]][4]
-[![Issue Welcome][5]][6]
-[![Release Version][7]][8]
-[![Contact Me][10]][11]
-[![AutoBuild][12]][13]
 
 <a href="https://t.me/openwrt_nginx" target="_blank">Telegram</a>
 ### 特色:
