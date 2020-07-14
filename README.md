@@ -2,15 +2,15 @@
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
-[4]: https://github.com/garypang13/Actions-OpenWrt-Nginx/pulls
+[4]: https://github.com/kannychak/Actions-OpenWrt-Nginx/pulls
 [5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg
-[6]: https://github.com/garypang13/Actions-OpenWrt-Nginx/issues/new
+[6]: https://github.com/kannychak/Actions-OpenWrt-Nginx/issues/new
 [7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
-[8]: https://github.com/garypang13/Actions-OpenWrt-Nginx/releases
+[8]: https://github.com/kannychak/Actions-OpenWrt-Nginx/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
 [11]: https://t.me/openwrt_nginx
-[12]: https://github.com/garypang13/Actions-OpenWrt-Nginx/workflows/Openwrt-AutoBuild/badge.svg
-[13]: https://github.com/garypang13/Actions-OpenWrt-Nginx/actions
+[12]: https://github.com/kannychak/Actions-OpenWrt-Nginx/workflows/Openwrt-AutoBuild/badge.svg
+[13]: https://github.com/kannychak/Actions-OpenWrt-Nginx/actions
 
 [![license][1]][2]
 [![PRs Welcome][3]][4]
@@ -212,11 +212,10 @@ Build OpenWrt using GitHub Actions
 
 ### Acknowledgments
 - [OpenWrt](https://github.com/openwrt/openwrt)
-- [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
+- [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
+- [garypan13](https://github.com/garypang13/Actions-OpenWrt-Nginx)
 - [upload-release-action](https://github.com/svenstaro/upload-release-action)
-- [Microsoft](https://www.microsoft.com)
-- [Microsoft Azure](https://azure.microsoft.com)
 - [GitHub](https://github.com)
 - [GitHub Actions](https://github.com/features/actions)
 - [tmate](https://github.com/tmate-io/tmate)
