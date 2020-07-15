@@ -14,7 +14,7 @@ config smartdns
 	option seconddns_no_dualstack_selection '0'
 	option seconddns_no_cache '0'
 	option rr_ttl_max '86400'
-	option port '5335'
+	option port '5336'
 	option force_aaaa_soa '0'
 	option serve_expired '1'
 	option enabled '1'
