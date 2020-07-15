@@ -77,11 +77,11 @@ tls:
   certificate_path: ""
   private_key_path: ""
 filters:
-- enabled: false
+- enabled: true
   url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
   name: AdGuard Simplified Domain Names filter
   id: 1
-- enabled: true
+- enabled: false
   url: https://block.energized.pro/blu/formats/filter
   name: Energized Protection Blu
   id: 1590467081
@@ -97,7 +97,7 @@ filters:
   url: https://gitee.com/lhzgl6587/hosts/raw/master/myruler
   name: 国内手机
   id: 1584462286
-- enabled: false
+- enabled: true
   url: https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
   name: StevenBlack fakenews gambling
   id: 1577002821
@@ -113,8 +113,8 @@ filters:
   url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
   name: googlehosts
   id: 1573404421
-- enabled: false
-  url: https://github.com/jerryn70/GoodbyeAds/raw/master/Extension/GoodbyeAds-YouTube-AdBlock.txt
+- enabled: true
+  url: https://gist.githubusercontent.com/Ewpratten/a25ae63a7200c02c850fede2f32453cf/raw/b9318009399b99e822515d388b8458557d828c37/hosts-yt-ads
   name: YouTube-AdBlock
   id: 1584350199
 whitelist_filters:
