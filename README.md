@@ -1,4 +1,4 @@
-# Actions OpenWrt Snapshot With Nginx
+# Actions OpenWrt Snapshot
 
 <a href="https://t.me/openwrt_nginx" target="_blank">Telegram</a>
 ### 特色:
