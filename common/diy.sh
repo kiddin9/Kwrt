@@ -31,6 +31,8 @@ git clone https://github.com/frainzy1477/luci-app-clash
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-control-timewol
+svn co https://github.com/dogbutcat/openwrt-packages/trunk/openwrt-udp2raw
+svn co https://github.com/dogbutcat/openwrt-packages/trunk/speederv2
 
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
