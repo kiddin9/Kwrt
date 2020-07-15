@@ -22,10 +22,10 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   bootstrap_dns:
+  - 127.0.0.1:5336
   - 180.76.76.76:53
   - 119.29.29.29:53
-  - 8.8.8.8:53
-  - 127.0.0.1:5555
+  - 8.8.8.8:53  
   all_servers: true
   fastest_addr: false
   edns_client_subnet: true
@@ -39,7 +39,7 @@ dns:
   cache_ttl_min: 1800
   cache_ttl_max: 86400
   upstream_dns:
-  - 127.0.0.1:5555
+  - 127.0.0.1:5336
   - tls://dns.rubyfish.cn
   - tls://dns.google
   - tls://1.1.1.1
