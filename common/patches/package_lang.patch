@@ -11,7 +11,7 @@ diff --git a/include/package.mk b/include/package.mk
 index a93d6b78f326..76109182cb97 100644
 --- a/include/package.mk
 +++ b/include/package.mk
-@@ -353,3 +353,83 @@ dist:
+@@ -353,3 +353,85 @@ dist:
  
  distcheck:
  	$(Build/DistCheck)
@@ -91,6 +91,8 @@ index a93d6b78f326..76109182cb97 100644
 +		exit 0
 +	}
 +  endef
++
++endef
 +
 +  LUCI_BUILD_PACKAGES += luci-i18n-$(LUCI_BASENAME)-$(1)
 +
