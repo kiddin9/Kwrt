@@ -1,5 +1,5 @@
 config AdGuardHome 'AdGuardHome'
-	option configpath '/etc/config/AdGuardHome.yaml'
+	option configpath '/etc/AdGuardHome.yaml'
 	option workdir '/usr/bin/AdGuardHome'
 	option logfile '/tmp/AdGuardHome.log'
 	option binpath '/usr/bin/AdGuardHome/AdGuardHome'
