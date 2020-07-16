@@ -13,7 +13,13 @@ else
 	sysctl -w net.ipv6.conf.default.disable_ipv6=0
 	echo 0 >/proc/sys/net/ipv6/conf/all/disable_ipv6
 fi
-
+			if [ ! -f /etc/inited ]; then
+				[ uci get dhcp.@dnsmasq[0].noresolv ] && {
+					uci del dhcp.@dnsmasq[0].noresolv
+					uci commit dhcp
+					service dnsmasq reload
+				}
+			fi
 count=0
 while :; do
 	httping -c 1 www.baidu.com >/dev/null 2>&1
