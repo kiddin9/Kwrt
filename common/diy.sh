@@ -1,6 +1,6 @@
 #!/bin/bash
 #=================================================
-rm -Rf package/lean
+rm -Rf package/lean tmp
 cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
