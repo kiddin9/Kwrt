@@ -1,17 +1,17 @@
-From d10aaaef7c0a17c378a6bece9d0b21e91d3c6e71 Mon Sep 17 00:00:00 2001
+From dc04365c00017c9886f965ada272d0f16ecc8400 Mon Sep 17 00:00:00 2001
 From: garypang13 <48883331+garypang13@users.noreply.github.com>
-Date: Thu, 16 Jul 2020 09:22:05 +0800
+Date: Thu, 16 Jul 2020 10:19:38 +0800
 Subject: [PATCH] Update package.mk
 
 ---
- include/package.mk | 81 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+ include/package.mk | 92 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
 diff --git a/include/package.mk b/include/package.mk
-index a93d6b78f326..76109182cb97 100644
+index a93d6b78f326..0c35e6318fbd 100644
 --- a/include/package.mk
 +++ b/include/package.mk
-@@ -353,3 +353,85 @@ dist:
+@@ -353,3 +353,95 @@ dist:
  
  distcheck:
  	$(Build/DistCheck)
@@ -58,7 +58,17 @@ index a93d6b78f326..76109182cb97 100644
 +LUCI_LC_ALIAS.zh_Hans=zh-cn
 +LUCI_LC_ALIAS.zh_Hant=zh-tw
 +
-+LUCI_BUILD_PACKAGES := $(PKG_NAME)
++ifeq ($(PKG_NAME),luci-base)
++ define Package/luci-base/config
++
++   menu "Translations"$(foreach lang,$(LUCI_LANGUAGES),
++
++     config LUCI_LANG_$(lang)
++	   tristate "$(shell echo '$(LUCI_LANG.$(lang))' | sed -e 's/^.* (\(.*\))$$/\1/') ($(lang))")
++
++   endmenu
++ endef
++endif
 +
 +define LuciTranslation
 +  define Package/luci-i18n-$(LUCI_BASENAME)-$(1)
@@ -92,8 +102,8 @@ index a93d6b78f326..76109182cb97 100644
 +	}
 +  endef
 +
-+endef
++  LUCI_LANG_PACKAGES := luci-i18n-$(LUCI_BASENAME)-$(1)
 +
-+  LUCI_BUILD_PACKAGES += luci-i18n-$(LUCI_BASENAME)-$(1)
++endef
 +
 +  $(foreach lang,$(LUCI_LANGUAGES),$(eval $(call LuciTranslation,$(firstword $(LUCI_LC_ALIAS.$(lang)) $(lang)),$(lang))))
