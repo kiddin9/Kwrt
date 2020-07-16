@@ -11,7 +11,7 @@ diff --git a/include/package.mk b/include/package.mk
 index a93d6b78f326..0c35e6318fbd 100644
 --- a/include/package.mk
 +++ b/include/package.mk
-@@ -353,3 +353,95 @@ dist:
+@@ -353,3 +353,96 @@ dist:
  
  distcheck:
  	$(Build/DistCheck)
@@ -107,3 +107,5 @@ index a93d6b78f326..0c35e6318fbd 100644
 +endef
 +
 +  $(foreach lang,$(LUCI_LANGUAGES),$(eval $(call LuciTranslation,$(firstword $(LUCI_LC_ALIAS.$(lang)) $(lang)),$(lang))))
++  $(foreach pkg,$(LUCI_LANG_PACKAGES),$(eval $(call BuildPackage,$(pkg))))
+
