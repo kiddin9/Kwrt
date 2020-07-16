@@ -4,6 +4,7 @@ rm -Rf package/lean tmp
 cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
+git clone https://github.com/kannychak/luci-theme-argon
 git clone https://github.com/garypang13/luci-theme-edge
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
