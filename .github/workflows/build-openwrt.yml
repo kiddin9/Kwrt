@@ -133,12 +133,12 @@ jobs:
         fi
         if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
         (
-          find "common/patches" -type f -name '*.patch'| xargs -i git apply {}
+          find "common/patches" -type f -name '*.patch'| xargs -i git apply {} || true
         )
         fi
         if [ -n "$(ls -A "${{matrix.target}}/patches" 2>/dev/null)" ]; then
         (
-          find "${{matrix.target}}/patches" -type f -name '*.patch'| xargs -i git apply {}
+          find "${{matrix.target}}/patches" -type f -name '*.patch'| xargs -i git apply {} || true
         )
         fi
         make defconfig
