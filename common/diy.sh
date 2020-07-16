@@ -3,22 +3,11 @@
 cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
-git clone https://github.com/pymumu/luci-app-smartdns -b lede
-
-#svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
-git clone https://github.com/kannychak/luci-app-syncthing
-
-git clone https://github.com/jerrykuku/luci-app-vssr
-svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
-git clone https://github.com/frainzy1477/luci-app-clash
-git clone https://github.com/garypang13/openwrt-adguardhome
-
-git clone https://github.com/garypang13/luci-app-baidupcs-web
+git clone https://github.com/garypang13/luci-theme-edge
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
-
+git clone https://github.com/pymumu/luci-app-smartdns -b lede
 git clone https://github.com/lisaac/luci-app-diskman
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
-
 git clone https://github.com/tty228/luci-app-serverchan
 git clone https://github.com/brvphoenix/luci-app-wrtbwmon
 git clone https://github.com/brvphoenix/wrtbwmon
@@ -30,24 +19,28 @@ git clone https://github.com/garypang13/r8125
 git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
 git clone https://github.com/garypang13/luci-app-qbittorrent
+git clone https://github.com/jerrykuku/luci-app-vssr
 git clone https://github.com/jerrykuku/lua-maxminddb
 git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
 git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
 
+svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
+git clone https://github.com/frainzy1477/luci-app-clash
+svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
+svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-control-timewol
+svn co https://github.com/dogbutcat/openwrt-packages/trunk/openwrt-udp2raw
+svn co https://github.com/dogbutcat/openwrt-packages/trunk/speederv2
 
+git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
 # git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
 git clone https://github.com/garypang13/openwrt-filerun
-
+git clone https://github.com/garypang13/luci-app-baidupcs-web
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
-
-git clone https://github.com/jerrykuku/luci-theme-argon
-svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
-
 cd -
 
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
@@ -75,8 +68,8 @@ rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf f
 chmod +x files/usr/share/aria2/*.sh
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech package/feeds/custom/antileech/src
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n package/feeds/custom/default-settings/po/zh_Hans
-rm -Rf package/*/*/luci-theme-argon/htdocs/luci-static/argon/img/*
 sed -i '/index.htm/d' package/*/*/autocore/Makefile
+sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& \[ -f "\/bin\/bash" \] \&\& env -i bash "$FILE" || . "$FILE"/g' package/base-files/files/etc/profile
 sed -i 's/var opts = \[\]/var opts = \["-k"\]/g' package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
@@ -119,10 +112,6 @@ find package/*/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makef
 find package/*/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDIRS=/M=/g" {}
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i '/PKG_BUILD_DIR.*(PKG_NAME)/d' feeds/luci/luci.mk
-sed -i "/foreach pkg/d" feeds/luci/luci.mk;
-sed -i 's/$(INCLUDE_DIR)\/package.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/*/luci-app-*/Makefile
-sed -i "/foreach pkg/d" package/*/*/luci-*/Makefile
-find package/*/*/luci-*/ package/*/*/luci/ -maxdepth 1 -name Makefile | xargs -i sed -i '$a $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))' {}
 find package/*/custom/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
 find package/*/custom/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
 sed -i "/po2lmo /d" package/*/custom/*/Makefile

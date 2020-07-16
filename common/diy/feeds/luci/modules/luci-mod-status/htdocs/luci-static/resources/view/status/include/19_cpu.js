@@ -29,7 +29,7 @@ return L.Class.extend({
 			_('Total Available'), (info.cpufree) ? info.cpufree : 0, 100
 		];
 
-		var table = E('div', { 'class': 'table' });
+		var table = E('div', { 'class': 'table cpu' });
 
 		for (var i = 0; i < fields.length; i += 3) {
 			table.appendChild(E('div', { 'class': 'tr' }, [
