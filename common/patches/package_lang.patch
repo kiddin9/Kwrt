@@ -1,17 +1,39 @@
-From dc04365c00017c9886f965ada272d0f16ecc8400 Mon Sep 17 00:00:00 2001
+From 372040e679ca15529398bc0a9923431cf49f9119 Mon Sep 17 00:00:00 2001
 From: garypang13 <48883331+garypang13@users.noreply.github.com>
-Date: Thu, 16 Jul 2020 10:19:38 +0800
+Date: Fri, 17 Jul 2020 09:41:31 +0800
 Subject: [PATCH] Update package.mk
 
 ---
- include/package.mk | 92 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ include/package.mk | 108 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
 diff --git a/include/package.mk b/include/package.mk
-index a93d6b78f326..0c35e6318fbd 100644
+index a93d6b78f326..ccd84a356e65 100644
 --- a/include/package.mk
 +++ b/include/package.mk
-@@ -353,3 +353,95 @@ dist:
+@@ -307,6 +307,21 @@ endif
+   $(if $(PKG_HOST_ONLY),,$(call Build/DefaultTargets,$(1)))
+ endef
+ 
++define BuildPackage1
++  $(eval $(Package/Default))
++  $(eval $(Package/$(1)))
++
++  $(if $(DUMP), \
++    $(if $(CHECK),,$(Dumpinfo/Package)), \
++    $(foreach target, \
++      $(if $(Package/$(1)/targets),$(Package/$(1)/targets), \
++        $(if $(PKG_TARGETS),$(PKG_TARGETS), ipkg) \
++      ), $(BuildTarget/$(target)) \
++    ) \
++  )
++
++endef
++
+ define pkg_install_files
+ 	$(foreach install_file,$(1),$(INSTALL_DIR) $(3)/`dirname $(install_file)`; $(INSTALL_DATA) $(2)/$(install_file) $(3)/`dirname $(install_file)`;)
+ endef
+@@ -353,3 +368,96 @@ dist:
  
  distcheck:
  	$(Build/DistCheck)
@@ -107,3 +129,4 @@ index a93d6b78f326..0c35e6318fbd 100644
 +endef
 +
 +  $(foreach lang,$(LUCI_LANGUAGES),$(eval $(call LuciTranslation,$(firstword $(LUCI_LC_ALIAS.$(lang)) $(lang)),$(lang))))
++  $(foreach pkg,$(LUCI_LANG_PACKAGES),$(eval $(call BuildPackage1,$(pkg))))
