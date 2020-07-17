@@ -5,7 +5,6 @@ cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 git clone https://github.com/rufengsuixing/luci-app-adguardhome
 git clone https://github.com/kannychak/luci-theme-argon
-git clone https://github.com/garypang13/luci-theme-edge
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
 git clone https://github.com/lisaac/luci-app-diskman
@@ -27,7 +26,6 @@ git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
 git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
-git clone https://github.com/jerrykuku/luci-theme-argon
 
 svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
 git clone https://github.com/frainzy1477/luci-app-clash
