@@ -38,6 +38,7 @@ svn co https://github.com/dogbutcat/openwrt-packages/trunk/speederv2
 
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
+git clone https://github.com/garypang13/luci-app-amule
 # git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
 git clone https://github.com/garypang13/openwrt-filerun
 git clone https://github.com/garypang13/luci-app-baidupcs-web
