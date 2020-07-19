@@ -13,6 +13,8 @@
 [13]: https://github.com/garypang13/Actions-OpenWrt-Nginx/actions
 
 [![license][1]][2]
+[![GitHub Stars](https://img.shields.io/github/stars/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Stars)](https://github.com/garypang13/Actions-OpenWrt-Nginx/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Forks)](https://github.com/garypang13/Actions-OpenWrt-Nginx/fork)
 [![PRs Welcome][3]][4]
 [![Issue Welcome][5]][6]
 [![Release Version][7]][8]
@@ -197,10 +199,6 @@ make defconfig
 
 7. 执行 `make -j$(($(nproc)+1)) || make -j1 V=s` 即可开始编译你要的固件了。
 
-[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/garypang13/Actions-OpenWrt-Nginx/blob/master/LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Stars)](https://github.com/P3TERX/Actions-OpenWrt/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Forks)](https://github.com/P3TERX/Actions-OpenWrt/fork)
-
 Build OpenWrt using GitHub Actions
 
 ### Usage
@@ -224,3 +222,12 @@ Build OpenWrt using GitHub Actions
 - [csexton/debugger-action](https://github.com/csexton/debugger-action)
 - [Cisco](https://www.cisco.com/)
 
+![](https://github.com/garypang13/luci-theme-edge/raw/master/Screenshots/1.png)
+![](https://github.com/garypang13/luci-theme-edge/raw/master/Screenshots/2.png)
+![](https://github.com/garypang13/luci-theme-edge/raw/master/Screenshots/3.png)
+![](https://github.com/garypang13/luci-theme-edge/raw/master/Screenshots/4.png)
+![](https://github.com/garypang13/luci-theme-edge/raw/master/Screenshots/5.png)
+<br/>
+<br />
+<img src="https://github.com/garypang13/luci-theme-edge/raw/master/Screenshots/6.png" width="550" />
+![](https://github.com/garypang13/luci-theme-edge/raw/master/Screenshots/7.png)
