@@ -1,42 +1,24 @@
-From bc1cad64d1c936489ba46e28fe49054d706f17ae Mon Sep 17 00:00:00 2001
-From: Lienol <lawlienol@gmail.com>
-Date: Sun, 21 Jun 2020 22:19:57 +0800
-Subject: [PATCH] dnsmasq: add dns redirect option
+From 25b58ef509969efa706980d3529891016b86aef1 Mon Sep 17 00:00:00 2001
+From: garypang13 <48883331+garypang13@users.noreply.github.com>
+Date: Thu, 16 Jul 2020 16:56:14 +0800
+Subject: [PATCH] Update dhcp.js
 
 ---
- modules/luci-base/po/zh_Hans/base.po                        | 6 ++++++
- .../htdocs/luci-static/resources/view/network/dhcp.js       | 4 ++++
- 2 files changed, 10 insertions(+)
+ .../htdocs/luci-static/resources/view/network/dhcp.js         | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/modules/luci-base/po/zh_Hans/base.po b/modules/luci-base/po/zh_Hans/base.po
-index 7008452b6..f70f1b275 100644
---- a/feeds/luci/modules/luci-base/po/zh_Hans/base.po
-+++ b/feeds/luci/modules/luci-base/po/zh_Hans/base.po
-@@ -1644,6 +1644,12 @@ msgstr "您真的要清除所有设置吗？"
- msgid "Do you really want to recursively delete the directory \"%s\" ?"
- msgstr "您真的要删除目录“%s”吗？"
- 
-+msgid "DNS Redirect"
-+msgstr "DNS 重定向"
-+
-+msgid "Redirect client DNS to dnsmasq"
-+msgstr "重定向客户端DNS到dnsmasq"
-+
- #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:168
- msgid "Domain required"
- msgstr "忽略空域名解析"
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-index 6a64fe0a9..6e5bfef8c 100644
+index 6693dc0eac..9c6f316b6e 100644
 --- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 +++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-@@ -183,6 +183,10 @@ return view.extend({
+@@ -164,6 +164,10 @@ return view.extend({
+ 		s.tab('advanced', _('Advanced Settings'));
+ 		s.tab('leases', _('Static Leases'));
  
- 		so = ss.option(form.Value, 'comments', _('Comments'));
- 		so.rmempty  = true;
-+
 +		s.taboption('general', form.Flag, 'dns_redirect',
 +			_('DNS Redirect'),
 +			_('Redirect client DNS to dnsmasq'));
- 
++
  		s.taboption('general', form.Flag, 'domainneeded',
  			_('Domain required'),
+ 			_('Don\'t forward <abbr title="Domain Name System">DNS</abbr>-Requests without <abbr title="Domain Name System">DNS</abbr>-Name'));

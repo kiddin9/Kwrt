@@ -1,2 +1,8 @@
 msgid "Online Users"
 msgstr "在线用户数"
+
+msgid "DNS Redirect"
+msgstr "DNS 重定向"
+
+msgid "Redirect client DNS to dnsmasq"
+msgstr "重定向客户端DNS到dnsmasq"
