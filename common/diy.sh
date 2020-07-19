@@ -56,7 +56,7 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean fe
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/package feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwrt-19.07/package/ctcgfw
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwrt-19.07/package/ctcgfw feeds/custom/luci
 
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
