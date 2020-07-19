@@ -196,6 +196,7 @@ jobs:
         RANDOM=$$$(date +%s)
         rand=$[$RANDOM % ${#Emoji[@]}]
         echo "::set-env name=EMOJI::${Emoji[$rand]}"
+        [ ${{matrix.target}} == "k2p" ] && echo "::set-env name=NOTICE::'刷机时breed里的闪存布局请选择斐讯而非默认的公版'" || echo "::set-env name=NOTICE::'请分配不少于800M的存储容量'"
  
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
@@ -232,7 +233,9 @@ jobs:
             
             奶牛快传: ${{ env.COWURL }} 🚀
             
-            WeTransfer: ${{ env.WETRANS }} 🗽
+            WeTransfer: ${{ env.WETRANS }} ${{ env.EMOJI }}
+            
+            ${{ env.NOTICE }} ${{ env.EMOJI }}
             
         draft: false
         prerelease: false
@@ -263,5 +266,4 @@ jobs:
       if: env.TELEGRAM_TOKEN
       continue-on-error: true
       run: |
-        [ ${{ env.status }} == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋  ${{ env.COWURL }} ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
-
+        [ ${{ env.status }} == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
