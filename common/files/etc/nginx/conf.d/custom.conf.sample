@@ -1,0 +1,25 @@
+server {
+	listen 80;
+	server_name custom.domain.com;
+	index nginx.html index.html index.htm index.php default.html default.htm default.php;
+	root  /www;
+	client_max_body_size 300M;
+	include conf.d/*.locations;
+	
+		location = /(robots.txt|favicon.ico) {
+			log_not_found off;
+		}
+
+		location ~* \.(?:css(\.map)?|js(\.map)?|jpe?g|png|gif|ico|cur|heic|webp|tiff?|mp3|m4a|aac|ogg|midi?|wav|mp4|mov|webm|mpe?g|avi|ogv|flv|wmv)$ {
+			expires 30d;
+		}
+
+		location ~* \.(?:svgz?|ttf|ttc|otf|eot|woff2?)$ {
+			add_header Access-Control-Allow-Origin "*";
+			expires 30d;
+		}
+
+		location ~ /\.(?!well-known) {
+			deny all;
+		}
+}
