@@ -25,14 +25,13 @@ uci commit smartdns
   uci set dhcp.@dnsmasq[0].filter_aaaa='1'
   uci commit dhcp
 }
+  
+if [ ! -f /etc/config/placeholder ]; then
 
   uci set luci.main.lang=zh_cn
   uci set luci.main.mediaurlbase=/luci-static/edge
   uci commit luci
   
-if [ ! -f /etc/config/placeholder ]; then
-
-
   uci set system.@system[0].timezone=CST-8
   uci set system.@system[0].zonename=Asia/Shanghai
   uci commit system
