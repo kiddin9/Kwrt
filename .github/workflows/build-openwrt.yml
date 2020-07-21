@@ -192,7 +192,7 @@ jobs:
         RANDOM=$$$(date +%s)
         rand=$[$RANDOM % ${#Emoji[@]}]
         echo "::set-env name=EMOJI::${Emoji[$rand]}"
-        [ ${{matrix.target}} == "k2p" ] && echo "::set-env name=NOTICE::'刷机时breed里的闪存布局请选择斐讯而非默认的公版'" || echo "::set-env name=NOTICE::'请分配不少于800M的存储容量'"
+        [ ${{matrix.target}} == "phicomm-k2p" ] && echo "::set-env name=NOTICE::刷机时breed里的闪存布局请选择斐讯而非默认的公版" || echo "::set-env name=NOTICE::请分配不少于800M的存储容量"
  
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
@@ -231,7 +231,7 @@ jobs:
             
             WeTransfer: ${{ env.WETRANS }} ${{ env.EMOJI }}
             
-            ${{ env.NOTICE }} ${{ env.EMOJI }}
+            ${{ env.NOTICE }}
             
         draft: false
         prerelease: false
