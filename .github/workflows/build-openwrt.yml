@@ -9,6 +9,7 @@
 name: Openwrt-AutoBuild
 
 on: 
+  repository_dispatch:
   # push: 
   #   branches:
   #     - master
@@ -39,7 +40,7 @@ jobs:
         
     steps:
     - name: Checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@main
   
     - name: Load Settings.ini
       run: |
@@ -172,7 +173,7 @@ jobs:
         echo "::set-env name=status::success"
       
     - name: Upload bin directory
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: env.UPLOAD_BIN_DIR_FOR_ARTIFACT == 'true'
       with:
         name: OpenWrt_bin_${{matrix.target}}
@@ -250,7 +251,7 @@ jobs:
         release-url: ${{ steps.create_release.outputs.upload_url }}
 
     - name: Upload firmware for artifact
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
