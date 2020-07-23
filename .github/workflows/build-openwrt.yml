@@ -220,7 +220,7 @@ jobs:
 
     - name: Create release
       id: create_release
-      uses: actions/create-release@master
+      uses: actions/create-release@main
       continue-on-error: true
       if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       env:
