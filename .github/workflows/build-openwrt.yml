@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [github.event.action]
+        target: ["${{ github.event.action }}"]
         
     steps:
     - name: Checkout
