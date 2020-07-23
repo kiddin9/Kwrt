@@ -9,7 +9,6 @@
 name: Openwrt-AutoBuild
 
 on: 
-  repository_dispatch:
   # push: 
   #   branches:
   #     - master
@@ -36,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["${{ github.event.action }}"]
+        target: [k2p,x86_64]
         
     steps:
     - name: Checkout
