@@ -28,7 +28,7 @@ if [ -f /etc/config/jia ]; then
 fi
 if [ -f /etc/config/smartdns ]; then
 rm -Rf /etc/smartdns/anti-ad-smartdns.conf
-wget -P https://github.com/privacy-protection-tools/anti-AD/raw/master/anti-ad-smartdns.conf /etc/smartdns/anti-ad-smartdns.conf
+wget -P /etc/smartdns/anti-ad-smartdns.conf https://github.com/privacy-protection-tools/anti-AD/raw/master/anti-ad-smartdns.conf
 fi
 if [ ! -f /usr/bin/ssr-server ]; then
   sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
