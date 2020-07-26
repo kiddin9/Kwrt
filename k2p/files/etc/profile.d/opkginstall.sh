@@ -1,3 +1,5 @@
+#!/bin/sh
+
 opkg() {
     if [[ `echo $@ | grep -o -E '^install'` ]]; then
 	command opkg $@
@@ -23,6 +25,10 @@ sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
 
 if [ -f /etc/config/jia ]; then
   sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
+fi
+if [ -f /etc/config/smartdns ]; then
+rm -Rf /etc/smartdns/anti-ad-smartdns.conf
+wget -P https://github.com/privacy-protection-tools/anti-AD/raw/master/anti-ad-smartdns.conf /etc/smartdns/anti-ad-smartdns.conf
 fi
 if [ ! -f /usr/bin/ssr-server ]; then
   sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
