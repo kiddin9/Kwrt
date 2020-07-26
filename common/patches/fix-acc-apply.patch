@@ -8,7 +8,7 @@
 +}
  
  start_service() {
- 
+
 --- /feeds/custom/luci/luci-app-flowoffload/root/etc/init.d/flowoffload
 +++ /feeds/custom/luci/luci-app-flowoffload/root/etc/init.d/flowoffload
 @@ -152,3 +152,7 @@
