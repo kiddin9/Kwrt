@@ -3,7 +3,8 @@
 rm -Rf package/lean tmp
 cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
-git clone https://github.com/rufengsuixing/luci-app-adguardhome
+# git clone https://github.com/rufengsuixing/luci-app-adguardhome
+svn co https://github.com/Lienol/openwrt/trunk/package/diy/luci-app-adguardhome
 git clone https://github.com/garypang13/luci-theme-edge
 git clone https://github.com/jerrykuku/luci-theme-argon
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
