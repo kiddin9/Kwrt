@@ -20,7 +20,8 @@ git clone https://github.com/lisaac/luci-app-dockerman
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
 git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
-git clone https://github.com/jefferymvp/luci-app-koolproxyR
+# git clone https://github.com/jefferymvp/luci-app-koolproxyR
+svn co https://github.com/chuansao-258/filters-openwrt/trunk/luci-app-koolproxyR
 git clone https://github.com/garypang13/luci-app-qbittorrent
 git clone https://github.com/jerrykuku/luci-app-vssr
 git clone https://github.com/jerrykuku/lua-maxminddb
@@ -89,6 +90,7 @@ sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 sed -i 's/DEPENDS:=/DEPENDS:=+adguardhome /g' package/*/*/luci-app-adguardhome/Makefile
+sed -i '/EXTRA_DEPENDS:=nginx-util/d' package/*/*/nginx-util/Makefile
 sed -i '/_redirect2ssl/d' package/*/*/nginx/Makefile
 sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential

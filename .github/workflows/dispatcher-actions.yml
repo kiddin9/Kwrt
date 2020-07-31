@@ -184,13 +184,20 @@ jobs:
         cd firmware
         mv sha256sums ${{matrix.target}}_sha256sums
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *combined*
+        rename -v "s/xiaomi_redmi-router/redmi/" *bin
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *bin
         echo "::set-env name=FIRMWARE::$PWD"
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         RANDOM=$$$(date +%s)
         rand=$[$RANDOM % ${#Emoji[@]}]
         echo "::set-env name=EMOJI::${Emoji[$rand]}"
-        [ ${{matrix.target}} == "k2p" ] && echo "::set-env name=NOTICE::刷机时breed里的闪存布局请选择斐讯而非默认的公版" || echo "::set-env name=NOTICE::请分配不少于800M的存储容量"
+        if [ ${{matrix.target}} == "k2p" ]; then
+        echo "::set-env name=NOTICE::刷机时breed里的闪存布局请选择斐讯而非默认的公版"
+        elif [ ${{matrix.target}} == "x86_64" ]; then
+        echo "::set-env name=NOTICE::请分配不少于800M的存储容量"
+        else
+        echo "::set-env name=NOTICE::"
+        fi
  
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
