@@ -8,6 +8,7 @@ svn co https://github.com/Lienol/openwrt/trunk/package/diy/luci-app-adguardhome
 git clone https://github.com/garypang13/luci-theme-edge
 git clone https://github.com/jerrykuku/luci-theme-argon
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
+svn co https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
 git clone https://github.com/pymumu/luci-app-smartdns -b lede
 git clone https://github.com/lisaac/luci-app-diskman
 mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
