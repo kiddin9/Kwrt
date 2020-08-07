@@ -1,14 +1,3 @@
-From 25b58ef509969efa706980d3529891016b86aef1 Mon Sep 17 00:00:00 2001
-From: garypang13 <48883331+garypang13@users.noreply.github.com>
-Date: Thu, 16 Jul 2020 16:56:14 +0800
-Subject: [PATCH] Update dhcp.js
-
----
- .../htdocs/luci-static/resources/view/network/dhcp.js         | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-index 6693dc0eac..9c6f316b6e 100644
 --- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 +++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 @@ -164,6 +164,10 @@ return view.extend({
@@ -22,3 +11,55 @@ index 6693dc0eac..9c6f316b6e 100644
  		s.taboption('general', form.Flag, 'domainneeded',
  			_('Domain required'),
  			_('Don\'t forward <abbr title="Domain Name System">DNS</abbr>-Requests without <abbr title="Domain Name System">DNS</abbr>-Name'));
+
+--- a/package/network/services/dnsmasq/files/dnsmasq.init
++++ b/package/network/services/dnsmasq/files/dnsmasq.init
+@@ -1080,6 +1080,10 @@ dnsmasq_start()
+ 	procd_add_jail_mount_rw /var/run/dnsmasq/ $leasefile
+ 
+ 	procd_close_instance
++
++	config_get_bool dns_redirect "$cfg" dns_redirect 0
++	config_get dns_port "$cfg" port 53
++	[ $dns_redirect = 1 ] && iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
+ }
+ 
+ dnsmasq_stop()
+@@ -1097,6 +1101,23 @@ dnsmasq_stop()
+ 	rm -f ${BASEDHCPSTAMPFILE}.${cfg}.*.dhcp
+ }
+ 
++iptables_clear()
++{
++	nums=$(iptables -t nat -n -L PREROUTING 2>/dev/null | grep -c "DNSMASQ")
++	if [ -n "$nums" ]; then
++		until [ "$nums" = 0 ]
++		do
++			rules=$(iptables -t nat -n -L PREROUTING --line-num 2>/dev/null | grep "DNSMASQ" | awk '{print $1}')
++			for rule in $rules
++			do
++				iptables -t nat -D PREROUTING $rule 2> /dev/null
++				break
++			done
++			nums=$(expr $nums - 1)
++		done
++	fi
++}
++
+ add_interface_trigger()
+ {
+ 	local interface ignore
+@@ -1149,6 +1170,7 @@ start_service() {
+ }
+ 
+ reload_service() {
++	iptables_clear
+ 	rc_procd start_service "$@"
+ 	procd_send_signal dnsmasq "$@"
+ }
+@@ -1175,4 +1197,5 @@ stop_service() {
+ 	else
+ 		config_foreach dnsmasq_stop dnsmasq
+ 	fi
++	iptables_clear
+ }
