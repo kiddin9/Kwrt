@@ -1,3 +1,6 @@
+msgid "Running Status"
+msgstr "运行状况"
+
 msgid "Online Users"
 msgstr "在线用户数"
 
