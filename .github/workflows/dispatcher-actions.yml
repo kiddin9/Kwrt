@@ -71,7 +71,16 @@ jobs:
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        mv ${{matrix.target}}/feeds.conf openwrt/
+        if [ -f "common/feeds.conf" ]; then
+        (
+          mv common/feeds.conf openwrt/
+        )
+        fi       
+        if [ -f "${{matrix.target}}/$DIY_SH" ]; then
+        (
+          mv ${{matrix.target}}/feeds.conf openwrt/
+        )
+        fi
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
