@@ -1,5 +1,26 @@
 --- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+@@ -884,6 +884,10 @@ return view.extend({
+ 
+ 					o = ss.taboption('advanced', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'));
+ 					o.default = o.enabled;
++
++					o = ss.taboption("advanced", form.Flag, 'mu_beamformer', _('MU-MIMO'));
++					o.rmempty = false;
++					o.default = '0';
+ 
+ 					o = ss.taboption('advanced', form.Value, 'distance', _('Distance Optimization'), _('Distance to farthest network member in meters.'));
+ 					o.datatype = 'range(0,114750)';
+@@ -904,6 +904,9 @@ return view.extend({
+ 					o.datatype = 'range(15,65535)';
+ 					o.placeholder = 100;
+ 					o.rmempty = true;
++					
++					o = ss.taboption('advanced', form.Flag, 'vendor_vht', _('Enable 256-QAM'), _('802.11n 2.4Ghz Only'));
++					o.default = o.disabled;
+ 				}
+ 
+ 
 @@ -1413,6 +1413,68 @@ return view.extend({
  
  
