@@ -8,5 +8,5 @@
 -PKG_BUILD_DIR:=$(BUILD_DIR)/qBittorrent-release-$(PKG_VERSION)
 +PKG_SOURCE_URL:=https://github.com/c0re100/qBittorrent-Enhanced-Edition
 +PKG_SOURCE_PROTO:=git
-+PKG_SOURCE_VERSION:=latest
++PKG_SOURCE_VERSION:=6486fc5f4db43855729607d487120688e0cbf796
  
