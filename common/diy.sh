@@ -4,7 +4,6 @@ rm -Rf package/lean tmp
 cd feeds/custom/luci
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
 # git clone https://github.com/rufengsuixing/luci-app-adguardhome
-svn co https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-zerotier
 svn co https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
 git clone https://github.com/garypang13/luci-theme-edge
 git clone https://github.com/jerrykuku/luci-theme-argon
@@ -60,7 +59,7 @@ echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/lienol fee
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/Lienol/openwrt/trunk/package/diy feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwrt-19.07/package/lean feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/package feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
