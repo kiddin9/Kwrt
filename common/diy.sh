@@ -21,7 +21,7 @@ svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
 git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
 # git clone https://github.com/jefferymvp/luci-app-koolproxyR
-svn co https://github.com/chuansao-258/filters-openwrt/trunk/luci-app-koolproxyR
+git clone https://github.com/jefferymvp/luci-app-koolproxyR
 git clone https://github.com/garypang13/luci-app-qbittorrent
 git clone https://github.com/jerrykuku/luci-app-vssr
 git clone https://github.com/jerrykuku/lua-maxminddb
@@ -29,7 +29,7 @@ git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
 git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
-git clone https://github.com/jerrykuku/luci-theme-argon
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
 
 svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
 git clone https://github.com/frainzy1477/luci-app-clash
