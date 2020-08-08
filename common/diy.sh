@@ -71,7 +71,6 @@ sed -i 's?zip zstd$?zip zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/com
 ./scripts/feeds update -a && ./scripts/feeds install -a
 rm -Rf package/*/*/rtl8821cu package/*/*/rtl88x2bu
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
-sed -i 's/$(MAKE)/$(MAKE) XCFLAGS="-DMULTITHREAD=16 -DUSE_PTHREAD"/g' package/*/*/coremark/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -Rf package/*/*/qBittorrent/patches
