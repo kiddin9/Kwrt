@@ -34,8 +34,8 @@ git clone https://github.com/jerrykuku/luci-theme-argon
 svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
 git clone https://github.com/frainzy1477/luci-app-clash
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
-svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-syncthing
-svn co https://github.com/Lienol/openwrt-package/trunk/others/luci-app-control-timewol
+svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-syncthing
+svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-control-timewol
 svn co https://github.com/dogbutcat/openwrt-packages/trunk/openwrt-udp2raw
 svn co https://github.com/dogbutcat/openwrt-packages/trunk/speederv2
 
@@ -54,13 +54,13 @@ mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
 rm -Rf feeds/packages/net/miniupnpd
 
-echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/lienol feeds/custom/luci
+echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/lienol feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/Lienol/openwrt/trunk/package/diy feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwrt-19.07/package/lean feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/Lienol/openwrt-package/trunk/package feeds/custom/luci
+echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/package feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwrt-19.07/package/ctcgfw feeds/custom/luci
 
