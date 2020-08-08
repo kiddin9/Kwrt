@@ -76,7 +76,7 @@ jobs:
           mv common/feeds.conf openwrt/
         )
         fi       
-        if [ -f "${{matrix.target}}/$DIY_SH" ]; then
+        if [ -f "${{matrix.target}}/feeds.conf" ]; then
         (
           mv ${{matrix.target}}/feeds.conf openwrt/
         )
