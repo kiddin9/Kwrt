@@ -45,3 +45,16 @@ msgstr "时区"
 
 msgid "Local time zone as specified in 8.3 of IEEE Std 1003.1-2004"
 msgstr "本地时区采用 IEEE Std 1003.1-2004 的 8.3 格式（例如 UTC8）"
+
+msgid "Custom Redirect Domain"
+msgstr "自定义挟持域名"
+
+msgid "Define a custom domain name and the corresponding PTR record"
+msgstr "自定义域名对应的IP地址（需要客户端DNS指向本路由）"
+
+msgid "Domain Name"
+msgstr "域名（不带 HTTP(S)://）"
+
+msgid "Comments"
+msgstr "备注"
+
