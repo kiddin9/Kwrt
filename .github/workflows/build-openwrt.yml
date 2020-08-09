@@ -15,7 +15,7 @@ on:
   # schedule:
   #  - cron: 0 16 * * 6
   watch:
-    types: started
+  #  types: started
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64]
+        target: [redmi-ac2100]
         
     steps:
     - name: Checkout
