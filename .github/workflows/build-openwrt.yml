@@ -12,9 +12,9 @@ on:
   # push: 
   #   branches:
   #     - master
-  # schedule:
-  #  - cron: 0 16 * * 6
-  watch:
+   schedule:
+    - cron: 0 16 * * 6
+  # watch:
   #  types: started
 
 env:
