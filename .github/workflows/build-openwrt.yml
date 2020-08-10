@@ -6,12 +6,12 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Openwrt-AutoBuild-QZmod
+name: Openwrt-AutoBuild
 
 on: 
-  push: 
-    branches:
-      - master
+  # push: 
+  #   branches:
+  #     - master
   # schedule:
   #  - cron: 0 16 * * 6
   watch:
@@ -77,7 +77,16 @@ jobs:
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        mv ${{matrix.target}}/feeds.conf openwrt/
+        if [ -f "common/feeds.conf" ]; then
+        (
+          mv common/feeds.conf openwrt/
+        )
+        fi       
+        if [ -f "${{matrix.target}}/feeds.conf" ]; then
+        (
+          mv ${{matrix.target}}/feeds.conf openwrt/
+        )
+        fi
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
@@ -184,7 +193,7 @@ jobs:
       run: |
         mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
         -name "*combined*" \
-        -or -name "*theme-edge*.ipk" \
+        # -or -name "*theme-edge*.ipk" \
         -or -name "*sysupgrade.bin" \
         -or -name "sha256sums" \
         | xargs -i mv -f {} ./firmware/
