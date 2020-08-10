@@ -14,7 +14,7 @@ PKG_RELEASE:=1
 STRIP:=true
 
 ifeq ($(ARCH),i386)
-	PKG_ARCH:=86
+	PKG_ARCH:=386
 endif
 
 ifeq ($(ARCH),x86_64)
