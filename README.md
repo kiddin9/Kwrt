@@ -103,7 +103,16 @@ git clone https://github.com/openwrt/openwrt
 git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
-mv x86_64/feeds.conf .
+if [ -f "common/feeds.conf" ]; then
+        (
+          mv common/feeds.conf ./
+        )
+fi       
+if [ -f "x86_64/feeds.conf" ]; then
+        (
+          mv x86_64/feeds.conf ./
+        )
+fi
 ./scripts/feeds update -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
 	cp -rf common/files files
