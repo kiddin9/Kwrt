@@ -66,7 +66,7 @@ echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwr
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
 
-rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin feeds/custom/luci/luci-app-mtwifi
+rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin feeds/custom/luci/luci-app-mtwifi feeds/custom/luci/mt-drivers
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zip zstd$?zip zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
