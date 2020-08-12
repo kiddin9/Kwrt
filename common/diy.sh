@@ -29,7 +29,7 @@ git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
 git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/autocore
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
 
 svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
 git clone https://github.com/frainzy1477/luci-app-clash
@@ -58,15 +58,13 @@ echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/lienol 
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/Lienol/openwrt/trunk/package/diy feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwrt-19.07/package/lean feeds/custom/luci
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/package feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/openwrt-19.07/package/ctcgfw feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/package/lean feeds/custom/luci
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/ctcgfw feeds/custom/luci
 
-rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin feeds/custom/luci/luci-app-mtwifi feeds/custom/luci/mt-drivers
+rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zip zstd$?zip zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
@@ -81,7 +79,7 @@ rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf f
 chmod +x files/usr/share/aria2/*.sh
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech feeds/custom/luci/antileech/src
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n feeds/custom/luci/default-settings/po/zh_Hans
-sed -i '/index.htm/d' package/*/*/autocore/Makefile
+sed -i '/rpcd_/d' package/*/*/autocore/Makefile
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& \[ -f "\/bin\/bash" \] \&\& env -i bash "$FILE" || . "$FILE"/g' package/base-files/files/etc/profile
 sed -i 's/var opts = \[\]/var opts = \["-k"\]/g' package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
