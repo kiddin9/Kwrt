@@ -109,3 +109,32 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
+
+--- a/feeds/custom/luci/luci-app-autoreboot/Makefile
++++ b/feeds/custom/luci/luci-app-autoreboot/Makefile
+@@ -11,6 +11,10 @@ LUCI_PKGARCH:=all
+ PKG_VERSION:=1.0
+ PKG_RELEASE:=8
+ 
++define Package/luci-app-autoreboot/conffiles
++/etc/config/autoreboot
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/feeds/custom/luci/luci-app-usb-printer/Makefile
++++ b/feeds/custom/luci/luci-app-usb-printer/Makefile
+@@ -11,6 +11,10 @@ LUCI_DEPENDS:=+p910nd +kmod-usb-printer
+ PKG_VERSION:=1.0
+ PKG_RELEASE:=2
+ 
++define Package/luci-app-usb-printer/conffiles
++/etc/config/usb_printer
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+ 
