@@ -43,9 +43,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.wan.proto=pppoe
   uci commit network
   
-  uci set firewall.@defaults[0].fullcone='1'
-  uci commit firewall
-  
 fi
 
 cp -R /www/cgi-bin/* /www/
