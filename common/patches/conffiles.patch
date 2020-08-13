@@ -25,7 +25,7 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
- 
+
 --- a/feeds/custom/luci/luci-app-amule/Makefile
 +++ b/feeds/custom/luci/luci-app-amule/Makefile
 @@ -9,6 +9,10 @@ LUCI_TITLE:=LuCI support for Amule
@@ -137,7 +137,7 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
- 
+
 --- a/feeds/custom/luci/luci-app-vlmcsd/Makefile
 +++ b/feeds/custom/luci/luci-app-vlmcsd/Makefile
 @@ -11,6 +11,10 @@ LUCI_DEPENDS:=+vlmcsd
@@ -151,4 +151,31 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
+
+--- a/feeds/custom/luci/luci-app-softethervpn/Makefile
++++ b/feeds/custom/luci/luci-app-softethervpn/Makefile
+@@ -11,6 +11,10 @@ LUCI_PKGARCH:=all
+ PKG_VERSION:=1.0
+ PKG_RELEASE:=4
  
++define Package/luci-app-softethervpn/conffiles
++/etc/config/softethervpn
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/feeds/custom/luci/luci-app-xlnetacc/Makefile
++++ b/feeds/custom/luci/luci-app-xlnetacc/Makefile
+@@ -11,6 +11,10 @@ LUCI_DEPENDS:=+jshn +wget +openssl-util
+ LUCI_PKGARCH:=all
+ LUCI_DESCRIPTION=LuCI Support for XLNetAcc.
+ 
++define Package/luci-app-xlnetacc/conffiles
++/etc/config/xlnetacc
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
