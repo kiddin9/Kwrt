@@ -179,3 +179,17 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
+
+--- a/feeds/custom/luci/luci-app-openclash/Makefile
++++ b/feeds/custom/luci/luci-app-openclash/Makefile
+@@ -25,6 +25,10 @@ endef
+ define Package/$(PKG_NAME)/postinst
+ endef
+ 
++define Package/luci-app-openclash/conffiles
++/etc/config/openclash
++endef
++
+ define Build/Prepare
+ 	$(CP) $(CURDIR)/files $(PKG_BUILD_DIR)
+ 	$(foreach po,$(wildcard ${CURDIR}/i18n/zh-cn/*.po), \
