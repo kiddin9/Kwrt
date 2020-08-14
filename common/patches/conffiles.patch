@@ -42,7 +42,7 @@
 
 --- a/feeds/custom/luci/luci-app-qbittorrent/Makefile
 +++ b/feeds/custom/luci/luci-app-qbittorrent/Makefile
-@@ -10,4 +10,8 @@ PKG_NAME:=luci-app-qbittorrent
+@@ -14,4 +14,8 @@ PKG_NAME:=luci-app-qbittorrent
  
 +define Package/luci-app-qbittorrent/conffiles
 +/etc/config/qbittorrent
@@ -54,7 +54,7 @@
 
 --- a/feeds/custom/luci/luci-app-kodexplorer/Makefile
 +++ b/feeds/custom/luci/luci-app-kodexplorer/Makefile
-@@ -9,4 +9,8 @@ LUCI_PKGARCH:=all
+@@ -13,4 +13,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-kodexplorer/conffiles
 +/etc/config/kodexplorer
@@ -66,7 +66,7 @@
 
 --- a/feeds/custom/luci/luci-app-zerotier/Makefile
 +++ b/feeds/custom/luci/luci-app-zerotier/Makefile
-@@ -10,4 +10,8 @@ LUCI_PKGARCH:=all
+@@ -14,4 +14,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-zerotier/conffiles
 +/etc/config/zerotier
@@ -92,7 +92,7 @@
 
 --- a/feeds/custom/luci/luci-app-adbyby-plus/Makefile
 +++ b/feeds/custom/luci/luci-app-adbyby-plus/Makefile
-@@ -10,4 +10,8 @@ PKG_NAME:=luci-app-adbyby-plus
+@@ -14,4 +14,8 @@ PKG_NAME:=luci-app-adbyby-plus
  
 +define Package/luci-app-adbyby-plus/conffiles
 +/etc/config/adbyby
@@ -104,7 +104,7 @@
 
 --- a/feeds/custom/luci/luci-app-autoreboot/Makefile
 +++ b/feeds/custom/luci/luci-app-autoreboot/Makefile
-@@ -9,4 +9,8 @@ LUCI_PKGARCH:=all
+@@ -13,4 +13,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-autoreboot/conffiles
 +/etc/config/autoreboot
@@ -116,7 +116,7 @@
 
 --- a/feeds/custom/luci/luci-app-usb-printer/Makefile
 +++ b/feeds/custom/luci/luci-app-usb-printer/Makefile
-@@ -9,4 +9,8 @@ LUCI_DEPENDS:=+p910nd +kmod-usb-printer
+@@ -13,4 +13,8 @@ LUCI_DEPENDS:=+p910nd +kmod-usb-printer
  
 +define Package/luci-app-usb-printer/conffiles
 +/etc/config/usb_printer
@@ -128,7 +128,7 @@
 
 --- a/feeds/custom/luci/luci-app-vlmcsd/Makefile
 +++ b/feeds/custom/luci/luci-app-vlmcsd/Makefile
-@@ -9,4 +9,8 @@ LUCI_DEPENDS:=+vlmcsd
+@@ -13,4 +13,8 @@ LUCI_DEPENDS:=+vlmcsd
  
 +define Package/luci-app-vlmcsd/conffiles
 +/etc/config/vlmcsd
@@ -140,7 +140,7 @@
 
 --- a/feeds/custom/luci/luci-app-softethervpn/Makefile
 +++ b/feeds/custom/luci/luci-app-softethervpn/Makefile
-@@ -9,4 +9,8 @@ LUCI_PKGARCH:=all
+@@ -13,4 +13,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-softethervpn/conffiles
 +/etc/config/softethervpn
@@ -189,4 +189,3 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
-
