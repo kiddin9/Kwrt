@@ -42,9 +42,7 @@
 
 --- a/feeds/custom/luci/luci-app-qbittorrent/Makefile
 +++ b/feeds/custom/luci/luci-app-qbittorrent/Makefile
-@@ -12,6 +12,10 @@ PKG_NAME:=luci-app-qbittorrent
- PKG_VERSION=1.0
- PKG_RELEASE:=2
+@@ -10,4 +10,8 @@ PKG_NAME:=luci-app-qbittorrent
  
 +define Package/luci-app-qbittorrent/conffiles
 +/etc/config/qbittorrent
@@ -56,9 +54,7 @@
 
 --- a/feeds/custom/luci/luci-app-kodexplorer/Makefile
 +++ b/feeds/custom/luci/luci-app-kodexplorer/Makefile
-@@ -11,6 +11,10 @@ LUCI_PKGARCH:=all
- PKG_VERSION:=13
- PKG_DATE:=20200612
+@@ -9,4 +9,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-kodexplorer/conffiles
 +/etc/config/kodexplorer
@@ -70,9 +66,7 @@
 
 --- a/feeds/custom/luci/luci-app-zerotier/Makefile
 +++ b/feeds/custom/luci/luci-app-zerotier/Makefile
-@@ -12,6 +12,10 @@ LUCI_PKGARCH:=all
- PKG_VERSION:=1.0
- PKG_RELEASE:=20
+@@ -10,4 +10,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-zerotier/conffiles
 +/etc/config/zerotier
@@ -98,9 +92,7 @@
 
 --- a/feeds/custom/luci/luci-app-adbyby-plus/Makefile
 +++ b/feeds/custom/luci/luci-app-adbyby-plus/Makefile
-@@ -12,6 +12,10 @@ PKG_NAME:=luci-app-adbyby-plus
- PKG_VERSION:=2.0
- PKG_RELEASE:=72
+@@ -10,4 +10,8 @@ PKG_NAME:=luci-app-adbyby-plus
  
 +define Package/luci-app-adbyby-plus/conffiles
 +/etc/config/adbyby
@@ -112,9 +104,7 @@
 
 --- a/feeds/custom/luci/luci-app-autoreboot/Makefile
 +++ b/feeds/custom/luci/luci-app-autoreboot/Makefile
-@@ -11,6 +11,10 @@ LUCI_PKGARCH:=all
- PKG_VERSION:=1.0
- PKG_RELEASE:=8
+@@ -9,4 +9,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-autoreboot/conffiles
 +/etc/config/autoreboot
@@ -126,9 +116,7 @@
 
 --- a/feeds/custom/luci/luci-app-usb-printer/Makefile
 +++ b/feeds/custom/luci/luci-app-usb-printer/Makefile
-@@ -11,6 +11,10 @@ LUCI_DEPENDS:=+p910nd +kmod-usb-printer
- PKG_VERSION:=1.0
- PKG_RELEASE:=2
+@@ -9,4 +9,8 @@ LUCI_DEPENDS:=+p910nd +kmod-usb-printer
  
 +define Package/luci-app-usb-printer/conffiles
 +/etc/config/usb_printer
@@ -140,9 +128,7 @@
 
 --- a/feeds/custom/luci/luci-app-vlmcsd/Makefile
 +++ b/feeds/custom/luci/luci-app-vlmcsd/Makefile
-@@ -11,6 +11,10 @@ LUCI_DEPENDS:=+vlmcsd
- PKG_VERSION:=1.0
- PKG_RELEASE:=5
+@@ -9,4 +9,8 @@ LUCI_DEPENDS:=+vlmcsd
  
 +define Package/luci-app-vlmcsd/conffiles
 +/etc/config/vlmcsd
@@ -154,9 +140,7 @@
 
 --- a/feeds/custom/luci/luci-app-softethervpn/Makefile
 +++ b/feeds/custom/luci/luci-app-softethervpn/Makefile
-@@ -11,6 +11,10 @@ LUCI_PKGARCH:=all
- PKG_VERSION:=1.0
- PKG_RELEASE:=4
+@@ -9,4 +9,8 @@ LUCI_PKGARCH:=all
  
 +define Package/luci-app-softethervpn/conffiles
 +/etc/config/softethervpn
@@ -193,3 +177,16 @@
  define Build/Prepare
  	$(CP) $(CURDIR)/files $(PKG_BUILD_DIR)
  	$(foreach po,$(wildcard ${CURDIR}/i18n/zh-cn/*.po), \
+
+--- a/feeds/custom/luci/luci-app-accesscontrol/Makefile
++++ b/feeds/custom/luci/luci-app-accesscontrol/Makefile
+@@ -15,4 +15,8 @@ PKG_NAME:=luci-app-accesscontrol
+ 
++define Package/luci-app-accesscontrol/conffiles
++/etc/config/mia
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
