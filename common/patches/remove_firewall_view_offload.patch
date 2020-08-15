@@ -1,0 +1,20 @@
+--- a/feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
++++ b/feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
+@@ -70,7 +70,7 @@ return view.extend({
+ 		}
+ 
+ 		/* Netfilter flow offload support */
+-
++/*
+ 		if (L.hasSystemFeature('offloading')) {
+ 			s = m.section(form.TypedSection, 'defaults', _('Routing/NAT Offloading'),
+ 				_('Experimental feature. Not fully compatible with QoS/SQM.'));
+@@ -89,7 +89,7 @@ return view.extend({
+ 			o.optional = true;
+ 			o.depends('flow_offloading', '1');
+ 		}
+-
++*/
+ 
+ 		s = m.section(form.GridSection, 'zone', _('Zones'));
+ 		s.addremove = true;

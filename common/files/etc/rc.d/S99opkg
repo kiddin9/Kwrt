@@ -47,7 +47,6 @@ while :; do
 					done
 				}
 				sysupgrade -k -l >/dev/null 2>&1
-				find /etc/confbak -type f ! -path '*/ucitrack' ! -path '*/dhcp' ! -path '*/firewall' ! -path '*/network' ! -path '*/system' -exec cp -f '{}' '/etc/config/' \;
 				rm /etc/config/.*-opkg
 				source /etc/profile.d/opkginstall.sh
 				opkg install >/dev/null 2>&1

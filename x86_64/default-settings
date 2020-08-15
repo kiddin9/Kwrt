@@ -43,11 +43,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.wan.proto=pppoe
   uci commit network
   
-  uci set firewall.@defaults[0].fullcone='1'
-  uci commit firewall
-  
-  uci set flowoffload.@flow[0].bbr='1'
-  uci commit flowoffload
 fi
 
 cp -R /www/cgi-bin/* /www/
