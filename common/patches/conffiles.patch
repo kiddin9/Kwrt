@@ -26,20 +26,6 @@
  
  # call BuildPackage - OpenWrt buildroot signature
 
---- a/feeds/custom/luci/luci-app-amule/Makefile
-+++ b/feeds/custom/luci/luci-app-amule/Makefile
-@@ -9,6 +9,10 @@ LUCI_TITLE:=LuCI support for Amule
- LUCI_DEPENDS:=+amule
- LUCI_PKGARCH:=all
- 
-+define Package/luci-app-amule/conffiles
-+/etc/config/amule
-+endef
-+
- include $(TOPDIR)/feeds/luci/luci.mk
- 
- # call BuildPackage - OpenWrt buildroot signature
-
 --- a/feeds/custom/luci/luci-app-qbittorrent/Makefile
 +++ b/feeds/custom/luci/luci-app-qbittorrent/Makefile
 @@ -14,4 +14,8 @@ PKG_NAME:=luci-app-qbittorrent
@@ -169,7 +155,7 @@
 @@ -25,6 +25,10 @@ endef
  define Package/$(PKG_NAME)/postinst
  endef
- 
+
 +define Package/luci-app-openclash/conffiles
 +/etc/config/openclash
 +endef
