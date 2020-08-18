@@ -128,8 +128,8 @@ config server
 config server
 	option enabled '1'
 	option name '台湾 Quad101'
-	option ip '101.101.101.101'
-	option type 'tls'
+	option ip 'https://dns.twnic.tw/dns-query'
+	option type 'https'
 
 config server
 	option enabled '1'
