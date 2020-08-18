@@ -26,16 +26,16 @@ config smartdns
 
 config server
 	option name '腾讯'
-	option type 'udp'
+	option type 'https'
 	option enabled '1'
-	option ip '119.29.29.29'
+	option ip 'https://doh.pub/dns-query'
 	option blacklist_ip '1'
 
 config server
 	option name '阿里'
-	option type 'udp'
+	option type 'https'
 	option enabled '1'
-	option ip '223.5.5.5'
+	option ip 'https://dns.alidns.com/dns-query'
 	option blacklist_ip '1'
 
 config server
@@ -143,3 +143,9 @@ config server
 	option name '新加坡DNS'
 	option ip '202.56.128.30'
 	option type 'tcp'
+
+config server
+	option enabled '1'
+	option name 'DNS.sb'
+	option ip 'dns.sb'
+	option type 'tls'
