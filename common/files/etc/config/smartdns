@@ -61,7 +61,7 @@ config server
 
 config server
 	option name 'google'
-	option ip 'dns.google/dns-query'
+	option ip 'https://dns.google/dns-query'
 	option type 'https'
 	option enabled '1'
 
