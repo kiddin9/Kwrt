@@ -51,6 +51,7 @@ dns:
   - tcp://203.198.7.66
   - tcp://77.88.8.8
   - tls://101.101.101.101
+  - tls://dns.sb
   - tcp://203.198.7.66
   - tcp://202.56.128.30
   filtering_enabled: true
