@@ -40,18 +40,18 @@ dns:
   upstream_dns:
   - 127.0.0.1:5555
   - tcp://208.67.222.222:5353
-  - tls://1.1.1.1
-  - tls://dns.google
-  - tls://dns.quad9.net
+  - https://cloudflare-dns.com/dns-query
+  - https://dns.google/dns-query
+  - https://dns.quad9.net/dns-query
   - tcp://168.95.1.1
-  - tls://dns.rubyfish.cn
+  - https://rubyfish.cn/dns-query
   - tcp://202.175.82.46
   - tcp://101.6.6.6:5353
   - tcp://210.0.255.250
   - tcp://203.198.7.66
   - tcp://77.88.8.8
-  - tls://101.101.101.101
-  - tls://dns.sb
+  - https://dns.twnic.tw/dns-query
+  - https://doh.dns.sb/dns-query
   - tcp://203.198.7.66
   - tcp://202.56.128.30
   filtering_enabled: true
