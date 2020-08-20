@@ -152,16 +152,17 @@
 
 --- a/feeds/custom/luci/luci-app-openclash/Makefile
 +++ b/feeds/custom/luci/luci-app-openclash/Makefile
-@@ -22,6 +22,10 @@ define Package/$(PKG_NAME)/description
-     A LuCI support for clash
+@@ -25,6 +25,10 @@ endef
+ define Package/$(PKG_NAME)/postinst
  endef
- 
+
 +define Package/luci-app-openclash/conffiles
 +/etc/config/openclash
 +endef
 +
- define Package/$(PKG_NAME)/postinst
- endef
+ define Build/Prepare
+ 	$(CP) $(CURDIR)/files $(PKG_BUILD_DIR)
+ 	$(foreach po,$(wildcard ${CURDIR}/i18n/zh-cn/*.po), \
 
 --- a/feeds/custom/luci/luci-app-accesscontrol/Makefile
 +++ b/feeds/custom/luci/luci-app-accesscontrol/Makefile
