@@ -63,6 +63,8 @@ rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/package feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/ctcgfw feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/ntlf9t feeds/custom/luci
 
 rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
