@@ -1,15 +1,14 @@
 --- a/feeds/packages/utils/coremark/Makefile
 +++ b/feeds/packages/utils/coremark/Makefile
-@@ -34,11 +34,20 @@ define Package/coremark/description
+@@ -34,11 +34,19 @@ define Package/coremark/description
    Embedded Microprocessor Benchmark
  endef
  
 +DIR_ARCH:=linux
 +
-+ifeq ($(ARCH),x86_64)
++ifeq ($(CONFIG_ARCH_64BIT),y)
 +	DIR_ARCH:=linux64
-+endif
-+ifeq ($(ARCH),aarch64)
++else ifeq ($(CONFIG_64BIT),y)
 +	DIR_ARCH:=linux64
 +endif
 +
