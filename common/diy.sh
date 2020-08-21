@@ -31,7 +31,7 @@ git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
 
-svn co https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
+svn export https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
 git clone https://github.com/frainzy1477/luci-app-clash
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-syncthing
