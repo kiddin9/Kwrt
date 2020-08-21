@@ -36,8 +36,6 @@ git clone https://github.com/frainzy1477/luci-app-clash
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-control-timewol
-svn co https://github.com/dogbutcat/openwrt-packages/trunk/openwrt-udp2raw
-svn co https://github.com/dogbutcat/openwrt-packages/trunk/speederv2
 
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
@@ -66,7 +64,7 @@ echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/ntlf9t feeds/custom/luci
 
-rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin feeds/custom/luci/openwrt-udpspeeder
+rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 rm -Rf feeds/packages/lang/python/Flask-RESTful && svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
