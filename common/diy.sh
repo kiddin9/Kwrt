@@ -16,7 +16,8 @@ git clone https://github.com/brvphoenix/luci-app-wrtbwmon
 git clone https://github.com/brvphoenix/wrtbwmon
 git clone https://github.com/destan19/OpenAppFilter && mv -f OpenAppFilter/* ./
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-advancedsetting
-git clone https://github.com/lisaac/luci-app-dockerman
+svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
+git clone https://github.com/lisaac/luci-in-docker
 svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 git clone https://github.com/garypang13/r8125
 git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
