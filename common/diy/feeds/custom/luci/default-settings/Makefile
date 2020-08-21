@@ -7,14 +7,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=default-settings
-PKG_VERSION:=1.1
-PKG_RELEASE:=57
+PKG_VERSION:=2
+PKG_RELEASE:=2
 PKG_LICENSE:=GPLv3
 PKG_LICENSE_FILES:=LICENSE
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
-include $(TOPDIR)/feeds/luci/luci.mk
+include $(INCLUDE_DIR)/package.mk
 
 define Package/default-settings
   SECTION:=luci
@@ -40,4 +40,3 @@ define Package/default-settings/install
 endef
 
 $(eval $(call BuildPackage,default-settings))
-$(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))
