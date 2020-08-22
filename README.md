@@ -161,7 +161,6 @@ cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 rm -Rf feeds package/feeds tmp
 [ -f ".config" ] && mv .config .config.bak
-svn co https://github.com/openwrt/openwrt/trunk/package
 git fetch --all
 git reset --hard origin/master
 ./scripts/feeds update -a
