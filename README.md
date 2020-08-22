@@ -100,7 +100,7 @@ sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git
 #!/bin/bash
 rm -Rf openwrt Actions-OpenWrt-Nginx
 git clone https://github.com/openwrt/openwrt
-git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
+git clone https://github.com/garypang13/Actions-OpenWrt
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 if [ -f "common/feeds.conf" ]; then
@@ -156,7 +156,7 @@ make defconfig
 4. 二次编译执行脚本
 ```bash
 #!/bin/bash
-rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-OpenWrt-Nginx
+rm -Rf Actions-OpenWrt-Nginx && git clone https://github.com/garypang13/Actions-OpenWrt
 cp -Rf Actions-OpenWrt-Nginx/* openwrt/
 cd openwrt
 rm -Rf feeds package/feeds tmp
