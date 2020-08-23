@@ -1,0 +1,78 @@
+--- a/feeds/custom/luci/n2n_v2/Makefile
++++ b/feeds/custom/luci/n2n_v2/Makefile
+@@ -34,12 +34,13 @@ endef
+ define Package/n2n-edge
+   $(call Package/n2n/Default)
+   TITLE+= client (edge node)
+-  DEPENDS+=+kmod-tun +resolveip +libopenssl
++  DEPENDS+=+kmod-tun +resolveip +libopenssl +libcap
+ endef
+ 
+ define Package/n2n-supernode
+   $(call Package/n2n/Default)
+   TITLE+= server (supernode)
++  DEPENDS+=+libcap
+ endef
+ 
+ define Package/n2n-edge/description
+
+--- a/package/network/utils/curl/Makefile
++++ b/package/network/utils/curl/Makefile
+@@ -92,7 +92,7 @@ define Package/libcurl
+   CATEGORY:=Libraries
+   DEPENDS:= +LIBCURL_WOLFSSL:libwolfssl +LIBCURL_OPENSSL:libopenssl +LIBCURL_GNUTLS:libgnutls +LIBCURL_MBEDTLS:libmbedtls
+   DEPENDS += +LIBCURL_ZLIB:zlib +LIBCURL_THREADED_RESOLVER:libpthread +LIBCURL_LDAP:libopenldap +LIBCURL_LIBIDN2:libidn2
+-  DEPENDS += +LIBCURL_SSH2:libssh2 +LIBCURL_NGHTTP2:libnghttp2 +ca-bundle
++  DEPENDS += +LIBCURL_SSH2:libssh2 +LIBCURL_NGHTTP2:libnghttp2 +ca-bundle +libzstd
+   TITLE:=A client-side URL transfer library
+   MENU:=1
+   ABI_VERSION:=4
+
+--- a/feeds/packages/net/transmission-web-control/Makefile
++++ b/feeds/packages/net/transmission-web-control/Makefile
+@@ -19,7 +19,7 @@ define Package/transmission-web-control
+   SECTION:=net
+   CATEGORY:=Network
+   SUBMENU:=BitTorrent
+-  DEPENDS:=@(PACKAGE_transmission-daemon-openssl||PACKAGE_transmission-daemon-mbedtls)
++  DEPENDS:=+transmission-daemon-openssl
+   CONFLICTS:=transmission-web
+   TITLE:=Transmission Web Control
+   URL:=https://github.com/ronggang/transmission-web-control
+diff --git a/net/transmission/Makefile b/net/transmission/Makefile
+index 2ec11f54c..f953b8919 100644
+--- a/feeds/packages/net/transmission/Makefile
++++ b/feeds/packages/net/transmission/Makefile
+@@ -85,7 +85,7 @@ endef
+ define Package/transmission-web
+   $(call Package/transmission/template)
+   TITLE+= (webinterface)
+-  DEPENDS:=@(PACKAGE_transmission-daemon-openssl||PACKAGE_transmission-daemon-mbedtls)
++  DEPENDS:=+transmission-daemon-openssl
+   PKGARCH:=all
+ endef
+ 
+
+--- a/feeds/custom/luci/dnsforwarder/Makefile
++++ b/feeds/custom/luci/dnsforwarder/Makefile
+@@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
+   CATEGORY:=Network
+   TITLE:=A simple DNS forwarder
+   URL:=https://github.com/holmium/dnsforwarder
+-  DEPENDS:=+wget +dnsmasq-full +libpthread +coreutils-base64
++  DEPENDS:=+wget +dnsmasq-full +libpthread +coreutils +coreutils-base64
+ endef
+ 
+ define Package/$(PKG_NAME)/description
+
+--- a/feeds/custom/luci/luci-app-adguardhome/Makefile
++++ b/feeds/custom/luci/luci-app-adguardhome/Makefile
+@@ -17,7 +17,7 @@ define Package/luci-app-adguardhome
+ 	TITLE:=LuCI app for adguardhome
+ 	PKG_MAINTAINER:=<https://github.com/rufengsuixing/luci-app-adguardhome>
+ 	PKGARCH:=all
+-	DEPENDS:=+!wget&&!curl:wget
++	DEPENDS:=+!wget&&!curl:wget +adguardhome
+ endef
+ 
+ define Package/luci-app-adguardhome/description
