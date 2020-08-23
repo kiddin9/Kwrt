@@ -30,11 +30,6 @@ while :; do
 		if [ "$?" == "0" ]; then
 			opkg update
 			# if [ ! -f /etc/inited ]; then
-				[ uci get dhcp.@dnsmasq[0].noresolv ] && {
-					uci del dhcp.@dnsmasq[0].noresolv
-					uci commit dhcp
-					service dnsmasq reload
-				}
 
 				cp -r /etc/config /etc/confbak
 
