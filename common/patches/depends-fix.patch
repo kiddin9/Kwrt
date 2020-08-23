@@ -27,8 +27,7 @@
    CONFLICTS:=transmission-web
    TITLE:=Transmission Web Control
    URL:=https://github.com/ronggang/transmission-web-control
-diff --git a/net/transmission/Makefile b/net/transmission/Makefile
-index 2ec11f54c..f953b8919 100644
+
 --- a/feeds/packages/net/transmission/Makefile
 +++ b/feeds/packages/net/transmission/Makefile
 @@ -85,7 +85,7 @@ endef
