@@ -19,6 +19,8 @@ fi
 					uci commit dhcp
 					service dnsmasq reload
 				}
+			else
+				sysupgrade -k -l >/dev/null 2>&1
 			fi
 count=0
 while :; do
@@ -28,11 +30,6 @@ while :; do
 		if [ "$?" == "0" ]; then
 			opkg update
 			# if [ ! -f /etc/inited ]; then
-				[ uci get dhcp.@dnsmasq[0].noresolv ] && {
-					uci del dhcp.@dnsmasq[0].noresolv
-					uci commit dhcp
-					service dnsmasq reload
-				}
 
 				cp -r /etc/config /etc/confbak
 
@@ -46,7 +43,6 @@ while :; do
 						opkg upgrade --force-overwrite --force-checksum $ipk
 					done
 				}
-				sysupgrade -k -l >/dev/null 2>&1
 				rm /etc/config/.*-opkg
 				source /etc/profile.d/opkginstall.sh
 				opkg install >/dev/null 2>&1
