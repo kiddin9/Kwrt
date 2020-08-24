@@ -147,7 +147,10 @@ jobs:
         fi
         if [ -n "$(ls -A "${{matrix.target}}/patches" 2>/dev/null)" ]; then
         (
-          find "${{matrix.target}}/patches" -type f -name '*.patch'| xargs -i git apply {} || true
+          for patch in $(find "common/patches" -type f -name '*.patch'); do
+            echo $patch
+            git apply $patch || true
+          done
         )
         fi
         make defconfig
