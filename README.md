@@ -145,16 +145,10 @@ if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
 	cp -Rf x86_64/diy/* ./
 fi
 if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
-          for patch in $(find "common/patches" -type f -name '*.patch'); do
-            echo $patch
-            git apply $patch || true
-          done
+          find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"
 fi
 if [ -n "$(ls -A "x86_64/patches" 2>/dev/null)" ]; then
-          for patch in $(find "x86_64/patches" -type f -name '*.patch'); do
-            echo $patch
-            git apply $patch || true
-          done
+          find "x86_64/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"
 fi
 mv x86_64/.config .config
 make defconfig
@@ -201,16 +195,10 @@ if [ -f "x86_64/default-settings" ]; then
 	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
-          for patch in $(find "common/patches" -type f -name '*.patch'); do
-            echo $patch
-            git apply $patch || true
-          done
+          find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"
 fi
 if [ -n "$(ls -A "x86_64/patches" 2>/dev/null)" ]; then
-          for patch in $(find "x86_64/patches" -type f -name '*.patch'); do
-            echo $patch
-            git apply $patch || true
-          done
+          find "x86_64/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"
 fi
 [ -f ".config.bak" ] && mv .config.bak .config || mv x86_64/.config .config
 make defconfig
