@@ -81,7 +81,7 @@
 +			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + ' ' + cpuinfo.cputemp,
 +			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
  				systeminfo.load[0] / 65535.0,
-     
+
 --- /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
 +++ /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
 @@ -2,6 +2,7 @@
