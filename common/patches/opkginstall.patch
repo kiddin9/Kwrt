@@ -1,5 +1,5 @@
---- /feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
-+++ /feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
+--- feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
++++ feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
 @@ -41,3 +41,3 @@
  	local sys = require "luci.sys"
 -	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages" }

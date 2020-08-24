@@ -1,5 +1,5 @@
---- a/feeds/custom/luci/n2n_v2/Makefile
-+++ b/feeds/custom/luci/n2n_v2/Makefile
+--- feeds/custom/luci/n2n_v2/Makefile
++++ feeds/custom/luci/n2n_v2/Makefile
 @@ -34,12 +34,13 @@ endef
  define Package/n2n-edge
    $(call Package/n2n/Default)
@@ -16,8 +16,8 @@
  
  define Package/n2n-edge/description
 
---- a/feeds/packages/net/transmission-web-control/Makefile
-+++ b/feeds/packages/net/transmission-web-control/Makefile
+--- feeds/packages/net/transmission-web-control/Makefile
++++ feeds/packages/net/transmission-web-control/Makefile
 @@ -19,7 +19,7 @@ define Package/transmission-web-control
    SECTION:=net
    CATEGORY:=Network
@@ -28,8 +28,8 @@
    TITLE:=Transmission Web Control
    URL:=https://github.com/ronggang/transmission-web-control
 
---- a/feeds/packages/net/transmission/Makefile
-+++ b/feeds/packages/net/transmission/Makefile
+--- feeds/packages/net/transmission/Makefile
++++ feeds/packages/net/transmission/Makefile
 @@ -85,7 +85,7 @@ endef
  define Package/transmission-web
    $(call Package/transmission/template)
@@ -40,8 +40,8 @@
  endef
  
 
---- a/feeds/custom/luci/dnsforwarder/Makefile
-+++ b/feeds/custom/luci/dnsforwarder/Makefile
+--- feeds/custom/luci/dnsforwarder/Makefile
++++ feeds/custom/luci/dnsforwarder/Makefile
 @@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
    CATEGORY:=Network
    TITLE:=A simple DNS forwarder
@@ -52,8 +52,8 @@
  
  define Package/$(PKG_NAME)/description
 
---- a/feeds/custom/luci/luci-app-adguardhome/Makefile
-+++ b/feeds/custom/luci/luci-app-adguardhome/Makefile
+--- feeds/custom/luci/luci-app-adguardhome/Makefile
++++ feeds/custom/luci/luci-app-adguardhome/Makefile
 @@ -17,7 +17,7 @@ define Package/luci-app-adguardhome
  	TITLE:=LuCI app for adguardhome
  	PKG_MAINTAINER:=<https://github.com/rufengsuixing/luci-app-adguardhome>

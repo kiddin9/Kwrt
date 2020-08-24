@@ -1,45 +1,10 @@
-From c471af298eb320ebab66cd3f70e2869ddf8b5bbb Mon Sep 17 00:00:00 2001
-From: Lienol <lawlienol@gmail.com>
-Date: Tue, 7 Apr 2020 01:27:52 +0800
-Subject: [PATCH] dhcp: add hijack domain
-
----
- modules/luci-base/po/zh_Hans/base.po          | 12 +++++++++++
- .../resources/view/network/dhcp.js            | 20 +++++++++++++++++++
- 2 files changed, 32 insertions(+)
-
-diff --git a/modules/luci-base/po/zh_Hans/base.po b/modules/luci-base/po/zh_Hans/base.po
-index 414c6699c..c9e3cfb84 100644
---- a/feeds/luci/modules/luci-base/po/zh_Hans/base.po
-+++ b/feeds/luci/modules/luci-base/po/zh_Hans/base.po
-@@ -5906,6 +5906,18 @@ msgstr ""
- "选字段，可为每个主机单独设定 DHCP 租期的时长，例如：12h、3d、infinite，分别表"
- "示 12 小时、3 天、永久。"
- 
-+msgid "Custom domain"
-+msgstr "自定义挟持域名"
-+
-+msgid "Define a custom domain name and the corresponding PTR record"
-+msgstr "自定义域名对应的IP地址（需要客户端DNS指向本路由）"
-+
-+msgid "Domain name"
-+msgstr "域名（不带 HTTP(S)://）"
-+
-+msgid "Comments"
-+msgstr "备注"
-+
- #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js:36
- #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/mounts.js:194
- msgid "Used"
-diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-index ea9596d3f..6a64fe0a9 100644
---- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-+++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+--- feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
++++ feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 @@ -163,6 +163,26 @@ return view.extend({
  		s.tab('tftp', _('TFTP Settings'));
  		s.tab('advanced', _('Advanced Settings'));
  		s.tab('leases', _('Static Leases'));
-+		s.tab('custom_domain', _('Custom domain'));
++		s.tab('custom_domain', _('Custom Redirect Domain'));
 +
 +		o = s.taboption('custom_domain', form.SectionValue, 'domain', form.GridSection, 'domain', null,
 +			_('Define a custom domain name and the corresponding PTR record'));

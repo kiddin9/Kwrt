@@ -1,5 +1,5 @@
---- a/feeds/luci/modules/luci-base/po/zh_Hans/base.po
-+++ b/feeds/luci/modules/luci-base/po/zh_Hans/base.po
+--- feeds/luci/modules/luci-base/po/zh_Hans/base.po
++++ feeds/luci/modules/luci-base/po/zh_Hans/base.po
 @@ -5047,6 +5047,12 @@ msgstr "强"
  msgid "Submit"
  msgstr "提交"
@@ -14,8 +14,8 @@
  msgid "Suppress logging"
  msgstr "不记录日志"
 
---- /feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-+++ /feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+--- feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
++++ feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 @@ -185,2 +185,7 @@
  			_('Additional Hosts files')).optional = true;
 +
@@ -25,8 +25,8 @@
 +		o.optional = true;
  
 
---- /package/network/services/dnsmasq/files/dnsmasq.init
-+++ /package/network/services/dnsmasq/files/dnsmasq.init
+--- package/network/services/dnsmasq/files/dnsmasq.init
++++ package/network/services/dnsmasq/files/dnsmasq.init
 @@ -868,2 +868,3 @@
  	append_bool "$cfg" rapidcommit "--dhcp-rapid-commit"
 +	append_bool "$cfg" filter_aaaa "--filter-aaaa"
