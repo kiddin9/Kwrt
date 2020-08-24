@@ -201,10 +201,16 @@ if [ -f "x86_64/default-settings" ]; then
 	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
-	find "common/patches" -type f -name '*.patch' | xargs -i git apply {}
+          for patch in $(find "common/patches" -type f -name '*.patch'); do
+            echo $patch
+            git apply $patch || true
+          done
 fi
 if [ -n "$(ls -A "x86_64/patches" 2>/dev/null)" ]; then
-	find "x86_64/patches" -type f -name '*.patch' | xargs -i git apply {}
+          for patch in $(find "x86_64/patches" -type f -name '*.patch'); do
+            echo $patch
+            git apply $patch || true
+          done
 fi
 [ -f ".config.bak" ] && mv .config.bak .config || mv x86_64/.config .config
 make defconfig
