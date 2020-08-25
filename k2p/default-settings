@@ -28,7 +28,7 @@ uci commit smartdns
  
 if [ ! -f /etc/config/placeholder ]; then
 
-  uci set luci.main.lang=zh_cn
+  uci set luci.main.lang=auto
   uci set luci.main.mediaurlbase=/luci-static/edge
   uci commit luci
   
