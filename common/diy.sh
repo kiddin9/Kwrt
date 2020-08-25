@@ -47,7 +47,7 @@ git clone https://github.com/garypang13/openwrt-filerun
 git clone https://github.com/garypang13/luci-app-baidupcs-web
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
-svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/net/e2guardian
+svn co https://github.com/openwrt/packages/branches/openwrt-19.07/net/e2guardian
 cd -
 
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
