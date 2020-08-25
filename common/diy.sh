@@ -85,7 +85,6 @@ rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf f
 chmod +x files/usr/share/aria2/*.sh
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech feeds/custom/luci/antileech/src
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n feeds/custom/luci/default-settings/po/zh_Hans
-sed -i "s/+ca-bundle$/+ca-bundle +libzstd/g"  package/network/utils/curl/Makefile
 sed -i '/rpcd_/d' package/*/*/autocore/Makefile
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& \[ -f "\/bin\/bash" \] \&\& env -i bash "$FILE" || . "$FILE"/g' package/base-files/files/etc/profile
