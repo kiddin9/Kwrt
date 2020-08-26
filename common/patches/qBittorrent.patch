@@ -1,0 +1,56 @@
+--- feeds/custom/luci/libtorrent-rasterbar/Makefile
++++ feeds/custom/luci/libtorrent-rasterbar/Makefile
+@@ -68,7 +68,7 @@ endef
+ 
+ define Package/libtorrent-rasterbar/install
+ 	$(INSTALL_DIR) $(1)/usr/lib
+-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libtorrent-rasterbar.so.* $(1)/usr/lib/
++	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libtorrent-rasterbar.so* $(1)/usr/lib/
+ endef
+ 
+ $(eval $(call BuildPackage,libtorrent-rasterbar))
+
+--- feeds/custom/luci/qBittorrent-Enhanced-Edition/Makefile
++++ feeds/custom/luci/qBittorrent-Enhanced-Edition/Makefile
+@@ -25,7 +25,7 @@ define Package/$(PKG_NAME)
+   CATEGORY:=Network
+   TITLE:=bittorrent client programmed in C++ / Qt
+   URL:=https://github.com/c0re100/qBittorrent-Enhanced-Edition
+-  DEPENDS:=+qt5-core +qt5-network +qt5-xml +libtorrent-rasterbar +python3 +boost-system
++  DEPENDS:=+libQt5Core +libQt5Network +libQt5Xml +libtorrent-rasterbar +python3 +boost-system
+ endef
+ 
+ define Package/$(PKG_NAME)/description
+@@ -37,8 +37,9 @@ well as many features.
+ endef
+ 
+ CONFIGURE_VARS += \
+-  	QT_QMAKE="$(TOOLCHAIN_DIR)/bin" \
+-	PKG_CONFIG_PATH="$(TOOLCHAIN_DIR)/lib/pkgconfig"
++  	QT_QMAKE=$(STAGING_DIR_HOSTPKG)/bin \
++	QMAKE_LRELEASE=$(STAGING_DIR_HOSTPKG)/bin/lrelease \
++	PKG_CONFIG_PATH=$(STAGING_DIR)/usr/lib/pkgconfig
+ 
+ CONFIGURE_ARGS += \
+ 	--disable-gui \
+@@ -46,7 +47,7 @@ CONFIGURE_ARGS += \
+ 	--with-boost=$(STAGING_DIR)/usr
+ 
+ MAKE_VARS += \
+-	INSTALL_ROOT="$(PKG_INSTALL_DIR)"
++	INSTALL_ROOT=$(PKG_INSTALL_DIR)
+ 
+ define Build/Prepare
+ 	$(call Build/Prepare/Default)
+
+--- feeds/custom/luci/qt5/Makefile
++++ feeds/custom/luci/qt5/Makefile
+@@ -33,7 +33,7 @@ define Package/libQt5/Default
+   SUBMENU:=Qt5
+   TITLE:=Qt5
+   URL:=http://qt-project.org
+-  DEPENDS:=+libatomic +libpthread +librt +libstdcpp +zlib @!LINUX_2_6
++  DEPENDS:=+libzstd +libpcre2-16 +libdouble-conversion +icu +libatomic +libpthread +librt +libstdcpp +zlib @!LINUX_2_6
+ endef
+ 
+ define Package/libQt5
