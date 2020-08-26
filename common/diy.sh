@@ -31,6 +31,7 @@ git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
 git clone https://github.com/jerrykuku/node-request.git
 git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
+svn co https://github.com/KryptonLee/qBittorrent-openwrt-package/trunk/qt5
 
 svn export https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
 git clone https://github.com/frainzy1477/luci-app-clash
