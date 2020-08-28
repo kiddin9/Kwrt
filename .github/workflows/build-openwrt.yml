@@ -1,4 +1,4 @@
--#=================================================
+#=================================================
 # https://github.com/P3TERX/Actions-OpenWrt
 # Description: Build OpenWrt using GitHub Actions
 # Lisence: MIT
@@ -14,8 +14,8 @@ on:
   #     - master
    schedule:
     - cron: 0 16 * * 6
-   watch:
-    types: started
+  # watch:
+  #  types: started
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
