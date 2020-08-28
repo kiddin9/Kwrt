@@ -1,5 +1,5 @@
---- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-+++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+--- feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
++++ feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 @@ -884,6 +884,10 @@ return view.extend({
  
  					o = ss.taboption('advanced', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'));

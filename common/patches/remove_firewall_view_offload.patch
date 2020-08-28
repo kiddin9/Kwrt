@@ -1,5 +1,5 @@
---- a/feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
-+++ b/feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
+--- feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
++++ feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
 @@ -70,7 +70,7 @@ return view.extend({
  		}
  

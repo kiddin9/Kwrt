@@ -1,5 +1,5 @@
---- /package/system/procd/files/procd.sh
-+++ /package/system/procd/files/procd.sh
+--- package/system/procd/files/procd.sh
++++ package/system/procd/files/procd.sh
 @@ -50,11 +50,2 @@
  	local service_name="$(basename ${basescript:-$initscript})"
 -

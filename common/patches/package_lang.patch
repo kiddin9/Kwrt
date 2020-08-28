@@ -1,16 +1,5 @@
-From 372040e679ca15529398bc0a9923431cf49f9119 Mon Sep 17 00:00:00 2001
-From: garypang13 <48883331+garypang13@users.noreply.github.com>
-Date: Fri, 17 Jul 2020 09:41:31 +0800
-Subject: [PATCH] Update package.mk
-
----
- include/package.mk | 108 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
-
-diff --git a/include/package.mk b/include/package.mk
-index a93d6b78f326..ccd84a356e65 100644
---- a/include/package.mk
-+++ b/include/package.mk
+--- include/package.mk
++++ include/package.mk
 @@ -307,6 +307,21 @@ endif
    $(if $(PKG_HOST_ONLY),,$(call Build/DefaultTargets,$(1)))
  endef

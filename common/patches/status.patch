@@ -1,5 +1,5 @@
---- /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
-+++ /feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
+--- feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
++++ feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
 @@ -45,2 +45,30 @@
  
 +    getCPUInfo = {
@@ -32,16 +32,16 @@
 +
  	setLocaltime = {
 
---- /feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
-+++ /feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
+--- feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
++++ feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
 @@ -63,3 +63,3 @@
  				"iwinfo": [ "assoclist", "freqlist", "txpowerlist", "countrylist" ],
 -				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints" ],
 +				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints", "getCPUInfo", "getEthInfo", "getUserInfo" ],
  				"luci-rpc": [ "getBoardJSON", "getDHCPLeases", "getDSLStatus", "getDUIDHints", "getHostHints", "getNetworkDevices", "getWirelessDevices" ],
 
---- /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-+++ /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+--- feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 @@ -15,17 +15,24 @@
  
 +var callCPUInfo = rpc.declare({
@@ -81,9 +81,9 @@
 +			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + ' ' + cpuinfo.cputemp,
 +			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
  				systeminfo.load[0] / 65535.0,
-     
---- /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
-+++ /feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
+
+--- feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
++++ feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
 @@ -2,6 +2,7 @@
  'require baseclass';
  'require fs';

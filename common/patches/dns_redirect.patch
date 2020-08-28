@@ -1,5 +1,5 @@
---- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-+++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+--- feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
++++ feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 @@ -164,6 +164,10 @@ return view.extend({
  		s.tab('advanced', _('Advanced Settings'));
  		s.tab('leases', _('Static Leases'));
@@ -12,8 +12,8 @@
  			_('Domain required'),
  			_('Don\'t forward <abbr title="Domain Name System">DNS</abbr>-Requests without <abbr title="Domain Name System">DNS</abbr>-Name'));
 
---- a/package/network/services/dnsmasq/files/dnsmasq.init
-+++ b/package/network/services/dnsmasq/files/dnsmasq.init
+--- package/network/services/dnsmasq/files/dnsmasq.init
++++ package/network/services/dnsmasq/files/dnsmasq.init
 @@ -1080,6 +1080,10 @@ dnsmasq_start()
  	procd_add_jail_mount_rw /var/run/dnsmasq/ $leasefile
  
