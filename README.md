@@ -9,8 +9,8 @@
 [8]: https://github.com/garypang13/Actions-OpenWrt-Nginx/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
 [11]: https://t.me/openwrt_nginx
-[12]: https://github.com/garypang13/Actions-OpenWrt-Nginx/workflows/Openwrt-AutoBuild/badge.svg
-[13]: https://github.com/garypang13/Actions-OpenWrt-Nginx/actions
+[12]: https://github.com/Magic-Xin/Actions-OpenWrt/workflows/Openwrt-AutoBuild/badge.svg?branch=master
+[13]: https://github.com/Magic-Xin/Actions-OpenWrt/actions
 
 [![license][1]][2]
 [![GitHub Stars](https://img.shields.io/github/stars/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Stars)](https://github.com/garypang13/Actions-OpenWrt-Nginx/stargazers)
