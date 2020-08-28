@@ -9,4 +9,3 @@
  endef
  
  $(eval $(call BuildPackage,libtorrent-rasterbar))
-
