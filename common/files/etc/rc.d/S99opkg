@@ -20,7 +20,9 @@ fi
 					service dnsmasq reload
 				}
 			else
-				sysupgrade -k -l >/dev/null 2>&1
+			find /usr/lib/opkg/info -name "*.control" \( \
+				\( -exec test -f /overlay/upper/{} \; -exec echo {} overlay \; \) -o \
+				\) | sed -e 's,.*/,,;s/\.control /\t/' > /etc/backup/installed_packages.txt
 			fi
 count=0
 while :; do
