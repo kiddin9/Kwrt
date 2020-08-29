@@ -5,7 +5,3 @@
 -	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages" }
 +	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages", "--force-overwrite", "--force-checksum" }
  	local pkg = luci.http.formvalue("package")
-@@ -60,2 +60,3 @@
- 	luci.http.write_json(sys.process.exec(cmd, true, true))
-+	luci.sys.exec("source /etc/profile.d/opkginstall.sh;opkg "..command.." >/dev/null 2>&1")
- end

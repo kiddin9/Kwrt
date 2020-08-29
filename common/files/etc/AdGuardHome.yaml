@@ -53,7 +53,7 @@ dns:
   - https://dns.twnic.tw/dns-query
   - https://doh.dns.sb/dns-query
   - tcp://203.198.7.66
-  - tcp://202.56.128.30
+  - tcp://205.252.144.228
   filtering_enabled: true
   filters_update_interval: 12
   parental_enabled: false
