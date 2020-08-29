@@ -75,7 +75,7 @@ config server
 	option type 'tcp'
 	option enabled '1'
 	option ip '210.0.255.250'
-	option blacklist_ip '0'
+	option blacklist_ip '1'
 	option name '香港环球全域电讯'
 
 config server
@@ -83,11 +83,12 @@ config server
 	option ip '168.95.1.1'
 	option type 'tcp'
 	option enabled '1'
+	option blacklist_ip '1'
 
 config server
 	option type 'tcp'
-	option ip '218.102.23.228'
-	option blacklist_ip '0'
+	option ip '205.252.144.228'
+	option blacklist_ip '1'
 	option name '電訊盈科'
 	option enabled '0'
 
@@ -96,6 +97,7 @@ config server
 	option type 'tcp'
 	option enabled '1'
 	option ip '202.175.82.46'
+	option blacklist_ip '1'
 
 config server
 	option name '红鱼'
@@ -124,6 +126,7 @@ config server
 	option name 'Yandex'
 	option ip '77.88.8.8'
 	option type 'tcp'
+	option blacklist_ip '1'
 
 config server
 	option enabled '1'
@@ -138,11 +141,6 @@ config server
 	option type 'tcp'
 	option blacklist_ip '1'
 
-config server
-	option enabled '1'
-	option name '新加坡DNS'
-	option ip '202.56.128.30'
-	option type 'tcp'
 
 config server
 	option enabled '1'
