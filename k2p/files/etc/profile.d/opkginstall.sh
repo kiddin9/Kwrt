@@ -23,37 +23,12 @@ sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
 
-if [ -f /etc/config/jia ]; then
-  sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
-fi
+
 if [ -f /etc/config/smartdns ]; then
 rm -Rf /etc/smartdns/anti-ad-smartdns.conf
 wget -P /etc/smartdns/anti-ad-smartdns.conf https://github.com/privacy-protection-tools/anti-AD/raw/master/anti-ad-smartdns.conf
 fi
-if [ ! -f /usr/bin/ssr-server ]; then
-  sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
-fi
-    [ ! -f /etc/confbak/shadowsocksr ] && {
-    [ -f /etc/config/smartdns ] && {
-      uci set shadowsocksr.@global[0].pdnsd_enable='0'
-  uci del shadowsocksr.@global[0].tunnel_forward
-  }
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='208.67.222.222'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.8.8'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.4.4'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.9'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='218.102.23.228'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='210.0.255.250'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='168.95.1.1'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.175.82.46'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='77.88.8.8'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='101.101.101.101'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='203.198.7.66'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.56.128.30'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.112'
-  uci commit shadowsocksr
-}
+
 
 sleep 2
 	[[ ! `pgrep UnblockNeteaseMusic` && `uci get unblockmusic.@unblockmusic[0].enabled` == 1 ]] && {
@@ -61,9 +36,6 @@ sleep 2
 	}
 	[[ ! `pgrep rclone` && `uci get rclone.global.enabled` == 1 ]] && {
 	/etc/init.d/rclone restart
-	}
-	[[ ! `pgrep ssr-redir` && `uci get shadowsocksr.@global[0].global_server` != 'nil' ]] && {
-	/etc/init.d/shadowsocksr restart
 	}
 	rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
     else

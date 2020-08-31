@@ -52,13 +52,6 @@ config server
 	option enabled '1'
 
 config server
-	option name 'opendns'
-	option ip '208.67.222.222'
-	option port '5353'
-	option type 'tcp'
-	option enabled '1'
-
-config server
 	option name 'google'
 	option ip 'https://dns.google/dns-query'
 	option type 'https'
@@ -81,13 +74,6 @@ config server
 	option name '台湾'
 	option ip '168.95.1.1'
 	option type 'tcp'
-	option enabled '1'
-	option blacklist_ip '0'
-
-config server
-	option name 'GeekDNS'
-	option ip 'https://i.233py.com/dns-query'
-	option type 'https'
 	option enabled '1'
 	option blacklist_ip '0'
 
@@ -122,13 +108,6 @@ config server
 
 config server
 	option enabled '1'
-	option name 'Yandex'
-	option ip '77.88.8.8'
-	option type 'tcp'
-	option blacklist_ip '0'
-
-config server
-	option enabled '1'
 	option name '台湾 Quad101'
 	option ip 'https://dns.twnic.tw/dns-query'
 	option type 'https'
@@ -139,9 +118,3 @@ config server
 	option ip '203.198.7.66'
 	option type 'tcp'
 	option blacklist_ip '0'
-
-config server
-	option enabled '1'
-	option name 'DNS.sb'
-	option ip 'https://doh.dns.sb/dns-query'
-	option type 'https'
