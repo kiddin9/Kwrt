@@ -57,7 +57,6 @@ config server
 	option port '5353'
 	option type 'tcp'
 	option enabled '1'
-	option blacklist_ip '1'
 
 config server
 	option name 'google'
@@ -75,7 +74,7 @@ config server
 	option type 'tcp'
 	option enabled '1'
 	option ip '210.0.255.250'
-	option blacklist_ip '1'
+	option blacklist_ip '0'
 	option name '香港环球全域电讯'
 
 config server
@@ -83,28 +82,28 @@ config server
 	option ip '168.95.1.1'
 	option type 'tcp'
 	option enabled '1'
-	option blacklist_ip '1'
+	option blacklist_ip '0'
 
 config server
-	option type 'tcp'
-	option ip '205.252.144.228'
-	option blacklist_ip '1'
-	option name '電訊盈科'
-	option enabled '0'
+	option name 'GeekDNS'
+	option ip 'https://i.233py.com/dns-query'
+	option type 'https'
+	option enabled '1'
+	option blacklist_ip '0'
 
 config server
 	option name '澳门'
 	option type 'tcp'
 	option enabled '1'
 	option ip '202.175.82.46'
-	option blacklist_ip '1'
+	option blacklist_ip '0'
 
 config server
 	option name '红鱼'
 	option ip 'https://rubyfish.cn/dns-query'
 	option type 'https'
 	option enabled '1'
-	option blacklist_ip '1'
+	option blacklist_ip '0'
 
 config server
 	option enabled '1'
@@ -112,7 +111,7 @@ config server
 	option ip '101.6.6.6'
 	option port '5353'
 	option type 'tcp'
-	option blacklist_ip '1'
+	option blacklist_ip '0'
 
 config server
 	option enabled '1'
@@ -126,7 +125,7 @@ config server
 	option name 'Yandex'
 	option ip '77.88.8.8'
 	option type 'tcp'
-	option blacklist_ip '1'
+	option blacklist_ip '0'
 
 config server
 	option enabled '1'
@@ -139,8 +138,7 @@ config server
 	option name 'HK网上行'
 	option ip '203.198.7.66'
 	option type 'tcp'
-	option blacklist_ip '1'
-
+	option blacklist_ip '0'
 
 config server
 	option enabled '1'

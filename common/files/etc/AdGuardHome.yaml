@@ -52,8 +52,7 @@ dns:
   - tcp://77.88.8.8
   - https://dns.twnic.tw/dns-query
   - https://doh.dns.sb/dns-query
-  - tcp://203.198.7.66
-  - tcp://205.252.144.228
+  - https://i.233py.com/dns-query
   filtering_enabled: true
   filters_update_interval: 12
   parental_enabled: false
@@ -87,7 +86,7 @@ filters:
   name: Energized Protection Blu
   id: 1590467081
 - enabled: true
-  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-easylist.txt
+  url: https://anti-ad.net/easylist.txt
   name: anti-AD
   id: 1580820695
 - enabled: true
@@ -110,7 +109,7 @@ filters:
   url: https://www.malwaredomainlist.com/hostslist/hosts.txt
   name: MalwareDomainList.com Hosts List
   id: 4
-- enabled: false
+- enabled: true
   url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
   name: googlehosts
   id: 1573404421
