@@ -86,7 +86,7 @@ filters:
   name: Energized Protection Blu
   id: 1590467081
 - enabled: true
-  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-easylist.txt
+  url: https://anti-ad.net/easylist.txt
   name: anti-AD
   id: 1580820695
 - enabled: true
@@ -109,7 +109,7 @@ filters:
   url: https://www.malwaredomainlist.com/hostslist/hosts.txt
   name: MalwareDomainList.com Hosts List
   id: 4
-- enabled: false
+- enabled: true
   url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
   name: googlehosts
   id: 1573404421
