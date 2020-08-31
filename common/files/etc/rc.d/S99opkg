@@ -23,6 +23,7 @@ fi
 				}
 			else
 			find /usr/lib/opkg/info -name "*.control" \( \
+				\( -exec find {} -name "luci-app*" \; | xargs -i echo {} overlay \) -o \
 				\( -exec test -f /overlay/upper/{} \; -exec echo {} overlay \; \) -o \
 				\) | sed -e 's,.*/,,;s/\.control /\t/' > /etc/backup/installed_packages.txt
 			fi
