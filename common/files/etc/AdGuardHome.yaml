@@ -52,8 +52,7 @@ dns:
   - tcp://77.88.8.8
   - https://dns.twnic.tw/dns-query
   - https://doh.dns.sb/dns-query
-  - tcp://203.198.7.66
-  - tcp://205.252.144.228
+  - https://i.233py.com/dns-query
   filtering_enabled: true
   filters_update_interval: 12
   parental_enabled: false
