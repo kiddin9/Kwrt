@@ -14,8 +14,8 @@ on:
   #     - master
    schedule:
     - cron: 0 16 * * 6
-  # watch:
-  #  types: started
+   watch:
+    types: started
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
