@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64,k2p,redmi_ac2100]
+        target: ["${{ github.event.client_payload.target }}"]
         
     steps:
     - name: Checkout
