@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["${{ github.event.action }}"]
+        target: ["${{ github.event.action }} | awk '{print $1}'"]
         
     steps:
     - name: Checkout
