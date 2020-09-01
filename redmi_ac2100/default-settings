@@ -43,6 +43,28 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.wan.proto=pppoe
   uci commit network
   
+    [ -f /etc/config/smartdns ] || [ -f /etc/config/AdGuardHome ] && {
+      uci set shadowsocksr.@global[0].pdnsd_enable='0'
+      uci del shadowsocksr.@global[0].tunnel_forward
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.8.8'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.4.4'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.9'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='210.0.255.250'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='168.95.1.1'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='202.175.82.46'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='101.101.101.101'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='203.198.7.66'
+  uci commit shadowsocksr
+  }
+  
+fi
+
+if [ -f /etc/config/jia ]; then
+  sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
+fi
+if [ ! -f /usr/bin/ssr-server ]; then
+  sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
 fi
 
 cp -R /www/cgi-bin/* /www/

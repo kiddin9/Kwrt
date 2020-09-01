@@ -1,1 +1,1 @@
-0 0 * * * wget -O files/etc/smartdns/anti-ad-smartdns.conf https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-smartdns.conf
+0 0 * * * wget -O /etc/smartdns/anti-ad-smartdns.conf https://anti-ad.net/anti-ad-for-smartdns.conf
