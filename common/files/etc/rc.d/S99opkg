@@ -25,7 +25,7 @@ else
 	find /usr/lib/opkg/info -name "*.control" \( \
 	\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
 	\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
-	\) | sed -e 's/control$/control overlay/g' | sed -e 's,.*/,,;s/\.control /\t/' >/etc/backup/installed_packages.txt
+	\) | sed -e 's?/usr/lib/opkg/info/\(.*control\)$?\1 overlay?g' >/etc/backup/installed_packages.txt
 fi
 count=0
 while :; do
