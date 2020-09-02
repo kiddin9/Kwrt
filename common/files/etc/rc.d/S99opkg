@@ -30,14 +30,14 @@ while :; do
 		if [ "$?" == "0" ]; then
 			opkg update
 			# if [ ! -f /etc/inited ]; then
-
 			cp -r /etc/config /etc/confbak
-	
+
+	[ -f "/etc/inited" ] && {
 	find /usr/lib/opkg/info -name "*.control" \( \
 	\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
 	\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
 	\) | sed -e 's?/usr/lib/opkg/info/\(.*control\)$?\1 overlay?g' >/etc/backup/installed_packages.txt
-
+	}
 			[ -f "/etc/config/installed-opkg" ] && {
 				for ipk in $(cat /etc/config/installed-opkg); do
 					opkg upgrade --force-overwrite --force-checksum $ipk
