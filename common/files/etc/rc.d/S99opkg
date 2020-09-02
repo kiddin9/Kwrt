@@ -21,11 +21,6 @@ if [ ! -f /etc/inited ]; then
 		uci commit dhcp
 		service dnsmasq reload
 	}
-else
-	find /usr/lib/opkg/info -name "*.control" \( \
-	\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
-	\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
-	\) | sed -e 's?/usr/lib/opkg/info/\(.*control\)$?\1 overlay?g' >/etc/backup/installed_packages.txt
 fi
 count=0
 while :; do
@@ -37,6 +32,11 @@ while :; do
 			# if [ ! -f /etc/inited ]; then
 
 			cp -r /etc/config /etc/confbak
+	
+	find /usr/lib/opkg/info -name "*.control" \( \
+	\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
+	\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
+	\) | sed -e 's?/usr/lib/opkg/info/\(.*control\)$?\1 overlay?g' >/etc/backup/installed_packages.txt
 
 			[ -f "/etc/config/installed-opkg" ] && {
 				for ipk in $(cat /etc/config/installed-opkg); do
