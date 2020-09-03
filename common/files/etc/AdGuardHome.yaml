@@ -11,49 +11,48 @@ dns:
   port: 5335
   statistics_interval: 90
   querylog_enabled: true
+  querylog_file_enabled: true
   querylog_interval: 7
-  querylog_memsize: 0
+  querylog_size_memory: 1000
+  anonymize_client_ip: false
   protection_enabled: true
   blocking_mode: default
   blocking_ipv4: ""
   blocking_ipv6: ""
   blocked_response_ttl: 300
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
   ratelimit: 0
   ratelimit_whitelist: []
   refuse_any: true
+  upstream_dns:
+  - 127.0.0.1:5555
+  - https://cloudflare-dns.com/dns-query
+  - https://dns.google/dns-query
+  - https://dns.quad9.net/dns-query
+  - https://dns.rubyfish.cn/dns-query
+  - https://dns.twnic.tw/dns-query
+  - https://doh.opendns.com/dns-query
+  - tcp://203.198.7.66
+  - tcp://168.95.1.1
+  - tcp://101.6.6.6:5353
+  - tcp://210.0.255.250
   bootstrap_dns:
   - 8.8.8.8:53
   - 119.29.29.29:53
   - 127.0.0.1:5555
   all_servers: true
   fastest_addr: false
-  edns_client_subnet: true
-  aaaa_disabled: true
   allowed_clients: []
   disallowed_clients: []
   blocked_hosts: []
-  parental_block_host: family-block.dns.adguard.com
-  safebrowsing_block_host: standard-block.dns.adguard.com
   cache_size: 4194304
   cache_ttl_min: 1800
   cache_ttl_max: 86400
-  upstream_dns:
-  - 127.0.0.1:5555
-  - tcp://208.67.222.222:5353
-  - https://cloudflare-dns.com/dns-query
-  - https://dns.google/dns-query
-  - https://dns.quad9.net/dns-query
-  - tcp://168.95.1.1
-  - https://rubyfish.cn/dns-query
-  - tcp://202.175.82.46
-  - tcp://101.6.6.6:5353
-  - tcp://210.0.255.250
-  - tcp://203.198.7.66
-  - tcp://77.88.8.8
-  - https://dns.twnic.tw/dns-query
-  - https://doh.dns.sb/dns-query
-  - tcp://203.198.7.66
-  - tcp://205.252.144.228
+  bogus_nxdomain: []
+  aaaa_disabled: true
+  enable_dnssec: false
+  edns_client_subnet: true
   filtering_enabled: true
   filters_update_interval: 12
   parental_enabled: false
@@ -87,7 +86,7 @@ filters:
   name: Energized Protection Blu
   id: 1590467081
 - enabled: true
-  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-easylist.txt
+  url: https://anti-ad.net/easylist.txt
   name: anti-AD
   id: 1580820695
 - enabled: true
@@ -110,7 +109,7 @@ filters:
   url: https://www.malwaredomainlist.com/hostslist/hosts.txt
   name: MalwareDomainList.com Hosts List
   id: 4
-- enabled: false
+- enabled: true
   url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
   name: googlehosts
   id: 1573404421
