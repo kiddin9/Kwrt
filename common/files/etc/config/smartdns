@@ -62,6 +62,12 @@ config server
 	option ip 'https://dns.quad9.net/dns-query'
 	option type 'https'
 	option enabled '1'
+	
+config server
+	option name 'OpenDNS'
+	option ip 'https://doh.opendns.com/dns-query'
+	option type 'https'
+	option enabled '1'
 
 config server
 	option type 'tcp'
@@ -78,15 +84,8 @@ config server
 	option blacklist_ip '0'
 
 config server
-	option name '澳门'
-	option type 'tcp'
-	option enabled '1'
-	option ip '202.175.82.46'
-	option blacklist_ip '0'
-
-config server
 	option name '红鱼'
-	option ip 'https://rubyfish.cn/dns-query'
+	option ip 'https://dns.rubyfish.cn/dns-query'
 	option type 'https'
 	option enabled '1'
 	option blacklist_ip '0'

@@ -1,0 +1,10 @@
+--- /libopkg/opkg_install.c
++++ /libopkg/opkg_install.c
+@@ -864,6 +864,6 @@
+ 				opkg_message(ERROR, "<no package>\n"
+ 					     "Please move this file out of the way and try again.\n");
+ 			}
+-			clashes++;
++		//	clashes++;
+ 		}
+ 	}
