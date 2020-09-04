@@ -1,21 +1,3 @@
---- feeds/custom/luci/n2n_v2/Makefile
-+++ feeds/custom/luci/n2n_v2/Makefile
-@@ -34,12 +34,13 @@ endef
- define Package/n2n-edge
-   $(call Package/n2n/Default)
-   TITLE+= client (edge node)
--  DEPENDS+=+kmod-tun +resolveip +libopenssl
-+  DEPENDS+=+kmod-tun +resolveip +libopenssl +libzstd +libcap
- endef
- 
- define Package/n2n-supernode
-   $(call Package/n2n/Default)
-   TITLE+= server (supernode)
-+  DEPENDS+=+libcap
- endef
- 
- define Package/n2n-edge/description
-
 --- feeds/packages/net/transmission-web-control/Makefile
 +++ feeds/packages/net/transmission-web-control/Makefile
 @@ -19,7 +19,7 @@ define Package/transmission-web-control
