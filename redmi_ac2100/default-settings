@@ -7,7 +7,7 @@ sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
 sed -i '/openwrt_custom/d' /etc/opkg/customfeeds.conf
 sed -i '$a src/gz openwrt_custom_luci https://op.supes.top:88/ramips/luci' /etc/opkg/customfeeds.conf
 # sed -i '$a src/gz openwrt_custom_core https://op.supes.top:88/ramips/kmod' /etc/opkg/distfeeds.conf
-sed -i 's/downloads.openwrt.org/mirrors.bfsu.edu.cn\/openwrt/g' /etc/opkg/distfeeds.conf
+sed -i 's/downloads.openwrt.org/mirrors.cloud.tencent.com\/openwrt/g' /etc/opkg/distfeeds.conf
 sed -i 's/http:/https:/g' /etc/opkg/distfeeds.conf
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
 sed -i '/log-facility/d' /etc/dnsmasq.conf
