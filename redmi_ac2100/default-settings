@@ -51,8 +51,7 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.lan.ipaddr="10.0.0.1"
   uci set network.wan.proto=pppoe
   uci commit network
-  
-    [ -f /etc/config/smartdns ] || [ -f /etc/config/AdGuardHome ] && {
+
       uci set shadowsocksr.@global[0].pdnsd_enable='0'
       uci del shadowsocksr.@global[0].tunnel_forward
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
@@ -67,7 +66,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci add_list shadowsocksr.@access_control[0].wan_bp_ips='210.17.9.228'
   uci add_list shadowsocksr.@access_control[0].wan_bp_ips='203.198.7.66'
   uci commit shadowsocksr
-  }
   
 fi
 
