@@ -46,6 +46,7 @@ while :; do
 			} || {
 				for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 					opkg upgrade --force-overwrite --force-checksum $ipk
+				[[ $(awk '{print NR}' /etc/backup/installed_packages.txt|tail -n1) -le 5 ]] && exit 0;
 				done
 			}
 			rm /etc/config/*-opkg

@@ -1,8 +1,8 @@
 
 config smartdns
 	option server_name 'smartdns'
-	option ipv6_server '0'
-	option dualstack_ip_selection '0'
+	option ipv6_server '1'
+	option dualstack_ip_selection '1'
 	option cache_size '5048'
 	option seconddns_port '7053'
 	option seconddns_tcp_server '1'
@@ -22,7 +22,7 @@ config smartdns
 	option prefetch_domain '1'
 	option coredump '1'
 	option redirect 'none'
-	option rr_ttl_min '1800'
+	option rr_ttl_min '3600'
 
 config server
 	option name '腾讯'

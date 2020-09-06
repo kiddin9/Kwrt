@@ -50,7 +50,7 @@ dns:
   cache_ttl_min: 1800
   cache_ttl_max: 86400
   bogus_nxdomain: []
-  aaaa_disabled: true
+  aaaa_disabled: false
   enable_dnssec: false
   edns_client_subnet: true
   filtering_enabled: true

@@ -1,8 +1,8 @@
 
 config smartdns
 	option server_name 'smartdns'
-	option ipv6_server '0'
-	option dualstack_ip_selection '0'
+	option ipv6_server '1'
+	option dualstack_ip_selection '1'
 	option cache_size '5048'
 	option seconddns_port '7053'
 	option seconddns_tcp_server '1'
