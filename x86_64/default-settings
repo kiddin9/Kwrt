@@ -20,6 +20,9 @@ rm -rf /tmp/luci-*
   
 if [ ! -f /etc/config/placeholder ]; then
 
+	uci set turboacc.config.sw_flow='0'
+	uci commit turboacc
+
 	if [ $(uci get network.wan.ipv6) == 0 ]; then
 		uci set smartdns.@smartdns[0].ipv6_server='0'
 		uci commit smartdns
