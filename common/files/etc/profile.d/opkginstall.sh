@@ -21,15 +21,6 @@ sed -i 's/local page = entry/entry({"admin", "nas"}, firstchild(), _("NAS"), 45)
 sed -i 's/entry/entry({"admin", "nas"}, firstchild(), _("NAS"), 45).dependent = false\nentry/g' /usr/lib/lua/luci/controller/ksmbd.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
-
-    [ -f /etc/config/smartdns ] || [ -f /etc/config/AdGuardHome ] {
-      uci set shadowsocksr.@global[0].pdnsd_enable='0'
-      uci del shadowsocksr.@global[0].tunnel_forward
-      uci commit shadowsocksr
-      uci set passwall.@global[0].dns_mode='nonuse'
-      uci del passwall.@global[0].up_trust_pdnsd_dns
-	  uci del passwall.@global[0].dns_forward
-	  uci commit passwall
   }
 
 

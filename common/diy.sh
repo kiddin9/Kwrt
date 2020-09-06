@@ -110,7 +110,6 @@ sed -i '$a /www/speedtest/results/telemetry_settings.php' package/base-files/fil
 sed -i '$a /etc/php7/custom.ini' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
 sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\nCONFIG_CPU_FREQ_GOV_CONSERVATIVE=y\nCONFIG_CPU_FREQ_GOV_POWERSAVE=y\nCONFIG_CPU_FREQ_GOV_USERSPACE=y\nCONFIG_NR_CPUS=128' target/linux/*/config-*
-sed -i '/continue$/d' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/if test_proxy/sleep 3600\nif test_proxy/g' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/ uci.cursor/ luci.model.uci.cursor/g' package/*/*/luci-app-ssr-plus/root/usr/share/shadowsocksr/subscribe.lua
 sed -i 's/service_start $PROG/service_start $PROG -R/g' package/*/*/php7/files/php7-fpm.init

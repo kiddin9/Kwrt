@@ -47,3 +47,27 @@
  		
  		local new_node
  		in_backup_nodes=$(echo $b_tcp_nodes | grep $now_node)
+
+--- feeds/custom/luci/luci-app-passwall/root/etc/init.d/passwall
++++ feeds/custom/luci/luci-app-passwall/root/etc/init.d/passwall
+@@ -9,6 +9,13 @@ boot() {
+ 
+ start() {
+ 	/usr/share/passwall/app.sh start
++	uci set shadowsocksr.@global[0].pdnsd_enable='0'
++	uci del shadowsocksr.@global[0].tunnel_forward
++	uci commit shadowsocksr
++	uci set passwall.@global[0].dns_mode='nonuse'
++	uci del passwall.@global[0].up_trust_pdnsd_dns
++	uci del passwall.@global[0].dns_forward
++	uci commit passwall
+ }
+ 
+ stop() {
+@@ -18,4 +25,4 @@ stop() {
+ restart() {
+ 	stop
+ 	start
+-}
+\ No newline at end of file
++}
