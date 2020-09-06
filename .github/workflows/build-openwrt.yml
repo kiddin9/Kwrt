@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64]
+        target: [x86_64,k2p]
         
     steps:
     - name: Checkout
