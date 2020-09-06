@@ -160,7 +160,7 @@ make defconfig
 rm -Rf Actions-OpenWrt && git clone https://github.com/garypang13/Actions-OpenWrt
 cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
-rm -Rf feeds package/feeds tmp
+rm -Rf feeds package/feeds files tmp
 [ -f ".config" ] && mv .config .config.bak
 git fetch --all
 git reset --hard origin/master
