@@ -20,6 +20,9 @@ rm -rf /tmp/luci-*
  
 if [ ! -f /etc/config/placeholder ]; then
 
+	uci set smartdns.@smartdns[0].redirect='dnsmasq-upstream'
+	uci commit smartdns
+
 	if [ $(uci get network.wan.ipv6) == 0 ]; then
 		uci set smartdns.@smartdns[0].ipv6_server='0'
 		uci commit smartdns

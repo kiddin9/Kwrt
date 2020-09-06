@@ -166,7 +166,7 @@ git fetch --all
 git reset --hard origin/master
 ./scripts/feeds update -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
-	cp -rf common/files files
+	cp -rf common/files/* files/
 fi
 if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
 	cp -rf x86_64/files/* files/
