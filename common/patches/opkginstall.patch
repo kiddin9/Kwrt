@@ -30,6 +30,24 @@
  
  				if (!is_valid || is_too_big)
  					body.push(E('hr'));
+@@ -257,7 +262,7 @@ return view.extend({
+ 
+ 				var cntbtn = E('button', {
+ 					'class': 'btn cbi-button-action important',
+-					'click': ui.createHandlerFn(this, 'handleSysupgradeConfirm', btn, keep, force),
++					'click': ui.createHandlerFn(this, 'handleSysupgradeConfirm', btn, keep, keep_opkg, force),
+ 					'disabled': (!is_valid || is_too_big) ? true : null
+ 				}, [ _('Continue') ]);
+ 
+@@ -282,7 +287,7 @@ return view.extend({
+ 			}, this, ev.target));
+ 	},
+ 
+-	handleSysupgradeConfirm: function(btn, keep, force, ev) {
++	handleSysupgradeConfirm: function(btn, keep, keep_opkg, force, ev) {
+ 		btn.firstChild.data = _('Flashing…');
+ 
+ 		ui.showModal(_('Flashing…'), [
 @@ -294,6 +299,9 @@ return view.extend({
  		if (!keep.checked)
  			opts.push('-n');
