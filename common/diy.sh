@@ -33,8 +33,6 @@ git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-verysync
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/verysync
 svn co https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
 
 svn export https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
