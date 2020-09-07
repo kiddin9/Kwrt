@@ -60,17 +60,20 @@ mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
 mv -f feeds/packages/net/smartdns feeds/custom/luci/smartdns
 rm -Rf feeds/packages/net/miniupnpd
 
-echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/lienol feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/Lienol/openwrt/trunk/package/diy feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/package feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/ctcgfw feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 svn export --force https://github.com/project-openwrt/openwrt/branches/master/package/ntlf9t feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/zxlhhyccc feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
+echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/lienol feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
+echo -e "\q" | svn co https://github.com/Lienol/openwrt/trunk/package/diy feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
+echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/package feeds/custom/luci
+rm -rf feeds/custom/luci/.svn
 
 rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin feeds/custom/luci/luci-app-cifs feeds/custom/luci/qt5
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
