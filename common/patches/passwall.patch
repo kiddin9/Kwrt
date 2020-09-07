@@ -48,12 +48,13 @@
  		local new_node
  		in_backup_nodes=$(echo $b_tcp_nodes | grep $now_node)
 
---- feeds/custom/luci/luci-app-passwall/root/etc/init.d/passwall
-+++ feeds/custom/luci/luci-app-passwall/root/etc/init.d/passwall
-@@ -9,6 +9,13 @@ boot() {
- 
- start() {
- 	/usr/share/passwall/app.sh start
+--- feeds/custom/luci/luci-app-adguardhome/root/etc/init.d/AdGuardHome
++++ feeds/custom/luci/luci-app-adguardhome/root/etc/init.d/AdGuardHome
+@@ -486,6 +486,14 @@ start_service() {
+ 	echo "AdGuardHome service enabled"
+ 	echo "luci enable switch=$enabled"
+ 	(sleep 10 && [ -z "$(pgrep $binpath)" ] && logger "AdGuardHome" "no process in 10s cancel redirect" && _do_redirect 0 )&
++
 +	uci set shadowsocksr.@global[0].pdnsd_enable='0'
 +	uci del shadowsocksr.@global[0].tunnel_forward
 +	uci commit shadowsocksr
@@ -62,12 +63,5 @@
 +	uci del passwall.@global[0].dns_forward
 +	uci commit passwall
  }
- 
- stop() {
-@@ -18,4 +25,4 @@ stop() {
- restart() {
- 	stop
- 	start
--}
-\ No newline at end of file
-+}
+ reload_service()
+ {
