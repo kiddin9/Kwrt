@@ -13,8 +13,8 @@
  	--[[ API ]]
  	entry({"admin", "services", appname, "server_user_status"}, call("server_user_status")).leaf = true
 
---- a/feeds/custom/luci/luci-app-passwall/root/usr/share/passwall/test.sh
-+++ b/feeds/custom/luci/luci-app-passwall/root/usr/share/passwall/test.sh
+--- feeds/custom/luci/luci-app-passwall/root/usr/share/passwall/test.sh
++++ feeds/custom/luci/luci-app-passwall/root/usr/share/passwall/test.sh
 @@ -67,17 +67,12 @@ test_auto_switch() {
  	fi
  
