@@ -22,6 +22,9 @@ sed -i 's/entry/entry({"admin", "nas"}, firstchild(), _("NAS"), 45).dependent = 
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
 
+	[[ ! "`pgrep UnblockNeteaseMusic`" && "`uci get unblockmusic.@unblockmusic[0].enabled`" == 1 ]] && {
+	/etc/init.d/unblockmusic restart
+	}
 	rm -Rf /tmp/luci-modulecache /tmp/luci-indexcache
     else
         command opkg $@

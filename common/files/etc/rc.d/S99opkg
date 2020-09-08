@@ -30,20 +30,32 @@ function opkgupgrade() {
 			httping -c 1 https://op.supes.top:88 >/dev/null 2>&1
 			if [ "$?" == "0" ]; then
 				opkg update
-				# if [ ! -f /etc/inited ]; then
+				 if [ ! -f /etc/inited ]; then
 				cp -r /etc/config /etc/confbak
-
-				[ -f "/etc/inited" ] && {
+				[ -f "/etc/backup/installed_packages.txt" ] && {
+					for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+							opkg upgrade --force-overwrite --force-checksum $ipk
+							[ "$?" == "0" ] && udok=true || return 1
+					done
+						rm /etc/config/*-opkg
+						source /etc/profile.d/opkginstall.sh
+						opkg install >/dev/null 2>&1
+						rm -f /var/lock/opkg.lock
+						touch /etc/inited
+						[ $udok ] && reboot -f
+				}
+				break
+			fi
+			else
 					find /usr/lib/opkg/info -name "*.control" \( \
 					\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
 					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
-				}
 				[ -f "/etc/backup/installed_packages.txt" ] && {
 					for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 						[ "$(opkg list-upgradable | grep '$ipk')" ] && {
 							opkg upgrade --force-overwrite --force-checksum $ipk
-							[ "$?" == "0" ] && udok=true || return
+							[ "$?" == "0" ] && udok=true || return 1
 						}
 					done
 					[ $udok ] && {
@@ -51,13 +63,8 @@ function opkgupgrade() {
 						source /etc/profile.d/opkginstall.sh
 						opkg install >/dev/null 2>&1
 						rm -f /var/lock/opkg.lock
-						[ -f "/etc/inited" ] || {
-							touch /etc/inited
-							reboot -f
-						}
 					}
 				}
-				break
 			fi
 		fi
 		sleep 5
