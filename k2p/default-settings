@@ -18,6 +18,8 @@ sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/
 
 rm -rf /tmp/luci-*
 
+/etc/init.d/https-dns-proxy disable
+
 if [ ! -f /etc/config/placeholder ]; then
 
 	uci set smartdns.@smartdns[0].redirect='dnsmasq-upstream'
