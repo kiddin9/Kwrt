@@ -88,18 +88,14 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
 #### 一键脚本:
 
-
-`
-sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl
-`
-
- 首次编译执行脚本:
+ 首次编译:
 ```
 wget -O compile.sh https://raw.githubusercontent.com/garypang13/Actions-OpenWrt/master/onekey/compile.sh && sudo bash compile.sh
 ```
 
- 二次编译执行脚本
-```wget -O recompile.sh https://raw.githubusercontent.com/garypang13/Actions-OpenWrt/master/onekey/recompile.sh && sudo bash recompile.sh
+ 二次编译:
+```
+wget -O recompile.sh https://raw.githubusercontent.com/garypang13/Actions-OpenWrt/master/onekey/recompile.sh && sudo bash recompile.sh
 ```
 
 Build OpenWrt using GitHub Actions
