@@ -43,10 +43,10 @@ function opkgupgrade() {
 					for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 						[ "$(opkg list-upgradable | grep '$ipk')" ] && {
 							opkg upgrade --force-overwrite --force-checksum $ipk
-							[ "$?" == "0" ] && udok=true || return
+							[ "$?" == "0" ] && $udok=true || return
 						}
 					done
-					[ udok ] && {
+					[ $udok ] && {
 						rm /etc/config/*-opkg
 						source /etc/profile.d/opkginstall.sh
 						opkg install >/dev/null 2>&1
