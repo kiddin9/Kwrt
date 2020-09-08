@@ -67,6 +67,7 @@ function opkgupgrade() {
 		fi
 	done
 }
+opkgupgrade
 
 [ -f "/bin/coremark" ] && [ ! -f "/etc/bench.log" ] && {
 	sleep 5
