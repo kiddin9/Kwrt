@@ -27,9 +27,8 @@ function opkgupgrade() {
 	while :; do
 		httping -c 1 www.baidu.com >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
-			httping -c 1 https://op.supes.top:88 >/dev/null 2>&1
-			if [ "$?" == "0" ]; then
 				opkg update
+			if [ "$?" == "0" ]; then
 				 if [ ! -f /etc/inited ]; then
 				cp -r /etc/config /etc/confbak
 				[ -f "/etc/backup/installed_packages.txt" ] && {
@@ -42,7 +41,6 @@ function opkgupgrade() {
 						opkg install >/dev/null 2>&1
 						rm -f /var/lock/opkg.lock
 						touch /etc/inited
-						[ $udok ] && reboot -f
 				}
 				break
 			fi
@@ -52,8 +50,9 @@ function opkgupgrade() {
 					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
 				[ -f "/etc/backup/installed_packages.txt" ] && {
+				opkg list-upgradable > /tmp/list-upgradable
 					for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
-						[ "$(opkg list-upgradable | grep '$ipk')" ] && {
+						[ "$(cat /tmp/list-upgradable | grep '$ipk')" ] && {
 							opkg upgrade --force-overwrite --force-checksum $ipk
 							[ "$?" == "0" ] && udok=true || return 1
 						}
