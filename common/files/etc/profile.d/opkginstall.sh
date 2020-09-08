@@ -21,8 +21,6 @@ sed -i 's/local page = entry/entry({"admin", "nas"}, firstchild(), _("NAS"), 45)
 sed -i 's/entry/entry({"admin", "nas"}, firstchild(), _("NAS"), 45).dependent = false\nentry/g' /usr/lib/lua/luci/controller/ksmbd.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/mjpg-streamer.lua
 sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
-  }
-
 
 sleep 2
 	[[ ! `pgrep UnblockNeteaseMusic` && `uci get unblockmusic.@unblockmusic[0].enabled` == 1 ]] && {
