@@ -41,7 +41,7 @@ svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/lu
 svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-control-timewol
 
-git clone https://github.com/garypang13/openwrt-adguardhome
+git clone https://github.com/garypang13/openwrt-adguardhome AdGuardHome
 git clone https://github.com/garypang13/luci-app-eqos
 git clone https://github.com/garypang13/luci-app-amule
 # git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
@@ -73,7 +73,8 @@ rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/package feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 
-rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin feeds/custom/luci/openwrt-ssocks feeds/custom/luci/luci-app-cifs feeds/custom/luci/qt5
+rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin \
+feeds/custom/luci/openwrt-ssocks feeds/custom/luci/luci-app-cifs feeds/custom/luci/qt5 feeds/custom/luci/adguardhome
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
