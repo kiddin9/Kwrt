@@ -40,7 +40,6 @@ git clone https://github.com/frainzy1477/luci-app-clash
 svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
 svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-syncthing
 svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-control-timewol
-svn co https://github.com/Lienol/openwrt/trunk/package/diy/luci-app-adguardhome
 
 git clone https://github.com/garypang13/openwrt-adguardhome
 git clone https://github.com/garypang13/luci-app-eqos
