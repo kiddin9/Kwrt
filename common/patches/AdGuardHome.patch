@@ -5,7 +5,7 @@
  	echo $OLD_SERVER | grep "^$addr" >/dev/null 2>&1
  	if [ $? -eq 0 ]; then
 -		return
-+	//	return
++	#	return
  	fi
  	uci delete dhcp.@dnsmasq[0].server 2>/dev/null
  	uci add_list dhcp.@dnsmasq[0].server=$addr
@@ -14,7 +14,7 @@
  	echo $OLD_SERVER | grep "^$addr" >/dev/null 2>&1
  	if [ $? -ne 0 ]; then
 -		return
-+	//	return
++	#	return
  	fi
  
  	uci del_list dhcp.@dnsmasq[0].server=$addr 2>/dev/null
