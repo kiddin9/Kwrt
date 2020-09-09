@@ -3,6 +3,12 @@
 [ ! "$(pgrep nginx)" ] && {
 	/etc/init.d/nginx restart
 }
+[[ ! "$(pgrep smartdns)" && "$(uci get smartdns.@smartdns[0].enabled)" == 1 ]] && {
+	/etc/init.d/smartdns start
+}
+[[ ! "$(pgrep passwall)" && "$(uci get passwall.@global[0].enabled)" == 1 ]] && {
+	/etc/init.d/passwall start
+}
 if [ $(uci get network.wan.ipv6) == 0 ]; then
 	sysctl -w net.ipv6.conf.all.disable_ipv6=1
 	sysctl -w net.ipv6.conf.lo.disable_ipv6=1
@@ -42,13 +48,12 @@ function opkgupgrade() {
 						touch /etc/inited
 					}
 				else
-					echo "aa"
+
 					find /usr/lib/opkg/info -name "*.control" \( \
 					\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
 					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
 					[ -f "/etc/backup/installed_packages.txt" ] && {
-						echo "bb"
 						opkg list-upgradable >/tmp/list-upgradable
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 							[ "$(cat /tmp/list-upgradable | grep '$ipk')" ] && {
