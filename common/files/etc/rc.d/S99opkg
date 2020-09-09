@@ -1,7 +1,6 @@
 #!/bin/sh
 
-exec >/var/persist-packages.log 2>&1
-[[ ! $(pgrep nginx) ]] && {
+[ ! "$(pgrep nginx)" ] && {
 	/etc/init.d/nginx restart
 }
 if [ $(uci get network.wan.ipv6) == 0 ]; then
@@ -22,48 +21,60 @@ if [ ! -f /etc/inited ]; then
 		service dnsmasq reload
 	}
 fi
-count=0
-while :; do
-	httping -c 1 www.baidu.com >/dev/null 2>&1
-	if [ "$?" == "0" ]; then
-		httping -c 1 https://op.supes.top:88 >/dev/null 2>&1
+function opkgupgrade() {
+	count=0
+	while :; do
+		httping -c 1 www.baidu.com >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
 			opkg update
-			# if [ ! -f /etc/inited ]; then
-			cp -r /etc/config /etc/confbak
-
-	[ -f "/etc/inited" ] && {
-	find /usr/lib/opkg/info -name "*.control" \( \
-	\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
-	\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
-	\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
-	}
-			[ -f "/etc/config/installed-opkg" ] && {
-				for ipk in $(cat /etc/config/installed-opkg); do
-					opkg upgrade --force-overwrite --force-checksum $ipk
-				done
-				rm -f /etc/config/installed-opkg
-			} || {
-				for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
-					opkg upgrade --force-overwrite --force-checksum $ipk
-				[[ $(awk '{print NR}' /etc/backup/installed_packages.txt|tail -n1) -le 5 ]] && exit 0;
-				done
-			}
-			rm /etc/config/*-opkg
-			source /etc/profile.d/opkginstall.sh
-			opkg install >/dev/null 2>&1
-			# fi
-			rm -f /var/lock/opkg.lock
-			touch /etc/inited
+			if [ "$?" == "0" ]; then
+				if [ ! -f /etc/inited ]; then
+					cp -r /etc/config /etc/confbak
+					[ -f "/etc/backup/installed_packages.txt" ] && {
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+							opkg upgrade --force-overwrite --force-checksum $ipk
+							[ "$?" == "0" ] && udok=true || return 1
+						done
+						rm /etc/config/*-opkg
+						source /etc/profile.d/opkginstall.sh
+						opkg install >/dev/null 2>&1
+						rm -f /var/lock/opkg.lock
+						touch /etc/inited
+					}
+				else
+					echo "aa"
+					find /usr/lib/opkg/info -name "*.control" \( \
+					\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
+					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
+					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
+					[ -f "/etc/backup/installed_packages.txt" ] && {
+						echo "bb"
+						opkg list-upgradable >/tmp/list-upgradable
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+							[ "$(cat /tmp/list-upgradable | grep '$ipk')" ] && {
+								opkg upgrade --force-overwrite --force-checksum $ipk
+								[ "$?" == "0" ] && udok=true || return 1
+							}
+						done
+						[ $udok ] && {
+							rm /etc/config/*-opkg
+							source /etc/profile.d/opkginstall.sh
+							opkg install >/dev/null 2>&1
+							rm -f /var/lock/opkg.lock
+						}
+					}
+				fi
+				break
+			fi
+		fi
+		sleep 5
+		count=$((count + 1))
+		if [ $count -gt 120 ]; then
 			break
 		fi
-	fi
-	sleep 5
-	count=$((count + 1))
-	if [ $count -gt 120 ]; then
-		break
-	fi
-done
+	done
+}
+opkgupgrade
 
 [ -f "/bin/coremark" ] && [ ! -f "/etc/bench.log" ] && {
 	sleep 5

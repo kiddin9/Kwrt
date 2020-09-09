@@ -220,7 +220,7 @@ jobs:
         echo "Download Link: ${{ env.EMOJI }} $cowurl ${{ env.EMOJI }} 🚀"
  
     - name: Upload firmware to WeTransfer
-      if: env.UPLOAD_FIRMWARE_TO_WETRANSFER == 'true'
+      if: env.UPLOAD_FIRMWARE_TO_WETRANSFER == 'true' && ! contains(github.event.action, 'noup')
       continue-on-error: true
       run: |
         curl -fsSL git.io/file-transfer | sh
@@ -233,7 +233,7 @@ jobs:
       id: create_release
       uses: actions/create-release@main
       continue-on-error: true
-      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
+      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true' && ! contains(github.event.action, 'noup')
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
@@ -254,7 +254,7 @@ jobs:
     - name: Upload firmware for release
       uses: csexton/release-asset-action@master
       continue-on-error: true
-      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
+      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true' && ! contains(github.event.action, 'noup')
       with:
         pattern: "${{ env.FIRMWARE }}/*"
         github-token: ${{ secrets.REPO_TOKEN }}
