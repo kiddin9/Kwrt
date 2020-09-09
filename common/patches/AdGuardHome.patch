@@ -1,35 +1,36 @@
 --- feeds/custom/luci/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 +++ feeds/custom/luci/luci-app-adguardhome/root/etc/init.d/AdGuardHome
-@@ -20,7 +20,7 @@ set_forward_dnsmasq()
+@@ -19,9 +19,7 @@ set_forward_dnsmasq()
+ 	addr="127.0.0.1#$PORT"
  	OLD_SERVER="`uci get dhcp.@dnsmasq[0].server 2>/dev/null`"
  	echo $OLD_SERVER | grep "^$addr" >/dev/null 2>&1
- 	if [ $? -eq 0 ]; then
+-	if [ $? -eq 0 ]; then
 -		return
-+	#	return
- 	fi
+-	fi
++
  	uci delete dhcp.@dnsmasq[0].server 2>/dev/null
  	uci add_list dhcp.@dnsmasq[0].server=$addr
-@@ -43,7 +43,7 @@ stop_forward_dnsmasq()
+ 	for server in $OLD_SERVER; do
+@@ -42,9 +40,6 @@ stop_forward_dnsmasq()
+ 	addr="127.0.0.1#$OLD_PORT"
  	OLD_SERVER="`uci get dhcp.@dnsmasq[0].server 2>/dev/null`"
  	echo $OLD_SERVER | grep "^$addr" >/dev/null 2>&1
- 	if [ $? -ne 0 ]; then
+-	if [ $? -ne 0 ]; then
 -		return
-+	#	return
- 	fi
+-	fi
  
  	uci del_list dhcp.@dnsmasq[0].server=$addr 2>/dev/null
-@@ -486,6 +486,14 @@ start_service() {
+ 	addrlist="`uci get dhcp.@dnsmasq[0].server 2>/dev/null`"
+@@ -490,6 +485,12 @@ start_service() {
  	echo "AdGuardHome service enabled"
  	echo "luci enable switch=$enabled"
  	(sleep 10 && [ -z "$(pgrep $binpath)" ] && logger "AdGuardHome" "no process in 10s cancel redirect" && _do_redirect 0 )&
-+
-+	uci set shadowsocksr.@global[0].pdnsd_enable='0'
-+	uci del shadowsocksr.@global[0].tunnel_forward
-+	uci commit shadowsocksr
-+	uci set passwall.@global[0].dns_mode='nonuse'
-+	uci del passwall.@global[0].up_trust_pdnsd_dns
-+	uci del passwall.@global[0].dns_forward
-+	uci commit passwall
++	[ "$(uci get shadowsocksr.@global[0].pdnsd_enable)" == 0 ] || {
++		uci set shadowsocksr.@global[0].pdnsd_enable='0'
++		uci del shadowsocksr.@global[0].tunnel_forward
++		uci commit shadowsocksr
++		service shadowsocksr reload
++	}
  }
  reload_service()
  {
