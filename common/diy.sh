@@ -2,6 +2,7 @@
 #=================================================
 
 rm -Rf feeds/packages/net/miniupnpd
+sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/custom/*/Makefile
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 mv -f feeds/packages/libs/libx264 package/feeds/custom/libx264
@@ -14,7 +15,6 @@ rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl 
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 ln -sf ../../../feeds/packages/lang/python/Flask-RESTful package/feeds/packages/Flask-RESTful
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
-sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/custom/*/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -Rf target/linux/generic/hack-5.4/641-sch_cake-fix-IP-protocol-handling-in-the-presence-of.patch
