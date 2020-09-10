@@ -1,7 +1,7 @@
 #/bin/bash
 echo
 echo
-echo "本脚本仅适用于在Ubuntu环境下编译https://github.com/garypang13/Actions-OpenWrt"
+echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/garypang13/Actions-OpenWrt"
 echo
 echo
 
