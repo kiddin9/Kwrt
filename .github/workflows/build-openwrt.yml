@@ -101,9 +101,6 @@ jobs:
         #ln -s /mnt/openwrt/dl openwrt/
         #ln -s /mnt/openwrt/staging_dir openwrt/
 
-    - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
-
     - name: Load custom configuration
       run: |
         cp -Rf * openwrt/ || true
