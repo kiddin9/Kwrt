@@ -48,7 +48,6 @@ rm -Rf feeds package/feeds files tmp
 [ -f ".config" ] && mv .config .config.bak
 git fetch --all
 git reset --hard origin/master
-./scripts/feeds update -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
 	cp -rf common/files/ files
 fi

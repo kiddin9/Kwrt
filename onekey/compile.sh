@@ -95,7 +95,6 @@ if [ -f "$firmware/feeds.conf" ]; then
           mv $firmware/feeds.conf ./
         )
 fi
-./scripts/feeds update -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
 	cp -rf common/files files
 fi
