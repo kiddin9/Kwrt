@@ -1,55 +1,38 @@
 #!/bin/bash
 #=================================================
-rm -Rf package/lean tmp
 cd feeds/custom/luci
-# git clone https://github.com/rufengsuixing/luci-app-adguardhome
-svn co https://github.com/Lienol/openwrt/trunk/package/lean/luci-app-autoreboot
-git clone https://github.com/garypang13/luci-theme-edge
-git clone https://github.com/jerrykuku/luci-theme-argon
-svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
-svn co https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
-git clone https://github.com/pymumu/luci-app-smartdns -b lede
-git clone https://github.com/lisaac/luci-app-diskman
-mkdir parted && cp luci-app-diskman/Parted.Makefile parted/Makefile
-git clone https://github.com/tty228/luci-app-serverchan
-git clone https://github.com/brvphoenix/luci-app-wrtbwmon
-git clone https://github.com/brvphoenix/wrtbwmon
-git clone https://github.com/destan19/OpenAppFilter && mv -f OpenAppFilter/* ./
-svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-advancedsetting
-svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
-git clone https://github.com/lisaac/luci-in-docker
-svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
-git clone https://github.com/garypang13/r8125
-git clone https://github.com/ElonH/Rclone-OpenWrt && mv -f Rclone-OpenWrt/* ./
-# git clone https://github.com/jefferymvp/luci-app-koolproxyR
-git clone https://github.com/jefferymvp/luci-app-koolproxyR
-git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
-git clone https://github.com/jerrykuku/luci-app-vssr
-git clone https://github.com/jerrykuku/lua-maxminddb
-git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
-git clone https://github.com/rufengsuixing/luci-app-autoipsetadder
-git clone https://github.com/jerrykuku/node-request.git
-git clone https://github.com/jerrykuku/luci-app-jd-dailybonus
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
-svn co https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
-
-svn export https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
-git clone https://github.com/frainzy1477/luci-app-clash
-svn co https://github.com/solidus1983/luci-theme-opentomato/trunk/luci/themes/luci-theme-opentomato
-svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-syncthing
-svn co https://github.com/xiaorouji/openwrt-package/trunk/others/luci-app-control-timewol
 
 git clone https://github.com/garypang13/openwrt-adguardhome AdGuardHome
 git clone https://github.com/garypang13/luci-app-eqos
 git clone https://github.com/garypang13/luci-app-amule
-# git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
 git clone https://github.com/garypang13/openwrt-filerun
 git clone https://github.com/garypang13/luci-app-baidupcs-web
+git clone https://github.com/garypang13/r8125
+git clone https://github.com/garypang13/luci-theme-edge
+git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
+
+svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
+svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
 svn co https://github.com/openwrt/packages/branches/openwrt-19.07/net/e2guardian
+
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
+svn co https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
+svn co https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
+
+git clone https://github.com/jerrykuku/luci-theme-argon
+git clone https://github.com/pymumu/luci-app-smartdns -b lede
+git clone https://github.com/brvphoenix/luci-app-wrtbwmon
+git clone https://github.com/brvphoenix/wrtbwmon
+svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
+git clone https://github.com/lisaac/luci-in-docker
+git clone https://github.com/jefferymvp/luci-app-koolproxyR
+git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
+svn export https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
+luci-lib-docker
+
 cd -
 
 mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
@@ -66,15 +49,10 @@ svn export --force https://github.com/project-openwrt/openwrt/branches/master/pa
 rm -rf feeds/custom/luci/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/zxlhhyccc feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/lienol feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/Lienol/openwrt/trunk/package/diy feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/xiaorouji/openwrt-package/trunk/package feeds/custom/luci
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/lienol feeds/custom/luci
 rm -rf feeds/custom/luci/.svn
 
-rm -Rf feeds/custom/luci/openwrt-chinadns-ng feeds/custom/luci/openwrt-simple-obfs feeds/custom/luci/openwrt-v2ray-plugin \
-feeds/custom/luci/openwrt-ssocks feeds/custom/luci/luci-app-cifs feeds/custom/luci/qt5 feeds/custom/luci/adguardhome
+rm -Rf feeds/custom/luci/qt5
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
@@ -125,7 +103,7 @@ ver=$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/$1
 [ $ver ] && echo $ver || git ls-remote --tags git://github.com/$1 | cut -d/ -f3- | sort -t. -nk1,2 -k3 | awk '/^[^{]*$/{version=$1}END{print version}' | grep -o -E "[0-9].+"
 }
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion v2ray/v2ray-core)/g" package/*/*/v2ray/Makefile
-sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion AdguardTeam/AdGuardHome)/g" package/*/*/openwrt-adguardhome/Makefile
+sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion AdguardTeam/AdGuardHome)/g" package/*/*/AdGuardHome/Makefile
 sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion c0re100/qBittorrent-Enhanced-Edition)/g" package/*/*/qBittorrent-Enhanced-Edition/Makefile
 sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" package/feeds/custom/*/Makefile
 find package/*/custom/*/ -maxdepth 2 ! -path "*shadowsocksr-libev*" -name "Makefile" ! -path "*rclone*" -name "Makefile" ! -path "*subweb*" -name "Makefile" \
