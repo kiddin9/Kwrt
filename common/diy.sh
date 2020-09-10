@@ -31,7 +31,7 @@ git clone https://github.com/lisaac/luci-in-docker
 git clone https://github.com/jefferymvp/luci-app-koolproxyR
 git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
 svn export https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
-luci-lib-docker
+git clone https://github.com/lisaac/luci-lib-docker
 
 cd -
 
@@ -58,8 +58,8 @@ rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl 
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 rm -Rf feeds/packages/lang/python/Flask-RESTful && svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 rm -Rf feeds/packages/lang/python/python-psutil && svn co https://github.com/project-openwrt/packages/trunk/lang/python/python-psutil feeds/packages/lang/python/python-psutil
+sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/custom/luci/*/Makefile
 ./scripts/feeds update -a && ./scripts/feeds install -a
-sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/feeds/custom/*/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -Rf target/linux/generic/hack-5.4/641-sch_cake-fix-IP-protocol-handling-in-the-presence-of.patch
