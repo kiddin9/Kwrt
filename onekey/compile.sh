@@ -8,7 +8,7 @@ sleep 2s
 sudo apt-get update
 sudo apt-get upgrade
 
-sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl
+sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl screen
 
 
 
@@ -27,7 +27,7 @@ echo
 echo
 
 
-if [ "$USER" = "root" ]; then
+if [ "$USER" == "root" ]; then
 	echo
 	echo
 	echo "请勿使用root用户编译，换一个普通用户吧~~"
@@ -137,7 +137,7 @@ make menuconfig
 echo
 echo
 echo
-echo "                      *****6秒后开始编译*****
+echo "                      *****5秒后开始编译*****
 
 1.你可以随时按Ctrl+C停止编译
 
@@ -145,9 +145,7 @@ echo "                      *****6秒后开始编译*****
 echo
 echo
 echo
-echo
-sleep 6s
-
+sleep 5s
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 

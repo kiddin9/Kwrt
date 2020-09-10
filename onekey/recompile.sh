@@ -5,7 +5,7 @@ echo "本脚本仅适用于在Ubuntu环境下编译https://github.com/garypang13
 echo
 echo
 
-if [ "$USER" = "root" ]; then
+if [ "$USER" == "root" ]; then
 	echo
 	echo
 	echo "请勿使用root用户编译，换一个普通用户吧~~"
@@ -13,11 +13,8 @@ if [ "$USER" = "root" ]; then
 	exit 0
 fi
 
-
 echo
-
 echo
-
 
 clear
 
@@ -107,15 +104,14 @@ done
 }
 echo
 echo
-echo "                      *****6秒后开始编译*****
+echo "                      *****5秒后开始编译*****
 
 1.你可以随时按Ctrl+C停止编译
 
 3.大陆用户编译前请准备好梯子,使用大陆白名单或全局模式"
 echo
 echo
-echo
-sleep 6s
+sleep 5s
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 

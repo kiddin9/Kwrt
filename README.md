@@ -90,11 +90,13 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 
  首次编译:
 ```
+screen -S openwrt
 wget -O compile.sh https://raw.githubusercontent.com/garypang13/Actions-OpenWrt/master/onekey/compile.sh && sudo bash compile.sh
 ```
 
  二次编译:
 ```
+screen -S openwrt
 wget -O recompile.sh https://raw.githubusercontent.com/garypang13/Actions-OpenWrt/master/onekey/recompile.sh && sudo bash recompile.sh
 ```
 
