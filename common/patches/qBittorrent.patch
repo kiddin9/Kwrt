@@ -1,5 +1,5 @@
---- feeds/custom/luci/libtorrent-rasterbar/Makefile
-+++ feeds/custom/luci/libtorrent-rasterbar/Makefile
+--- package/feeds/custom/libtorrent-rasterbar/Makefile
++++ package/feeds/custom/libtorrent-rasterbar/Makefile
 @@ -68,7 +68,7 @@ endef
  
  define Package/libtorrent-rasterbar/install

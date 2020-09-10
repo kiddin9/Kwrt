@@ -1,5 +1,5 @@
---- feeds/custom/luci/luci-app-adguardhome/root/etc/init.d/AdGuardHome
-+++ feeds/custom/luci/luci-app-adguardhome/root/etc/init.d/AdGuardHome
+--- package/feeds/custom/luci-app-adguardhome/root/etc/init.d/AdGuardHome
++++ package/feeds/custom/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 @@ -19,9 +19,7 @@ set_forward_dnsmasq()
  	addr="127.0.0.1#$PORT"
  	OLD_SERVER="`uci get dhcp.@dnsmasq[0].server 2>/dev/null`"

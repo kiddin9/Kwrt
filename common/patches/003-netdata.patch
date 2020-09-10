@@ -1,5 +1,5 @@
---- feeds/custom/luci/netdata/Makefile
-+++ feeds/custom/luci/netdata/Makefile 
+--- package/feeds/custom/netdata/Makefile
++++ package/feeds/custom/netdata/Makefile 
 @@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/package.mk
  define Package/netdata
    SECTION:=admin

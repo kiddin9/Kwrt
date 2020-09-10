@@ -22,8 +22,8 @@
  endef
  
 
---- feeds/custom/luci/dnsforwarder/Makefile
-+++ feeds/custom/luci/dnsforwarder/Makefile
+--- package/feeds/custom/dnsforwarder/Makefile
++++ package/feeds/custom/dnsforwarder/Makefile
 @@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
    CATEGORY:=Network
    TITLE:=A simple DNS forwarder

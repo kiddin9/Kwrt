@@ -1,65 +1,20 @@
 #!/bin/bash
 #=================================================
-cd feeds/custom/luci
 
-git clone https://github.com/garypang13/openwrt-adguardhome AdGuardHome
-git clone https://github.com/garypang13/luci-app-eqos
-git clone https://github.com/garypang13/luci-app-amule
-git clone https://github.com/garypang13/openwrt-filerun
-git clone https://github.com/garypang13/luci-app-baidupcs-web
-git clone https://github.com/garypang13/r8125
-git clone https://github.com/garypang13/luci-theme-edge
-git clone https://github.com/garypang13/openwrt-qbittorrent && mv -f openwrt-qbittorrent/* ./
-
-svn co https://github.com/openwrt/luci/trunk/applications/luci-app-acme
-svn co https://github.com/openwrt/luci/trunk/applications/luci-app-sqm
-svn co https://github.com/openwrt/packages/branches/openwrt-19.07/libs/libdouble-conversion
-svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36
-svn co https://github.com/openwrt/packages/branches/openwrt-19.07/net/e2guardian
-
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
-svn co https://github.com/coolsnowwolf/lede/trunk/package/network/services/shellsync
-svn co https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
-
-git clone https://github.com/jerrykuku/luci-theme-argon
-git clone https://github.com/pymumu/luci-app-smartdns -b lede
-git clone https://github.com/brvphoenix/luci-app-wrtbwmon
-git clone https://github.com/brvphoenix/wrtbwmon
-svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
-git clone https://github.com/lisaac/luci-in-docker
-git clone https://github.com/jefferymvp/luci-app-koolproxyR
-git clone https://github.com/peter-tank/luci-app-dnscrypt-proxy2
-svn export https://github.com/vernesong/OpenClash/branches/master/luci-app-openclash
-git clone https://github.com/lisaac/luci-lib-docker
-
-cd -
-
-mv -f feeds/packages/libs/libx264 feeds/custom/luci/libx264
-mv -f feeds/packages/net/aria2 feeds/custom/luci/aria2
-mv -f feeds/packages/admin/netdata feeds/custom/luci/netdata
-mv -f feeds/packages/net/smartdns feeds/custom/luci/smartdns
 rm -Rf feeds/packages/net/miniupnpd
+./scripts/feeds update -a
+./scripts/feeds install -a
+mv -f feeds/packages/libs/libx264 package/feeds/custom/libx264
+mv -f feeds/packages/net/aria2 package/feeds/custom/aria2
+mv -f feeds/packages/admin/netdata package/feeds/custom/netdata
+mv -f feeds/packages/net/smartdns package/feeds/custom/smartdns
 
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/ctcgfw feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-svn export --force https://github.com/project-openwrt/openwrt/branches/master/package/ntlf9t feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/zxlhhyccc feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/lienol feeds/custom/luci
-rm -rf feeds/custom/luci/.svn
-
-rm -Rf feeds/custom/luci/qt5
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
+svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful package/feeds/packages/Flask-RESTful
+svn co https://github.com/project-openwrt/packages/trunk/lang/python/python-psutil package/feeds/packages//python-psutil
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
-rm -Rf feeds/packages/lang/python/Flask-RESTful && svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
-rm -Rf feeds/packages/lang/python/python-psutil && svn co https://github.com/project-openwrt/packages/trunk/lang/python/python-psutil feeds/packages/lang/python/python-psutil
-sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/custom/luci/*/Makefile
-./scripts/feeds update -a && ./scripts/feeds install -a
+sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/custom/*/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -Rf target/linux/generic/hack-5.4/641-sch_cake-fix-IP-protocol-handling-in-the-presence-of.patch
@@ -67,8 +22,8 @@ echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master
 rm -Rf package/*/*/luci-app-zerotier/root/etc/init.d/zerotier
 rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf files/usr/share/aria2
 chmod +x files/usr/share/aria2/*.sh
-rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech feeds/custom/luci/antileech/src
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n feeds/custom/luci/default-settings/po/zh_Hans
+rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech feeds/custom/antileech/src
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n feeds/custom/default-settings/po/zh_Hans
 sed -i '/rpcd_/d' package/*/*/autocore/Makefile
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& \[ -f "\/bin\/bash" \] \&\& env -i bash "$FILE" || . "$FILE"/g' package/base-files/files/etc/profile

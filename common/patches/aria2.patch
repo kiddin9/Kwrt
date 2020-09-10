@@ -1,5 +1,5 @@
---- feeds/custom/luci/aria2/files/aria2.init
-+++ feeds/custom/luci/aria2/files/aria2.init
+--- package/feeds/custom/aria2/files/aria2.init
++++ package/feeds/custom/aria2/files/aria2.init
 @@ -312,3 +312,6 @@
  
 -	sed '/^$/d' "$config_file_tmp" >"$config_file"
