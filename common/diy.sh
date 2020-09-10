@@ -12,7 +12,6 @@ mv -f feeds/packages/net/smartdns package/feeds/custom/smartdns
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful package/feeds/packages/Flask-RESTful
-svn co https://github.com/project-openwrt/packages/trunk/lang/python/python-psutil package/feeds/packages//python-psutil
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/custom/*/Makefile
 sed -i 's/-std=\(gnu\|c\)++\(11\|14\)//g' package/feeds/*/*/Makefile
