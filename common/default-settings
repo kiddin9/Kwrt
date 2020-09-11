@@ -5,8 +5,6 @@ ln -sf /sbin/ip /usr/bin/ip
 sed -i 's/snapshots\(.*luci\)/releases\/19.07-SNAPSHOT\1/g' /etc/opkg/distfeeds.conf
 sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
 sed -i '/openwrt_custom/d' /etc/opkg/customfeeds.conf
-sed -i '$a src/gz openwrt_custom_luci https://op.supes.top:88/x64/luci' /etc/opkg/customfeeds.conf
-# sed -i '$a src/gz openwrt_custom_core https://op.supes.top:88/x64/kmod' /etc/opkg/distfeeds.conf
 sed -i 's/downloads.openwrt.org/mirrors.cloud.tencent.com\/openwrt/g' /etc/opkg/distfeeds.conf
 sed -i 's/http:/https:/g' /etc/opkg/distfeeds.conf
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
@@ -21,9 +19,6 @@ rm -rf /tmp/luci-*
 /etc/init.d/https-dns-proxy disable
 
 if [ ! -f /etc/config/placeholder ]; then
-
-	uci set turboacc.config.sw_flow='0'
-	uci commit turboacc
 
 	if [ $(uci get network.wan.ipv6) == 0 ]; then
 		uci set smartdns.@smartdns[0].ipv6_server='0'
@@ -85,6 +80,3 @@ chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
-touch /etc/config/placeholder
-
-exit 0

@@ -1,0 +1,9 @@
+
+sed -i '$a src/gz openwrt_custom_luci https://op.supes.top:88/x64/luci' /etc/opkg/customfeeds.conf
+
+	uci set turboacc.config.sw_flow='0'
+	uci commit turboacc
+
+touch /etc/config/placeholder
+
+exit 0

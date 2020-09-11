@@ -83,7 +83,7 @@ if [ -f "common/default-settings" ]; then
 fi
 if [ -f "$firmware/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' $firmware/default-settings
-	cp -f $firmware/default-settings package/*/*/default-settings/files/zzz-default-settings
+	cat $firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
           find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"

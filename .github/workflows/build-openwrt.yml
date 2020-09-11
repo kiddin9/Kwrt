@@ -125,7 +125,7 @@ jobs:
          cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
         fi
         if [ -f "${{matrix.target}}/default-settings" ]; then
-         cp -f ${{matrix.target}}/default-settings package/*/*/default-settings/files/zzz-default-settings
+         cat ${{matrix.target}}/default-settings >> package/*/*/default-settings/files/zzz-default-settings
         fi
         if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
          cp -Rf common/diy/* ./

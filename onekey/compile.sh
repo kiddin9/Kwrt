@@ -126,7 +126,7 @@ if [ -f "common/default-settings" ]; then
 fi
 if [ -f "$firmware/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' $firmware/default-settings
-	cp -f $firmware/default-settings package/*/*/default-settings/files/zzz-default-settings
+	cat -f $firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
 	cp -Rf common/diy/* ./
