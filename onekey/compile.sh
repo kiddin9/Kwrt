@@ -85,6 +85,13 @@ case $CHOOSE in
 
 esac
 done
+
+
+read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
+ip=${ip:-"10.0.0.1"}
+echo "您的后台地址为: $ip"
+
+
 if [ -f "common/feeds.conf" ]; then
         (
           mv common/feeds.conf ./
@@ -114,9 +121,11 @@ if [ -f "$firmware/diy.sh" ]; then
 	)
 fi
 if [ -f "common/default-settings" ]; then
+	sed -i 's/10.0.0.1/$ip/' common/default-settings
 	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -f "$firmware/default-settings" ]; then
+	sed -i 's/10.0.0.1/$ip/' $firmware/default-settings
 	cp -f $firmware/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
@@ -152,7 +161,7 @@ echo "
 
 编译完成~~~
 
-后台地址: 10.0.0.1
-默认用户名密码: root  root
+初始后台地址: $ip
+初始用户名密码: root  root
 
 "

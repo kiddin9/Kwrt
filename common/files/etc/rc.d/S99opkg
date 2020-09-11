@@ -3,6 +3,9 @@
 [ ! "$(pgrep nginx)" ] && {
 	/etc/init.d/nginx restart
 }
+[ ! "$(pgrep uhttpd)" ] && {
+	/etc/init.d/uhttpd restart
+}
 [[ ! "$(pgrep smartdns)" && "$(uci get smartdns.@smartdns[0].enabled)" == 1 ]] && {
 	/etc/init.d/smartdns start
 }
