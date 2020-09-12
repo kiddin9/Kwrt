@@ -2,7 +2,6 @@
 #=================================================
 
 rm -Rf feeds/packages/net/miniupnpd
-sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' feeds/custom/*/Makefile
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 mv -f feeds/packages/libs/libx264 package/feeds/custom/libx264
@@ -12,6 +11,7 @@ mv -f feeds/packages/net/smartdns package/feeds/custom/smartdns
 
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
+sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' package/*/custom/*/Makefile
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 ln -sf ../../../feeds/packages/lang/python/Flask-RESTful package/feeds/packages/Flask-RESTful
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
