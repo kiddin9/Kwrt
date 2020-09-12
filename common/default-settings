@@ -16,9 +16,9 @@ sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/
 
 rm -rf /tmp/luci-*
 
-/etc/init.d/https-dns-proxy disable
+[ -f /etc/init.d/https-dns-proxy ] && /etc/init.d/https-dns-proxy disable
 
-sed -i 'S99opkg/d' /etc/crontabs/root
+sed -i '/S99opkg/d' /etc/crontabs/root
 echo "0 0 */3 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
 if [ ! -f /etc/config/placeholder ]; then

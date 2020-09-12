@@ -17,7 +17,7 @@ else
 	sysctl -w net.ipv6.conf.all.disable_ipv6=0
 fi
 if [ ! -f /etc/inited ]; then
-	[ uci get dhcp.@dnsmasq[0].noresolv ] && {
+	[ "$(uci get dhcp.@dnsmasq[0].noresolv)" ] && {
 		uci del dhcp.@dnsmasq[0].noresolv
 		uci commit dhcp
 		service dnsmasq reload
@@ -35,11 +35,11 @@ function opkgupgrade() {
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
+							echo "$ipk"
 							[ "$(cat /tmp/upgrade)" == "" ] || [ "$(cat /tmp/upgrade | grep 'Configuring')" ] && {
 								udok=true
 							} || {
 								udok=false
-								break
 							}
 						done
 						[ $udok == true ] && {
@@ -65,7 +65,6 @@ function opkgupgrade() {
 									udok=true
 								} || {
 									udok=false
-									break
 								}
 							}
 						done
