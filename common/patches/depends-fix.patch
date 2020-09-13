@@ -22,8 +22,8 @@
  endef
  
 
---- feeds/custom/luci/dnsforwarder/Makefile
-+++ feeds/custom/luci/dnsforwarder/Makefile
+--- package/feeds/custom/dnsforwarder/Makefile
++++ package/feeds/custom/dnsforwarder/Makefile
 @@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
    CATEGORY:=Network
    TITLE:=A simple DNS forwarder
@@ -33,15 +33,3 @@
  endef
  
  define Package/$(PKG_NAME)/description
-
---- feeds/custom/luci/luci-app-adguardhome/Makefile
-+++ feeds/custom/luci/luci-app-adguardhome/Makefile
-@@ -17,7 +17,7 @@ define Package/luci-app-adguardhome
- 	TITLE:=LuCI app for adguardhome
- 	PKG_MAINTAINER:=<https://github.com/rufengsuixing/luci-app-adguardhome>
- 	PKGARCH:=all
--	DEPENDS:=+!wget&&!curl:wget
-+	DEPENDS:=+!wget&&!curl:wget +adguardhome
- endef
- 
- define Package/luci-app-adguardhome/description

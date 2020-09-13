@@ -1,11 +1,11 @@
 #/bin/bash
 echo
 echo
-echo "本脚本仅适用于在Ubuntu环境下编译https://github.com/garypang13/Actions-OpenWrt"
+echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/garypang13/Actions-OpenWrt"
 echo
 echo
 
-if [ "$USER" = "root" ]; then
+if [ "$USER" == "root" ]; then
 	echo
 	echo
 	echo "请勿使用root用户编译，换一个普通用户吧~~"
@@ -13,11 +13,8 @@ if [ "$USER" = "root" ]; then
 	exit 0
 fi
 
-
 echo
-
 echo
-
 
 clear
 
@@ -47,16 +44,20 @@ else
 		make menuconfig
 fi
 echo
+
+read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
+ip=${ip:-"10.0.0.1"}
+echo "您的后台地址为: $ip"
+
 rm -Rf feeds package/feeds files tmp
 [ -f ".config" ] && mv .config .config.bak
 git fetch --all
 git reset --hard origin/master
-./scripts/feeds update -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
 	cp -rf common/files/ files
 fi
-if [ -n "$(ls -A "x86_64/files" 2>/dev/null)" ]; then
-	cp -rf x86_64/files/* files/
+if [ -n "$(ls -A "$firmware/files" 2>/dev/null)" ]; then
+	cp -rf $firmware/files/* files/
 fi
 if [ -f "common/diy.sh" ]; then
 	(
@@ -64,31 +65,33 @@ if [ -f "common/diy.sh" ]; then
 		/bin/bash "common/diy.sh"
 	)
 fi
-if [ -f "x86_64/diy.sh" ]; then
+if [ -f "$firmware/diy.sh" ]; then
 	(
-		chmod +x x86_64/diy.sh
-		/bin/bash "x86_64/diy.sh"
+		chmod +x $firmware/diy.sh
+		/bin/bash "$firmware/diy.sh"
 	)
 fi
 if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
 	cp -Rf common/diy/* ./
 fi
-if [ -n "$(ls -A "x86_64/diy" 2>/dev/null)" ]; then
-	cp -Rf x86_64/diy/* ./
+if [ -n "$(ls -A "$firmware/diy" 2>/dev/null)" ]; then
+	cp -Rf $firmware/diy/* ./
 fi
 if [ -f "common/default-settings" ]; then
+	sed -i 's/10.0.0.1/$ip/' common/default-settings
 	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
-if [ -f "x86_64/default-settings" ]; then
-	cp -f x86_64/default-settings package/*/*/default-settings/files/zzz-default-settings
+if [ -f "$firmware/default-settings" ]; then
+	sed -i 's/10.0.0.1/$ip/' $firmware/default-settings
+	cat $firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
           find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"
 fi
-if [ -n "$(ls -A "x86_64/patches" 2>/dev/null)" ]; then
-          find "x86_64/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"
+if [ -n "$(ls -A "$firmware/patches" 2>/dev/null)" ]; then
+          find "$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p0 --forward"
 fi
-[ -f ".config.bak" ] && mv .config.bak .config || mv x86_64/.config .config
+[ -f ".config.bak" ] && mv .config.bak .config || mv $firmware/.config .config
 
 [ firmware == "other" ] || {
 while true; do
@@ -107,15 +110,14 @@ done
 }
 echo
 echo
-echo "                      *****6秒后开始编译*****
+echo "                      *****5秒后开始编译*****
 
 1.你可以随时按Ctrl+C停止编译
 
 3.大陆用户编译前请准备好梯子,使用大陆白名单或全局模式"
 echo
 echo
-echo
-sleep 6s
+sleep 5s
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 
@@ -123,7 +125,7 @@ echo "
 
 编译完成~~~
 
-后台地址: 10.0.0.1
-默认用户名密码: root  root
+初始后台地址: $ip
+初始用户名密码: root  root
 
 "

@@ -1,1 +1,0 @@
-0 0 * * * wget -O /etc/smartdns/anti-ad-smartdns.conf https://anti-ad.net/anti-ad-for-smartdns.conf

@@ -1,7 +1,9 @@
 #!/bin/sh
-
 [ ! "$(pgrep nginx)" ] && {
 	/etc/init.d/nginx restart
+}
+[[ ! "$(pgrep smartdns)" && "$(uci get smartdns.@smartdns[0].enabled)" == 1 ]] && {
+	/etc/init.d/smartdns start
 }
 if [ $(uci get network.wan.ipv6) == 0 ]; then
 	sysctl -w net.ipv6.conf.all.disable_ipv6=1
@@ -15,7 +17,7 @@ else
 	sysctl -w net.ipv6.conf.all.disable_ipv6=0
 fi
 if [ ! -f /etc/inited ]; then
-	[ uci get dhcp.@dnsmasq[0].noresolv ] && {
+	[ "$(uci get dhcp.@dnsmasq[0].noresolv)" ] && {
 		uci del dhcp.@dnsmasq[0].noresolv
 		uci commit dhcp
 		service dnsmasq reload
@@ -32,40 +34,50 @@ function opkgupgrade() {
 					cp -r /etc/config /etc/confbak
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
-							opkg upgrade --force-overwrite --force-checksum $ipk
-							[ "$?" == "0" ] && udok=true || return 1
+							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
+							echo "$ipk"
+							[ "$(cat /tmp/upgrade)" == "" ] || [ "$(cat /tmp/upgrade | grep 'Configuring')" ] && {
+								udok=true
+							} || {
+								udok=false
+							}
 						done
-						rm /etc/config/*-opkg
-						source /etc/profile.d/opkginstall.sh
-						opkg install >/dev/null 2>&1
-						rm -f /var/lock/opkg.lock
-						touch /etc/inited
+						[ $udok == true ] && {
+							rm /etc/config/*-opkg
+							source /etc/profile.d/opkginstall.sh
+							opkg install >/dev/null 2>&1
+							touch /etc/inited
+						}
 					}
 				else
-					echo "aa"
+
 					find /usr/lib/opkg/info -name "*.control" \( \
 					\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
 					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
 					[ -f "/etc/backup/installed_packages.txt" ] && {
-						echo "bb"
 						opkg list-upgradable >/tmp/list-upgradable
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
-							[ "$(cat /tmp/list-upgradable | grep '$ipk')" ] && {
-								opkg upgrade --force-overwrite --force-checksum $ipk
-								[ "$?" == "0" ] && udok=true || return 1
+							[ "$(cat /tmp/list-upgradable | grep $ipk)" ] && {
+								opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
+								[ "$(cat /tmp/upgrade)" == "" ] || [ "$(cat /tmp/upgrade | grep 'Configuring')" ] && {
+									udok=true
+								} || {
+									udok=false
+								}
 							}
 						done
-						[ $udok ] && {
+						[ $udok == true ] && {
 							rm /etc/config/*-opkg
 							source /etc/profile.d/opkginstall.sh
 							opkg install >/dev/null 2>&1
-							rm -f /var/lock/opkg.lock
 						}
 					}
 				fi
+				rm -f /var/lock/opkg.lock
 				break
 			fi
+			rm -f /var/lock/opkg.lock
 		fi
 		sleep 5
 		count=$((count + 1))

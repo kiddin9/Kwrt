@@ -62,7 +62,7 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf wget swig rsync
+        sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf wget swig
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -93,20 +93,13 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        #sudo mkdir -p -m 777 openwrt/build_dir /mnt/openwrt/build_dir/hostpkg /mnt/openwrt/build_dir/host /mnt/openwrt/dl /mnt/openwrt/staging_dir
-        sudo mkdir -p -m 777 /openwrt/build_dir
-        ln -s /openwrt/build_dir openwrt/
-        #ln -s /mnt/openwrt/build_dir/hostpkg openwrt/build_dir/
-        #ln -s /mnt/openwrt/build_dir/host openwrt/build_dir/
-        #ln -s /mnt/openwrt/dl openwrt/
-        #ln -s /mnt/openwrt/staging_dir openwrt/
-
-    - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
+        sudo mkdir -p -m 777 /mnt/openwrt/dl /mnt/openwrt/staging_dir
+        ln -s /mnt/openwrt/dl openwrt/
+        ln -s /mnt/openwrt/staging_dir openwrt/
 
     - name: Load custom configuration
       run: |
-        cp -Rf * openwrt/ || true
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
         echo "Apply files..."
         if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
@@ -132,7 +125,7 @@ jobs:
          cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
         fi
         if [ -f "${{matrix.target}}/default-settings" ]; then
-         cp -f ${{matrix.target}}/default-settings package/*/*/default-settings/files/zzz-default-settings
+         cat ${{matrix.target}}/default-settings >> package/*/*/default-settings/files/zzz-default-settings
         fi
         if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
          cp -Rf common/diy/* ./

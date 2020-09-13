@@ -29,4 +29,5 @@ sed -i 's/services/nas/g'  /usr/lib/lua/luci/view/minidlna_status.htm
     else
         command opkg $@
     fi
+    rm -f /var/lock/opkg.lock
 }

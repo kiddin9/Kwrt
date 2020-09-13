@@ -1,0 +1,15 @@
+--- a/package/openwrt/files/etc/init.d/smartdns
++++ b/package/openwrt/files/etc/init.d/smartdns
+@@ -381,6 +381,12 @@ start_service()
+ {
+ 	config_load "smartdns"
+ 	config_foreach load_service "smartdns"
++	[ "$(uci get shadowsocksr.@global[0].pdnsd_enable)" == 0 ] || {
++		uci set shadowsocksr.@global[0].pdnsd_enable='0'
++		uci del shadowsocksr.@global[0].tunnel_forward
++		uci commit shadowsocksr
++		service shadowsocksr reload
++	}
+ }
+ 
+ reload_service()

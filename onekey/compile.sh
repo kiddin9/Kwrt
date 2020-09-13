@@ -1,14 +1,14 @@
 #/bin/bash
 echo
 echo
-echo "本脚本仅适用于在Ubuntu环境下编译https://github.com/garypang13/Actions-OpenWrt"
+echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/garypang13/Actions-OpenWrt"
 echo
 echo
 sleep 2s
 sudo apt-get update
 sudo apt-get upgrade
 
-sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl
+sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl screen
 
 
 
@@ -27,7 +27,7 @@ echo
 echo
 
 
-if [ "$USER" = "root" ]; then
+if [ "$USER" == "root" ]; then
 	echo
 	echo
 	echo "请勿使用root用户编译，换一个普通用户吧~~"
@@ -85,6 +85,13 @@ case $CHOOSE in
 
 esac
 done
+
+
+read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
+ip=${ip:-"10.0.0.1"}
+echo "您的后台地址为: $ip"
+
+
 if [ -f "common/feeds.conf" ]; then
         (
           mv common/feeds.conf ./
@@ -95,7 +102,6 @@ if [ -f "$firmware/feeds.conf" ]; then
           mv $firmware/feeds.conf ./
         )
 fi
-./scripts/feeds update -a
 if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
 	cp -rf common/files files
 fi
@@ -115,10 +121,12 @@ if [ -f "$firmware/diy.sh" ]; then
 	)
 fi
 if [ -f "common/default-settings" ]; then
+	sed -i 's/10.0.0.1/$ip/' common/default-settings
 	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -f "$firmware/default-settings" ]; then
-	cp -f $firmware/default-settings package/*/*/default-settings/files/zzz-default-settings
+	sed -i 's/10.0.0.1/$ip/' $firmware/default-settings
+	cat -f $firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
 	cp -Rf common/diy/* ./
@@ -137,7 +145,7 @@ make menuconfig
 echo
 echo
 echo
-echo "                      *****6秒后开始编译*****
+echo "                      *****5秒后开始编译*****
 
 1.你可以随时按Ctrl+C停止编译
 
@@ -145,9 +153,7 @@ echo "                      *****6秒后开始编译*****
 echo
 echo
 echo
-echo
-sleep 6s
-
+sleep 5s
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 
@@ -155,7 +161,7 @@ echo "
 
 编译完成~~~
 
-后台地址: 10.0.0.1
-默认用户名密码: root  root
+初始后台地址: $ip
+初始用户名密码: root  root
 
 "
