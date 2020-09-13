@@ -7,6 +7,7 @@ rm -Rf feeds/packages/net/miniupnpd
 mv -f feeds/packages/libs/libx264 package/feeds/custom/libx264
 mv -f feeds/packages/net/aria2 package/feeds/custom/aria2
 mv -f feeds/packages/admin/netdata package/feeds/custom/netdata
+rm -Rf feeds/packages/net/smartdns
 
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
