@@ -46,7 +46,6 @@ function opkgupgrade() {
 							rm /etc/config/*-opkg
 							source /etc/profile.d/opkginstall.sh
 							opkg install >/dev/null 2>&1
-							rm -f /var/lock/opkg.lock
 							touch /etc/inited
 						}
 					}
@@ -72,12 +71,13 @@ function opkgupgrade() {
 							rm /etc/config/*-opkg
 							source /etc/profile.d/opkginstall.sh
 							opkg install >/dev/null 2>&1
-							rm -f /var/lock/opkg.lock
 						}
 					}
 				fi
+				rm -f /var/lock/opkg.lock
 				break
 			fi
+			rm -f /var/lock/opkg.lock
 		fi
 		sleep 5
 		count=$((count + 1))
