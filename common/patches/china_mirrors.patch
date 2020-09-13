@@ -35,10 +35,10 @@
  			push @mirrors, "https://cdn.kernel.org/pub/$dir";
  			push @mirrors, "https://mirror.rackspace.com/kernel.org/pub/$dir";
  			push @mirrors, "https://download.xs4all.nl/ftp.kernel.org/pub/$dir";
-@@ -244,6 +252,7 @@ sub cleanup
+@@ -244,6 +244,7 @@ sub cleanup
  			push @mirrors, "ftp://www.mirrorservice.org/sites/ftp.kernel.org/pub/$dir";
  		}
-     } elsif ($mirror =~ /^\@GNOME\/(.+)$/) {
+ 	} elsif ($mirror =~ /^\@GNOME\/(.+)$/) {
 +		push @mirrors, "https://mirrors.ustc.edu.cn/gnome/sources/$1";
  		push @mirrors, "https://mirror.csclub.uwaterloo.ca/gnome/sources/$1";
  		push @mirrors, "http://ftp.acc.umu.se/pub/GNOME/sources/$1";
