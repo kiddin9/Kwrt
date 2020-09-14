@@ -40,6 +40,7 @@ function opkgupgrade() {
 								udok=true
 							} || {
 								udok=false
+								rm -f /var/lock/opkg.lock
 							}
 						done
 						[ $udok == true ] && {
@@ -64,6 +65,7 @@ function opkgupgrade() {
 									udok=true
 								} || {
 									udok=false
+									rm -f /var/lock/opkg.lock
 								}
 							}
 						done
