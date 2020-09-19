@@ -7,6 +7,7 @@ mv -f feeds/packages/net/aria2 feeds/custom/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/netdata
 rm -Rf feeds/packages/net/smartdns
 rm -Rf feeds/packages/net/miniupnpd
+rm -Rf feeds/packages/net/mwan3
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 ./scripts/feeds update packages custom
 ./scripts/feeds install -a
