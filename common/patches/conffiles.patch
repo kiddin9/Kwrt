@@ -174,3 +174,15 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
+
+--- package/feeds/custom/vsftpd-alt/Makefile
++++ package/feeds/custom/vsftpd-alt/Makefile
+@@ -33,7 +33,7 @@ define Package/vsftpd-alt/Default
+ endef
+ 
+ define Package/vsftpd-alt/conffiles
+-/etc/vsftpd.conf
++/etc/config/vsftpd.conf
+ endef
+ 
+ #EXTRA_LDFLAGS:= -lcrypt -lcrypto -lssl
