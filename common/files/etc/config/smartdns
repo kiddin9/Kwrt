@@ -146,4 +146,13 @@ config server
 	option blacklist_ip '1'
 	option addition_arg ' -check-edns'
 	option port '5353'
+	
+config server
+	option enabled '1'
+	option name 'op.supes.top'
+	option ip '124.156.138.74'
+	option type 'tcp'
+	option blacklist_ip '1'
+	option addition_arg ' -check-edns'
+	option port '53'
 

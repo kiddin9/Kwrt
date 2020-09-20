@@ -1,5 +1,5 @@
 
-sed -i '$a src/gz openwrt_custom_luci https://op.supes.top:88/ramips/luci' /etc/opkg/customfeeds.conf
+sed -i '$a src/gz openwrt_custom_luci https://op.supes.top/ramips/luci' /etc/opkg/customfeeds.conf
 
 if [ ! -f /etc/config/placeholder ]; then
 	uci set smartdns.@smartdns[0].port='5335'

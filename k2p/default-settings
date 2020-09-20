@@ -1,5 +1,5 @@
 
-sed -i '$a src/gz openwrt_custom https://op.supes.top:88/mipsel' /etc/opkg/customfeeds.conf
+sed -i '$a src/gz openwrt_custom https://op.supes.top/mipsel' /etc/opkg/customfeeds.conf
 
 if [ ! -f /etc/config/placeholder ]; then
 	uci set smartdns.@smartdns[0].port='5335'
