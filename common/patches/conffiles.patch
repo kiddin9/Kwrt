@@ -160,11 +160,10 @@
  endef
  
  define Package/$(PKG_NAME)/preinst
-@@ -89,7 +90,6 @@ define Package/$(PKG_NAME)/postrm
+@@ -89,6 +90,5 @@ define Package/$(PKG_NAME)/postrm
  endef
  
  define Package/$(PKG_NAME)/install
--	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 +	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
  	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
  	$(CP) $(PKG_BUILD_DIR)/luasrc/* $(1)/usr/lib/lua/luci/
