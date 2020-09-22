@@ -160,7 +160,7 @@
  endef
  
  define Package/$(PKG_NAME)/preinst
-@@ -89,6 +90,5 @@ define Package/$(PKG_NAME)/postrm
+@@ -89,6 +90,7 @@ define Package/$(PKG_NAME)/postrm
  endef
  
  define Package/$(PKG_NAME)/install
