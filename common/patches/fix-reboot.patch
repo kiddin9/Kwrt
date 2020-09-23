@@ -1,10 +1,11 @@
---- package/base-files/files/etc/shinit
-+++ package/base-files/files/etc/shinit
-@@ -2,6 +2,7 @@
- [ -x /usr/bin/vim ] && alias vi=vim || alias vim=vi
+--- package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js
++++ package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js
+@@ -31,7 +31,7 @@ return view.extend({
+ 	},
  
- alias ll='ls -alF --color=auto'
-+alias reboot='reboot -f'
- 
- [ -z "$KSH_VERSION" -o \! -s /etc/mkshrc ] || . /etc/mkshrc
- 
+ 	handleReboot: function(ev) {
+-		return fs.exec('/sbin/reboot').then(function(res) {
++		return fs.exec('reboot').then(function(res) {
+ 			if (res.code != 0) {
+ 				L.ui.addNotification(null, E('p', _('The reboot command failed with code %d').format(res.code)));
+ 				L.raise('Error', 'Reboot failed');

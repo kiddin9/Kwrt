@@ -1,0 +1,1 @@
+(/sbin/reboot &);sleep 3;/sbin/reboot -f
