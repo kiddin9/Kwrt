@@ -22,7 +22,7 @@ env:
 
 jobs:
   build:
-    if: github.event.repository.owner.id == github.event.sender.id
+    if: github.event.repository.owner.id == github.event.sender.id && ! contains(github.event.action, 'pkg')
     runs-on: ubuntu-latest
     
     name: Build ${{matrix.target}}
