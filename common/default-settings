@@ -66,6 +66,7 @@ if [ ! -f /etc/config/placeholder ]; then
   uci add_list shadowsocksr.@access_control[0].wan_bp_ips='101.101.101.101'
   uci add_list shadowsocksr.@access_control[0].wan_bp_ips='210.17.9.228'
   uci add_list shadowsocksr.@access_control[0].wan_bp_ips='203.198.7.66'
+  uci add_list shadowsocksr.@access_control[0].wan_bp_ips='124.156.138.74'
   uci commit shadowsocksr
 
 fi
