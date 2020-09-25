@@ -27,7 +27,7 @@ dns:
   refuse_any: true
   upstream_dns:
   - 127.0.0.1:5555
-  - tcp://124.156.138.74
+  - https://dns.supes.top/dns-query
   - https://cloudflare-dns.com/dns-query
   - https://dns.google/dns-query
   - https://dns10.quad9.net/dns-query
