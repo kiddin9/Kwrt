@@ -220,7 +220,7 @@ jobs:
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avzr"
-        SOURCE: ${{ env.FIRMWARE }}/
+        SOURCE: firmware/
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/firmware/${{ env.DEVICE_NAME }}/"
