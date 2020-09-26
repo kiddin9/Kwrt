@@ -231,6 +231,7 @@ jobs:
 
     - name: Deploy files to server
       uses: easingthemes/ssh-deploy@master
+      continue-on-error: true
       if: env.SSH_PRIVATE_KEY
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -255,9 +256,9 @@ jobs:
             
             腾讯云: https://op.supes.top/firmware/${{ env.DEVICE_NAME }}/ ☁
             
-            奶牛快传: ${{ env.COWURL }} 🚀
-            
             WeTransfer: ${{ env.WETRANS }} 🗽
+            
+            奶牛快传: ${{ env.COWURL }} 🚀
             
             ${{ env.NOTICE }}
             
