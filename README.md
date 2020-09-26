@@ -30,10 +30,7 @@
 
 + 性能,友好度,易用性,插件,以及针对国内特殊环境等的自定义优化
 
-+ uhttpd替换为nginx,大大增加可玩性(只针对X64设备):
-     + Nginx+PHP+MariaDB, 用于搭建FileRun,可道云等云盘,建站等.
-     + 通过nginx实现Webdav 自建共享同步网盘神器
-     + nginx反向代理 实现后台每个页面与服务都可通过自定义域名访问
++ uhttpd替换为nginx,大大增加可玩性,比如建站,文件服务器,Webdav,反向代理,端口复用...
 
 + 内置AdguardHome搭配SmartDNS综合优化方案, 开箱即用,实现恶意网站过滤+区分国内外域名解析加速+ 防污染+ DNS优选 (需在后台安装luci-app-adguardhome和luci-app-smartdns,K2P只需安装luci-app-smartdns)
 
@@ -41,9 +38,9 @@
 
 + 持续更新,  每周日零点定时自动云编译更新固件,不用再担心因停更而需更换固件.
 
-+ SSL兼容,可同时使用http IP访问和绑定域名开启https访问(只针对X64设备)
++ SSL兼容,可同时使用http IP访问和绑定域名开启https访问
 
-固件下载 [Releases](https://github.com/garypang13/Actions-OpenWrt-Nginx/releases),每周日更新固件.
+固件下载 [腾讯云](https://op.supes.top/firmware/),每周日更新固件.
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
 
