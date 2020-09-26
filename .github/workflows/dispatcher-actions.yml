@@ -218,7 +218,7 @@ jobs:
       if: env.SSH_PRIVATE_KEY
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr --delete"
+        ARGS: "-avzr"
         SOURCE: ${{ env.FIRMWARE }}
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
@@ -247,9 +247,11 @@ jobs:
         body: |
             墙内加速下载🔥:
             
+            腾讯云: https://op.supes.top/Firmware/${{ env.DEVICE_NAME }}/ ☁
+            
             奶牛快传: ${{ env.COWURL }} 🚀
             
-            WeTransfer: ${{ env.WETRANS }} ${{ env.EMOJI }}
+            WeTransfer: ${{ env.WETRANS }} 🗽
             
             ${{ env.NOTICE }}
             
