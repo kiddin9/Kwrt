@@ -1,5 +1,5 @@
 
-sed -i '$a src/gz openwrt_custom_luci https://op.supes.top/ramips/luci' /etc/opkg/customfeeds.conf
+sed -i '$a src/gz openwrt_custom_luci https://op.supes.top/packages/ramips/luci' /etc/opkg/customfeeds.conf
 
 touch /etc/config/placeholder
 
