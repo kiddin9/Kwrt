@@ -12,8 +12,8 @@ on:
   # push: 
   #   branches:
   #     - master
-  # schedule:
-  #  - cron: 0 16 * * 6
+  schedule:
+    - cron: 0 14 * * 6
   watch:
     types: started
 
@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64]
+        target: [x86_64,k2p,redmi_ac2100]
         
     steps:
     - name: Checkout
