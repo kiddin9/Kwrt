@@ -31,7 +31,6 @@ function opkgupgrade() {
 			opkg update
 			if [ "$?" == "0" ]; then
 				if [ ! -f /etc/inited ]; then
-					cp -r /etc/config /etc/confbak
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
@@ -56,6 +55,8 @@ function opkgupgrade() {
 					\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
 					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
+					echo "luci-app-ssr-plus" >> /etc/backup/installed_packages.txt
+					echo "luci-app-turboacc" >> /etc/backup/installed_packages.txt
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						opkg list-upgradable >/tmp/list-upgradable
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
