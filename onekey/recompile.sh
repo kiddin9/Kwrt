@@ -18,8 +18,8 @@ echo
 
 clear
 
-#rm -Rf Actions-OpenWrt && git clone https://github.com/garypang13/Actions-OpenWrt
-#cp -Rf Actions-OpenWrt/* openwrt/
+rm -Rf Actions-OpenWrt openwwrt/common openwrt/files && git clone https://github.com/garypang13/Actions-OpenWrt
+cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
 
 [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && {
