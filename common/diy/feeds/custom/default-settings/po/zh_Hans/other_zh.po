@@ -60,3 +60,9 @@ msgstr "备注"
 
 msgid "Retain the current packages"
 msgstr "保留已安装软件包"
+
+msgid "Packet Steering"
+msgstr "数据包引导"
+
+msgid "Enable packet steering across all CPUs. May help or hinder network speed."
+msgstr "启用所有CPU的数据包控制。 可能有助于或阻碍网络速度。"

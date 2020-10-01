@@ -71,6 +71,9 @@ if [ ! -f /etc/config/placeholder ]; then
   uci add_list shadowsocksr.@access_control[0].wan_bp_ips='124.156.138.74'
   uci commit shadowsocksr
 
+  uci set network.@globals[0].packet_steering=1
+  uci commit network
+
 fi
 
 if [ -f /etc/config/jia ]; then
