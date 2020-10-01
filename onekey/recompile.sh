@@ -18,8 +18,8 @@ echo
 
 clear
 
-#rm -Rf Actions-OpenWrt && git clone https://github.com/garypang13/Actions-OpenWrt
-#cp -Rf Actions-OpenWrt/* openwrt/
+rm -Rf Actions-OpenWrt openwwrt/common openwrt/files && git clone https://github.com/garypang13/Actions-OpenWrt
+cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
 
 [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && {
@@ -49,7 +49,7 @@ read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
 ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 
-rm -Rf feeds package/feeds files tmp
+rm -Rf feeds package/feeds tmp
 [ -f ".config" ] && mv .config .config.bak
 git fetch --all
 git reset --hard origin/master

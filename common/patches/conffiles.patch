@@ -188,7 +188,7 @@
  
  define Package/vsftpd-alt/conffiles
 -/etc/vsftpd.conf
-+/etc/config/vsftpd.conf
++/etc/config/vsftpd
  endef
  
  #EXTRA_LDFLAGS:= -lcrypt -lcrypto -lssl
