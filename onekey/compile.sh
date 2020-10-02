@@ -52,9 +52,11 @@ echo "
 
 3. RedMi_AC2100
 
-4. 自定义
+4. r2s
 
-5. Exit
+5. 自定义
+
+6. Exit
 
 "
 
@@ -76,11 +78,15 @@ case $CHOOSE in
 	break
 	;;
 	4)
+		firmware="r2s"
+	break
+	;;
+	5)
 		firmware="other"
 		make menuconfig
 	break
 	;;
-	5)	exit 0
+	6)	exit 0
 	;;
 
 esac

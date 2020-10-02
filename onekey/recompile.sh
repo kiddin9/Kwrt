@@ -39,6 +39,10 @@ elif [ $firmware == "x86_64" ]; then
         (
 	firmware="x86_64"
         )
+elif [ $firmware == "friendlyarm_nanopi-r2s" ]; then
+        (
+	firmware="r2s"
+        )
 else
 		firmware="other"
 		make menuconfig

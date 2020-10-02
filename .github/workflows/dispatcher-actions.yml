@@ -141,6 +141,7 @@ jobs:
         make defconfig
         [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
         DEVICE_NAME=`echo ${DEVICE_NAME/xiaomi_redmi-router/redmi}`
+        DEVICE_NAME=`echo ${DEVICE_NAME/friendlyarm_nanopi-r2s/nanopi-r2s}`
         echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
         
     - name: Default PPPOE Setting
@@ -189,6 +190,7 @@ jobs:
         mv sha256sums ${{matrix.target}}_sha256sums
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *combined*
         rename -v "s/xiaomi_redmi-router/redmi/" *bin
+        rename -v "s/friendlyarm_nanopi-r2s/nanopi-r2s/" *gz
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *bin
         echo "::set-env name=FIRMWARE::$PWD"
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")

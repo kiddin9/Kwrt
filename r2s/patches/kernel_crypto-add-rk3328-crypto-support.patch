@@ -1,0 +1,29 @@
+From 7662626ba699090aa3ec98e9d406e7b056703438 Mon Sep 17 00:00:00 2001
+From: CN_SZTL <cnsztl@project-openwrt.eu.org>
+Date: Sun, 19 Jul 2020 18:02:52 +0800
+Subject: [PATCH] kernel/crypto: add rk3328 crypto support
+
+Signed-off-by: CN_SZTL <cnsztl@project-openwrt.eu.org>
+---
+ package/kernel/linux/modules/crypto.mk | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/package/kernel/linux/modules/crypto.mk b/package/kernel/linux/modules/crypto.mk
+index 48777764a8..2e71bb3e75 100644
+--- a/package/kernel/linux/modules/crypto.mk
++++ b/package/kernel/linux/modules/crypto.mk
+@@ -842,3 +843,14 @@ endef
+ 
+ $(eval $(call KernelPackage,crypto-xts))
+ 
++
++define KernelPackage/crypto-rk3328
++  TITLE:=Rockchip RK3328 CryptoAPI module
++  DEPENDS:=@TARGET_rockchip +kmod-crypto-des +kmod-crypto-md5 +kmod-crypto-sha1 +kmod-crypto-sha256
++  KCONFIG:=CONFIG_CRYPTO_DEV_ROCKCHIP
++  FILES:=$(LINUX_DIR)/drivers/crypto/rockchip/rk_crypto.ko
++  AUTOLOAD:=$(call AutoLoad,09,rk_crypto)
++  $(call AddDepends/crypto)
++endef
++
++$(eval $(call KernelPackage,crypto-rk3328))
