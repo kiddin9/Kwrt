@@ -72,7 +72,6 @@ find package/*/custom/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh
 sed -i "/po2lmo /d" package/*/custom/*/Makefile
 sed -i "/luci\/i18n/d" package/*/custom/*/Makefile
 sed -i "/*\.po/d" package/*/custom/*/Makefile
-sed -i "s/+luci\( \|$\)//g"  package/*/*/*/Makefile
 sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
 find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
