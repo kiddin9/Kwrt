@@ -17,8 +17,8 @@ Signed-off-by: wevsty <ty@wevs.org>
  create mode 100644 target/linux/rockchip/patches-5.4/015-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch
 
 diff -rNEZbwBdu3 a/target/linux/rockchip/armv8/config-5.4 b/target/linux/rockchip/armv8/config-5.4
---- a/target/linux/rockchip/armv8/config-5.4	2020-08-27 16:16:43.088264763 +0800
-+++ b/target/linux/rockchip/armv8/config-5.4	2020-08-27 16:20:13.937869695 +0800
+--- target/linux/rockchip/armv8/config-5.4	2020-08-27 16:16:43.088264763 +0800
++++ target/linux/rockchip/armv8/config-5.4	2020-08-27 16:20:13.937869695 +0800
 @@ -182,6 +182,8 @@
  CONFIG_HWMON=y
  CONFIG_HWSPINLOCK=y
@@ -29,8 +29,8 @@ diff -rNEZbwBdu3 a/target/linux/rockchip/armv8/config-5.4 b/target/linux/rockchi
  CONFIG_I2C=y
  CONFIG_I2C_ALGOBIT=y
 diff -rNEZbwBdu3 a/target/linux/rockchip/patches-5.4/012-rockchip-hardware-random-dev-support.patch b/target/linux/rockchip/patches-5.4/012-rockchip-hardware-random-dev-support.patch
---- a/target/linux/rockchip/patches-5.4/012-rockchip-hardware-random-dev-support.patch	1970-01-01 08:00:00.000000000 +0800
-+++ b/target/linux/rockchip/patches-5.4/012-rockchip-hardware-random-dev-support.patch	2020-08-27 16:19:22.785477444 +0800
+--- target/linux/rockchip/patches-5.4/012-rockchip-hardware-random-dev-support.patch	1970-01-01 08:00:00.000000000 +0800
++++ target/linux/rockchip/patches-5.4/012-rockchip-hardware-random-dev-support.patch	2020-08-27 16:19:22.785477444 +0800
 @@ -0,0 +1,385 @@
 +From: wevsty <ty@wevs.org>
 +Subject: Support for rockchip hardware random number generator
@@ -418,8 +418,8 @@ diff -rNEZbwBdu3 a/target/linux/rockchip/patches-5.4/012-rockchip-hardware-rando
 + obj-$(CONFIG_HW_RANDOM_MESON) += meson-rng.o
 + obj-$(CONFIG_HW_RANDOM_CAVIUM) += cavium-rng.o cavium-rng-vf.o
 diff -rNEZbwBdu3 a/target/linux/rockchip/patches-5.4/013-rockchip-add-hardware-rng-for-RK3328.patch b/target/linux/rockchip/patches-5.4/013-rockchip-add-hardware-rng-for-RK3328.patch
---- a/target/linux/rockchip/patches-5.4/013-rockchip-add-hardware-rng-for-RK3328.patch	1970-01-01 08:00:00.000000000 +0800
-+++ b/target/linux/rockchip/patches-5.4/013-rockchip-add-hardware-rng-for-RK3328.patch	2020-08-27 16:19:22.785477444 +0800
+--- target/linux/rockchip/patches-5.4/013-rockchip-add-hardware-rng-for-RK3328.patch	1970-01-01 08:00:00.000000000 +0800
++++ target/linux/rockchip/patches-5.4/013-rockchip-add-hardware-rng-for-RK3328.patch	2020-08-27 16:19:22.785477444 +0800
 @@ -0,0 +1,28 @@
 +From: wevsty <ty@wevs.org>
 +Subject: Add hardware random number generator for RK3328
@@ -450,8 +450,8 @@ diff -rNEZbwBdu3 a/target/linux/rockchip/patches-5.4/013-rockchip-add-hardware-r
 + 		compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
 + 		reg = <0x0 0xff100000 0x0 0x1000>;
 diff -rNEZbwBdu3 a/target/linux/rockchip/patches-5.4/014-rockchip-add-hardware-rng-for-RK3399.patch b/target/linux/rockchip/patches-5.4/014-rockchip-add-hardware-rng-for-RK3399.patch
---- a/target/linux/rockchip/patches-5.4/014-rockchip-add-hardware-rng-for-RK3399.patch	1970-01-01 08:00:00.000000000 +0800
-+++ b/target/linux/rockchip/patches-5.4/014-rockchip-add-hardware-rng-for-RK3399.patch	2020-08-27 16:19:22.785477444 +0800
+--- target/linux/rockchip/patches-5.4/014-rockchip-add-hardware-rng-for-RK3399.patch	1970-01-01 08:00:00.000000000 +0800
++++ target/linux/rockchip/patches-5.4/014-rockchip-add-hardware-rng-for-RK3399.patch	2020-08-27 16:19:22.785477444 +0800
 @@ -0,0 +1,27 @@
 +From: wevsty <ty@wevs.org>
 +Subject: Add hardware random number generator for RK3399
@@ -481,8 +481,8 @@ diff -rNEZbwBdu3 a/target/linux/rockchip/patches-5.4/014-rockchip-add-hardware-r
 + 		compatible = "rockchip,rk3399-mali", "arm,mali-t860";
 + 		reg = <0x0 0xff9a0000 0x0 0x10000>;
 diff -rNEZbwBdu3 a/target/linux/rockchip/patches-5.4/015-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/015-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch
---- a/target/linux/rockchip/patches-5.4/015-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch	1970-01-01 08:00:00.000000000 +0800
-+++ b/target/linux/rockchip/patches-5.4/015-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch	2020-08-27 16:19:22.785477444 +0800
+--- target/linux/rockchip/patches-5.4/015-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch	1970-01-01 08:00:00.000000000 +0800
++++ target/linux/rockchip/patches-5.4/015-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch	2020-08-27 16:19:22.785477444 +0800
 @@ -0,0 +1,17 @@
 +From: wevsty <ty@wevs.org>
 +Subject: Enable hardware random number generator for RK3328
