@@ -1,6 +1,4 @@
 
-sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
-
 if [ ! -f /etc/config/placeholder ]; then
 	uci set smartdns.@smartdns[0].port='5335'
 	uci set smartdns.@smartdns[0].redirect='dnsmasq-upstream'
@@ -8,5 +6,12 @@ if [ ! -f /etc/config/placeholder ]; then
 fi
 
 touch /etc/config/placeholder
+
+sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
+
+uci set uhttpd.main.rfc1918_filter=0
+uci set uhttpd.main.redirect_https=0
+uci commit uhttpd
+/etc/init.d/uhttpd restart
 
 exit 0
