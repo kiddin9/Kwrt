@@ -16,8 +16,8 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 
 diff --git a/target/linux/rockchip/patches-5.4/001-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch b/target/linux/rockchip/patches-5.4/001-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
 index 904a2f31b6b..69ee8a7c3a4 100644
---- a/target/linux/rockchip/patches-5.4/001-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
-+++ b/target/linux/rockchip/patches-5.4/001-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
+--- target/linux/rockchip/patches-5.4/001-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
++++ target/linux/rockchip/patches-5.4/001-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
 @@ -1,4 +1,4 @@
 -From 749cbb7b1a4bc2244b6af8cd7d8b471d4e33c80f Mon Sep 17 00:00:00 2001
 +From 0720be5371c806c1b89936984a321248fa739bea Mon Sep 17 00:00:00 2001
@@ -34,11 +34,11 @@ index 904a2f31b6b..69ee8a7c3a4 100644
 + 2 files changed, 369 insertions(+)
   create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
  
- --- a/arch/arm64/boot/dts/rockchip/Makefile
+ --- arch/arm64/boot/dts/rockchip/Makefile
 @@ -33,7 +33,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
  --- /dev/null
- +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ +++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -0,0 +1,334 @@
 +@@ -0,0 +1,368 @@
  +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
@@ -486,12 +486,12 @@ index 904a2f31b6b..69ee8a7c3a4 100644
  +&usb_host0_ehci {
 diff --git a/target/linux/rockchip/patches-5.4/100-rockchip-use-system-LED-for-OpenWrt.patch b/target/linux/rockchip/patches-5.4/100-rockchip-use-system-LED-for-OpenWrt.patch
 index 1250dbcd9b4..7f9af85b1d3 100644
---- a/target/linux/rockchip/patches-5.4/100-rockchip-use-system-LED-for-OpenWrt.patch
-+++ b/target/linux/rockchip/patches-5.4/100-rockchip-use-system-LED-for-OpenWrt.patch
+--- target/linux/rockchip/patches-5.4/100-rockchip-use-system-LED-for-OpenWrt.patch
++++ target/linux/rockchip/patches-5.4/100-rockchip-use-system-LED-for-OpenWrt.patch
 @@ -15,26 +15,17 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
- +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ --- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ +++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -17,6 +17,13 @@
 - 		stdout-path = "serial2:1500000n8";
 - 	};
@@ -527,12 +527,12 @@ index 1250dbcd9b4..7f9af85b1d3 100644
 + 	};
 diff --git a/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
 index e2aa2d67e69..20d18597dba 100644
---- a/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
-+++ b/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
+--- target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
++++ target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
 @@ -13,8 +13,8 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
- +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ --- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ +++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -68,6 +68,18 @@
 - 		regulator-max-microvolt = <5000000>;
 +@@ -44,6 +44,18 @@
@@ -566,12 +566,12 @@ index e2aa2d67e69..20d18597dba 100644
   };
 diff --git a/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
 index 3b97ecde9e0..473c265016a 100644
---- a/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
-+++ b/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
+--- target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
++++ target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
 @@ -14,7 +14,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
- +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ --- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ +++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -365,4 +365,11 @@
 +@@ -399,4 +399,11 @@
   &usbdrd_dwc3 {
@@ -600,7 +600,7 @@ diff --git a/target/linux/rockchip/patches-5.4/005-rockchip-rk3328-add-compatibl
 new file mode 100644
 index 00000000000..5d2574200c4
 --- /dev/null
-+++ b/target/linux/rockchip/patches-5.4/005-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
++++ target/linux/rockchip/patches-5.4/005-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
 @@ -0,0 +1,25 @@
 +From bc6c96d850419e71dbc9b0094ccc9b668ba9be43 Mon Sep 17 00:00:00 2001
 +From: David Bauer <mail@david-bauer.net>
@@ -616,8 +616,8 @@ index 00000000000..5d2574200c4
 + arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts | 2 ++
 + 1 file changed, 2 insertions(+)
 +
-+--- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-++++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
++--- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+++++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 +@@ -134,6 +134,8 @@
 + 		#size-cells = <0>;
 + 
@@ -629,8 +629,8 @@ index 00000000000..5d2574200c4
 + 			pinctrl-names = "default";
 diff --git a/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
 index 20d18597dba..243c1ac78d7 100644
---- a/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
-+++ b/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
+--- target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
++++ target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
 @@ -32,7 +32,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
   	leds {
   		compatible = "gpio-leds";
@@ -651,12 +651,12 @@ index 20d18597dba..243c1ac78d7 100644
   };
 diff --git a/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
 index 473c265016a..e318f3136fe 100644
---- a/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
-+++ b/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
+--- target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
++++ target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
 @@ -14,7 +14,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
- +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ --- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ +++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -399,4 +399,11 @@
 +@@ -401,4 +401,11 @@
   &usbdrd_dwc3 {
@@ -682,8 +682,8 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 
 diff --git a/package/boot/uboot-rockchip/Makefile b/package/boot/uboot-rockchip/Makefile
 index e5c49d00bb8..1dbdcb531f2 100644
---- a/package/boot/uboot-rockchip/Makefile
-+++ b/package/boot/uboot-rockchip/Makefile
+--- package/boot/uboot-rockchip/Makefile
++++ package/boot/uboot-rockchip/Makefile
 @@ -6,6 +6,7 @@ include $(TOPDIR)/rules.mk
  include $(INCLUDE_DIR)/kernel.mk
  
@@ -694,8 +694,8 @@ index e5c49d00bb8..1dbdcb531f2 100644
  
 diff --git a/package/boot/uboot-rockchip/patches/100-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch b/package/boot/uboot-rockchip/patches/100-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
 index bc65fb69ef7..ddda1469359 100644
---- a/package/boot/uboot-rockchip/patches/100-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
-+++ b/package/boot/uboot-rockchip/patches/100-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
+--- package/boot/uboot-rockchip/patches/100-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
++++ package/boot/uboot-rockchip/patches/100-rockchip-rk3328-Add-support-for-FriendlyARM-NanoPi-R.patch
 @@ -1,4 +1,4 @@
 -From 67f4c228c2bf515386cd54073104dc2e6eae85ea Mon Sep 17 00:00:00 2001
 +From 64d37d74519eb5d4dcff8e9164d18f524aa72c8d Mon Sep 17 00:00:00 2001
@@ -720,7 +720,7 @@ index bc65fb69ef7..ddda1469359 100644
 @@ -38,7 +38,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
   	rk3328-rock-pi-e.dtb
  --- /dev/null
- +++ b/arch/arm/dts/rk3328-nanopi-r2s-u-boot.dtsi
+ +++ arch/arm/dts/rk3328-nanopi-r2s-u-boot.dtsi
 -@@ -0,0 +1,34 @@
 +@@ -0,0 +1,40 @@
  +// SPDX-License-Identifier: GPL-2.0+
@@ -737,7 +737,7 @@ index bc65fb69ef7..ddda1469359 100644
 ++	snps,reset-delays-us = <0 10000 50000>;
 ++};
  --- /dev/null
- +++ b/arch/arm/dts/rk3328-nanopi-r2s.dts
+ +++ arch/arm/dts/rk3328-nanopi-r2s.dts
 -@@ -0,0 +1,334 @@
 +@@ -0,0 +1,387 @@
  +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
@@ -1203,13 +1203,13 @@ index bc65fb69ef7..ddda1469359 100644
  +	status = "okay";
  +};
 ++
- --- a/board/rockchip/evb_rk3328/MAINTAINERS
- +++ b/board/rockchip/evb_rk3328/MAINTAINERS
+ --- board/rockchip/evb_rk3328/MAINTAINERS
+ +++ board/rockchip/evb_rk3328/MAINTAINERS
  @@ -5,6 +5,13 @@ F:      board/rockchip/evb_rk3328
 diff --git a/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-platdata.c b/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-platdata.c
 index fa42c1a7609..a7c57e72c2a 100644
---- a/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-platdata.c
-+++ b/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-platdata.c
+--- package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-platdata.c
++++ package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-platdata.c
 @@ -19,7 +19,7 @@ U_BOOT_DEVICE(syscon_at_ff100000) = {
  
  static const struct dtd_rockchip_rk3328_cru dtv_clock_controller_at_ff440000 = {
@@ -1269,8 +1269,8 @@ index fa42c1a7609..a7c57e72c2a 100644
  	.regulator_name		= "vcc_sd",
 diff --git a/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-structs-gen.h b/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-structs-gen.h
 index 88291627b8c..499ddb78a4b 100644
---- a/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-structs-gen.h
-+++ b/package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-structs-gen.h
+--- package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-structs-gen.h
++++ package/boot/uboot-rockchip/src/of-platdata/nanopi-r2s-rk3328/dt-structs-gen.h
 @@ -10,6 +10,7 @@ struct dtd_regulator_fixed {
  	fdt32_t		gpio[3];
  	fdt32_t		pinctrl_0;
@@ -1346,13 +1346,13 @@ rename to target/linux/rockchip/patches-5.4/002-rockchip-add-hwmon-support-for-S
 diff --git a/target/linux/rockchip/patches-5.4/002-rockchip-rk3328-Enable-i2c0-on-FriendlyARM-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/002-rockchip-rk3328-Enable-i2c0-on-FriendlyARM-NanoPi-R2S.patch
 deleted file mode 100644
 index 2477e7da24a..00000000000
---- a/target/linux/rockchip/patches-5.4/002-rockchip-rk3328-Enable-i2c0-on-FriendlyARM-NanoPi-R2S.patch
+--- target/linux/rockchip/patches-5.4/002-rockchip-rk3328-Enable-i2c0-on-FriendlyARM-NanoPi-R2S.patch
 +++ /dev/null
 @@ -1,15 +0,0 @@
 -From: QiuSimons
 -diff --git a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
----- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
--+++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+---- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+-+++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -226,6 +226,10 @@
 - 	};
 - };
@@ -1368,7 +1368,7 @@ diff --git a/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-c
 new file mode 100644
 index 00000000000..ead32d360e4
 --- /dev/null
-+++ b/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
++++ target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
 @@ -0,0 +1,44 @@
 +From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 +From: Leonidas P. Papadakos <papadakospan@gmail.com>
@@ -1390,8 +1390,8 @@ index 00000000000..ead32d360e4
 + arch/arm64/boot/dts/rockchip/rk3328.dtsi | 15 +++++++++++++++
 + 1 files changed, 15 insertions(+)
 +
-+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++--- arch/arm64/boot/dts/rockchip/rk3328.dtsi
+++++ arch/arm64/boot/dts/rockchip/rk3328.dtsi
 +@@ -123,6 +123,21 @@
 + 			opp-microvolt = <1300000>;
 + 			clock-latency-ns = <40000>;
@@ -1417,12 +1417,12 @@ index 00000000000..ead32d360e4
 diff --git a/target/linux/rockchip/patches-5.4/003-rockchip-rk3328-allow-higher-frequency.patch b/target/linux/rockchip/patches-5.4/003-rockchip-rk3328-allow-higher-frequency.patch
 deleted file mode 100644
 index 576e462152c..00000000000
---- a/target/linux/rockchip/patches-5.4/003-rockchip-rk3328-allow-higher-frequency.patch
+--- target/linux/rockchip/patches-5.4/003-rockchip-rk3328-allow-higher-frequency.patch
 +++ /dev/null
 @@ -1,20 +0,0 @@
 -From: QiuSimons
----- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
--+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+---- arch/arm64/boot/dts/rockchip/rk3328.dtsi
+-+++ arch/arm64/boot/dts/rockchip/rk3328.dtsi
 -@@ -123,6 +123,16 @@
 - 			opp-microvolt = <1300000>;
 - 			clock-latency-ns = <40000>;
@@ -1442,12 +1442,12 @@ index 576e462152c..00000000000
 - 	amba {
 diff --git a/target/linux/rockchip/patches-5.4/004-arm64-dts-rockchip-Add-txpbl-node-for-RK3399-RK3328.patch b/target/linux/rockchip/patches-5.4/004-arm64-dts-rockchip-Add-txpbl-node-for-RK3399-RK3328.patch
 index 8931d5c5a9a..cc90bad6914 100644
---- a/target/linux/rockchip/patches-5.4/004-arm64-dts-rockchip-Add-txpbl-node-for-RK3399-RK3328.patch
-+++ b/target/linux/rockchip/patches-5.4/004-arm64-dts-rockchip-Add-txpbl-node-for-RK3399-RK3328.patch
+--- target/linux/rockchip/patches-5.4/004-arm64-dts-rockchip-Add-txpbl-node-for-RK3399-RK3328.patch
++++ target/linux/rockchip/patches-5.4/004-arm64-dts-rockchip-Add-txpbl-node-for-RK3399-RK3328.patch
 @@ -26,7 +26,7 @@ Signed-off-by: Heiko Stuebner <heiko@sntech.de>
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
- +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+ --- arch/arm64/boot/dts/rockchip/rk3328.dtsi
+ +++ arch/arm64/boot/dts/rockchip/rk3328.dtsi
 -@@ -857,6 +857,7 @@
 +@@ -872,6 +872,7 @@
   		resets = <&cru SRST_GMAC2IO_A>;
@@ -1466,7 +1466,7 @@ diff --git a/target/linux/rockchip/patches-5.4/005-arm64-dts-rockchip-Add-RK3328
 new file mode 100644
 index 00000000000..a65f04011c1
 --- /dev/null
-+++ b/target/linux/rockchip/patches-5.4/005-arm64-dts-rockchip-Add-RK3328-idle-state.patch
++++ target/linux/rockchip/patches-5.4/005-arm64-dts-rockchip-Add-RK3328-idle-state.patch
 @@ -0,0 +1,74 @@
 +From 4f279f9fbca54464173240f7e73b145a136dfa1e Mon Sep 17 00:00:00 2001
 +From: Robin Murphy <robin.murphy@arm.com>
@@ -1486,8 +1486,8 @@ index 00000000000..a65f04011c1
 +
 +diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
 +index 91306ebed4da2..c9ff1188bd7b1 100644
-+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++--- arch/arm64/boot/dts/rockchip/rk3328.dtsi
+++++ arch/arm64/boot/dts/rockchip/rk3328.dtsi
 +@@ -41,6 +41,7 @@
 + 			reg = <0x0 0x0>;
 + 			clocks = <&cru ARMCLK>;
@@ -1556,12 +1556,12 @@ rename from target/linux/rockchip/patches-5.4/006-dt-bindings-net-add-RTL8152-bi
 rename to target/linux/rockchip/patches-5.4/008-dt-bindings-net-add-RTL8152-binding-documentation.patch
 diff --git a/target/linux/rockchip/patches-5.4/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch b/target/linux/rockchip/patches-5.4/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
 index 2635c7a6766..f6d5f518ec9 100644
---- a/target/linux/rockchip/patches-5.4/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
-+++ b/target/linux/rockchip/patches-5.4/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
+--- target/linux/rockchip/patches-5.4/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
++++ target/linux/rockchip/patches-5.4/101-dts-rockchip-add-usb3-controller-node-for-RK3328-SoCs.patch
 @@ -26,7 +26,7 @@ use-case. You've been warned.
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
- +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+ --- arch/arm64/boot/dts/rockchip/rk3328.dtsi
+ +++ arch/arm64/boot/dts/rockchip/rk3328.dtsi
 -@@ -938,6 +938,33 @@
 +@@ -970,6 +970,33 @@
   		status = "disabled";
@@ -1569,8 +1569,8 @@ index 2635c7a6766..f6d5f518ec9 100644
   
 diff --git a/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
 index 243c1ac78d7..aa8f72e84b8 100644
---- a/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
-+++ b/target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
+--- target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
++++ target/linux/rockchip/patches-5.4/102-rockchip-enable-LAN-port-on-NanoPi-R2S.patch
 @@ -1,4 +1,4 @@
 -From 0fc3b9b7619c4878f73a6a7989863f0d1a3fd392 Mon Sep 17 00:00:00 2001
 +From 7cde8541d04e0ade5d126bdada3cf0c0429eaa99 Mon Sep 17 00:00:00 2001
@@ -1579,8 +1579,8 @@ index 243c1ac78d7..aa8f72e84b8 100644
  Subject: [PATCH] rockchip: enabled LAN port on NanoPi R2S
 @@ -13,10 +13,11 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
- +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ --- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ +++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -44,6 +44,18 @@
 - 		};
 +@@ -103,6 +103,18 @@
@@ -1623,12 +1623,12 @@ index 243c1ac78d7..aa8f72e84b8 100644
   };
 diff --git a/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch b/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
 index e318f3136fe..473c265016a 100644
---- a/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
-+++ b/target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
+--- target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
++++ target/linux/rockchip/patches-5.4/103-arm64-rockchip-add-OF-node-for-USB-eth-on-NanoPi-R2S.patch
 @@ -14,7 +14,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
- --- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
- +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ --- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+ +++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 -@@ -401,4 +401,11 @@
 +@@ -399,4 +399,11 @@
   &usbdrd_dwc3 {
@@ -1638,7 +1638,7 @@ diff --git a/target/linux/rockchip/patches-5.4/104-rockchip-rk3328-add-i2c0-cont
 new file mode 100644
 index 00000000000..30dbcc17a40
 --- /dev/null
-+++ b/target/linux/rockchip/patches-5.4/104-rockchip-rk3328-add-i2c0-controller-for-nanopi-r2s.patch
++++ target/linux/rockchip/patches-5.4/104-rockchip-rk3328-add-i2c0-controller-for-nanopi-r2s.patch
 @@ -0,0 +1,22 @@
 +From 3b7eb946b1d640d684a921e53e1e50985ab7eb89 Mon Sep 17 00:00:00 2001
 +From: QiuSimons <45143996+QiuSimons@users.noreply.github.com>
@@ -1649,8 +1649,8 @@ index 00000000000..30dbcc17a40
 + arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts | 4 ++++
 + 1 files changed, 4 insertions(+)
 +
-+--- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-++++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
++--- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+++++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 +@@ -163,6 +163,10 @@
 + 	};
 + };
@@ -1666,7 +1666,7 @@ diff --git a/target/linux/rockchip/patches-5.4/105-char-add-support-for-rockchip
 new file mode 100644
 index 00000000000..196cc00ae2a
 --- /dev/null
-+++ b/target/linux/rockchip/patches-5.4/105-char-add-support-for-rockchip-hardware-random-number.patch
++++ target/linux/rockchip/patches-5.4/105-char-add-support-for-rockchip-hardware-random-number.patch
 @@ -0,0 +1,388 @@
 +From e5b5361651940ff5c0c1784dfd0130abec7ab535 Mon Sep 17 00:00:00 2001
 +From: wevsty <ty@wevs.org>
@@ -1681,8 +1681,8 @@ index 00000000000..196cc00ae2a
 +Signed-off-by: wevsty <ty@wevs.org>
 +---
 +
-+--- a/drivers/char/hw_random/Kconfig
-++++ b/drivers/char/hw_random/Kconfig
++--- drivers/char/hw_random/Kconfig
+++++ drivers/char/hw_random/Kconfig
 +@@ -345,6 +345,19 @@ config HW_RANDOM_STM32
 + 
 + 	  If unsure, say N.
@@ -1704,7 +1704,7 @@ index 00000000000..196cc00ae2a
 + 	tristate "Microchip PIC32 Random Number Generator support"
 + 	depends on HW_RANDOM && MACH_PIC32
 +--- /dev/null
-++++ b/drivers/char/hw_random/rockchip-rng.c
+++++ drivers/char/hw_random/rockchip-rng.c
 +@@ -0,0 +1,340 @@
 ++// SPDX-License-Identifier: GPL-2.0
 ++/*
@@ -2046,8 +2046,8 @@ index 00000000000..196cc00ae2a
 ++MODULE_AUTHOR("Lin Jinhan <troy.lin@rock-chips.com>");
 ++MODULE_LICENSE("GPL v2");
 ++
-+--- a/drivers/char/hw_random/Makefile
-++++ b/drivers/char/hw_random/Makefile
++--- drivers/char/hw_random/Makefile
+++++ drivers/char/hw_random/Makefile
 +@@ -32,6 +32,7 @@ obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) +=
 + obj-$(CONFIG_HW_RANDOM_ST) += st-rng.o
 + obj-$(CONFIG_HW_RANDOM_XGENE) += xgene-rng.o
@@ -2060,7 +2060,7 @@ diff --git a/target/linux/rockchip/patches-5.4/106-arm64-dts-rockchip-add-hardwa
 new file mode 100644
 index 00000000000..aa7c5c39d4c
 --- /dev/null
-+++ b/target/linux/rockchip/patches-5.4/106-arm64-dts-rockchip-add-hardware-random-number-genera.patch
++++ target/linux/rockchip/patches-5.4/106-arm64-dts-rockchip-add-hardware-random-number-genera.patch
 @@ -0,0 +1,50 @@
 +From e5b5361651940ff5c0c1784dfd0130abec7ab535 Mon Sep 17 00:00:00 2001
 +From: wevsty <ty@wevs.org>
@@ -2073,8 +2073,8 @@ index 00000000000..aa7c5c39d4c
 +Signed-off-by: wevsty <ty@wevs.org>
 +---
 +
-+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++--- arch/arm64/boot/dts/rockchip/rk3328.dtsi
+++++ arch/arm64/boot/dts/rockchip/rk3328.dtsi
 +@@ -279,6 +279,17 @@
 + 		status = "disabled";
 + 	};
@@ -2093,8 +2093,8 @@ index 00000000000..aa7c5c39d4c
 + 	grf: syscon@ff100000 {
 + 		compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
 + 		reg = <0x0 0xff100000 0x0 0x1000>;
-+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++--- arch/arm64/boot/dts/rockchip/rk3399.dtsi
+++++ arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +@@ -1879,6 +1879,16 @@
 + 		};
 + 	};
@@ -2116,7 +2116,7 @@ diff --git a/target/linux/rockchip/patches-5.4/107-rockchip-enable-hardware-rng-
 new file mode 100644
 index 00000000000..cab0abeddb2
 --- /dev/null
-+++ b/target/linux/rockchip/patches-5.4/107-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch
++++ target/linux/rockchip/patches-5.4/107-rockchip-enable-hardware-rng-for-NanoPi-R2S.patch
 @@ -0,0 +1,19 @@
 +From e5b5361651940ff5c0c1784dfd0130abec7ab535 Mon Sep 17 00:00:00 2001
 +From: wevsty <ty@wevs.org>
@@ -2127,8 +2127,8 @@ index 00000000000..cab0abeddb2
 +Signed-off-by: wevsty <ty@wevs.org>
 +---
 +
-+--- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-++++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
++--- arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+++++ arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 +@@ -411,3 +411,7 @@
 + 		realtek,led-data = <0x87>;
 + 	};
@@ -2153,8 +2153,8 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 
 diff --git a/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch b/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
 index 5d2574200c4..897a42fea21 100644
---- a/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
-+++ b/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
+--- target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
++++ target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
 @@ -18,7 +18,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
   		#size-cells = <0>;
   
