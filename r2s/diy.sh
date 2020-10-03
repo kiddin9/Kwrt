@@ -6,7 +6,7 @@ wget -O target/linux/rockchip/patches-5.4/002-rockchip-add-hwmon-support-for-SoC
 wget -O target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch https://github.com/project-openwrt/openwrt/raw/master/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
 wget -O target/linux/rockchip/patches-5.4/005-arm64-dts-rockchip-Add-RK3328-idle-state.patch https://github.com/project-openwrt/openwrt/raw/master/target/linux/rockchip/patches-5.4/005-arm64-dts-rockchip-Add-RK3328-idle-state.patch
 wget -O target/linux/rockchip/patches-5.4/104-rockchip-rk3328-add-i2c0-controller-for-nanopi-r2s.patch https://github.com/project-openwrt/openwrt/raw/master/target/linux/rockchip/patches-5.4/104-rockchip-rk3328-add-i2c0-controller-for-nanopi-r2s.patch
-
+wget -O package/boot/uboot-rockchip/patches/101-rockchip-rk3328-fix-nanopi-r2s-failed-to-boot-on-som.patch https://github.com/project-openwrt/openwrt/raw/master/package/boot/uboot-rockchip/patches/101-rockchip-rk3328-fix-nanopi-r2s-failed-to-boot-on-som.patch
 
 sed -i "s,'eth1' 'eth0','eth0' 'eth1',g" target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 sed -i '/;;/i\set_interface_core 8 "ff160000" "ff160000.i2c"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
