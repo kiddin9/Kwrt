@@ -1,5 +1,5 @@
---- scripts/download.pl
-+++ scripts/download.pl
+--- a/scripts/download.pl
++++ b/scripts/download.pl
 @@ -194,6 +194,8 @@ sub cleanup
  			push @mirrors, "https://downloads.sourceforge.net/$1";
  		}

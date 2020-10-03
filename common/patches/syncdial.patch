@@ -1,5 +1,5 @@
---- package/network/services/ppp/Makefile
-+++ package/network/services/ppp/Makefile
+--- a/package/network/services/ppp/Makefile
++++ a/package/network/services/ppp/Makefile
 @@ -39,7 +39,7 @@ endef
  
  define Package/ppp
@@ -10,8 +10,8 @@
    VARIANT:=default
  endef
 
---- package/network/services/ppp/files/ppp.sh
-+++ package/network/services/ppp/files/ppp.sh
+--- a/package/network/services/ppp/files/ppp.sh
++++ a/package/network/services/ppp/files/ppp.sh
 @@ -233,7 +233,15 @@ proto_pppoe_setup() {
  	json_get_var padi_attempts padi_attempts
  	json_get_var padi_timeout padi_timeout

@@ -1,5 +1,5 @@
---- package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js	2020-08-11 17:54:35.854075042 +0800
-+++ package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js	2020-08-17 20:32:46.229218269 +0800
+--- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js	2020-08-11 17:54:35.854075042 +0800
++++ a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js	2020-08-17 20:32:46.229218269 +0800
 @@ -867,6 +867,10 @@
  		o.datatype = 'cidr6';
  

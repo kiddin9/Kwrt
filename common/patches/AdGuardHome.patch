@@ -1,5 +1,5 @@
---- package/feeds/custom/luci-app-adguardhome/root/etc/init.d/AdGuardHome
-+++ package/feeds/custom/luci-app-adguardhome/root/etc/init.d/AdGuardHome
+--- a/package/feeds/custom/luci-app-adguardhome/root/etc/init.d/AdGuardHome
++++ a/package/feeds/custom/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 @@ -28,7 +28,7 @@ set_forward_dnsmasq()
  		if [ "$server" = "$addr" ]; then
  			continue

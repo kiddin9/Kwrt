@@ -1,5 +1,5 @@
---- feeds/packages/net/transmission-web-control/Makefile
-+++ feeds/packages/net/transmission-web-control/Makefile
+--- a/feeds/packages/net/transmission-web-control/Makefile
++++ a/feeds/packages/net/transmission-web-control/Makefile
 @@ -19,7 +19,7 @@ define Package/transmission-web-control
    SECTION:=net
    CATEGORY:=Network
@@ -10,8 +10,8 @@
    TITLE:=Transmission Web Control
    URL:=https://github.com/ronggang/transmission-web-control
 
---- feeds/packages/net/transmission/Makefile
-+++ feeds/packages/net/transmission/Makefile
+--- a/feeds/packages/net/transmission/Makefile
++++ a/feeds/packages/net/transmission/Makefile
 @@ -85,7 +85,7 @@ endef
  define Package/transmission-web
    $(call Package/transmission/template)
@@ -22,8 +22,8 @@
  endef
  
 
---- package/feeds/custom/dnsforwarder/Makefile
-+++ package/feeds/custom/dnsforwarder/Makefile
+--- a/package/feeds/custom/dnsforwarder/Makefile
++++ a/package/feeds/custom/dnsforwarder/Makefile
 @@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
    CATEGORY:=Network
    TITLE:=A simple DNS forwarder

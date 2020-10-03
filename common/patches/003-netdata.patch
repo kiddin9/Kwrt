@@ -1,5 +1,5 @@
---- package/feeds/custom/netdata/Makefile
-+++ package/feeds/custom/netdata/Makefile 
+--- a/package/feeds/custom/netdata/Makefile
++++ a/package/feeds/custom/netdata/Makefile 
 @@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/package.mk
  define Package/netdata
    SECTION:=admin

@@ -10,8 +10,8 @@ Signed-off-by: CN_SZTL <cnsztl@project-openwrt.eu.org>
 
 diff --git a/package/kernel/linux/modules/crypto.mk b/package/kernel/linux/modules/crypto.mk
 index 48777764a8..2e71bb3e75 100644
---- package/kernel/linux/modules/crypto.mk
-+++ package/kernel/linux/modules/crypto.mk
+--- a/package/kernel/linux/modules/crypto.mk
++++ a/package/kernel/linux/modules/crypto.mk
 @@ -842,3 +843,14 @@ endef
  
  $(eval $(call KernelPackage,crypto-xts))
