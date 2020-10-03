@@ -24,7 +24,7 @@
 <a href="https://t.me/openwrt_nginx" target="_blank">Telegram</a>
 ### 特色:
 
-+ Cutting edge,openwrt官方master分支版本,内核升级到5.4. 与官方最新源码同步.
++ Cutting edge,openwrt官方master分支版本,luci19.07 内核升级到5.4. 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能,后台在线选装插件,自建插件仓库囊括了市面上主流开源插件,系统升级不丢失插件和配置.
 
@@ -40,7 +40,7 @@
 
 + SSL兼容,可同时使用http IP访问和绑定域名开启https访问
 
-固件下载 [腾讯云](https://op.supes.top/firmware/),每周日更新固件.
+固件下载 [x86_64,k2p,redmi_ac2100,r2s,newifi-d2,hiwifi-HC5962](https://op.supes.top/firmware/),每周日更新固件.
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
 
