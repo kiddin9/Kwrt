@@ -1,0 +1,26 @@
+From 0feb88d7192119263a7d79d821101519f8f18610 Mon Sep 17 00:00:00 2001
+From: David Bauer <mail@david-bauer.net>
+Date: Thu, 1 Oct 2020 10:25:45 +0200
+Subject: [PATCH] rockchip: fix NanoPi R2S PHY ID
+
+Fix the PHY ID for the NanoPi R2S PHY compatible to match the used PHY.
+The ID was wrong as I've accidentally picked the wrong upstream patch.
+
+Signed-off-by: David Bauer <mail@david-bauer.net>
+---
+ ...6-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch b/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
+index 5d2574200c..897a42fea2 100644
+--- a/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
++++ b/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
+@@ -18,7 +18,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
+  		#size-cells = <0>;
+  
+  		rtl8211e: ethernet-phy@1 {
+-+			compatible = "ethernet-phy-id0143.bca2",
+++			compatible = "ethernet-phy-id001c.c915",
+ +				     "ethernet-phy-ieee802.3-c22";
+  			reg = <1>;
+  			pinctrl-0 = <&eth_phy_reset_pin>;
