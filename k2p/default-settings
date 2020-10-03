@@ -12,6 +12,5 @@ sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg
 uci set uhttpd.main.rfc1918_filter=0
 uci set uhttpd.main.redirect_https=0
 uci commit uhttpd
-/etc/init.d/uhttpd restart
 
 exit 0
