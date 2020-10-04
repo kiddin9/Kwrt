@@ -90,10 +90,10 @@ if [ -f "$firmware/default-settings" ]; then
 	cat $firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
 fi
 if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
-          find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+          find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -Rp1 --forward"
 fi
 if [ -n "$(ls -A "$firmware/patches" 2>/dev/null)" ]; then
-          find "$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+          find "$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -Rp1 --forward"
 fi
 [ -f ".config.bak" ] && mv .config.bak .config || mv $firmware/.config .config
 

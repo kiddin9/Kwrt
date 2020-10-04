@@ -13,8 +13,8 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 
 diff --git a/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch b/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
 index 5d2574200c..897a42fea2 100644
---- a/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
-+++ b/target/linux/rockchip/patches-5.4/006-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
+--- a/target/linux/rockchip/patches-5.4/005-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
++++ b/target/linux/rockchip/patches-5.4/005-rockchip-rk3328-add-compatible-to-NanoPi-R2S-etherne.patch
 @@ -18,7 +18,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
   		#size-cells = <0>;
   
