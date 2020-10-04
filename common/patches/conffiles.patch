@@ -1,16 +1,15 @@
 --- a/package/feeds/custom/luci-app-ssr-plus/Makefile
 +++ a/package/feeds/custom/luci-app-ssr-plus/Makefile
-@@ -52,6 +52,10 @@ LUCI_DEPENDS:=+shadowsocksr-libev-alt +ipset +ip-full +iptables-mod-tproxy +dnsm
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun:kcptun-client \
- 	+PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server:shadowsocksr-libev-server
+@@ -7,7 +7,10
+ include $(INCLUDE_DIR)/package.mk
  
-+define Package/luci-app-ssr-plus/conffiles
++define Package/$(PKG_NAME)/conffiles
 +/etc/config/shadowsocksr
 +endef
 +
- include $(TOPDIR)/feeds/luci/luci.mk
- 
- # call BuildPackage - OpenWrt buildroot signature
+ define Package/$(PKG_NAME)/config
+ config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_plugin
+ 	bool "Include Shadowsocks V2ray Plugin"
 
 --- a/package/feeds/custom/luci-app-unblockmusic/Makefile
 +++ a/package/feeds/custom/luci-app-unblockmusic/Makefile
