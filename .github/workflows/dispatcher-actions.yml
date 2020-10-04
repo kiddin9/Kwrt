@@ -188,10 +188,9 @@ jobs:
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
         cd firmware
         mv sha256sums ${{matrix.target}}_sha256sums
-        rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *combined*
+        rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *squashfs*
         rename -v "s/xiaomi_redmi-router/redmi/" *bin
         rename -v "s/friendlyarm_nanopi-r2s/nanopi-r2s/" *gz
-        rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *bin
         echo "::set-env name=FIRMWARE::$PWD"
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         RANDOM=$$$(date +%s)
