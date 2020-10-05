@@ -222,7 +222,7 @@ jobs:
       if: env.SSH_PRIVATE_KEY
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
+        ARGS: "-avzr --exclude=${{matrix.target}}.config"
         SOURCE: firmware/
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
