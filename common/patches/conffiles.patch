@@ -151,22 +151,14 @@
 
 --- a/package/feeds/custom/luci-app-openclash/Makefile
 +++ a/package/feeds/custom/luci-app-openclash/Makefile
-@@ -49,6 +49,7 @@ define Build/Compile
- endef
- 
+@@ -51,2 +51,3 @@
  define Package/$(PKG_NAME)/conffiles
 +/etc/config/openclash
  endef
- 
- define Package/$(PKG_NAME)/preinst
-@@ -89,6 +90,7 @@ define Package/$(PKG_NAME)/postrm
- endef
- 
+@@ -91,2 +92,3 @@
  define Package/$(PKG_NAME)/install
 +	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
  	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
- 	$(CP) $(PKG_BUILD_DIR)/luasrc/* $(1)/usr/lib/lua/luci/
- endef
 
 --- a/package/feeds/custom/luci-app-accesscontrol/Makefile
 +++ a/package/feeds/custom/luci-app-accesscontrol/Makefile
