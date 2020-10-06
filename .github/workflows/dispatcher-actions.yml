@@ -181,7 +181,7 @@ jobs:
     - name: Organize files
       id: organize
       run: |
-        mkdir firmware && find openwrt/bin/*/*/*/ -maxdepth 1 \
+        mkdir firmware && find openwrt/bin/targets/*/*/ -maxdepth 1 \
         -name "*combined*" \
         -or -name "*sysupgrade*" \
         -or -name "sha256sums" \
