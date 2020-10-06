@@ -1,5 +1,5 @@
 --- a/feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
-+++ a/feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
++++ b/feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
 @@ -41,3 +41,3 @@
  	local sys = require "luci.sys"
 -	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages" }
@@ -10,7 +10,7 @@
 +	luci.sys.exec("source /etc/profile.d/opkginstall.sh;opkg "..command.." >/dev/null 2>&1")
 
 --- a/feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
-+++ a/feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ b/feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
 @@ -203,6 +203,7 @@ return view.extend({
  			}, this, ev.target))
  			.then(L.bind(function(btn, res) {

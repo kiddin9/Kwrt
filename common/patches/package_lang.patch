@@ -1,5 +1,5 @@
 --- a/include/package.mk
-+++ a/include/package.mk
++++ b/include/package.mk
 @@ -307,6 +307,21 @@ endif
    $(if $(PKG_HOST_ONLY),,$(call Build/DefaultTargets,$(1)))
  endef

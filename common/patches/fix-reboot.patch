@@ -1,5 +1,5 @@
 --- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js
-+++ a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js
++++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js
 @@ -31,7 +31,7 @@ return view.extend({
  	},
  

@@ -1,5 +1,5 @@
 --- a/package/kernel/linux/modules/netfilter.mk
-+++ a/package/kernel/linux/modules/netfilter.mk
++++ b/package/kernel/linux/modules/netfilter.mk
 @@ -458,15 +458,100 @@
  $(eval $(call KernelPackage,ipt-nat))
  
@@ -103,7 +103,7 @@
  define KernelPackage/ipt-raw6
 
 --- a/include/netfilter.mk
-+++ a/include/netfilter.mk
++++ b/include/netfilter.mk
 @@ -111,3 +111,14 @@
  
 +# imq
@@ -128,7 +128,7 @@
  # IPv6
 
 --- a/package/network/utils/iptables/Makefile
-+++ a/package/network/utils/iptables/Makefile
++++ b/package/network/utils/iptables/Makefile
 @@ -170,3 +170,49 @@
  endef
  

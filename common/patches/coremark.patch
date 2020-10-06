@@ -1,5 +1,5 @@
 --- a/package/feeds/packages/coremark/Makefile
-+++ a/package/feeds/packages/coremark/Makefile
++++ b/package/feeds/packages/coremark/Makefile
 @@ -57,7 +57,7 @@ define Build/Compile
  	$(SED) 's|EXE = .exe|EXE =|' $(PKG_BUILD_DIR)/$(DIR_ARCH)/core_portme.mak
  	mkdir $(PKG_BUILD_DIR)/$(ARCH)

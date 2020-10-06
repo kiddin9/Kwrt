@@ -1,5 +1,5 @@
 --- a/package/feeds/custom/luci-app-passwall/luasrc/controller/passwall.lua
-+++ a/package/feeds/custom/luci-app-passwall/luasrc/controller/passwall.lua
++++ b/package/feeds/custom/luci-app-passwall/luasrc/controller/passwall.lua
 @@ -35,9 +35,11 @@ function index()
  	entry({"admin", "services", appname, "acl"}, cbi(appname .. "/client/acl"), _("Access control"), 98).leaf = true
  	entry({"admin", "services", appname, "log"}, form(appname .. "/client/log"), _("Watch Logs"), 999).leaf = true
@@ -14,7 +14,7 @@
  	entry({"admin", "services", appname, "server_user_status"}, call("server_user_status")).leaf = true
 
 --- a/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/test.sh
-+++ a/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/test.sh
++++ b/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/test.sh
 @@ -67,17 +67,12 @@ test_auto_switch() {
  	fi
  
@@ -49,7 +49,7 @@
  		in_backup_nodes=$(echo $b_tcp_nodes | grep $now_node)
 
 --- a/package/feeds/custom/luci-app-passwall/luasrc/model/cbi/passwall/client/auto_switch.lua
-+++ a/package/feeds/custom/luci-app-passwall/luasrc/model/cbi/passwall/client/auto_switch.lua
++++ b/package/feeds/custom/luci-app-passwall/luasrc/model/cbi/passwall/client/auto_switch.lua
 @@ -37,11 +37,6 @@ o.default = "3"
  -- 暂时只支持TCP1
  local tcp_node_num = 1

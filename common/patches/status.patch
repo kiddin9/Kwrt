@@ -1,5 +1,5 @@
 --- a/feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
-+++ a/feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
++++ b/feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
 @@ -45,2 +45,30 @@
  
 +    getCPUInfo = {
@@ -33,7 +33,7 @@
  	setLocaltime = {
 
 --- a/feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
-+++ a/feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
++++ b/feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
 @@ -63,3 +63,3 @@
  				"iwinfo": [ "assoclist", "freqlist", "txpowerlist", "countrylist" ],
 -				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints" ],
@@ -41,7 +41,7 @@
  				"luci-rpc": [ "getBoardJSON", "getDHCPLeases", "getDSLStatus", "getDUIDHints", "getHostHints", "getNetworkDevices", "getWirelessDevices" ],
 
 --- a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-+++ a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ b/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 @@ -15,17 +15,24 @@
  
 +var callCPUInfo = rpc.declare({
@@ -83,7 +83,7 @@
  				systeminfo.load[0] / 65535.0,
 
 --- a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
-+++ a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
++++ b/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
 @@ -2,6 +2,7 @@
  'require baseclass';
  'require fs';
