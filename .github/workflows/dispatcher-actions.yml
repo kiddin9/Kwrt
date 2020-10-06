@@ -131,12 +131,12 @@ jobs:
         fi
         if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
         (
-          find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -Rp1 --forward"
+          find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
         )
         fi
         if [ -n "$(ls -A "${{matrix.target}}/patches" 2>/dev/null)" ]; then
         (
-          find "${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -Rp1 --forward"
+          find "${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
         )
         fi
         make defconfig
