@@ -1,3 +1,14 @@
+--- a/package/feeds/custom/luci-app-openclash/Makefile
++++ b/package/feeds/custom/luci-app-openclash/Makefile
+@@ -51,2 +51,3 @@
+ define Package/$(PKG_NAME)/conffiles
++/etc/config/openclash
+ endef
+@@ -91,2 +92,3 @@
+ define Package/$(PKG_NAME)/install
++	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
+ 	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
+
 --- a/package/feeds/custom/luci-app-ssr-plus/Makefile
 +++ b/package/feeds/custom/luci-app-ssr-plus/Makefile
 @@ -7 +7,5 @@
@@ -144,17 +155,6 @@
  include $(TOPDIR)/feeds/luci/luci.mk
  
  # call BuildPackage - OpenWrt buildroot signature
-
---- a/package/feeds/custom/luci-app-openclash/Makefile
-+++ b/package/feeds/custom/luci-app-openclash/Makefile
-@@ -51,2 +51,3 @@
- define Package/$(PKG_NAME)/conffiles
-+/etc/config/openclash
- endef
-@@ -91,2 +92,3 @@
- define Package/$(PKG_NAME)/install
-+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
- 	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
 
 --- a/package/feeds/custom/luci-app-accesscontrol/Makefile
 +++ b/package/feeds/custom/luci-app-accesscontrol/Makefile
