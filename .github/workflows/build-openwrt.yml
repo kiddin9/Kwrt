@@ -190,6 +190,7 @@ jobs:
         mkdir firmware && find openwrt/bin/targets/*/*/ -maxdepth 1 \
         -name "*combined*" \
         -or -name "*sysupgrade*" \
+        -or -name "*armvirt-64-default-rootfs*" \
         -or -name "sha256sums" \
         | xargs -i mv -f {} ./firmware/
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
@@ -198,6 +199,7 @@ jobs:
         mv sha256sums ${{matrix.target}}_sha256sums
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *squashfs*
         rename -v "s/xiaomi_redmi-router/redmi/" *bin
+        rename -v "s/d-team//" *bin
         rename -v "s/friendlyarm_nanopi-r2s/nanopi-r2s/" *gz
         echo "::set-env name=FIRMWARE::$PWD"
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
