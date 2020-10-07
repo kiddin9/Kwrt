@@ -1,0 +1,10 @@
+
+touch /etc/config/placeholder
+
+sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
+
+uci set uhttpd.main.rfc1918_filter=0
+uci set uhttpd.main.redirect_https=0
+uci commit uhttpd
+
+exit 0
