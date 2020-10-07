@@ -146,10 +146,6 @@ jobs:
         )
         fi
         make defconfig
-        [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/') || DEVICE_NAME=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
-        DEVICE_NAME=`echo ${DEVICE_NAME/xiaomi_redmi-router/redmi}`
-        DEVICE_NAME=`echo ${DEVICE_NAME/friendlyarm_nanopi-r2s/nanopi-r2s}`
-        [ ${{matrix.target}} == "N1" ] && echo "::set-env name=DEVICE_NAME::N1" || echo "::set-env name=DEVICE_NAME::$DEVICE_NAME"
         
     - name: Default PPPOE Setting
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
@@ -244,7 +240,7 @@ jobs:
         SOURCE: firmware/
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/firmware/${{ env.DEVICE_NAME }}/"
+        TARGET: "/www/wwwroot/op.supes.top/firmware/${{matrix.target}}/"
 
     - name: Create release
       id: create_release
@@ -254,12 +250,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        tag_name: ${{ env.date }}_${{ env.DEVICE_NAME }}
-        release_name: ${{ env.date2 }} ${{ env.DEVICE_NAME }} ${{ env.EMOJI }}
+        tag_name: ${{ env.date }}_${{matrix.target}}
+        release_name: ${{ env.date2 }} ${{matrix.target}} ${{ env.EMOJI }}
         body: |
             墙内加速下载🔥:
             
-            腾讯云: https://op.supes.top/firmware/${{ env.DEVICE_NAME }}/ ☁
+            腾讯云: https://op.supes.top/firmware/${{matrix.target}}/ ☁
             
             WeTransfer: ${{ env.WETRANS }} 🗽
             
@@ -284,16 +280,16 @@ jobs:
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
-        name: ${{ env.date3 }} ${{ env.DEVICE_NAME }}
+        name: ${{ env.date3 }} ${{matrix.target}}
         path: ${{ env.FIRMWARE }}
         
     - name: WeChat notification
       if: env.SCKEY
       run: |
-        [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=🎉OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译完成😋|| curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=❌OpenWrt_${{ env.date3 }}_${{ env.DEVICE_NAME }}编译失败😂
+        [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=🎉OpenWrt_${{ env.date3 }}_${{matrix.target}}编译完成😋|| curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=❌OpenWrt_${{ env.date3 }}_${{matrix.target}}编译失败😂
 
     - name: Telegram notification
       if: env.TELEGRAM_TOKEN
       continue-on-error: true
       run: |
-        [ ${{ env.status }} == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译成功 😋  https://op.supes.top/firmware/${{ env.DEVICE_NAME }}/  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=❌ OpenWrt ${{ env.date3 }} ${{ env.DEVICE_NAME }} 编译失败 😂" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
+        [ ${{ env.status }} == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.date3 }} ${{matrix.target}} 编译成功 😋  https://op.supes.top/firmware/${{matrix.target}}/  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=❌ OpenWrt ${{ env.date3 }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
