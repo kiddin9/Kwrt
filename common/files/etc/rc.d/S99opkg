@@ -2,6 +2,9 @@
 ([ ! "$(pgrep nginx)" ] && {
 	/etc/init.d/nginx restart
 }
+[[ ! "$(netstat -tunlp | grep 5333)" && "$(uci get turboacc.config.dns_caching)" == 1 ]] && {
+	/etc/init.d/turboacc restart
+}
 [[ ! "$(pgrep smartdns)" && "$(uci get smartdns.@smartdns[0].enabled)" == 1 ]] && {
 	/etc/init.d/smartdns start
 }
