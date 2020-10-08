@@ -6,8 +6,7 @@
 +        call = function()
 +            local sys = require "luci.sys"
 +            local rv = {}
-+            rv.cpufreq      = sys.exec("grep 'MHz' /proc/cpuinfo | cut -c11- | sed -n '1p' | tr -d '\n'")
-+            rv.cputemp      = sys.exec("sensors|grep Core|awk '{print $1,$2,$3}'|tr '\n' ' '")
++            rv.cpufreq      = sys.exec("/sbin/cpuinfo")
 +            rv.cpufree      = sys.exec("echo -n $(top -n 1 | grep CPU | grep -v grep | head -n 1 | awk '{print $8}' | sed 's/\\(.*\\)\\(.\\)$/\\1/')")
 +            rv.cpumark      = sys.exec("cat /etc/bench.log")
 +            return rv
@@ -78,7 +77,7 @@
  			_('Local Time'),       datestr,
  			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,
 -			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
-+			_('CPU Info'),         cpuinfo.cpufreq + ' MHz ' + ' ' + cpuinfo.cputemp,
++			_('CPU Info'),         cpuinfo.cpufreq,
 +			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
  				systeminfo.load[0] / 65535.0,
 
