@@ -1,6 +1,6 @@
 #!/bin/bash
 #=================================================
-
+rm -Rf package/lean
 ./scripts/feeds update -a
 mv -f feeds/packages/libs/libx264 feeds/custom/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/aria2
