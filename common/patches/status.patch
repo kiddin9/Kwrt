@@ -1,6 +1,6 @@
 --- a/feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
 +++ b/feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
-@@ -45,2 +45,30 @@
+@@ -45,2 +45,29 @@
  
 +    getCPUInfo = {
 +        call = function()
