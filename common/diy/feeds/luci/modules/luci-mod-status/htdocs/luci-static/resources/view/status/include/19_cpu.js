@@ -26,7 +26,7 @@ return L.Class.extend({
 
 	render: function(info) {
 		var fields = [
-			_('Total Available'), (info.cpufree) ? info.cpufree : 0, 100
+			_('Used'), (info.cpufree) ? info.cpufree : 0, 100
 		];
 
 		var table = E('div', { 'class': 'table cpu' });

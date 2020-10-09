@@ -7,7 +7,7 @@
 +            local sys = require "luci.sys"
 +            local rv = {}
 +            rv.cpufreq      = sys.exec("/sbin/cpuinfo")
-+            rv.cpufree      = sys.exec("echo -n $(top -n 1 | grep CPU | grep -v grep | head -n 1 | awk '{print $8}' | sed 's/\\(.*\\)\\(.\\)$/\\1/')")
++            rv.cpufree      = (sys.exec("expr 100 - $(top -n 1 | grep 'CPU:' | awk -F '%' '{print$4}' | awk -F ' ' '{print$2}')") or "2.33") .. "%"
 +            rv.cpumark      = sys.exec("cat /etc/bench.log")
 +            return rv
 +        end
