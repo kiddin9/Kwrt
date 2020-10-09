@@ -5,6 +5,7 @@
 touch /etc/config/placeholder
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/aarch64' /etc/opkg/customfeeds.conf
+sed -i "s/_('Architecture'),boardinfo.system,//" /www/luci-static/resources/view/status/include/10_system.js
 
 #HW-RNG
 uci set system.@rngd[0].enabled="1"
