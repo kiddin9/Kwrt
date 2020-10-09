@@ -134,3 +134,15 @@
  		}
  
  		var netstatus = E('div', { 'class': 'network-status-table' });
+
+--- a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
++++ b/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
+@@ -32,7 +32,7 @@ return baseclass.extend({
+ 		    swap = L.isObject(systeminfo.swap) ? systeminfo.swap : {};
+ 
+ 		var fields = [
+-			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
+ 			_('Used'),            (mem.total && mem.free) ? (mem.total - mem.free) : null, mem.total,
++			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
+ 			_('Buffered'),        (mem.total && mem.buffered) ? mem.buffered : null, mem.total
+ 		];
