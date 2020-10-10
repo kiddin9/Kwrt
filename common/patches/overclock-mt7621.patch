@@ -34,7 +34,7 @@ index 0c997a3f28f6..3d43c47eda00 100644
  -		}
  +		pll = rt_memc_r32(MEMC_REG_CPU_PLL);
 ++		pll &= ~(0x7ff);
-++		pll |=  (0x362);
+++		pll |=  (0x312);
 ++		rt_memc_w32(pll,MEMC_REG_CPU_PLL);
 ++		for(i=0;i<1024;i++);
  +		fbdiv = (pll >> CPU_PLL_FBDIV_SHIFT) & CPU_PLL_FBDIV_MASK;
