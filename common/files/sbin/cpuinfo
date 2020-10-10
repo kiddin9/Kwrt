@@ -15,12 +15,12 @@ if grep -q "ipq40xx" /etc/openwrt_release; then
 	sys_temp="$(sensors | grep -Eo '\+[0-9]+.+C' | sed ':a;N;$!ba;s/\n/ /g;s/+//g')"
 elif grep -q "x86" "/etc/openwrt_release"; then
 sys_temp="$(sensors 2>/dev/null | grep 'Core 0' | cut -c12-)"
-else
+elif grep -q "arm" "/etc/openwrt_release"; then
 	sys_temp="$(awk "BEGIN{printf (\"%.1f\n\",$(cat /sys/class/thermal/thermal_zone0/temp)/1000) }")°C"
 fi
 
 if grep -q "x86" "/etc/openwrt_release"; then
 echo -n "${cpu_freq} ${sys_temp}"
 else
-echo -n "${cpu_arch} x ${cpu_cores} (${cpu_freq}, ${sys_temp})"
+echo -n "${cpu_arch} x ${cpu_cores} (${cpu_freq} ${sys_temp})"
 fi
