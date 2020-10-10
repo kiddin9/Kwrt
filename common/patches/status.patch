@@ -7,7 +7,7 @@
 +            local sys = require "luci.sys"
 +            local rv = {}
 +            rv.cpufreq      = sys.exec("/sbin/cpuinfo")
-+            rv.cpufree      = sys.exec("echo -n $(top -n 1 | grep CPU | grep -v grep | head -n 1 | awk '{print $8}' | sed 's/\\(.*\\)\\(.\\)$/\\1/')")
++            rv.cpufree      = (sys.exec("expr 100 - $(top -n 1 | grep 'CPU:' | awk -F '%' '{print$4}' | awk -F ' ' '{print$2}')") or "2.33") .. "%"
 +            rv.cpumark      = sys.exec("cat /etc/bench.log")
 +            return rv
 +        end
@@ -134,3 +134,15 @@
  		}
  
  		var netstatus = E('div', { 'class': 'network-status-table' });
+
+--- a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
++++ b/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
+@@ -32,7 +32,7 @@ return baseclass.extend({
+ 		    swap = L.isObject(systeminfo.swap) ? systeminfo.swap : {};
+ 
+ 		var fields = [
+-			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
+ 			_('Used'),            (mem.total && mem.free) ? (mem.total - mem.free) : null, mem.total,
++			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
+ 			_('Buffered'),        (mem.total && mem.buffered) ? mem.buffered : null, mem.total
+ 		];
