@@ -5,17 +5,13 @@ cpu_cores="$(cat "/proc/cpuinfo" | grep "processor" | wc -l)"
 
 if grep -q "bcm53xx" /etc/openwrt_release; then
 	cpu_freq="$(nvram get clkfreq | awk -F ',' '{print $1}')MHz"
-elif grep -q "x86" "/etc/openwrt_release"; then
-	cpu_freq="$(grep 'MHz' /proc/cpuinfo | cut -c11- |sed -n '1p')MHz"
-else
-	cpu_freq="$(expr $(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq) / 1000)MHz"
-fi
-
-if grep -q "ipq40xx" /etc/openwrt_release; then
+elif grep -q "ipq40xx" /etc/openwrt_release; then
 	sys_temp="$(sensors | grep -Eo '\+[0-9]+.+C' | sed ':a;N;$!ba;s/\n/ /g;s/+//g')"
 elif grep -q "x86" "/etc/openwrt_release"; then
-sys_temp="$(sensors 2>/dev/null | grep 'Core 0' | cut -c12-)"
+	cpu_freq="$(grep 'MHz' /proc/cpuinfo | cut -c11- |sed -n '1p')MHz"
+	sys_temp="$(sensors 2>/dev/null | grep 'Core 0' | cut -c12-)"
 elif grep -q "arm" "/etc/openwrt_release"; then
+	cpu_freq="$(expr $(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq) / 1000)MHz"
 	sys_temp="$(awk "BEGIN{printf (\"%.1f\n\",$(cat /sys/class/thermal/thermal_zone0/temp)/1000) }")°C"
 fi
 
