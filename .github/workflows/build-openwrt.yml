@@ -45,18 +45,17 @@ jobs:
     - name: Load Settings.ini
       run: |
         source "${GITHUB_WORKSPACE}/${{matrix.target}}/settings.ini"
-        echo "::set-env name=REPO_URL::${REPO_URL}"
-        echo "::set-env name=REPO_BRANCH::${REPO_BRANCH}"
-        echo "::set-env name=CONFIG_FILE::${CONFIG_FILE}"
-        echo "::set-env name=DIY_SH::${DIY_SH}"
-        echo "::set-env name=FREE_UP_DISK::${FREE_UP_DISK}"
-        echo "::set-env name=SSH_ACTIONS::${SSH_ACTIONS}"
-        echo "::set-env name=UPLOAD_BIN_DIR_FOR_ARTIFACT::${UPLOAD_BIN_DIR_FOR_ARTIFACT}"
-        echo "::set-env name=UPLOAD_FIRMWARE_FOR_ARTIFACT::${UPLOAD_FIRMWARE_FOR_ARTIFACT}"
-        echo "::set-env name=UPLOAD_FIRMWARE_FOR_RELEASE::${UPLOAD_FIRMWARE_FOR_RELEASE}"
-        echo "::set-env name=UPLOAD_FIRMWARE_TO_COWTRANSFER::${UPLOAD_FIRMWARE_TO_COWTRANSFER}"
-        echo "::set-env name=UPLOAD_FIRMWARE_TO_WETRANSFER::${UPLOAD_FIRMWARE_TO_WETRANSFER}"
-
+        echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
+        echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
+        echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
+        echo "DIY_SH=${DIY_SH}" >> $GITHUB_ENV
+        echo "FREE_UP_DISK=${FREE_UP_DISK}" >> $GITHUB_ENV
+        echo "SSH_ACTIONS=${SSH_ACTIONS}" >> $GITHUB_ENV
+        echo "UPLOAD_BIN_DIR_FOR_ARTIFACT=${UPLOAD_BIN_DIR_FOR_ARTIFACT}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_FOR_ARTIFACT=${UPLOAD_FIRMWARE_FOR_ARTIFACT}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_FOR_RELEASE=${UPLOAD_FIRMWARE_FOR_RELEASE}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -71,11 +70,10 @@ jobs:
     - name: Get current date
       id: date
       run: |
-        echo "::set-env name=date::$(date +'%m/%d_%Y_%H/%M')"
-        echo "::set-env name=date2::$(date +'%m/%d %Y')"
-        echo "::set-env name=date3::$(date +'%m.%d')"
-        echo "::set-env name=date4::$(date +'%m.%d.%Y')"
-
+        echo "date=$(date +'%m/%d_%Y_%H/%M')" >> $GITHUB_ENV
+        echo "date2=$(date +'%m/%d %Y')" >> $GITHUB_ENV
+        echo "date3=$(date +'%m.%d')" >> $GITHUB_ENV
+        echo "date4=$(date +'%m.%d.%Y')" >> $GITHUB_ENV
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
@@ -98,7 +96,6 @@ jobs:
         sudo mkdir -p -m 777 /mnt/openwrt/dl /mnt/openwrt/staging_dir
         ln -sf /mnt/openwrt/dl openwrt/dl
         ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
-
     - name: Load custom configuration
       run: |
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
@@ -165,13 +162,12 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-
     - name: Compile the firmware
       run: |
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
-        echo "::set-env name=status::success"
+        echo "status=success" >> $GITHUB_ENV
       
     - name: Upload bin directory
       uses: actions/upload-artifact@main
@@ -197,17 +193,17 @@ jobs:
         rename -v "s/xiaomi_redmi-router/redmi/" *bin
         rename -v "s/-d-team//" *bin
         rename -v "s/friendlyarm_nanopi-r2s/nanopi-r2s/" *gz
-        echo "::set-env name=FIRMWARE::$PWD"
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         RANDOM=$$$(date +%s)
         rand=$[$RANDOM % ${#Emoji[@]}]
-        echo "::set-env name=EMOJI::${Emoji[$rand]}"
+        echo "EMOJI=${Emoji[$rand]}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "k2p" ]; then
-        echo "::set-env name=NOTICE::刷机时breed里的闪存布局请选择斐讯而非默认的公版"
+        echo "NOTICE=刷机时breed里的闪存布局请选择斐讯而非默认的公版" >> $GITHUB_ENV
         elif [ ${{matrix.target}} == "x86_64" ]; then
-        echo "::set-env name=NOTICE::请分配不少于800M的存储容量"
+        echo "NOTICE=请分配不少于800M的存储容量" >> $GITHUB_ENV
         else
-        echo "::set-env name=NOTICE::"
+        echo "NOTICE=" >> $GITHUB_ENV
         fi
  
     - name: Upload firmware to cowtransfer
@@ -217,7 +213,7 @@ jobs:
         curl -fsSL git.io/file-transfer | sh
         cowurl=$(./transfer cow --block 2621440 -s --no-progress ${FIRMWARE})
         cowurl=$(echo $cowurl | grep -o -E "https[^ ]*")
-        echo "::set-env name=COWURL::$cowurl"
+        echo "COWURL=$cowurl" >> $GITHUB_ENV
         echo "Download Link: ${{ env.EMOJI }} $cowurl ${{ env.EMOJI }} 🚀"
  
     - name: Upload firmware to WeTransfer
@@ -227,9 +223,8 @@ jobs:
         curl -fsSL git.io/file-transfer | sh
         wetrans=$(./transfer wet -s -p 16 --no-progress ${FIRMWARE})
         wetrans=$(echo $wetrans | grep -o -E "https[^ ]*")
-        echo "::set-env name=WETRANS::$wetrans"
+        echo "WETRANS=$wetrans" >> $GITHUB_ENV
         echo "Download Link: ${{ env.EMOJI }} $wetrans ${{ env.EMOJI }} 🚀"
-
     - name: Deploy files to server
       uses: easingthemes/ssh-deploy@master
       continue-on-error: true
@@ -287,7 +282,6 @@ jobs:
       if: env.SCKEY
       run: |
         [ ${{ env.status }} == 'success' ] && curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=🎉OpenWrt_${{ env.date3 }}_${{matrix.target}}编译完成😋|| curl https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=❌OpenWrt_${{ env.date3 }}_${{matrix.target}}编译失败😂
-
     - name: Telegram notification
       if: env.TELEGRAM_TOKEN
       continue-on-error: true
