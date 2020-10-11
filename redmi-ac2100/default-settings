@@ -1,5 +1,13 @@
+if [ ! -f /etc/config/placeholder ]; then
+	uci set smartdns.@smartdns[0].port='5335'
+	uci set smartdns.@smartdns[0].redirect='dnsmasq-upstream'
+	uci commit smartdns
+fi
 
 touch /etc/config/placeholder
+
+sed -i '/anti-ad-smartdns/d' /etc/crontabs/root
+echo "0 0 */3 * * wget -O /etc/smartdns/anti-ad-smartdns.conf https://anti-ad.net/anti-ad-for-smartdns.conf" >> /etc/crontabs/root
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
 
