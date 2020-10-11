@@ -6,8 +6,10 @@ fi
 
 touch /etc/config/placeholder
 
+if [ `uci get smartdns.@smartdns[0].enabled` == 1 ]; then
 sed -i '/anti-ad-smartdns/d' /etc/crontabs/root
-echo "0 0 */3 * * wget -O /etc/smartdns/anti-ad-smartdns.conf https://anti-ad.net/anti-ad-for-smartdns.conf" >> /etc/crontabs/root
+echo "0 0 */2 * * wget -O /etc/smartdns/anti-ad-smartdns.conf https://anti-ad.net/anti-ad-for-smartdns.conf" >> /etc/crontabs/root
+fi
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
 
