@@ -295,7 +295,7 @@ jobs:
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 10
         delete_tags: true
