@@ -42,7 +42,7 @@
 
 + SSL兼容,可同时使用http IP访问和绑定域名开启https访问
 
-固件下载 [x86_64,k2p,redmi_ac2100,r2s,newifi-d2,hiwifi-HC5962](https://op.supes.top/firmware/),每周日更新固件.
+固件下载 [x86_64,phicomm-k2p,redmi-ac2100,nanopi-r2s,newifi-d2,hiwifi-HC5962,phicomm-N1](https://op.supes.top/firmware/),每周日更新固件.
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
 

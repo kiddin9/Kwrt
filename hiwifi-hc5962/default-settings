@@ -1,3 +1,9 @@
+if [ ! -f /etc/config/placeholder ]; then
+	uci set smartdns.@smartdns[0].port='5335'
+	uci set smartdns.@smartdns[0].redirect='dnsmasq-upstream'
+	uci set smartdns.@smartdns[0].anti_ad='1'
+	uci commit smartdns
+fi
 
 touch /etc/config/placeholder
 
