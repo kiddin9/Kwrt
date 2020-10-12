@@ -78,7 +78,7 @@ jobs:
         echo "date4=$(date +'%m.%d.%Y')" >> $GITHUB_ENV
     - name: Clone source code
       run: |
-        git clone $REPO_URL -b $REPO_BRANCH --single-branch openwrt
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         if [ -f "common/feeds.conf" ]; then
         (
           mv common/feeds.conf openwrt/
