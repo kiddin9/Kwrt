@@ -23,7 +23,7 @@ env:
 
 jobs:
   build:
-    if: ! contains(github.event.action, 'pkg')
+    if: && ! contains(github.event.action, 'pkg')
     runs-on: ubuntu-latest
     
     name: Build ${{matrix.target}}
