@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Openwrt-AutoBuild
+name: Build OpenWrt
 
 on: 
   # push: 
