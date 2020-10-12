@@ -1,4 +1,7 @@
 
+uci set turboacc.config.sw_flow='0'
+uci commit turboacc
+
 touch /etc/config/placeholder
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/aarch64' /etc/opkg/customfeeds.conf
