@@ -14,8 +14,12 @@ on:
   #     - master
   schedule:
     - cron: 30 13 * * 6
-  watch:
-    types: started
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
@@ -29,7 +33,6 @@ env:
 
 jobs:
   build:
-    if: github.event.repository.owner.id == github.event.sender.id
     runs-on: ubuntu-latest
     
     name: Build ${{matrix.target}}
@@ -50,7 +53,6 @@ jobs:
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
         echo "DIY_SH=${DIY_SH}" >> $GITHUB_ENV
         echo "FREE_UP_DISK=${FREE_UP_DISK}" >> $GITHUB_ENV
-        echo "SSH_ACTIONS=${SSH_ACTIONS}" >> $GITHUB_ENV
         echo "UPLOAD_BIN_DIR_FOR_ARTIFACT=${UPLOAD_BIN_DIR_FOR_ARTIFACT}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_FOR_ARTIFACT=${UPLOAD_FIRMWARE_FOR_ARTIFACT}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_FOR_RELEASE=${UPLOAD_FIRMWARE_FOR_RELEASE}" >> $GITHUB_ENV
@@ -76,7 +78,7 @@ jobs:
         echo "date4=$(date +'%m.%d.%Y')" >> $GITHUB_ENV
     - name: Clone source code
       run: |
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        git clone $REPO_URL -b $REPO_BRANCH --single-branch openwrt
         if [ -f "common/feeds.conf" ]; then
         (
           mv common/feeds.conf openwrt/
@@ -153,7 +155,7 @@ jobs:
               
     - name: SSH connection to Actions
       uses: garypang13/debugger-action@master
-      if: env.SSH_ACTIONS == 'true'
+      if: github.event.inputs.ssh == 'true'
 
     - name: Download package
       id: package
@@ -287,3 +289,18 @@ jobs:
       continue-on-error: true
       run: |
         [ ${{ env.status }} == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.date3 }} ${{matrix.target}} 编译成功 😋  https://op.supes.top/firmware/${{matrix.target}}/  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=❌ OpenWrt ${{ env.date3 }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
+
+    - name: Remove old Artifacts
+      uses: c-hive/gha-remove-artifacts@v1.2.0
+      with:
+        age: '1 day'
+        skip-recent: 10
+
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 10
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
