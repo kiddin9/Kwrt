@@ -9,6 +9,7 @@ rm -Rf feeds/packages/net/smartdns
 rm -Rf feeds/packages/net/miniupnpd
 rm -Rf feeds/packages/net/mwan3
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
+svn co https://github.com/openwrt/luci/trunk/applications/luci-app-ddns feeds/custom/luci-app-ddns
 ./scripts/feeds update packages custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
