@@ -48,7 +48,7 @@
 @@ -15,17 +15,24 @@
  
 +var callCPUInfo = rpc.declare({
-+    object: 'system',
++    object: 'luci',
 +    method: 'getCPUInfo'
 +});
 +
@@ -100,7 +100,7 @@
  }
  
 +var callUserInfo = rpc.declare({
-+    object: 'system',
++    object: 'luci',
 +    method: 'getUserInfo'
 +});
 +
