@@ -3,12 +3,11 @@
 opkg() {
     if [[ `echo $@ | grep -o -E '^install'` ]]; then
 	command opkg $@
-rm -Rf /lib/upgrade/keep.d/php7*
-sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
-sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
-/etc/init.d/php7-fpm restart
+#rm -Rf /lib/upgrade/keep.d/php7*
+#sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
+#sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
+#/etc/init.d/php7-fpm restart
 ln -sf /usr/bin/python3 /usr/bin/python
-sed -i 's/extra_setting\"/extra_settings\"/g' /usr/lib/lua/luci/model/cbi/aria2/config.lua
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/aria2.lua
 sed -i 's/services/nas/g' /usr/lib/lua/luci/view/aria2/*.htm
 sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/hd_idle.lua
