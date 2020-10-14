@@ -1,16 +1,28 @@
---- a/feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
-+++ b/feeds/luci/applications/luci-app-opkg/luasrc/controller/opkg.lua
-@@ -41,3 +41,3 @@
- 	local sys = require "luci.sys"
--	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages" }
-+	local cmd = { "/bin/opkg", "--force-removal-of-dependent-packages", "--force-overwrite", "--force-checksum" }
- 	local pkg = luci.http.formvalue("package")
-@@ -60,2 +60,3 @@
- 	luci.http.write_json(sys.process.exec(cmd, true, true))
-+	luci.sys.exec("source /etc/profile.d/opkginstall.sh;opkg "..command.." >/dev/null 2>&1")
+--- a/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
++++ b/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
+@@ -880,7 +880,7 @@ function handleOpkg(ev)
+ 				_('Waiting for the <em>opkg %h</em> command to complete…').format(cmd))
+ 		]);
+ 
+-		var argv = [ cmd, '--force-removal-of-dependent-packages' ];
++		var argv = [ cmd, '--force-removal-of-dependent-packages', '--force-overwrite', '--force-checksum' ];
+ 
+ 		if (rem && rem.checked)
+ 			argv.push('--autoremove');
 
---- a/feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
-+++ b/feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+--- a/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
++++ b/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
+@@ -15,6 +15,7 @@ case "$action" in
+ 	;;
+ 	install|update|remove)
+ 		(
++		source /etc/profile.d/opkginstall.sh;
+ 			opkg="opkg"
+ 
+ 			while [ -n "$1" ]; do
+
+--- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
 @@ -203,6 +203,7 @@ return view.extend({
  			}, this, ev.target))
  			.then(L.bind(function(btn, res) {
