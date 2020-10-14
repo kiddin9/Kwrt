@@ -1,5 +1,5 @@
---- package/base-files/files/etc/shinit
-+++ package/base-files/files/etc/shinit
+--- a/package/base-files/files/etc/shinit
++++ b/package/base-files/files/etc/shinit
 @@ -2,5 +2,7 @@
  [ -x /usr/bin/vim ] && alias vi=vim || alias vim=vi
  
