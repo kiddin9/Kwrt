@@ -1,5 +1,5 @@
---- a/feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
-+++ b/feeds/luci/modules/luci-base/root/usr/libexec/rpcd/luci
+--- a/packages/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
++++ b/packages/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
 @@ -45,2 +45,29 @@
  
 +    getCPUInfo = {
@@ -31,20 +31,24 @@
 +
  	setLocaltime = {
 
---- a/feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
-+++ b/feeds/luci/modules/luci-base/root/usr/share/rpcd/acl.d/luci-base.json
-@@ -63,3 +63,3 @@
- 				"iwinfo": [ "assoclist", "freqlist", "txpowerlist", "countrylist" ],
--				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints" ],
-+				"luci": [ "getConntrackList", "getInitList", "getLocaltime", "getProcessList", "getRealtimeStats", "getTimezones", "getLEDs", "getUSBDevices", "getSwconfigFeatures", "getSwconfigPortState", "getBlockDevices", "getMountPoints", "getCPUInfo", "getEthInfo", "getUserInfo" ],
- 				"luci-rpc": [ "getBoardJSON", "getDHCPLeases", "getDSLStatus", "getDUIDHints", "getHostHints", "getNetworkDevices", "getWirelessDevices" ],
+--- a/packages/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
++++ b/packages/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
+@@ -93,7 +93,7 @@
+ 			},
+ 			"ubus": {
+ 				"file": [ "list", "read" ],
+-				"system": [ "board", "info" ]
++				"system": [ "board", "info", "getCPUInfo", "getEthInfo", "getUserInfo" ]
+ 			}
+ 		}
+ 	},
 
---- a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-+++ b/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+--- a/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ b/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 @@ -15,17 +15,24 @@
  
 +var callCPUInfo = rpc.declare({
-+    object: 'luci',
++    object: 'system',
 +    method: 'getCPUInfo'
 +});
 +
@@ -81,8 +85,8 @@
 +			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
  				systeminfo.load[0] / 65535.0,
 
---- a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
-+++ b/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
+--- a/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
++++ b/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
 @@ -2,6 +2,7 @@
  'require baseclass';
  'require fs';
@@ -96,7 +100,7 @@
  }
  
 +var callUserInfo = rpc.declare({
-+    object: 'luci',
++    object: 'system',
 +    method: 'getUserInfo'
 +});
 +
@@ -135,8 +139,8 @@
  
  		var netstatus = E('div', { 'class': 'network-status-table' });
 
---- a/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
-+++ b/feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
+--- a/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
++++ b/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 @@ -32,7 +32,7 @@ return baseclass.extend({
  		    swap = L.isObject(systeminfo.swap) ? systeminfo.swap : {};
  
