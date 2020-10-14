@@ -1,5 +1,5 @@
---- a/packages/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
-+++ b/packages/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
+--- a/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
++++ b/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
 @@ -45,2 +45,29 @@
  
 +    getCPUInfo = {
@@ -31,8 +31,8 @@
 +
  	setLocaltime = {
 
---- a/packages/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
-+++ b/packages/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
+--- a/package/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
++++ b/package/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
 @@ -93,7 +93,7 @@
  			},
  			"ubus": {
@@ -43,8 +43,8 @@
  		}
  	},
 
---- a/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-+++ b/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+--- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 @@ -15,17 +15,24 @@
  
 +var callCPUInfo = rpc.declare({
@@ -85,8 +85,8 @@
 +			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
  				systeminfo.load[0] / 65535.0,
 
---- a/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
-+++ b/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
+--- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
++++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
 @@ -2,6 +2,7 @@
  'require baseclass';
  'require fs';
@@ -139,8 +139,8 @@
  
  		var netstatus = E('div', { 'class': 'network-status-table' });
 
---- a/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
-+++ b/packages/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
+--- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
++++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 @@ -32,7 +32,7 @@ return baseclass.extend({
  		    swap = L.isObject(systeminfo.swap) ? systeminfo.swap : {};
  
