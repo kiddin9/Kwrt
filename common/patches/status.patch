@@ -31,17 +31,17 @@
 +
  	setLocaltime = {
 
---- a/package/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
-+++ b/package/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
-@@ -93,7 +93,7 @@
- 			},
+--- a/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
++++ b/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
+@@ -3,7 +3,7 @@
+ 		"description": "Grant access to system configuration",
+ 		"read": {
  			"ubus": {
- 				"file": [ "list", "read" ],
--				"system": [ "board", "info" ]
-+				"system": [ "board", "info", "getCPUInfo", "getEthInfo", "getUserInfo" ]
- 			}
- 		}
- 	},
+-				"luci": [ "getInitList", "getLEDs", "getLocaltime", "getTimezones", "getUSBDevices" ]
++				"luci": [ "getInitList", "getLEDs", "getLocaltime", "getTimezones", "getUSBDevices", "getCPUInfo", "getEthInfo", "getUserInfo" ]
+ 			},
+ 			"uci": [ "luci", "system" ]
+ 		},
 
 --- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 +++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
