@@ -9,7 +9,7 @@ rm -Rf feeds/packages/net/smartdns feeds/luci/applications/luci-app-smartdns
 rm -Rf feeds/packages/net/miniupnpd
 rm -Rf feeds/packages/net/mwan3
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
-./scripts/feeds update packages custom
+./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
