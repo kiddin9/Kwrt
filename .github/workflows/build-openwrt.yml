@@ -47,7 +47,7 @@ jobs:
   
     - name: Load Settings.ini
       run: |
-        source "${GITHUB_WORKSPACE}/${{matrix.target}}/settings.ini"
+        source "${GITHUB_WORKSPACE}/devices/${{matrix.target}}/settings.ini"
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
@@ -81,14 +81,14 @@ jobs:
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        if [ -f "common/feeds.conf" ]; then
+        if [ -f "devices/common/feeds.conf" ]; then
         (
-          mv common/feeds.conf openwrt/
+          mv devices/common/feeds.conf openwrt/
         )
         fi       
-        if [ -f "${{matrix.target}}/feeds.conf" ]; then
+        if [ -f "devices/${{matrix.target}}/feeds.conf" ]; then
         (
-          mv ${{matrix.target}}/feeds.conf openwrt/
+          mv devices/${{matrix.target}}/feeds.conf openwrt/
         )
         fi
       
@@ -106,45 +106,45 @@ jobs:
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
         echo "Apply files..."
-        if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
-         cp -rf common/files files
+        if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
+         cp -rf devices/common/files files
         fi
-        if [ -n "$(ls -A "${{matrix.target}}/files" 2>/dev/null)" ]; then
-         cp -rf ${{matrix.target}}/files/* files/
+        if [ -n "$(ls -A "devices/${{matrix.target}}/files" 2>/dev/null)" ]; then
+         cp -rf devices/${{matrix.target}}/files/* files/
         fi
-        if [ -f "common/$DIY_SH" ]; then
+        if [ -f "devices/common/$DIY_SH" ]; then
         (
-          chmod +x common/$DIY_SH
-          /bin/bash "common/$DIY_SH"
+          chmod +x devices/common/$DIY_SH
+          /bin/bash "devices/common/$DIY_SH"
         )
         fi       
-        if [ -f "${{matrix.target}}/$DIY_SH" ]; then
+        if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
         (
-          chmod +x ${{matrix.target}}/$DIY_SH
-          /bin/bash "${{matrix.target}}/$DIY_SH"
+          chmod +x devices/${{matrix.target}}/$DIY_SH
+          /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         )
         fi
-         mv ${{matrix.target}}/$CONFIG_FILE .config
-        if [ -f "common/default-settings" ]; then
-         cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+         mv devices/${{matrix.target}}/$CONFIG_FILE .config
+        if [ -f "devices/common/default-settings" ]; then
+         cp -f devices/common/default-settings package/*/*/default-settings/files/zzz-default-settings
         fi
-        if [ -f "${{matrix.target}}/default-settings" ]; then
-         cat ${{matrix.target}}/default-settings >> package/*/*/default-settings/files/zzz-default-settings
+        if [ -f "devices/${{matrix.target}}/default-settings" ]; then
+         cat devices/${{matrix.target}}/default-settings >> package/*/*/default-settings/files/zzz-default-settings
         fi
-        if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
-         cp -Rf common/diy/* ./
+        if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
+         cp -Rf devices/common/diy/* ./
         fi
-        if [ -n "$(ls -A "${{matrix.target}}/diy" 2>/dev/null)" ]; then
-         cp -Rf ${{matrix.target}}/diy/* ./
+        if [ -n "$(ls -A "devices/${{matrix.target}}/diy" 2>/dev/null)" ]; then
+         cp -Rf devices/${{matrix.target}}/diy/* ./
         fi
-        if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
+        if [ -n "$(ls -A "devices/common/patches" 2>/dev/null)" ]; then
         (
-          find "common/patches" -type f ! -path 'common/patches/china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+          find "devices/common/patches" -type f ! -path 'devices/common/patches/china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
         )
         fi
-        if [ -n "$(ls -A "${{matrix.target}}/patches" 2>/dev/null)" ]; then
+        if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
         (
-          find "${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
         )
         fi
         make defconfig

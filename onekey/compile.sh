@@ -98,55 +98,55 @@ ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 
 
-if [ -f "common/feeds.conf" ]; then
+if [ -f "devices/common/feeds.conf" ]; then
         (
-          mv common/feeds.conf ./
+          mv devices/common/feeds.conf ./
         )
 fi       
-if [ -f "$firmware/feeds.conf" ]; then
+if [ -f "devices/$firmware/feeds.conf" ]; then
         (
-          mv $firmware/feeds.conf ./
+          mv devices/$firmware/feeds.conf ./
         )
 fi
-if [ -n "$(ls -A "common/files" 2>/dev/null)" ]; then
-	cp -rf common/files files
+if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
+	cp -rf devices/common/files files
 fi
-if [ -n "$(ls -A "$firmware/files" 2>/dev/null)" ]; then
-	cp -rf $firmware/files/* files/
+if [ -n "$(ls -A "devices/$firmware/files" 2>/dev/null)" ]; then
+	cp -rf devices/$firmware/files/* files/
 fi
-if [ -f "common/diy.sh" ]; then
+if [ -f "devices/common/diy.sh" ]; then
 	(
-		chmod +x common/diy.sh
-		/bin/bash "common/diy.sh"
+		chmod +x devices/common/diy.sh
+		/bin/bash "devices/common/diy.sh"
 	)
 fi
-if [ -f "$firmware/diy.sh" ]; then
+if [ -f "devices/$firmware/diy.sh" ]; then
 	(
-		chmod +x $firmware/diy.sh
-		/bin/bash "$firmware/diy.sh"
+		chmod +x devices/$firmware/diy.sh
+		/bin/bash "devices/$firmware/diy.sh"
 	)
 fi
-if [ -f "common/default-settings" ]; then
-	sed -i 's/10.0.0.1/$ip/' common/default-settings
-	cp -f common/default-settings package/*/*/default-settings/files/zzz-default-settings
+if [ -f "devices/common/default-settings" ]; then
+	sed -i 's/10.0.0.1/$ip/' devices/common/default-settings
+	cp -f devices/common/default-settings package/*/*/default-settings/files/zzz-default-settings
 fi
-if [ -f "$firmware/default-settings" ]; then
-	sed -i 's/10.0.0.1/$ip/' $firmware/default-settings
-	cat -f $firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
+if [ -f "devices/$firmware/default-settings" ]; then
+	sed -i 's/10.0.0.1/$ip/' devices/$firmware/default-settings
+	cat -f devices/$firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
 fi
-if [ -n "$(ls -A "common/diy" 2>/dev/null)" ]; then
-	cp -Rf common/diy/* ./
+if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
+	cp -Rf devices/common/diy/* ./
 fi
-if [ -n "$(ls -A "$firmware/diy" 2>/dev/null)" ]; then
-	cp -Rf $firmware/diy/* ./
+if [ -n "$(ls -A "devices/$firmware/diy" 2>/dev/null)" ]; then
+	cp -Rf devices/$firmware/diy/* ./
 fi
-if [ -n "$(ls -A "common/patches" 2>/dev/null)" ]; then
-          find "common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+if [ -n "$(ls -A "devices/common/patches" 2>/dev/null)" ]; then
+          find "devices/common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
 fi
-if [ -n "$(ls -A "$firmware/patches" 2>/dev/null)" ]; then
-          find "$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+if [ -n "$(ls -A "devices/$firmware/patches" 2>/dev/null)" ]; then
+          find "devices/$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
 fi
-cp $firmware/.config .config
+cp devices/$firmware/.config .config
 make menuconfig
 echo
 echo
