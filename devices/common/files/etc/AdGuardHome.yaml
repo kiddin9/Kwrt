@@ -102,7 +102,7 @@ filters:
   url: https://gitee.com/lhzgl6587/hosts/raw/master/myruler
   name: 国内手机
   id: 1584462286
-- enabled: true
+- enabled: false
   url: https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
   name: StevenBlack fakenews gambling
   id: 1577002821
