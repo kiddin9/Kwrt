@@ -33,3 +33,12 @@
  endef
  
  define Package/$(PKG_NAME)/description
+
+--- a/package/feeds/custom/luci-app-passwall/root/etc/uci-defaults/luci-app-passwall
++++ b/package/feeds/custom/luci-app-passwall/root/etc/uci-defaults/luci-app-passwall
+@@ -28,4 +28,5 @@ EOF
+ /etc/init.d/https-dns-proxy stop >/dev/null 2>&1 &
+ /etc/init.d/https-dns-proxy disable >/dev/null 2>&1 &
+ rm -rf /tmp/luci-*cache
++killall -HUP rpcd 2>/dev/null
+ exit 0
