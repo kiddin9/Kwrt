@@ -38,7 +38,7 @@ function opkgupgrade() {
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
 							echo "$ipk"
-							[ "$(cat /tmp/upgrade)" == "" ] || [ "$(cat /tmp/upgrade | grep 'Configuring')" ] && {
+							[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
 								udok=true
 							} || {
 								udok=false
@@ -65,7 +65,7 @@ function opkgupgrade() {
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
 							[ "$(cat /tmp/list-upgradable | grep $ipk)" ] && {
 								opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
-								[ "$(cat /tmp/upgrade)" == "" ] || [ "$(cat /tmp/upgrade | grep 'Configuring')" ] && {
+								[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
 									udok=true
 								} || {
 									udok=false
@@ -94,7 +94,7 @@ function opkgupgrade() {
 }
 opkgupgrade
 
-[ -f "/bin/coremark" ] && [ ! -f "/etc/bench.log" ] && {
+[[ -f "/bin/coremark" && ! -f "/etc/bench.log" ]] && {
 	sleep 5
 	/bin/coremark >/tmp/coremark.log
 	cat /tmp/coremark.log | grep "CoreMark 1.0" | cut -d "/" -f 1 >/etc/bench.log
