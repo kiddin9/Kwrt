@@ -5,7 +5,7 @@ rm -Rf package/lean
 mv -f feeds/packages/libs/libx264 feeds/custom/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/netdata
-rm -Rf feeds/packages/net/smartdns feeds/luci/applications/luci-app-smartdns feeds/luci/applications/luci-app-frpc
+rm -Rf feeds/packages/net/smartdns feeds/luci/applications/luci-app-smartdns feeds/luci/applications/luci-app-frpc feeds/luci/applications/frp
 rm -Rf feeds/packages/net/miniupnpd
 rm -Rf feeds/packages/net/mwan3
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
