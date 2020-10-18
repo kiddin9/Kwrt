@@ -54,9 +54,15 @@ echo "
 
 4. r2s
 
-5. 自定义
+5. newifi-d2
 
-6. Exit
+6. hiwifi-hc5962
+
+7. XY-C5
+
+8. phicomm-N1
+
+9. Exit
 
 "
 
@@ -82,11 +88,23 @@ case $CHOOSE in
 	break
 	;;
 	5)
-		firmware="other"
+		firmware="newifi-d2"
+	break
+	;;
+	6)
+		firmware="hiwifi-hc5962"
+	break
+	;;
+	7)
+		firmware="XY-C5"
+	break
+	;;
+	8)
+		firmware="phicomm-N1"
 		make menuconfig
 	break
 	;;
-	6)	exit 0
+	9)	exit 0
 	;;
 
 esac

@@ -43,9 +43,20 @@ elif [ $firmware == "friendlyarm_nanopi-r2s" ]; then
         (
 	firmware="nanopi-r2s"
         )
+elif [ $firmware == "xiaoyu_xy-c5" ]; then
+        (
+	firmware="XY-C5"
+        )
+elif [ $firmware == "hiwifi_hc5962" ]; then
+        (
+	firmware="hiwifi-hc5962"
+        )
+elif [ $firmware == "d-team_newifi-d2" ]; then
+        (
+	firmware="newifi-d2"
+        )
 else
-		firmware="other"
-		make menuconfig
+		echo "无法识别固件类型,请退出"
 fi
 echo
 
