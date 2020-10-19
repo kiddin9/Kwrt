@@ -4,7 +4,7 @@ rm -Rf package/lean
 ./scripts/feeds update -a
 mv -f feeds/packages/libs/libx264 feeds/custom/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/aria2
-mv -f feeds/packages/admin/netdata feeds/custom/netdata
+mv -f feeds/packages/admin/netdata feeds/custom/netdata feeds/packages/lang/node
 rm -Rf feeds/packages/net/smartdns feeds/luci/applications/luci-app-smartdns feeds/luci/applications/luci-app-frpc feeds/packages/net/frp
 rm -Rf feeds/packages/net/miniupnpd
 rm -Rf feeds/packages/net/mwan3
