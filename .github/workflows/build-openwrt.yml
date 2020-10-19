@@ -9,11 +9,11 @@
 name: Openwrt-AutoBuild
 
 on: 
-  # push: 
-  #   branches:
-  #     - master
+  push: 
+    branches:
+      - master
   schedule:
-    - cron: 30 13 * * 6
+    - cron: 30 21 * * *
   workflow_dispatch:
     inputs:
       ssh:
