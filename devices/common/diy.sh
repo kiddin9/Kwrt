@@ -81,5 +81,5 @@ sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
 find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
 sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
-sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by GaryPang'/g" package/base-files/files/etc/openwrt_release
+sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by QZ forked from GaryPang'/g" package/base-files/files/etc/openwrt_release
 sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
