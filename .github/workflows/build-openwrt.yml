@@ -290,14 +290,14 @@ jobs:
       continue-on-error: true
       with:
         age: '1 day'
-        skip-recent: 10
+        skip-recent: 20
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 10
+        keep_latest: 20
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
