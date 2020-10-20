@@ -179,3 +179,16 @@
  endef
  
  #EXTRA_LDFLAGS:= -lcrypt -lcrypto -lssl
+
+--- a/package/feeds/custom/open-app-filter/Makefile
++++ b/package/feeds/custom/open-app-filter/Makefile
+@@ -29,6 +29,9 @@ define Package/appfilter/description
+   open appfilter app
+ endef
+ 
++define Package/$(PKG_NAME)/conffiles
++  /etc/config/appfilter
++endef
+ 
+ define Package/appfilter/install
+ 	echo "install"
