@@ -9,8 +9,8 @@ Subject: [PATCH] Update 60_nginx-luci-support
 
 diff --git a/net/nginx/files-luci-support/60_nginx-luci-support b/net/nginx/files-luci-support/60_nginx-luci-support
 index b1fe358246e..3f023ff3ce6 100644
---- a/net/nginx/files-luci-support/60_nginx-luci-support
-+++ b/net/nginx/files-luci-support/60_nginx-luci-support
+--- a/package/feeds/packages/nginx/files-luci-support/60_nginx-luci-support
++++ b/package/feeds/packages/nginx/files-luci-support/60_nginx-luci-support
 @@ -6,7 +6,7 @@ if nginx -V 2>&1 | grep -q ubus; then
  
  location /ubus {
