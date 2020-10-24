@@ -1,0 +1,22 @@
+From f7adde407c30ec1c53f6b9f6d8383b139582db35 Mon Sep 17 00:00:00 2001
+From: garypang13 <48883331+garypang13@users.noreply.github.com>
+Date: Sun, 25 Oct 2020 03:00:45 +0800
+Subject: [PATCH] Update 60_nginx-luci-support
+
+---
+ net/nginx/files-luci-support/60_nginx-luci-support | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/nginx/files-luci-support/60_nginx-luci-support b/net/nginx/files-luci-support/60_nginx-luci-support
+index b1fe358246e..3f023ff3ce6 100644
+--- a/net/nginx/files-luci-support/60_nginx-luci-support
++++ b/net/nginx/files-luci-support/60_nginx-luci-support
+@@ -6,7 +6,7 @@ if nginx -V 2>&1 | grep -q ubus; then
+ 
+ location /ubus {
+         ubus_interpreter;
+-        ubus_socket_path /var/run/ubus.sock;
++        ubus_socket_path /var/run/ubus/ubus.sock;
+         ubus_parallel_req 2;
+ }
+ EOT
