@@ -12,14 +12,12 @@ diff --git a/package/kernel/linux/modules/crypto.mk b/package/kernel/linux/modul
 index 48777764a8..2e71bb3e75 100644
 --- a/package/kernel/linux/modules/crypto.mk
 +++ b/package/kernel/linux/modules/crypto.mk
-@@ -842,3 +843,14 @@ endef
- 
+@@ -840,2 +840,12 @@
  $(eval $(call KernelPackage,crypto-xts))
  
-+
 +define KernelPackage/crypto-rk3328
 +  TITLE:=Rockchip RK3328 CryptoAPI module
-+  DEPENDS:=@TARGET_rockchip +kmod-crypto-des +kmod-crypto-md5 +kmod-crypto-sha1 +kmod-crypto-sha256
++  DEPENDS:=@TARGET_rockchip kmod-crypto-des kmod-crypto-md5 kmod-crypto-sha1 kmod-crypto-sha256
 +  KCONFIG:=CONFIG_CRYPTO_DEV_ROCKCHIP
 +  FILES:=$(LINUX_DIR)/drivers/crypto/rockchip/rk_crypto.ko
 +  AUTOLOAD:=$(call AutoLoad,09,rk_crypto)
