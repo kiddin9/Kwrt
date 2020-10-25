@@ -1,0 +1,144 @@
+bind_host: 0.0.0.0
+bind_port: 100
+users:
+- name: root
+  password: $2y$10$gyxCCCIhoPNGzqPVyQnwzeKeITo.pWYcMWGtUxO2ICiOzPeUroIbm
+language: zh-cn
+rlimit_nofile: 0
+web_session_ttl: 720
+dns:
+  bind_host: 0.0.0.0
+  port: 5335
+  statistics_interval: 90
+  querylog_enabled: true
+  querylog_file_enabled: true
+  querylog_interval: 7
+  querylog_size_memory: 1000
+  anonymize_client_ip: false
+  protection_enabled: true
+  blocking_mode: default
+  blocking_ipv4: ""
+  blocking_ipv6: ""
+  blocked_response_ttl: 300
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
+  ratelimit: 0
+  ratelimit_whitelist: []
+  refuse_any: true
+  upstream_dns:
+  - 127.0.0.1:5555
+  - https://dns.supes.top/dns-query
+  - https://cloudflare-dns.com/dns-query
+  - https://dns.google/dns-query
+  - https://dns10.quad9.net/dns-query
+  - https://dns.twnic.tw/dns-query
+  - https://doh.opendns.com/dns-query
+  - https://dns.rubyfish.cn/dns-query
+  - tcp://101.6.6.6:5353
+  - tcp://168.95.1.1
+  - tcp://203.198.7.66
+  bootstrap_dns:
+  - 8.8.8.8:53
+  - 119.29.29.29:53
+  - 127.0.0.1:5555
+  - 2620:fe::10
+  - 2620:fe::fe:10
+  all_servers: true
+  fastest_addr: false
+  allowed_clients: []
+  disallowed_clients: []
+  blocked_hosts:
+  - version.bind
+  - id.server
+  - hostname.bind
+  cache_size: 4194304
+  cache_ttl_min: 1800
+  cache_ttl_max: 86400
+  bogus_nxdomain: []
+  aaaa_disabled: false
+  enable_dnssec: false
+  edns_client_subnet: true
+  filtering_enabled: true
+  filters_update_interval: 12
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  rewrites: []
+  blocked_services: []
+tls:
+  enabled: false
+  server_name: ""
+  force_https: false
+  port_https: 443
+  port_dns_over_tls: 853
+  allow_unencrypted_doh: false
+  strict_sni_check: false
+  certificate_chain: ""
+  private_key: ""
+  certificate_path: ""
+  private_key_path: ""
+filters:
+- enabled: true
+  url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+  name: AdGuard DNS filter
+  id: 1
+- enabled: false
+  url: https://block.energized.pro/blu/formats/filter
+  name: Energized Protection Blu
+  id: 1590467081
+- enabled: true
+  url: https://anti-ad.net/easylist.txt
+  name: anti-AD
+  id: 1580820695
+- enabled: true
+  url: http://uujian.cn/browser/txt/metalist.txt
+  name: 荟萃
+  id: 1575015275
+- enabled: true
+  url: https://gitee.com/lhzgl6587/hosts/raw/master/myruler
+  name: 国内手机
+  id: 1584462286
+- enabled: false
+  url: https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
+  name: StevenBlack fakenews gambling
+  id: 1577002821
+- enabled: false
+  url: https://adaway.org/hosts.txt
+  name: AdAway
+  id: 2
+- enabled: false
+  url: https://www.malwaredomainlist.com/hostslist/hosts.txt
+  name: MalwareDomainList.com Hosts List
+  id: 4
+- enabled: true
+  url: https://raw.githubusercontent.com/googlehosts/hosts/master/hosts-files/hosts
+  name: googlehosts
+  id: 1573404421
+- enabled: true
+  url: https://gist.githubusercontent.com/Ewpratten/a25ae63a7200c02c850fede2f32453cf/raw/b9318009399b99e822515d388b8458557d828c37/hosts-yt-ads
+  name: YouTube-AdBlock
+  id: 1584350199
+whitelist_filters:
+- enabled: true
+  url: https://raw.githubusercontent.com/garypang13/dns_whitelist/master/whitelist
+  name: whitelist
+  id: 1586345471
+user_rules:
+- ""
+dhcp:
+  enabled: false
+  interface_name: br-lan
+  gateway_ip: 10.0.0.2
+  subnet_mask: 255.255.255.0
+  range_start: 10.0.0.100
+  range_end: 10.0.0.255
+  lease_duration: 86400
+  icmp_timeout_msec: 1000
+clients: []
+log_file: ""
+verbose: false
+schema_version: 6

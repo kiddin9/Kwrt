@@ -1,0 +1,152 @@
+--- a/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
++++ b/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
+@@ -45,2 +45,29 @@
+ 
++    getCPUInfo = {
++        call = function()
++            local sys = require "luci.sys"
++            local rv = {}
++            rv.cpufreq      = sys.exec("/sbin/cpuinfo")
++            rv.cpufree      = (sys.exec("expr 100 - $(top -n 1 | grep 'CPU:' | awk -F '%' '{print$4}' | awk -F ' ' '{print$2}')") or "2.33") .. "%"
++            rv.cpumark      = sys.exec("cat /etc/bench.log")
++            return rv
++        end
++    },
++
++	getEthInfo = {
++		call = function()
++			local sys = require "luci.sys"
++			local result = sys.exec("ethinfo 2>/dev/null")
++			return { result = result }
++		end
++	},
++
++	getUserInfo = {
++		call = function()
++			local sys = require "luci.sys"
++			local result = sys.exec("cat /proc/net/arp | grep 'br-lan' | grep '0x2' | wc -l")
++			return { result = result }
++		end
++	},
++
+ 	setLocaltime = {
+
+--- a/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
++++ b/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
+@@ -3,7 +3,7 @@
+ 		"description": "Grant access to system configuration",
+ 		"read": {
+ 			"ubus": {
+-				"luci": [ "getInitList", "getLEDs", "getLocaltime", "getTimezones", "getUSBDevices" ]
++				"luci": [ "getInitList", "getLEDs", "getLocaltime", "getTimezones", "getUSBDevices", "getCPUInfo", "getEthInfo", "getUserInfo" ]
+ 			},
+ 			"uci": [ "luci", "system" ]
+ 		},
+
+--- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+@@ -15,17 +15,24 @@
+ 
++var callCPUInfo = rpc.declare({
++    object: 'luci',
++    method: 'getCPUInfo'
++});
++
+ return baseclass.extend({
+ 	title: _('System'),
+ 
+ 	load: function() {
+ 		return Promise.all([
+ 			L.resolveDefault(callSystemBoard(), {}),
+ 			L.resolveDefault(callSystemInfo(), {}),
++			L.resolveDefault(callCPUInfo(), {}),
+ 			fs.lines('/usr/lib/lua/luci/version.lua')
+ 		]);
+ 	},
+ 
+ 	render: function(data) {
+ 		var boardinfo   = data[0],
+ 		    systeminfo  = data[1],
+-		    luciversion = data[2];
++		    cpuinfo     = data[2],
++		    luciversion = data[3];
+ 
+@@ -54,9 +56,10 @@
+ 			_('Hostname'),         boardinfo.hostname,
+-			_('Model'),            boardinfo.model,
++			_('Model'),            boardinfo.model + ' ' + cpuinfo.cpumark,
+ 			_('Architecture'),     boardinfo.system,
+ 			_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),
+ 			_('Kernel Version'),   boardinfo.kernel,
+ 			_('Local Time'),       datestr,
+ 			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,
+-			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
++			_('CPU Info'),         cpuinfo.cpufreq,
++			_('Load Average'),     Array.isArray(systeminfo.load) ? '%.2f, %.2f, %.2f'.format(
+ 				systeminfo.load[0] / 65535.0,
+
+--- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
++++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/30_network.js
+@@ -2,6 +2,7 @@
+ 'require baseclass';
+ 'require fs';
+ 'require network';
++'require rpc';
+ 
+ function progressbar(value, max, byte) {
+ 	var vn = parseInt(value) || 0,
+@@ -59,6 +60,11 @@ function renderbox(ifc, ipv6) {
+ 	]);
+ }
+ 
++var callUserInfo = rpc.declare({
++    object: 'luci',
++    method: 'getUserInfo'
++});
++
+ return baseclass.extend({
+ 	title: _('Network'),
+ 
+@@ -67,7 +73,8 @@ return baseclass.extend({
+ 			fs.trimmed('/proc/sys/net/netfilter/nf_conntrack_count'),
+ 			fs.trimmed('/proc/sys/net/netfilter/nf_conntrack_max'),
+ 			network.getWANNetworks(),
+-			network.getWAN6Networks()
++			network.getWAN6Networks(),
++			L.resolveDefault(callUserInfo(), {})
+ 		]);
+ 	},
+ 
+@@ -75,7 +82,8 @@ return baseclass.extend({
+ 		var ct_count  = +data[0],
+ 		    ct_max    = +data[1],
+ 		    wan_nets  = data[2],
+-		    wan6_nets = data[3];
++		    wan6_nets = data[3],
++		    userinfo = data[4];
+ 
+ 		var fields = [
+ 			_('Active Connections'), ct_max ? ct_count : null
+@@ -90,6 +98,10 @@ return baseclass.extend({
+ 					(fields[i + 1] != null) ? progressbar(fields[i + 1], ct_max) : '?'
+ 				])
+ 			]));
++			ctstatus.appendChild(E('div', { 'class': 'tr' }, [
++				E('div', { 'class': 'td left' }, _('Online Users')),
++				E('div', { 'class': 'td left' },  userinfo.result)
++			]));
+ 		}
+ 
+ 		var netstatus = E('div', { 'class': 'network-status-table' });
+
+--- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
++++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
+@@ -32,7 +32,7 @@ return baseclass.extend({
+ 		    swap = L.isObject(systeminfo.swap) ? systeminfo.swap : {};
+ 
+ 		var fields = [
+-			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
+ 			_('Used'),            (mem.total && mem.free) ? (mem.total - mem.free) : null, mem.total,
++			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
+ 			_('Buffered'),        (mem.total && mem.buffered) ? mem.buffered : null, mem.total
+ 		];

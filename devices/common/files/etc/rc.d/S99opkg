@@ -1,0 +1,103 @@
+#!/bin/sh
+([ ! "$(pgrep nginx)" ] && {
+	/etc/init.d/nginx restart
+}
+[[ ! "$(netstat -tunlp | grep 5333)" && "$(uci get turboacc.config.dns_caching)" == 1 ]] && {
+	/etc/init.d/turboacc restart
+}
+[[ ! "$(pgrep smartdns)" && "$(uci get smartdns.@smartdns[0].enabled)" == 1 ]] && {
+	/etc/init.d/smartdns start
+}
+if [ $(uci get network.wan.ipv6) == 0 ]; then
+	sysctl -w net.ipv6.conf.all.disable_ipv6=1
+	sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+	sysctl -w net.ipv6.conf.default.disable_ipv6=1
+	sysctl -w net.ipv6.conf.all.disable_ipv6=1
+else
+	sysctl -w net.ipv6.conf.all.disable_ipv6=0
+	sysctl -w net.ipv6.conf.lo.disable_ipv6=0
+	sysctl -w net.ipv6.conf.default.disable_ipv6=0
+	sysctl -w net.ipv6.conf.all.disable_ipv6=0
+fi
+if [ ! -f /etc/inited ]; then
+	[ "$(uci get dhcp.@dnsmasq[0].noresolv)" ] && {
+		uci del dhcp.@dnsmasq[0].noresolv
+		uci commit dhcp
+		service dnsmasq reload
+	}
+fi
+function opkgupgrade() {
+	count=0
+	while :; do
+		httping -c 1 www.baidu.com >/dev/null 2>&1
+		if [ "$?" == "0" ]; then
+			opkg update
+			if [ "$?" == "0" ]; then
+				if [ ! -f /etc/inited ]; then
+					[ -f "/etc/backup/installed_packages.txt" ] && {
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
+							echo "$ipk"
+							[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
+								udok=true
+							} || {
+								udok=false
+								rm -f /var/lock/opkg.lock
+							}
+						done
+						[ $udok == true ] && {
+							rm /etc/config/*-opkg
+							source /etc/profile.d/opkginstall.sh
+							opkg install >/dev/null 2>&1
+							touch /etc/inited
+						}
+					}
+				else
+
+					find /usr/lib/opkg/info -name "*.control" \( \
+					\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
+					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
+					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
+					echo "luci-app-ssr-plus overlay" >> /etc/backup/installed_packages.txt
+					echo "luci-app-turboacc overlay" >> /etc/backup/installed_packages.txt
+					[ -f "/etc/backup/installed_packages.txt" ] && {
+						opkg list-upgradable >/tmp/list-upgradable
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+							[ "$(cat /tmp/list-upgradable | grep $ipk)" ] && {
+								opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
+								[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
+									udok=true
+								} || {
+									udok=false
+									rm -f /var/lock/opkg.lock
+								}
+							}
+						done
+						[ $udok == true ] && {
+							rm /etc/config/*-opkg
+							source /etc/profile.d/opkginstall.sh
+							opkg install >/dev/null 2>&1
+						}
+					}
+				fi
+				rm -f /var/lock/opkg.lock
+				break
+			fi
+			rm -f /var/lock/opkg.lock
+		fi
+		sleep 5
+		count=$((count + 1))
+		if [ $count -gt 120 ]; then
+			break
+		fi
+	done
+}
+opkgupgrade
+
+[[ -f "/bin/coremark" && ! -f "/etc/bench.log" ]] && {
+	sleep 5
+	/bin/coremark >/tmp/coremark.log
+	cat /tmp/coremark.log | grep "CoreMark 1.0" | cut -d "/" -f 1 >/etc/bench.log
+	sed -i 's/CoreMark 1.0/(CpuMark/g' /etc/bench.log
+	echo " Scores)" >>/etc/bench.log
+} &)

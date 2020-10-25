@@ -1,0 +1,72 @@
+--- a/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
++++ b/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
+@@ -880,7 +880,7 @@ function handleOpkg(ev)
+ 				_('Waiting for the <em>opkg %h</em> command to complete…').format(cmd))
+ 		]);
+ 
+-		var argv = [ cmd, '--force-removal-of-dependent-packages' ];
++		var argv = [ cmd, '--force-removal-of-dependent-packages', '--force-overwrite', '--force-checksum' ];
+ 
+ 		if (rem && rem.checked)
+ 			argv.push('--autoremove');
+
+--- a/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
++++ b/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
+@@ -15,6 +15,7 @@ case "$action" in
+ 	;;
+ 	install|update|remove)
+ 		(
++		source /etc/profile.d/opkginstall.sh;
+ 			opkg="opkg"
+ 
+ 			while [ -n "$1" ]; do
+
+--- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+@@ -203,6 +203,7 @@ return view.extend({
+ 			}, this, ev.target))
+ 			.then(L.bind(function(btn, res) {
+ 				var keep = E('input', { type: 'checkbox' }),
++				    keep_opkg = E('input', { type: 'checkbox' }),
+ 				    force = E('input', { type: 'checkbox' }),
+ 				    is_valid = res[1].valid,
+ 				    is_forceable = res[1].forceable,
+@@ -220,6 +221,10 @@ return view.extend({
+ 				body.push(E('p', {}, E('label', { 'class': 'btn' }, [
+ 					keep, ' ', _('Keep settings and retain the current configuration')
+ 				])));
++				body.push(E('p', {}, E('label', { 'class': 'btn' }, [
++					keep_opkg, ' ', _('Retain the current packages')
++				])));
++					keep_opkg.checked = true;
+ 
+ 				if (!is_valid || is_too_big)
+ 					body.push(E('hr'));
+@@ -257,7 +262,7 @@ return view.extend({
+ 
+ 				var cntbtn = E('button', {
+ 					'class': 'btn cbi-button-action important',
+-					'click': ui.createHandlerFn(this, 'handleSysupgradeConfirm', btn, keep, force),
++					'click': ui.createHandlerFn(this, 'handleSysupgradeConfirm', btn, keep, keep_opkg, force),
+ 					'disabled': (!is_valid || is_too_big) ? true : null
+ 				}, [ _('Continue') ]);
+ 
+@@ -282,7 +287,7 @@ return view.extend({
+ 			}, this, ev.target));
+ 	},
+ 
+-	handleSysupgradeConfirm: function(btn, keep, force, ev) {
++	handleSysupgradeConfirm: function(btn, keep, keep_opkg, force, ev) {
+ 		btn.firstChild.data = _('Flashing…');
+ 
+ 		ui.showModal(_('Flashing…'), [
+@@ -294,6 +299,9 @@ return view.extend({
+ 		if (!keep.checked)
+ 			opts.push('-n');
+ 
++		if (keep_opkg.checked)
++			opts.push('-k');
++
+ 		if (force.checked)
+ 			opts.push('--force');
+ 

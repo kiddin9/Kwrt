@@ -1,0 +1,25 @@
+location /luci {
+		index  index.html;
+		include uwsgi_params;
+		uwsgi_read_timeout 300s;
+		uwsgi_param SERVER_ADDR $server_addr;
+		uwsgi_modifier1 9;
+		uwsgi_pass unix:////var/run/luci-webui.socket;
+}
+location ~ /cgi-(backup|download|upload|exec) {
+		include uwsgi_params;
+		uwsgi_read_timeout 300s;
+		uwsgi_param SERVER_ADDR $server_addr;
+		uwsgi_modifier1 9;
+		uwsgi_pass unix:////var/run/luci-cgi_io.socket;
+}
+
+location /luci-static {
+error_log stderr crit;
+}
+
+location /ubus {
+        ubus_interpreter;
+        ubus_socket_path /var/run/ubus/ubus.sock;
+        ubus_parallel_req 2;
+}

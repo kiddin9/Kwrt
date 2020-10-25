@@ -1,6 +1,0 @@
-
-touch /etc/config/placeholder
-
-sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/aarch64' /etc/opkg/customfeeds.conf
-
-exit 0

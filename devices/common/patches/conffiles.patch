@@ -1,0 +1,194 @@
+--- a/package/feeds/custom/luci-app-openclash/Makefile
++++ b/package/feeds/custom/luci-app-openclash/Makefile
+@@ -51,2 +51,3 @@
+ define Package/$(PKG_NAME)/conffiles
++/etc/config/openclash
+ endef
+@@ -91,2 +92,3 @@
+ define Package/$(PKG_NAME)/install
++	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
+ 	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
+
+--- a/package/feeds/custom/luci-app-ssr-plus/Makefile
++++ b/package/feeds/custom/luci-app-ssr-plus/Makefile
+@@ -7 +7,5 @@
+ include $(INCLUDE_DIR)/package.mk
++
++define Package/$(PKG_NAME)/conffiles
++/etc/config/shadowsocksr
++endef
+
+--- a/package/feeds/custom/luci-app-unblockmusic/Makefile
++++ b/package/feeds/custom/luci-app-unblockmusic/Makefile
+@@ -28,6 +28,10 @@ LUCI_PKGARCH:=all
+ 
+ PKG_MAINTAINER:=lean
+ 
++define Package/luci-app-unblockmusic/conffiles
++/etc/config/unblockmusic
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-qbittorrent/Makefile
++++ b/package/feeds/custom/luci-app-qbittorrent/Makefile
+@@ -14,4 +14,8 @@ PKG_NAME:=luci-app-qbittorrent
+ 
++define Package/luci-app-qbittorrent/conffiles
++/etc/config/qbittorrent
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-kodexplorer/Makefile
++++ b/package/feeds/custom/luci-app-kodexplorer/Makefile
+@@ -13,4 +13,8 @@ LUCI_PKGARCH:=all
+ 
++define Package/luci-app-kodexplorer/conffiles
++/etc/config/kodexplorer
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-zerotier/Makefile
++++ b/package/feeds/custom/luci-app-zerotier/Makefile
+@@ -14,4 +14,8 @@ LUCI_PKGARCH:=all
+ 
++define Package/luci-app-zerotier/conffiles
++/etc/config/zerotier
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-turboacc/Makefile
++++ b/package/feeds/custom/luci-app-turboacc/Makefile
+@@ -44,6 +44,10 @@ PKG_CONFIG_DEPENDS:= \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder
+ 
++define Package/luci-app-turboacc/conffiles
++/etc/config/turboacc
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-adbyby-plus/Makefile
++++ b/package/feeds/custom/luci-app-adbyby-plus/Makefile
+@@ -14,4 +14,8 @@ PKG_NAME:=luci-app-adbyby-plus
+ 
++define Package/luci-app-adbyby-plus/conffiles
++/etc/config/adbyby
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-autoreboot/Makefile
++++ b/package/feeds/custom/luci-app-autoreboot/Makefile
+@@ -13,4 +13,8 @@ LUCI_PKGARCH:=all
+ 
++define Package/luci-app-autoreboot/conffiles
++/etc/config/autoreboot
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-usb-printer/Makefile
++++ b/package/feeds/custom/luci-app-usb-printer/Makefile
+@@ -13,4 +13,8 @@ LUCI_DEPENDS:=+p910nd +kmod-usb-printer
+ 
++define Package/luci-app-usb-printer/conffiles
++/etc/config/usb_printer
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-vlmcsd/Makefile
++++ b/package/feeds/custom/luci-app-vlmcsd/Makefile
+@@ -13,4 +13,8 @@ LUCI_DEPENDS:=+vlmcsd
+ 
++define Package/luci-app-vlmcsd/conffiles
++/etc/config/vlmcsd
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-softethervpn/Makefile
++++ b/package/feeds/custom/luci-app-softethervpn/Makefile
+@@ -13,4 +13,8 @@ LUCI_PKGARCH:=all
+ 
++define Package/luci-app-softethervpn/conffiles
++/etc/config/softethervpn
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-xlnetacc/Makefile
++++ b/package/feeds/custom/luci-app-xlnetacc/Makefile
+@@ -11,6 +11,10 @@ LUCI_DEPENDS:=+jshn +wget +openssl-util
+ LUCI_PKGARCH:=all
+ LUCI_DESCRIPTION=LuCI Support for XLNetAcc.
+ 
++define Package/luci-app-xlnetacc/conffiles
++/etc/config/xlnetacc
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/luci-app-accesscontrol/Makefile
++++ b/package/feeds/custom/luci-app-accesscontrol/Makefile
+@@ -15,4 +15,8 @@ PKG_NAME:=luci-app-accesscontrol
+ 
++define Package/luci-app-accesscontrol/conffiles
++/etc/config/mia
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/vsftpd-alt/Makefile
++++ b/package/feeds/custom/vsftpd-alt/Makefile
+@@ -33,7 +33,7 @@ define Package/vsftpd-alt/Default
+ endef
+ 
+ define Package/vsftpd-alt/conffiles
+-/etc/vsftpd.conf
++/etc/config/vsftpd
+ endef
+ 
+ #EXTRA_LDFLAGS:= -lcrypt -lcrypto -lssl
+
+--- a/package/feeds/custom/open-app-filter/Makefile
++++ b/package/feeds/custom/open-app-filter/Makefile
+@@ -29,6 +29,9 @@ define Package/appfilter/description
+   open appfilter app
+ endef
+ 
++define Package/$(PKG_NAME)/conffiles
++  /etc/config/appfilter
++endef
+ 
+ define Package/appfilter/install
+ 	echo "install"

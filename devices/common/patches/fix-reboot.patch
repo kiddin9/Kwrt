@@ -1,0 +1,10 @@
+--- a/package/base-files/files/etc/shinit
++++ b/package/base-files/files/etc/shinit
+@@ -2,5 +2,7 @@
+ [ -x /usr/bin/vim ] && alias vi=vim || alias vim=vi
+ 
+ alias ll='ls -alF --color=auto'
++alias reboot='(/sbin/reboot &);sleep 3;/sbin/reboot -f'
++alias /sbin/reboot='(/sbin/reboot &);sleep 3;/sbin/reboot -f'
+ 
+ [ -z "$KSH_VERSION" -o \! -s /etc/mkshrc ] || . /etc/mkshrc
