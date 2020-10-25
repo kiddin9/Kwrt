@@ -6,6 +6,8 @@ if [ ! -f /etc/config/placeholder ]; then
 	uci commit smartdns
 fi
 
+touch /etc/config/placeholder
+
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
 
 uci set uhttpd.main.rfc1918_filter=0
