@@ -60,7 +60,8 @@ rm -rf ./feeds/luci/collections/luci-ssl
 svn co https://github.com/openwrt/luci/trunk/collections/luci-ssl feeds/luci/collections/luci-ssl
 mkdir package/network/config/firewall/patches
 wget -O package/network/config/firewall/patches/fullconenat.patch https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
-sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' package/*/custom/*/luasrc/view/*/*.htm
+find package/*/custom/*/luasrc/view/ -maxdepth 2 -name "*.htm" | xargs -i sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' {}
+find package/*/custom/*/luasrc/view/ -maxdepth 2 -name "*.htm" | xargs -i sed -i 's?"http://" + window.location.hostname?window.location.protocol + "//" + window.location.hostname?g' {}
 getversion(){
 ver=$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/$1/releases/latest) | grep -o -E "[0-9].+")
 [ $ver ] && echo $ver || git ls-remote --tags git://github.com/$1 | cut -d/ -f3- | sort -t. -nk1,2 -k3 | awk '/^[^{]*$/{version=$1}END{print version}' | grep -o -E "[0-9].+"
