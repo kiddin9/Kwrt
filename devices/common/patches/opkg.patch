@@ -1,0 +1,49 @@
+From 955488467c8f86aa1994d9a9cccd9dfe7922e459 Mon Sep 17 00:00:00 2001
+From: garypang13 <48883331+garypang13@users.noreply.github.com>
+Date: Tue, 27 Oct 2020 13:48:23 +0800
+Subject: [PATCH] Update opkg.js
+
+---
+ .../htdocs/luci-static/resources/view/opkg.js            | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js b/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
+index a5abfc168c..e139370fe5 100644
+--- a/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
++++ b/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
+@@ -232,7 +232,7 @@ function display(pattern)
+ 			var avail = packages.available.pkgs[name],
+ 			    inst  = packages.installed.pkgs[name];
+ 
+-			if (!inst || !inst.installed)
++			if (!inst || !inst.installed || (!pkg.name.includes('luci-app') && !pkg.name.includes('v2ray')))
+ 				continue;
+ 
+ 			if (!avail || compareVersion(avail.version, pkg.version) <= 0)
+@@ -260,6 +260,9 @@ function display(pattern)
+ 			}, _('Remove…'));
+ 		}
+ 		else {
++			if (pkg.name.includes('kmod'))
++			   continue;
++
+ 			var inst = packages.installed.pkgs[name];
+ 
+ 			ver = truncateVersion(pkg.version || '-');
+@@ -360,6 +363,7 @@ function handleMode(ev)
+ 	if (tab.getAttribute('data-mode') === currentDisplayMode)
+ 		return;
+ 
++	document.querySelector('input[name="filter"]').value = ""
+ 	tab.parentNode.querySelectorAll('li').forEach(function(li) {
+ 		li.classList.remove('cbi-tab');
+ 		li.classList.add('cbi-tab-disabled');
+@@ -1027,7 +1030,7 @@ return view.extend({
+ 				E('div', {}, [
+ 					E('label', {}, _('Filter') + ':'),
+ 					E('span', { 'class': 'control-group' }, [
+-						E('input', { 'type': 'text', 'name': 'filter', 'placeholder': _('Type to filter…'), 'value': query, 'keyup': handleKeyUp }),
++						E('input', { 'type': 'text', 'name': 'filter', 'placeholder': _('Type to filter…'), 'value': 'luci-app', 'keyup': handleKeyUp }),
+ 						E('button', { 'class': 'btn cbi-button', 'click': handleReset }, [ _('Clear') ])
+ 					])
+ 				]),
