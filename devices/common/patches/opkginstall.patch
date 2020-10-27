@@ -70,3 +70,14 @@
  		if (force.checked)
  			opts.push('--force');
  
+--- a/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
++++ b/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
+@@ -140,6 +140,7 @@
+ 				"/sbin/sysupgrade --force /tmp/firmware.bin": [ "exec" ],
+ 				"/sbin/sysupgrade -n --force /tmp/firmware.bin": [ "exec" ],
+ 				"/sbin/sysupgrade -n /tmp/firmware.bin": [ "exec" ],
++				"/sbin/sysupgrade -f /tmp/firmware.bin": [ "exec" ],
+ 				"/sbin/sysupgrade --restore-backup /tmp/backup.tar.gz": [ "exec" ],
+ 				"/sbin/sysupgrade --test /tmp/firmware.bin": [ "exec" ],
+ 				"/sbin/sysupgrade /tmp/firmware.bin": [ "exec" ],
+
