@@ -80,4 +80,3 @@
  				"/sbin/sysupgrade --restore-backup /tmp/backup.tar.gz": [ "exec" ],
  				"/sbin/sysupgrade --test /tmp/firmware.bin": [ "exec" ],
  				"/sbin/sysupgrade /tmp/firmware.bin": [ "exec" ],
-
