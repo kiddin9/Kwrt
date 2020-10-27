@@ -2,6 +2,7 @@
 #=================================================
 rm -Rf package/lean
 ./scripts/feeds update -a
+rm -Rf feeds/custom/diy
 mv -f feeds/packages/libs/libx264 feeds/custom/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/netdata
@@ -42,6 +43,7 @@ sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/smartdns' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
+sed -i '$a /etc/acme' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/php7/custom.ini' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
 sed -i 's/return json_object_new_int(nd);/return json_object_new_int64(nd);/g' package/feeds/luci/luci-lib-jsonc/src/jsonc.c
@@ -58,7 +60,8 @@ rm -rf ./feeds/luci/collections/luci-ssl
 svn co https://github.com/openwrt/luci/trunk/collections/luci-ssl feeds/luci/collections/luci-ssl
 mkdir package/network/config/firewall/patches
 wget -O package/network/config/firewall/patches/fullconenat.patch https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
-sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' package/*/custom/*/luasrc/view/*/*.htm
+find package/*/custom/*/luasrc/view/ -maxdepth 2 -name "*.htm" | xargs -i sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' {}
+find package/*/custom/*/luasrc/view/ -maxdepth 2 -name "*.htm" | xargs -i sed -i 's?"http://" + window.location.hostname?window.location.protocol + "//" + window.location.hostname?g' {}
 getversion(){
 ver=$(basename $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/$1/releases/latest) | grep -o -E "[0-9].+")
 [ $ver ] && echo $ver || git ls-remote --tags git://github.com/$1 | cut -d/ -f3- | sort -t. -nk1,2 -k3 | awk '/^[^{]*$/{version=$1}END{print version}' | grep -o -E "[0-9].+"
@@ -73,7 +76,6 @@ find package/*/custom/*/ -maxdepth 2 -name "Makefile" | xargs -i sed -i "s/SUBDI
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i '/PKG_BUILD_DIR.*(PKG_NAME)/d' feeds/luci/luci.mk
 find package/*/custom/*/ -maxdepth 1 -d -name "i18n" | xargs -i rename -v 's/i18n/po/' {}
-find package/*/custom/*/ -maxdepth 2 -d -name "zh-cn" | xargs -i rename -v 's/zh-cn/zh_Hans/' {}
 sed -i "/po2lmo /d" package/*/custom/*/Makefile
 sed -i "/luci\/i18n/d" package/*/custom/*/Makefile
 sed -i "/*\.po/d" package/*/custom/*/Makefile
@@ -84,3 +86,4 @@ sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by QZ forked from GaryPang'/g" package/base-files/files/etc/openwrt_release
 sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
+sed -i '$a cgi-timeout = 300' package/feeds/packages/uwsgi/files-luci-support/luci-webui.ini

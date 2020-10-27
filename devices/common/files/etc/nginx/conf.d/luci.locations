@@ -15,10 +15,11 @@ location ~ /cgi-(backup|download|upload|exec) {
 }
 
 location /luci-static {
+error_log stderr crit;
 }
 
 location /ubus {
         ubus_interpreter;
-        ubus_socket_path /var/run/ubus.sock;
+        ubus_socket_path /var/run/ubus/ubus.sock;
         ubus_parallel_req 2;
 }

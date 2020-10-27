@@ -89,3 +89,4 @@ chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
+sed -i "s?/var/run/ubus.sock?/var/run/ubus/ubus.sock?" /etc/nginx/conf.d/luci.locations
