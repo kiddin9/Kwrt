@@ -21,6 +21,9 @@ rm -rf /tmp/luci-*
 sed -i '/S99opkg/d' /etc/crontabs/root
 echo "0 0 */3 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
+uci set system.@rngd[0].enabled="1"
+uci commit system
+
 if [ ! -f /etc/config/placeholder ]; then
 
 	if [ $(uci get network.wan.ipv6) == 0 ]; then
