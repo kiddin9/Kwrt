@@ -96,4 +96,6 @@ grep -q reboot /etc/shinit ||
 	sed -i '$a alias reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"\nalias /sbin/reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"' /etc/shinit
 
 grep -q opkginstall /etc/profile ||
-	sed -i '/export ENV=\/etc\/shinit/a export ENV=/etc/profile.d/opkginstall.sh' /etc/shinit
+	sed -i '/export ENV=\/etc\/shinit/a export ENV=/etc/profile.d/opkginstall.sh' /etc/profile
+
+ln -s /sbin/poweroff /sbin/shutdown
