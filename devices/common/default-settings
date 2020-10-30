@@ -92,4 +92,8 @@ chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
-sed -i "s?/var/run/ubus.sock?/var/run/ubus/ubus.sock?" /etc/nginx/conf.d/luci.locations
+grep -q reboot /etc/shinit ||
+	sed -i '$a alias reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"\nalias /sbin/reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"' /etc/shinit
+
+grep -q opkginstall /etc/profile ||
+	sed -i '/export ENV=\/etc\/shinit/a export ENV=/etc/profile.d/opkginstall.sh' /etc/shinit
