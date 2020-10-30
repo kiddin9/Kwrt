@@ -11,13 +11,12 @@ diff --git a/package/feeds/custom/v2ray/Makefile b/package/feeds/custom/v2ray/Ma
 index 2cd405b..eb0df8a 100644
 --- a/package/feeds/custom/v2ray/Makefile
 +++ b/package/feeds/custom/v2ray/Makefile
-@@ -236,6 +236,10 @@ V2RAY_SED_ARGS += \
+@@ -236,6 +236,9 @@ V2RAY_SED_ARGS += \
  	s,_ "v2ray.com/core/transport/internet/headers/wireguard",// &,;
  endif
  
 +V2RAY_SED_ARGS += \
 +	s,_ "v2ray.com/core/proxy/trojan",// &,; \
-+	s,_ "v2ray.com/core/main/jsonem",// &,;
 +
  endif # custom features
  
