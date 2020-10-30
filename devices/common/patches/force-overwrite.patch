@@ -16,7 +16,7 @@ index ec503dc5273d..99b51f70f2fb 100644
  	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
  	mkdir -p $(TARGET_DIR)/tmp
 -	$(call opkg,$(TARGET_DIR)) install \
-+	$(call opkg,$(TARGET_DIR)) install --force-overwrite \
++	$(call opkg,$(TARGET_DIR)) install --force-overwrite --force-checksum \
  		$(call opkg_package_files,$(foreach pkg,$(shell cat $(PACKAGE_INSTALL_FILES) 2>/dev/null),$(pkg)$(call GetABISuffix,$(pkg))))
  	@for file in $(PACKAGE_INSTALL_FILES); do \
  		[ -s $$file.flags ] || continue; \
