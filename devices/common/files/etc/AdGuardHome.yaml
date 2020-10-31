@@ -52,7 +52,7 @@ dns:
   - id.server
   - hostname.bind
   cache_size: 4194304
-  cache_ttl_min: 1800
+  cache_ttl_min: 3600
   cache_ttl_max: 86400
   bogus_nxdomain: []
   aaaa_disabled: false
