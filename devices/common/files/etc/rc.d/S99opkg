@@ -43,6 +43,7 @@ function opkgupgrade() {
 							} || {
 								udok=false
 								rm -f /var/lock/opkg.lock
+								break
 							}
 						done
 						[ $udok == true ] && {
