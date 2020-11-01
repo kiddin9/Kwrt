@@ -23,7 +23,6 @@ config smartdns
 	option dualstack_ip_selection '1'
 	option enabled '1'
 	option redirect 'none'
-	option rr_ttl '7200'
 	list old_redirect 'none'
 	list old_port '5555'
 	list old_enabled '1'
