@@ -66,10 +66,6 @@ if [ ! -f /etc/config/placeholder ]; then
 
 fi
 
-if [ ! -f /usr/bin/ssr-server ]; then
-  sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
-fi
-
 cp -R /www/cgi-bin/* /www/
 find /www -type d -exec chmod 755 {} \;
 chmod +x /www/luci
