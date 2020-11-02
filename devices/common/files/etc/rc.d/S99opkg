@@ -43,6 +43,7 @@ function opkgupgrade() {
 							} || {
 								udok=false
 								rm -f /var/lock/opkg.lock
+								break
 							}
 						done
 						[ $udok == true ] && {
@@ -60,6 +61,7 @@ function opkgupgrade() {
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
 					echo "luci-app-ssr-plus overlay" >> /etc/backup/installed_packages.txt
 					echo "luci-app-turboacc overlay" >> /etc/backup/installed_packages.txt
+					echo "luci-app-gpsysupgrade overlay" >> /etc/backup/installed_packages.txt
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						opkg list-upgradable >/tmp/list-upgradable
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
