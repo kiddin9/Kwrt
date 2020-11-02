@@ -8,7 +8,7 @@ rlimit_nofile: 0
 web_session_ttl: 720
 dns:
   bind_host: 0.0.0.0
-  port: 5335
+  port: 5555
   statistics_interval: 90
   querylog_enabled: true
   querylog_file_enabled: true
@@ -26,23 +26,12 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-  - 127.0.0.1:5555
-  - https://dns.supes.top/dns-query
-  - https://cloudflare-dns.com/dns-query
-  - https://dns.google/dns-query
-  - https://dns10.quad9.net/dns-query
-  - https://dns.twnic.tw/dns-query
-  - https://doh.opendns.com/dns-query
-  - https://dns.rubyfish.cn/dns-query
-  - tcp://101.6.6.6:5353
-  - tcp://168.95.1.1
-  - tcp://203.198.7.66
+ - https://dns.alidns.com/dns-query
+  - https://doh.pub/dns-query
+  - tcp://114.114.114.114
   bootstrap_dns:
-  - 8.8.8.8:53
   - 119.29.29.29:53
-  - 127.0.0.1:5555
-  - 2620:fe::10
-  - 2620:fe::fe:10
+  - 223.5.5.5:53
   all_servers: true
   fastest_addr: false
   allowed_clients: []
