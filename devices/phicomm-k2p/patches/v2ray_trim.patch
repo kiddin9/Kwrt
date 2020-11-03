@@ -1,0 +1,23 @@
+From 35a151462d167746d68ba2c3a39df83a82a44bea Mon Sep 17 00:00:00 2001
+From: garypang13 <48883331+garypang13@users.noreply.github.com>
+Date: Wed, 28 Oct 2020 11:51:06 +0800
+Subject: [PATCH] Update Makefile
+
+---
+ v2ray/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/package/feeds/custom/v2ray/Makefile b/package/feeds/custom/v2ray/Makefile
+index 2cd405b..eb0df8a 100644
+--- a/package/feeds/custom/v2ray/Makefile
++++ b/package/feeds/custom/v2ray/Makefile
+@@ -236,6 +236,9 @@ V2RAY_SED_ARGS += \
+ 	s,_ "v2ray.com/core/transport/internet/headers/wireguard",// &,;
+ endif
+ 
++V2RAY_SED_ARGS += \
++	s,_ "v2ray.com/core/proxy/trojan",// &,; \
++
+ endif # custom features
+ 
+ GEOIP_VER:=latest

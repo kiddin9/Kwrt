@@ -18,7 +18,7 @@ echo
 
 clear
 
-rm -Rf Actions-OpenWrt openwwrt/common openwrt/files && git clone https://github.com/garypang13/Actions-OpenWrt
+rm -Rf Actions-OpenWrt openwrt/common openwrt/files && git clone https://github.com/garypang13/Actions-OpenWrt
 cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
 
@@ -65,6 +65,7 @@ ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 
 rm -Rf feeds package/feeds tmp
+make clean
 [ -f ".config" ] && mv .config .config.bak
 git fetch --all
 git reset --hard origin/master

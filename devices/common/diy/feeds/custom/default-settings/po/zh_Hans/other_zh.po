@@ -66,3 +66,9 @@ msgstr "数据包引导"
 
 msgid "Enable packet steering across all CPUs. May help or hinder network speed."
 msgstr "启用所有CPU的数据包控制。 可能有助于或阻碍网络速度。"
+
+msgid "Block Ads"
+msgstr "广告过滤"
+
+msgid "Block Ads with anti-AD"
+msgstr "启用anti-AD规则过滤广告"

@@ -26,13 +26,11 @@ rm -Rf files/usr/share/aria2 && git clone https://github.com/P3TERX/aria2.conf f
 chmod +x files/usr/share/aria2/*.sh
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech feeds/custom/antileech/src
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n feeds/custom/default-settings/po/zh_Hans
-sed -i '/rpcd_/d' package/*/*/autocore/Makefile
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& \[ -f "\/bin\/bash" \] \&\& env -i bash "$FILE" || . "$FILE"/g' package/base-files/files/etc/profile
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
-sed -i 's?/etc/config/AdGuardHome?/etc/config/AdGuardHome\n/etc/config/AdGuardHome/AdGuardHome.yaml?g'  package/*/*/luci-app-adguardhome/Makefile
+sed -i '/\/etc\/config\/AdGuardHome/a /etc/config/AdGuardHome.yaml'  package/*/*/luci-app-adguardhome/Makefile
 sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Makefile
-sed -i '/ipsec.init/d' package/*/*/strongswan/Makefile
 sed -i 's/+rclone\( \|$\)/+rclone +fuse-utils\1/g' package/*/*/luci-app-rclone/Makefile
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
@@ -45,11 +43,12 @@ sed -i '$a /etc/smartdns' package/base-files/files/lib/upgrade/keep.d/base-files
 sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/acme' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/php7/custom.ini' package/base-files/files/lib/upgrade/keep.d/base-files-essential
+sed -i '/\/etc/profile/d' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
 sed -i 's/return json_object_new_int(nd);/return json_object_new_int64(nd);/g' package/feeds/luci/luci-lib-jsonc/src/jsonc.c
 find target/linux -path "target/linux/*/config-*" | xargs -i sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\n \
 CONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\nCONFIG_CRYPTO_CHACHA20POLY1305=y' {}
-sed -i 's/if test_proxy/sleep 3600\nif test_proxy/g' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
+sed -i '/if test_proxy/i sleep 3600' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i 's/ uci.cursor/ luci.model.uci.cursor/g' package/*/*/luci-app-ssr-plus/root/usr/share/shadowsocksr/subscribe.lua
 sed -i 's/service_start $PROG/service_start $PROG -R/g' package/*/*/php7/files/php7-fpm.init
 sed -i 's/ +kmod-fs-exfat//g' package/*/*/automount/Makefile

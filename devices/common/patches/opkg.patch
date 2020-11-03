@@ -30,11 +30,13 @@ index a5abfc168c..e139370fe5 100644
  			var inst = packages.installed.pkgs[name];
  
  			ver = truncateVersion(pkg.version || '-');
-@@ -360,6 +363,7 @@ function handleMode(ev)
+@@ -360,6 +363,9 @@ function handleMode(ev)
  	if (tab.getAttribute('data-mode') === currentDisplayMode)
  		return;
  
-+	document.querySelector('input[name="filter"]').value = ""
++	var filterv = document.querySelector('input[name="filter"]')
++	if ( filterv.value == "luci-app-")
++		filterv.value = ""
  	tab.parentNode.querySelectorAll('li').forEach(function(li) {
  		li.classList.remove('cbi-tab');
  		li.classList.add('cbi-tab-disabled');
@@ -43,7 +45,7 @@ index a5abfc168c..e139370fe5 100644
  					E('label', {}, _('Filter') + ':'),
  					E('span', { 'class': 'control-group' }, [
 -						E('input', { 'type': 'text', 'name': 'filter', 'placeholder': _('Type to filter…'), 'value': query, 'keyup': handleKeyUp }),
-+						E('input', { 'type': 'text', 'name': 'filter', 'placeholder': _('Type to filter…'), 'value': 'luci-app', 'keyup': handleKeyUp }),
++						E('input', { 'type': 'text', 'name': 'filter', 'placeholder': _('Type to filter…'), 'value': 'luci-app-', 'keyup': handleKeyUp }),
  						E('button', { 'class': 'btn cbi-button', 'click': handleReset }, [ _('Clear') ])
  					])
  				]),

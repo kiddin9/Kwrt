@@ -21,18 +21,24 @@ rm -rf /tmp/luci-*
 sed -i '/S99opkg/d' /etc/crontabs/root
 echo "0 0 */3 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
+grep -q adblock /etc/crontabs/root ||
+	echo "00 00 * * * /etc/init.d/adblock reload" >> /etc/crontabs/root
+
+uci set system.@rngd[0].enabled="1"
+uci commit system
+
+sed -i '/REDIRECT --to-ports 53/d' /etc/firewall.user
+echo "iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
+echo "iptables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
+echo "ip6tables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
+echo "ip6tables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
+
 if [ ! -f /etc/config/placeholder ]; then
 
 	if [ $(uci get network.wan.ipv6) == 0 ]; then
-		uci set smartdns.@smartdns[0].ipv6_server='0'
-		uci commit smartdns
-
 			uci set dhcp.@dnsmasq[0].filter_aaaa='1'
 			uci commit dhcp
 	else
-		uci set smartdns.@smartdns[0].ipv6_server='1'
-		uci commit smartdns
-
 		uci set dhcp.@dnsmasq[0].filter_aaaa='0'
 		uci commit dhcp
 	fi
@@ -52,35 +58,23 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.wan.proto=pppoe
   uci commit network
 
+  uci set shadowsocksr.@global[0].tunnel_forward='1.1.1.1:53'
+
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.0.0.1'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.8.8'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.4.4'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.9'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.10'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.10'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.112'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='146.112.41.2'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.11'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='104.16.248.249'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='104.16.249.249'
-  uci add_list shadowsocksr.@access_control[0].wan_bp_ips='210.0.255.250'
-  uci add_list shadowsocksr.@access_control[0].wan_bp_ips='168.95.1.1'
-  uci add_list shadowsocksr.@access_control[0].wan_bp_ips='101.101.101.101'
-  uci add_list shadowsocksr.@access_control[0].wan_bp_ips='210.17.9.228'
-  uci add_list shadowsocksr.@access_control[0].wan_bp_ips='203.198.7.66'
-  uci add_list shadowsocksr.@access_control[0].wan_bp_ips='124.156.138.74'
+  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.11'
   uci commit shadowsocksr
 
   uci set network.@globals[0].packet_steering=1
   uci commit network
 
-fi
-
-if [ -f /etc/config/jia ]; then
-  sed -i '/=\/tmp\/dnsmasq.ssr/d' /etc/init.d/shadowsocksr
-fi
-if [ ! -f /usr/bin/ssr-server ]; then
-  sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
 fi
 
 cp -R /www/cgi-bin/* /www/
@@ -89,4 +83,10 @@ chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
-sed -i "s?/var/run/ubus.sock?/var/run/ubus/ubus.sock?" /etc/nginx/conf.d/luci.locations
+grep -q reboot /etc/shinit ||
+	sed -i '$a alias reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"\nalias /sbin/reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"' /etc/shinit
+
+sed -i '/opkginstall/d' /etc/profile
+sed -i '/export ENV=\/etc\/shinit/a source /etc/profile.d/opkginstall.sh' /etc/profile
+
+ln -s /sbin/poweroff /sbin/shutdown
