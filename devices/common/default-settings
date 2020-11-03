@@ -21,8 +21,17 @@ rm -rf /tmp/luci-*
 sed -i '/S99opkg/d' /etc/crontabs/root
 echo "0 0 */3 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
+grep -q adblock /etc/crontabs/root ||
+	echo "00 00 * * * /etc/init.d/adblock reload" >> /etc/crontabs/root
+
 uci set system.@rngd[0].enabled="1"
 uci commit system
+
+sed -i '/REDIRECT --to-ports 53/d' /etc/firewall.user
+echo "iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
+echo "iptables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
+echo "ip6tables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
+echo "ip6tables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
 
 if [ ! -f /etc/config/placeholder ]; then
 
@@ -48,6 +57,8 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.lan.ipaddr="10.0.0.1"
   uci set network.wan.proto=pppoe
   uci commit network
+
+  uci set shadowsocksr.@global[0].tunnel_forward='1.1.1.1:53'
 
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
   uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.0.0.1'
