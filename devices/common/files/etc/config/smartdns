@@ -31,7 +31,7 @@ config smartdns
 	list old_enabled '1'
 
 config server
-	option name '腾讯'
+	option name 'DNSPod'
 	option type 'https'
 	option ip 'https://doh.pub/dns-query'
 	option addition_arg ' -check-edns'
@@ -40,7 +40,7 @@ config server
 	option no_check_certificate '0'
 
 config server
-	option name '阿里'
+	option name 'AliDNS'
 	option type 'https'
 	option ip 'https://dns.alidns.com/dns-query'
 	option addition_arg ' -check-edns'
@@ -67,7 +67,7 @@ config server
 	option addition_arg '-host-name cloudflare-dns.com -check-edns'
 
 config server
-	option name 'google'
+	option name 'Google'
 	option type 'https'
 	option server_group 'oversea'
 	option blacklist_ip '0'
@@ -77,7 +77,7 @@ config server
 	option enabled '1'
 
 config server
-	option name 'IBM'
+	option name 'Quad9'
 	option type 'https'
 	option blacklist_ip '0'
 	option no_check_certificate '0'
