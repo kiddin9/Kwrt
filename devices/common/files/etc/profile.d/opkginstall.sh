@@ -9,7 +9,7 @@ opkg() {
 		#/etc/init.d/php7-fpm restart
 
 		while :; do
-			[[ "$(uci get unblockmusic.@unblockmusic[0].enabled)" == 1 && -f /etc/init.d/unblockmusic && ! "$(pgrep UnblockNeteaseMusic)" ]] && {
+			[[ -f /etc/init.d/unblockmusic && "$(uci get unblockmusic.@unblockmusic[0].enabled)" == 1 && ! "$(pgrep UnblockNeteaseMusic)" ]] && {
 				/etc/init.d/unblockmusic restart
 			}
 			[ "$(pgrep UnblockNeteaseMusic)" ] && {

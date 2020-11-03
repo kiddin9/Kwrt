@@ -66,10 +66,6 @@ if [ ! -f /etc/config/placeholder ]; then
 
 fi
 
-if [ ! -f /usr/bin/ssr-server ]; then
-  sed -i '/server-config/d' /usr/lib/lua/luci/controller/shadowsocksr.lua
-fi
-
 cp -R /www/cgi-bin/* /www/
 find /www -type d -exec chmod 755 {} \;
 chmod +x /www/luci
@@ -79,7 +75,7 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 grep -q reboot /etc/shinit ||
 	sed -i '$a alias reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"\nalias /sbin/reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"' /etc/shinit
 
-grep -q opkginstall /etc/profile ||
-	sed -i '/export ENV=\/etc\/shinit/a source /etc/profile.d/opkginstall.sh' /etc/profile
+sed -i '/opkginstall/d' /etc/profile
+sed -i '/export ENV=\/etc\/shinit/a source /etc/profile.d/opkginstall.sh' /etc/profile
 
 ln -s /sbin/poweroff /sbin/shutdown
