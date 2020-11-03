@@ -75,13 +75,3 @@ config server
 	option ip 'https://8.8.8.8/dns-query'
 	option addition_arg '-host-name dns.google -check-edns'
 	option enabled '1'
-
-config server
-	option name 'Quad9'
-	option type 'https'
-	option blacklist_ip '0'
-	option no_check_certificate '0'
-	option server_group 'oversea'
-	option ip 'https://9.9.9.11/dns-query'
-	option addition_arg '-host-name dns11.quad9.net -check-edns'
-	option enabled '1'
