@@ -5,6 +5,9 @@
 
 touch /etc/config/placeholder
 
+uci set adblock.global.adb_report='0'
+uci commit adblock
+
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
 
 uci set uhttpd.main.rfc1918_filter=0

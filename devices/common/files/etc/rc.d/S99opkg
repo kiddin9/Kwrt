@@ -35,7 +35,7 @@ function opkgupgrade() {
 			if [ "$?" == "0" ]; then
 				if [ ! -f /etc/inited ]; then
 					[ -f "/etc/backup/installed_packages.txt" ] && {
-						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}'); do
 							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
 							echo "$ipk"
 							[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
@@ -59,12 +59,9 @@ function opkgupgrade() {
 					\( -exec test -f /overlay/upper/{} \; -exec echo {} \; \) -o \
 					\( -exec test -f /rom/{} \; -exec find {} -name "luci-app*" \; \) \
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
-					echo "luci-app-ssr-plus overlay" >> /etc/backup/installed_packages.txt
-					echo "luci-app-turboacc overlay" >> /etc/backup/installed_packages.txt
-					echo "luci-app-gpsysupgrade overlay" >> /etc/backup/installed_packages.txt
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						opkg list-upgradable >/tmp/list-upgradable
-						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '.*overlay' | awk '{print $1}'); do
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}'); do
 							[ "$(cat /tmp/list-upgradable | grep $ipk)" ] && {
 								opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
 								[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
@@ -72,6 +69,7 @@ function opkgupgrade() {
 								} || {
 									udok=false
 									rm -f /var/lock/opkg.lock
+									break
 								}
 							}
 						done
