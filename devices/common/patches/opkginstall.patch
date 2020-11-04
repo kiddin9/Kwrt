@@ -8,6 +8,16 @@
  			opkg="opkg"
  
  			while [ -n "$1" ]; do
+@@ -33,7 +34,8 @@ case "$action" in
+ 			done
+ 
+ 			if flock -x 200; then
+-				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
++				$opkg $action "$@" </dev/null >/tmp/opkg.out 2 | sed -i "/resolve_conffiles/d" >/tmp/opkg.err
++				[ "`cat /tmp/opkg.err`" ] || rm -f /tmp/opkg.err
+ 				code=$?
+ 				stdout=$(cat /tmp/opkg.out)
+ 				stderr=$(cat /tmp/opkg.err)
 
 --- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
 +++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
