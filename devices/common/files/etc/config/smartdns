@@ -62,7 +62,7 @@ config server
 	option server_group 'oversea'
 	option blacklist_ip '0'
 	option no_check_certificate '0'
-	option enabled '1'
+	option enabled '0'
 	option ip 'https://1.1.1.1/dns-query'
 	option addition_arg '-host-name cloudflare-dns.com -check-edns'
 
@@ -74,4 +74,4 @@ config server
 	option no_check_certificate '0'
 	option ip 'https://8.8.8.8/dns-query'
 	option addition_arg '-host-name dns.google -check-edns'
-	option enabled '1'
+	option enabled '0'
