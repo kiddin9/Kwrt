@@ -1,15 +1,3 @@
---- a/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
-+++ b/package/feeds/luci/luci-app-opkg/htdocs/luci-static/resources/view/opkg.js
-@@ -880,7 +880,7 @@ function handleOpkg(ev)
- 				_('Waiting for the <em>opkg %h</em> command to complete…').format(cmd))
- 		]);
- 
--		var argv = [ cmd, '--force-removal-of-dependent-packages' ];
-+		var argv = [ cmd, '--force-removal-of-dependent-packages', '--force-overwrite', '--force-checksum' ];
- 
- 		if (rem && rem.checked)
- 			argv.push('--autoremove');
-
 --- a/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
 +++ b/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
 @@ -15,6 +15,7 @@ case "$action" in
