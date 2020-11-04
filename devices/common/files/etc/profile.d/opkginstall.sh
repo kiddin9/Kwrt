@@ -12,7 +12,7 @@ opkg() {
 			[[ -f /etc/init.d/unblockmusic && "$(uci get unblockmusic.@unblockmusic[0].enabled)" == 1 && ! "$(pgrep UnblockNeteaseMusic)" ]] && {
 				/etc/init.d/unblockmusic restart
 			}
-			[ "$(pgrep UnblockNeteaseMusic)" ] && {
+			[[ ! -f /etc/init.d/unblockmusic || "$(uci get unblockmusic.@unblockmusic[0].enabled)" != 1 || "$(pgrep UnblockNeteaseMusic)" ]] && {
 				break
 			}
 		done
