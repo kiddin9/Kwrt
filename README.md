@@ -42,7 +42,19 @@
 
 + SSL兼容,可同时使用http IP访问和绑定域名开启https访问
 
-固件下载 [x86_64,phicomm-k2p,redmi-ac2100,nanopi-r2s,newifi-d2,hiwifi-HC5962,phicomm-N1](https://op.supes.top/firmware/),每周日更新固件.
+| 设备           | 下载                                                | 说明                                 |
+|----------------|-----------------------------------------------------|--------------------------------------|
+| X86_64         | [📥](https://op.supes.top/firmware/x86_64/)         | 请分配不少于800M的存储空间           |
+| Redmi-ac2100   | [📥](https://op.supes.top/firmware/redmi-ac2100/)   | 在breed中需要先刷底包                |
+| Phicomm-k2p    | [📥](https://op.supes.top/firmware/phicomm-k2p/)    | 闪存布局请选择斐讯而非默认的公版     |
+| K2p-32m-usb    | [📥](https://op.supes.top/firmware/k2p-32m-usb/)    | 闪存布局请选择斐讯而非默认的公版     |
+| NanoPi-r2s     | [📥](https://op.supes.top/firmware/nanopi-r2s/)     | 默认交换了网口,靠近电源口的是WAN口   |
+| Phicomm-N1     | [📥](https://op.supes.top/firmware/phicomm-N1/)     | 另需使用打包工具生成刷机固件         |
+| Newifi-d2      | [📥](https://op.supes.top/firmware/newifi-d2/)      |                                      |
+| Hiwifi-hc5962  | [📥](https://op.supes.top/firmware/hiwifi-hc5962/)  |                                      |
+| Xiaomi-r3p     | [📥](https://op.supes.top/firmware/xiaomi-r3p/)     |                                      |
+| XY-C5          | [📥](https://op.supes.top/firmware/XY-C5/)          |                                      |
+
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
 
