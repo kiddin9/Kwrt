@@ -17,8 +17,6 @@
 [![GitHub Forks](https://img.shields.io/github/forks/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Forks)](https://github.com/garypang13/Actions-OpenWrt-Nginx/fork)
 [![PRs Welcome][3]][4]
 [![Issue Welcome][5]][6]
-[![Release Version][7]][8]
-[![Contact Me][10]][11]
 [![AutoBuild][12]][13]
 
 <a href="https://t.me/openwrt_nginx" target="_blank">Telegram</a>
