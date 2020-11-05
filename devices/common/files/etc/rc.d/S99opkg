@@ -38,7 +38,7 @@ function opkgupgrade() {
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}'); do
 							opkg install --force-overwrite --force-checksum $ipk >/tmp/upgrade
 							echo "$ipk"
-							[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')"|| "$(cat /tmp/upgrade | grep 'up to date')" ]] && {
+							[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" || "$(cat /tmp/upgrade | grep 'up to date')" ]] && {
 								udok=true
 							} || {
 								udok=false
