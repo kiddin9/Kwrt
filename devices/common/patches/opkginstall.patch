@@ -12,8 +12,8 @@
  
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
-+				sed -i "/resolve_conffiles/d" /tmp/opkg.err
-+				[ "`cat /tmp/opkg.err`" == "Collected errors:" ] && rm -f /tmp/opkg.err
++				sed -i "/resolve_conffiles/d" /tmp/opkg.err || true
++				[ "`cat /tmp/opkg.err`" == "Collected errors:" ] && rm -f /tmp/opkg.err || true
  				code=$?
  				stdout=$(cat /tmp/opkg.out)
  				stderr=$(cat /tmp/opkg.err)
