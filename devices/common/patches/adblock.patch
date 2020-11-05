@@ -1,0 +1,18 @@
+--- a/package/feeds/packages/adblock/files/adblock.init
++++ b/package/feeds/packages/adblock/files/adblock.init
+@@ -63,6 +63,7 @@ start_service()
+ reload_service()
+ {
+ 	rc_procd start_service reload
++	rc_procd "${adb_script}" report "${1:-"+"}" "${2:-"50"}" "${3:-"true"}" "${4:-"cli"}" >/dev/null 2>&1
+ }
+ 
+ stop_service()
+@@ -73,6 +74,7 @@ stop_service()
+ restart()
+ {
+ 	rc_procd start_service restart
++	rc_procd "${adb_script}" report "${1:-"+"}" "${2:-"50"}" "${3:-"true"}" "${4:-"cli"}" >/dev/null 2>&1
+ }
+ 
+ susp

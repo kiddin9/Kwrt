@@ -1,7 +1,7 @@
 #!/bin/sh
 
 opkg() {
-	if [[ $(echo $@ | grep -o -E '^install') ]]; then
+	if [[ $(echo $@ | grep -o -E ' install ') ]]; then
 		command opkg --force-checksum --force-overwrite $@
 		#rm -Rf /lib/upgrade/keep.d/php7*
 		#sed -i 's/service_start $PROG -y/service_start $PROG -R -y/g' /etc/init.d/php7-fpm
@@ -12,7 +12,7 @@ opkg() {
 			[[ -f /etc/init.d/unblockmusic && "$(uci get unblockmusic.@unblockmusic[0].enabled)" == 1 && ! "$(pgrep UnblockNeteaseMusic)" ]] && {
 				/etc/init.d/unblockmusic restart
 			}
-			[ "$(pgrep UnblockNeteaseMusic)" ] && {
+			[[ ! -f /etc/init.d/unblockmusic || "$(uci get unblockmusic.@unblockmusic[0].enabled)" != 1 || "$(pgrep UnblockNeteaseMusic)" ]] && {
 				break
 			}
 		done

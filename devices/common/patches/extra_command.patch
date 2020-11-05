@@ -1,0 +1,10 @@
+--- a/package/base-files/files/etc/rc.common
++++ b/package/base-files/files/etc/rc.common
+@@ -175,6 +175,6 @@ extra_command "enabled" "Check if service is started on boot"
+ 	}
+ }
+ 
+-ALL_COMMANDS="${EXTRA_COMMANDS}"
++ALL_COMMANDS="start stop reload restart boot shutdown enable disable enabled depends ${EXTRA_COMMANDS}"
+ list_contains ALL_COMMANDS "$action" || action=help
+ $action "$@"

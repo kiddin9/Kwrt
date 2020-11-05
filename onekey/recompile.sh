@@ -18,7 +18,7 @@ echo
 
 clear
 
-rm -Rf Actions-OpenWrt openwrt/common openwrt/files && git clone https://github.com/garypang13/Actions-OpenWrt
+rm -Rf Actions-OpenWrt openwrt/common openwrt/files openwrt/devices && git clone https://github.com/garypang13/Actions-OpenWrt
 cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
 
