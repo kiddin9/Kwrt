@@ -93,6 +93,9 @@ function opkgupgrade() {
 	done
 }
 opkgupgrade
+[[ -f /etc/init.d/adblock && "$(uci get adblock.global.adb_report)" == '1' && "$(uci get adblock.global.adb_enabled)" == '1' ]] && {
+/etc/init.d/adblock report
+}
 
 [[ -f "/bin/coremark" && ! -f "/etc/bench.log" ]] && {
 	sleep 5
