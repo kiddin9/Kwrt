@@ -117,14 +117,10 @@ echo "您的后台地址为: $ip"
 
 
 if [ -f "devices/common/feeds.conf" ]; then
-        (
           mv devices/common/feeds.conf ./
-        )
 fi       
 if [ -f "devices/$firmware/feeds.conf" ]; then
-        (
           mv devices/$firmware/feeds.conf ./
-        )
 fi
 if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
 	cp -rf devices/common/files files
@@ -133,16 +129,12 @@ if [ -n "$(ls -A "devices/$firmware/files" 2>/dev/null)" ]; then
 	cp -rf devices/$firmware/files/* files/
 fi
 if [ -f "devices/common/diy.sh" ]; then
-	(
 		chmod +x devices/common/diy.sh
 		/bin/bash "devices/common/diy.sh"
-	)
 fi
 if [ -f "devices/$firmware/diy.sh" ]; then
-	(
 		chmod +x devices/$firmware/diy.sh
 		/bin/bash "devices/$firmware/diy.sh"
-	)
 fi
 if [ -f "devices/common/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/common/default-settings
