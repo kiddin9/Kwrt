@@ -38,7 +38,8 @@ jobs:
     - name: Load Settings.ini
       run: |
         source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
-        source "${GITHUB_WORKSPACE}/devices/${{matrix.target}}/settings.ini"
+        [ -f "devices/${{matrix.target}}/feeds.conf" ] &&
+            source "${GITHUB_WORKSPACE}/devices/${{matrix.target}}/settings.ini"
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
@@ -97,48 +98,30 @@ jobs:
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
         echo "Apply files..."
-        if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
-         cp -rf devices/common/files files
-        fi
-        if [ -n "$(ls -A "devices/${{matrix.target}}/files" 2>/dev/null)" ]; then
-         cp -rf devices/${{matrix.target}}/files/* files/
-        fi
-        if [ -f "devices/common/$DIY_SH" ]; then
-        (
-          chmod +x devices/common/$DIY_SH
-          /bin/bash "devices/common/$DIY_SH"
-        )
-        fi       
-        if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
-        (
-          chmod +x devices/${{matrix.target}}/$DIY_SH
-          /bin/bash "devices/${{matrix.target}}/$DIY_SH"
-        )
-        fi
+        [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ] &&
+            cp -rf devices/common/files files
+        [ -n "$(ls -A "devices/${{matrix.target}}/files" 2>/dev/null)" ] &&
+            cp -rf devices/${{matrix.target}}/files/* files/
+        [ -f "devices/common/$DIY_SH" ] &&
+            chmod +x devices/common/$DIY_SH; \
+            /bin/bash "devices/common/$DIY_SH"      
+        [ -f "devices/${{matrix.target}}/$DIY_SH" ] &&
+            chmod +x devices/${{matrix.target}}/$DIY_SH; \
+            /bin/bash "devices/${{matrix.target}}/$DIY_SH"
          mv devices/${{matrix.target}}/$CONFIG_FILE .config
-        if [ -f "devices/common/default-settings" ]; then
-         cp -f devices/common/default-settings package/*/*/default-settings/files/zzz-default-settings
-        fi
-        if [ -f "devices/${{matrix.target}}/default-settings" ]; then
-         echo >> package/*/*/default-settings/files/zzz-default-settings
-         cat devices/${{matrix.target}}/default-settings >> package/*/*/default-settings/files/zzz-default-settings
-        fi
-        if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
-         cp -Rf devices/common/diy/* ./
-        fi
-        if [ -n "$(ls -A "devices/${{matrix.target}}/diy" 2>/dev/null)" ]; then
-         cp -Rf devices/${{matrix.target}}/diy/* ./
-        fi
-        if [ -n "$(ls -A "devices/common/patches" 2>/dev/null)" ]; then
-        (
-          find "devices/common/patches" -type f ! -path 'devices/common/patches/china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
-        )
-        fi
-        if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
-        (
-          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
-        )
-        fi
+        [ -f "devices/common/default-settings" ] &&
+            cp -f devices/common/default-settings package/*/*/default-settings/files/zzz-default-settings
+        [ -f "devices/${{matrix.target}}/default-settings" ] &&
+            echo >> package/*/*/default-settings/files/zzz-default-settings; \
+            cat devices/${{matrix.target}}/default-settings >> package/*/*/default-settings/files/zzz-default-settings
+        [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ] &&
+            cp -Rf devices/common/diy/* ./
+        [ -n "$(ls -A "devices/${{matrix.target}}/diy" 2>/dev/null)" ] &&
+            cp -Rf devices/${{matrix.target}}/diy/* ./
+        [ -n "$(ls -A "devices/common/patches" 2>/dev/null)" ] &&
+            find "devices/common/patches" -type f ! -path 'devices/common/patches/china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+        [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ] &&
+            find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
         make defconfig
         
     - name: Default PPPOE Setting
