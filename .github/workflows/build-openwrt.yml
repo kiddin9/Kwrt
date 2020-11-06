@@ -84,7 +84,7 @@ jobs:
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        if[ -f "devices/common/feeds.conf" ]; then
+        if [ -f "devices/common/feeds.conf" ]; then
           mv devices/common/feeds.conf openwrt/
         fi
         if [ -f "devices/${{matrix.target}}/feeds.conf" ]; then
@@ -116,7 +116,7 @@ jobs:
           /bin/bash "devices/common/$DIY_SH"
         fi
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
-          chmod +x devices/${{matrix.target}}/$DIY_SH;
+          chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
           mv devices/${{matrix.target}}/$CONFIG_FILE .config
         fi
