@@ -94,7 +94,7 @@ function opkgupgrade() {
 }
 opkgupgrade
 [[ -f /etc/init.d/adblock && "$(uci get adblock.global.adb_enabled)" == '1' ]] && {
-	[ -n "$(find /tmp/ -maxdepth 1 -name "adb_list.*")" ] && {
+	[ ! -n "$(find /tmp/ -maxdepth 1 -name "adb_list.*")" ] && {
  		/etc/init.d/adblock reload
 	}
 	[ "$(uci get adblock.global.adb_report)" == '1' ] && {
