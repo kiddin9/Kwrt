@@ -74,7 +74,9 @@ function opkgupgrade() {
 							}
 						done
 						[ $udok == true ] && {
-							rm /etc/config/*-opkg
+							[ -f /etc/inited ] && {
+								rm /etc/config/*-opkg
+							}
 							source /etc/profile.d/opkginstall.sh
 							opkg install >/dev/null 2>&1
 						}
@@ -98,7 +100,7 @@ opkgupgrade
  		/etc/init.d/adblock reload
 	}
 	[ "$(uci get adblock.global.adb_report)" == '1' ] && {
-		/etc/init.d/adblock report
+		/etc/init.d/adblock report >/dev/null 2>&1
 	}
 }
 
