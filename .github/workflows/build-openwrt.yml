@@ -118,7 +118,9 @@ jobs:
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
-          mv devices/${{matrix.target}}/$CONFIG_FILE .config
+          mv devices/common/$CONFIG_FILE .config
+          echo >> .config
+          cat devices/${{matrix.target}}/$CONFIG_FILE >> .config
         fi
         if [ -f "devices/common/default-settings" ]; then
           cp -f devices/common/default-settings package/*/*/default-settings/files/zzz-default-settings
