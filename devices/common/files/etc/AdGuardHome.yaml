@@ -8,7 +8,7 @@ rlimit_nofile: 0
 web_session_ttl: 720
 dns:
   bind_host: 0.0.0.0
-  port: 5555
+  port: 5556
   statistics_interval: 90
   querylog_enabled: true
   querylog_file_enabled: true
