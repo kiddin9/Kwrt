@@ -18,7 +18,7 @@ echo
 
 clear
 
-rm -Rf Actions-OpenWrt openwrt/common openwrt/files && git clone https://github.com/garypang13/Actions-OpenWrt
+rm -Rf Actions-OpenWrt openwrt/common openwrt/files openwrt/devices && git clone https://github.com/garypang13/Actions-OpenWrt
 cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
 
@@ -28,35 +28,21 @@ cd openwrt
  }
 
 if [ $firmware == "xiaomi_redmi-router-ac2100" ]; then
-        (
-          firmware="redmi-ac2100"
-        )
+	firmware="redmi-ac2100"
 elif [ $firmware == "phicomm_k2p" ]; then
-        (
-          firmware="phicomm-k2p"
-        )
+	firmware="phicomm-k2p"
 elif [ $firmware == "x86_64" ]; then
-        (
 	firmware="x86_64"
-        )
 elif [ $firmware == "friendlyarm_nanopi-r2s" ]; then
-        (
 	firmware="nanopi-r2s"
-        )
 elif [ $firmware == "xiaoyu_xy-c5" ]; then
-        (
 	firmware="XY-C5"
-        )
 elif [ $firmware == "hiwifi_hc5962" ]; then
-        (
 	firmware="hiwifi-hc5962"
-        )
 elif [ $firmware == "d-team_newifi-d2" ]; then
-        (
 	firmware="newifi-d2"
-        )
 else
-		echo "无法识别固件类型,请退出"
+	echo "无法识别固件类型,请退出"
 fi
 echo
 
@@ -76,16 +62,12 @@ if [ -n "$(ls -A "devices/$firmware/files" 2>/dev/null)" ]; then
 	cp -rf devices/$firmware/files/* files/
 fi
 if [ -f "devices/common/diy.sh" ]; then
-	(
 		chmod +x devices/common/diy.sh
 		/bin/bash "devices/common/diy.sh"
-	)
 fi
 if [ -f "devices/$firmware/diy.sh" ]; then
-	(
 		chmod +x devices/$firmware/diy.sh
 		/bin/bash "devices/$firmware/diy.sh"
-	)
 fi
 if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
 	cp -Rf devices/common/diy/* ./
@@ -107,7 +89,11 @@ fi
 if [ -n "$(ls -A "devices/$firmware/patches" 2>/dev/null)" ]; then
           find "devices/$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
 fi
-[ -f ".config.bak" ] && mv .config.bak .config || mv devices/$firmware/.config .config
+[ -f ".config.bak" ] && mv .config.bak .config || {
+cp devices/common/.config .config
+echo >> .config
+cat devices/$firmware/.config >> .config
+}
 
 [ firmware == "other" ] || {
 while true; do

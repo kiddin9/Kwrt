@@ -36,9 +36,9 @@ function opkgupgrade() {
 				if [ ! -f /etc/inited ]; then
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}'); do
-							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
+							opkg install --force-overwrite --force-checksum $ipk >/tmp/upgrade
 							echo "$ipk"
-							[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
+							[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" || "$(cat /tmp/upgrade | grep 'up to date')" ]] && {
 								udok=true
 							} || {
 								udok=false
@@ -61,20 +61,22 @@ function opkgupgrade() {
 					\) | sed -e 's?/usr/lib/opkg/info/\(.*\).control$?\1 overlay?g' >/etc/backup/installed_packages.txt
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						opkg list-upgradable >/tmp/list-upgradable
+						udok=false
 						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}'); do
 							[ "$(cat /tmp/list-upgradable | grep $ipk)" ] && {
 								opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
 								[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
 									udok=true
 								} || {
-									udok=false
 									rm -f /var/lock/opkg.lock
 									break
 								}
 							}
 						done
 						[ $udok == true ] && {
-							rm /etc/config/*-opkg
+							[ -f /etc/inited ] && {
+								rm /etc/config/*-opkg
+							}
 							source /etc/profile.d/opkginstall.sh
 							opkg install >/dev/null 2>&1
 						}
@@ -93,6 +95,14 @@ function opkgupgrade() {
 	done
 }
 opkgupgrade
+[[ -f /etc/init.d/adblock && "$(uci get adblock.global.adb_enabled)" == '1' ]] && {
+	[ ! -n "$(find /tmp/ -maxdepth 1 -name "adb_list.*")" ] && {
+ 		/etc/init.d/adblock reload
+	}
+	[ "$(uci get adblock.global.adb_report)" == '1' ] && {
+		/etc/init.d/adblock report >/dev/null 2>&1
+	}
+}
 
 [[ -f "/bin/coremark" && ! -f "/etc/bench.log" ]] && {
 	sleep 5
