@@ -21,15 +21,6 @@ diff --git a/src/option.c b/src/option.c
  #define LOPT_MAXTTL        297
  #define LOPT_NO_REBIND     298
  #define LOPT_LOC_REBND     299
-@@ -167,7 +168,7 @@
- #define LOPT_IGNORE_CLID   358
- #define LOPT_SINGLE_PORT   359
- #define LOPT_SCRIPT_TIME   360
-- 
-+
- #ifdef HAVE_GETOPT_LONG
- static const struct option opts[] =  
- #else
 @@ -284,6 +285,7 @@
      { "dhcp-name-match", 1, 0, LOPT_NAME_MATCH },
      { "dhcp-broadcast", 2, 0, LOPT_BROADCAST },
