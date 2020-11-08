@@ -1,0 +1,26 @@
+--- a/usr/lib/lua/luci/model/cbi/https-dns-proxy.lua
++++ b/usr/lib/lua/luci/model/cbi/https-dns-proxy.lua
+@@ -122,6 +122,11 @@ else
+ 	buttons.template = packageName .. "/buttons"
+ end
+ 
++s = m:section(TypedSection, "main", "config")
++s.anonymous=true
++o = s:option(Flag, "enabled", translate("Enable"))
++o.default = 1
++
+ createHelperText()
+ s3 = m:section(TypedSection, "https-dns-proxy", translate("Instances"), 
+ 	translatef("When you add/remove any instances below, they will be used to override the 'DNS forwardings' section of %sDHCP and DNS%s.", "<a href=\"" .. dispatcher.build_url("admin/network/dhcp") .. "\">", "</a>") .. helperText)
+
+--- a/etc/init.d/https-dns-proxy
++++ b/etc/init.d/https-dns-proxy
+@@ -86,6 +86,8 @@ service_triggers() {
+ start_service() {
+ 	local p=5053
+ 	config_load 'https-dns-proxy'
++	enabled=$(uci get https-dns-proxy.config.enabled)
++	[ "$enabled" = 0 ] && return
+ 	config_get dnsmasqConfig	'config' 'update_dnsmasq_config' '*'
+ 	dhcp_backup 'create'
+ 	config_load 'https-dns-proxy'
