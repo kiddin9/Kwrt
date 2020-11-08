@@ -16,8 +16,6 @@ sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/
 
 rm -rf /tmp/luci-*
 
-[ -f /etc/init.d/https-dns-proxy ] && /etc/init.d/https-dns-proxy disable
-
 sed -i '/S99opkg/d' /etc/crontabs/root
 echo "0 0 */3 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
@@ -26,12 +24,6 @@ grep -q adblock /etc/crontabs/root ||
 
 uci set system.@rngd[0].enabled="1"
 uci commit system
-
-sed -i '/REDIRECT --to-ports 53/d' /etc/firewall.user
-echo "iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
-echo "iptables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
-echo "ip6tables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
-echo "ip6tables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53" >> /etc/firewall.user
 
 if [ ! -f /etc/config/placeholder ]; then
 
@@ -76,6 +68,9 @@ if [ ! -f /etc/config/placeholder ]; then
   uci commit network
   
   uci set dhcp.@dnsmasq[0].dns_redirect='1'
+  uci set dhcp.dnsmasq[0].allservers='1'
+  uci set dhcp.lan.force='1'
+  uci set dhcp.dnsmasq[0].cachesize='10000'
   uci commit dhcp
 
 fi

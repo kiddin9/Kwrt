@@ -67,8 +67,14 @@ msgstr "数据包引导"
 msgid "Enable packet steering across all CPUs. May help or hinder network speed."
 msgstr "启用所有CPU的数据包控制。 可能有助于或阻碍网络速度。"
 
-msgid "Block Ads"
-msgstr "广告过滤"
+msgid "Disable IPv6 DNS forwards"
+msgstr "禁止解析 IPv6 DNS 记录"
 
-msgid "Block Ads with anti-AD"
-msgstr "启用anti-AD规则过滤广告"
+msgid "Filter IPv6(AAAA) DNS Query Name Resolve"
+msgstr "过滤掉 IPv6(AAAA) ，只返回 IPv4 DNS 域名记录"
+
+msgid "Minimum TTL to send to clients"
+msgstr "客户端缓存的最小 DNS TTL"
+
+msgid "Modify DNS entries minimum TTL (max is 86400, 0 is no modify)"
+msgstr "修改发送到客户端的域名记录的 TTL 时间 (最大 86400, 0 表示不修改)"
