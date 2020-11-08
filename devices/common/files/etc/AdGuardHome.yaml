@@ -28,7 +28,6 @@ dns:
   upstream_dns:
  - https://dns.alidns.com/dns-query
   - https://doh.pub/dns-query
-  - tcp://114.114.114.114
   bootstrap_dns:
   - 119.29.29.29:53
   - 223.5.5.5:53
