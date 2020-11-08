@@ -306,3 +306,22 @@
  	if [ "${restart_utils}" = "true" ]; then
  		/etc/init.d/dnsmasq restart >/dev/null 2>&1 && echo "DNSMASQ revert"
  		/etc/init.d/firewall restart >/dev/null 2>&1
+
+--- a/package/feeds/custom/luci-app-turboacc/luasrc/view/turboacc/status.htm
++++ b/package/feeds/custom/luci-app-turboacc/luasrc/view/turboacc/status.htm
+@@ -4,7 +4,6 @@
+ 		<tr><td width="33%"><%:Flow Offloading%></td><td id="_fastpath_state"><em><%:Collecting data...%></em></td></tr>
+ 		<tr><td width="33%"><%:BBR CCA%></td><td id="_bbr_state"><em><%:Collecting data...%></em></td></tr>
+ 		<tr><td width="33%"><%:FullCone NAT%></td><td id="_fullconenat_state"><em><%:Collecting data...%></em></td></tr>
+-		<tr><td width="33%"><%:DNS Caching%></td><td id="_dnscaching_state"><em><%:Collecting data...%></em></td></tr>
+ 	</table>
+ </fieldset>
+ 
+@@ -18,7 +17,6 @@
+ 			fastpath_state.innerHTML = status.fastpath_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+ 			bbr_state.innerHTML = status.bbr_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+ 			fullconenat_state.innerHTML = status.fullconenat_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+-			dnscaching_state.innerHTML = status.dnscaching_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+ 		}
+ 	});
+ //]]>
