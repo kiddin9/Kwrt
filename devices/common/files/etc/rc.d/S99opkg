@@ -41,9 +41,6 @@ function opkgupgrade() {
 								rm -f /var/lock/opkg.lock
 								break
 							}
-							[ "$(cat /tmp/list-upgradable | grep $ipk)" && $ipk != "luci-app-opkg" ]] && {
-								opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
-							}
 						done
 						[ $udok == true ] && {
 							rm /etc/config/*-opkg
