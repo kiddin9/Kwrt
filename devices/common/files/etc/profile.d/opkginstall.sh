@@ -8,7 +8,7 @@ opkg() {
 		#sed -i "s/user =.*/user = root/g" /etc/php7-fpm.d/www.conf
 		#/etc/init.d/php7-fpm restart
 		[ $(echo $@ | grep -o 'https-dns-proxy') ] && {
-		sh -c "cat '/usr/share/patch/https-dns-proxy.patch'  | patch -d './' -p1 --forward" >/dev/null 2>&1
+		sh -c "cat '/usr/share/patch/https-dns-proxy.patch'  | patch -d '/' -p1 --forward" >/dev/null 2>&1
 		/etc/init.d/https-dns-proxy restart
 		}
 		while :; do
