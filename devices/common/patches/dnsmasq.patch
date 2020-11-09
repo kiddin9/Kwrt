@@ -29,8 +29,6 @@
 
 --- a/package/network/services/dnsmasq/files/dnsmasq.init
 +++ b/package/network/services/dnsmasq/files/dnsmasq.init
---- a/package/network/services/dnsmasq/files/dnsmasq.init
-+++ b/package/network/services/dnsmasq/files/dnsmasq.init
 @@ -872,9 +872,11 @@ dnsmasq_start()
  	append_bool "$cfg" noping "--no-ping"
  	append_bool "$cfg" rapidcommit "--dhcp-rapid-commit"
