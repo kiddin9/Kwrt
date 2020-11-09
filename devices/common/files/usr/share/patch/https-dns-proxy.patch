@@ -1,7 +1,11 @@
 --- a/usr/lib/lua/luci/model/cbi/https-dns-proxy.lua
 +++ b/usr/lib/lua/luci/model/cbi/https-dns-proxy.lua
-@@ -122,6 +122,11 @@ else
- 	buttons.template = packageName .. "/buttons"
+@@ -118,10 +118,13 @@ else
+ 			ss.template = packageName .. "/status-textarea"
+ 		end
+ 	ss.value = packageStatus
+-	buttons = h:option(DummyValue, "_dummy")
+-	buttons.template = packageName .. "/buttons"
  end
  
 +s = m:section(TypedSection, "main", "config")
@@ -41,37 +45,14 @@
  
  dhcp_backup() {
 
---- a/usr/lib/lua/luci/view/https-dns-proxy/buttons.htm
-+++ b/usr/lib/lua/luci/view/https-dns-proxy/buttons.htm
-@@ -38,15 +38,9 @@
+--- a/usr/lib/lua/luci/view/https-dns-proxy/status-textarea.htm
++++ b/usr/lib/lua/luci/view/https-dns-proxy/status-textarea.htm
+@@ -6,7 +6,7 @@
+ <%+cbi/valueheader%>
  
- <div class="cbi-value"><label class="cbi-value-title">Service Control</label>
- 	<div class="cbi-value-field">
--		<input type="button" class="cbi-button cbi-button-apply" id="btn_start" name="start" value="<%:Start%>"
--			onclick="button_action(this)" />
--		<span id="btn_start_spinner" class="btn_spinner"></span>
- 		<input type="button" class="cbi-button cbi-button-apply" id="btn_action" name="action" value="<%:Reload%>"
- 			onclick="button_action(this)" />
- 		<span id="btn_action_spinner" class="btn_spinner"></span>
--		<input type="button" class="cbi-button cbi-button-reset" id="btn_stop" name="stop" value="<%:Stop%>"
--			onclick="button_action(this)" />
--		<span id="btn_stop_spinner" class="btn_spinner"></span>
- 		&nbsp;
- 		&nbsp;
- 		&nbsp;
-@@ -60,15 +54,9 @@
- 	</div>
- </div>
+ <textarea rows="<%=select(2, self:cfgvalue(section):gsub('\n', ''))%>"
+-	style="border:none;box-shadow:none;background:transparent;font-weight:bold;line-height:20px;width:50em;padding:none;margin:6px;resize:none;overflow:hidden;"
++	style="border:none;box-shadow:none;background:transparent;font-weight:bold;line-height:20px;width:50em;padding:none;padding:0;resize:none;overflow:hidden;"
+ 	disabled="disabled"><%=self:cfgvalue(section)%>
+ </textarea>
  
--<%-if not btn_start_status then%>
--<script type="text/javascript">document.getElementById("btn_start").disabled = true;</script>
--<%-end%>
- <%-if not btn_action_status then%>
- <script type="text/javascript">document.getElementById("btn_action").disabled = true;</script>
- <%-end%>
--<%-if not btn_stop_status then%>
--<script type="text/javascript">document.getElementById("btn_stop").disabled = true;</script>
--<%-end%>
- <%-if not btn_enable_status then%>
- <script type="text/javascript">document.getElementById("btn_enable").disabled = true;</script>
- <%-end%>
