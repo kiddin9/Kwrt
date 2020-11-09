@@ -68,6 +68,20 @@
  
  # call BuildPackage - OpenWrt buildroot signature
 
+--- a/package/feeds/custom/luci-app-turboacc/Makefile
++++ b/package/feeds/custom/luci-app-turboacc/Makefile
+@@ -44,6 +44,10 @@ PKG_CONFIG_DEPENDS:= \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder
+ 
++define Package/luci-app-turboacc/conffiles
++/etc/config/turboacc
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
 --- a/package/feeds/custom/luci-app-adbyby-plus/Makefile
 +++ b/package/feeds/custom/luci-app-adbyby-plus/Makefile
 @@ -14,4 +14,8 @@ PKG_NAME:=luci-app-adbyby-plus

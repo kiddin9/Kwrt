@@ -1,0 +1,327 @@
+--- a/package/feeds/custom/luci-app-turboacc/luasrc/model/cbi/turboacc.lua
++++ b/package/feeds/custom/luci-app-turboacc/luasrc/model/cbi/turboacc.lua
+@@ -59,33 +59,4 @@ fullcone_nat.rmempty = false
+ fullcone_nat.description = translate("Using FullCone NAT can improve gaming performance effectively")
+ end 
+ 
+-dns_acc = s:option(Flag, "dns_acc", translate("DNS Acceleration"))
+-dns_acc.default = 0
+-dns_acc.rmempty = false
+-dns_acc.description = translate("Using optimized DNS records for GoogleHosts (Don't use under Clash Fake-IP mode)")
+-
+-dns_caching = s:option(Flag, "dns_caching", translate("DNS Caching"))
+-dns_caching.default = 0
+-dns_caching.rmempty = false
+-dns_caching.description = translate("Enable DNS Caching and anti ISP DNS pollution")
+-
+-dns_caching_mode = s:option(ListValue, "dns_caching_mode", translate("Resolve DNS Mode"), translate("Only PDNSD and DNSForwarder is supported now"))
+-dns_caching_mode:value("1", translate("Using PDNSD to query and cache"))
+-if nixio.fs.access("/usr/bin/dnsforwarder") then
+-dns_caching_mode:value("2", translate("Using DNSForwarder to query and cache"))
+-end
+-dns_caching_mode.default = 1
+-dns_caching_mode:depends("dns_caching", 1)
+-
+-dns_caching_v4_dns = s:option(Value, "dns_caching_v4_dns", translate("Upsteam IPv4 DNS Server"))
+-dns_caching_v4_dns.default = "114.114.114.114,114.114.115.115,223.5.5.5,223.6.6.6,180.76.76.76,119.29.29.29,119.28.28.28,1.2.4.8,210.2.4.8"
+-dns_caching_v4_dns.description = translate("Muitiple IPv4 DNS server can saperate with ','")
+-dns_caching_v4_dns:depends("dns_caching_mode", 1)
+-dns_caching_v4_dns:depends("dns_caching_mode", 2)
+-
+-dns_caching_v6_dns = s:option(Value, "dns_caching_v6_dns", translate("Upsteam IPv6 DNS Server"))
+-dns_caching_v6_dns.default = "2001:4860:4860::8888,2001:4860:4860::8844,2001:2001::1111,2001:2001::1001,2400:da00::6666,240C::6666,240C::6644"
+-dns_caching_v6_dns.description = translate("Muitiple IPv6 DNS server can saperate with ','")
+-dns_caching_v6_dns:depends("dns_caching_mode", 2)
+-
+ return m
+
+--- a/package/feeds/custom/luci-app-turboacc/Makefile
++++ b/package/feeds/custom/luci-app-turboacc/Makefile
+@@ -12,11 +12,9 @@ PKG_RELEASE:=1
+ PKG_LICENSE:=GPLv3.0+
+ 
+ LUCI_TITLE:=LuCI support for Flow Offload / Shortcut-FE
+-LUCI_DEPENDS:=+pdnsd-alt \
+-              +PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
++LUCI_DEPENDS:=+PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
+               +PACKAGE_$(PKG_NAME)_INCLUDE_flow-offload:kmod-ipt-offload \
+               +PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca:kmod-tcp-bbr \
+-              +PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder:dnsforwarder
+ LUCI_PKGARCH:=all
+ 
+ define Package/$(PKG_NAME)/config
+@@ -32,17 +30,12 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe
+ config PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca
+ 	bool "Include BBR CCA"
+ 	default y
+-
+-config PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder
+-	bool "Include DNSForwarder"
+-	default n
+ endef
+ 
+ PKG_CONFIG_DEPENDS:= \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_flow-offload \
+ 	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca \
+-	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder
+ 
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+
+--- a/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
++++ b/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
+@@ -15,194 +15,6 @@ inital_conf(){
+ 	config_get "sfe_ipv6" "config" "sfe_ipv6" "0"
+ 	config_get "bbr_cca" "config" "bbr_cca" "0"
+ 	config_get "fullcone_nat" "config" "fullcone_nat" "0"
+-	config_get "dns_acc" "config" "dns_acc" "0"
+-	config_get "dns_caching" "config" "dns_caching" "0"
+-	config_get "dns_caching_mode" "config" "dns_caching_mode" "0"
+-	config_get "dns_caching_v4_dns" "config" "dns_caching_v4_dns"
+-	config_get "dns_caching_v6_dns" "config" "dns_caching_v6_dns"
+-}
+-
+-start_pdnsd() {
+-	[ -d "/var/etc" ] || mkdir -p "/var/etc"
+-	cat > "/var/etc/dnscache.conf" <<EOF
+-global {
+-    perm_cache=1024;        # dns缓存大小，单位KB，建议不要写的太大
+-    cache_dir="/var/dnscache";     # 缓存文件的位置
+-    pid_file = /var/run/dnscache.pid;
+-    server_ip = 127.0.0.1;        # pdnsd监听的网卡，0.0.0.0是全部网卡
+-    server_port=5333;           # pdnsd监听的端口，不要和别的服务冲突即可
+-    status_ctl = on;
+-    paranoid=on;                  # 二次请求模式，如果请求主DNS服务器返回的是垃圾地址，就向备用服务器请求
+-    query_method=udp_only;      
+-    neg_domain_pol = off;  
+-    par_queries = 400;          # 最多同时请求数
+-    min_ttl = 1h;               # DNS结果最短缓存时间
+-    max_ttl = 1w;               # DNS结果最长缓存时间
+-    timeout = 10;               # DNS请求超时时间，单位秒
+-}
+-
+-server {  
+-    label = "routine";         
+-    ip = ${dns_caching_v4_dns};     # 这里为主要上级 dns 的 ip 地址，建议填写一个当地最快的DNS地址  
+-    timeout = 5;              # DNS请求超时时间
+-    reject = 74.125.127.102,  # 以下是脏IP，也就是DNS污染一般会返回的结果，如果收到如下DNS结果会触发二次请求（TCP协议一般不会碰到脏IP）
+-        74.125.155.102,  
+-        74.125.39.102,  
+-        74.125.39.113,  
+-        209.85.229.138,  
+-        128.121.126.139,  
+-        159.106.121.75,  
+-        169.132.13.103,  
+-        192.67.198.6,  
+-        202.106.1.2,  
+-        202.181.7.85,  
+-        203.161.230.171,  
+-        203.98.7.65,  
+-        207.12.88.98,  
+-        208.56.31.43,  
+-        209.145.54.50,  
+-        209.220.30.174,  
+-        209.36.73.33,  
+-        211.94.66.147,  
+-        213.169.251.35,  
+-        216.221.188.182,  
+-        216.234.179.13,  
+-        243.185.187.39,  
+-        37.61.54.158,  
+-        4.36.66.178,  
+-        46.82.174.68,  
+-        59.24.3.173,  
+-        64.33.88.161,  
+-        64.33.99.47,  
+-        64.66.163.251,  
+-        65.104.202.252,  
+-        65.160.219.113,  
+-        66.45.252.237,  
+-        69.55.52.253,  
+-        72.14.205.104,  
+-        72.14.205.99,  
+-        78.16.49.15,  
+-        8.7.198.45,  
+-        93.46.8.89,  
+-        37.61.54.158,  
+-        243.185.187.39,  
+-        190.93.247.4,  
+-        190.93.246.4,  
+-        190.93.245.4,  
+-        190.93.244.4,  
+-        65.49.2.178,  
+-        189.163.17.5,  
+-        23.89.5.60,  
+-        49.2.123.56,  
+-        54.76.135.1,  
+-        77.4.7.92,  
+-        118.5.49.6,  
+-        159.24.3.173,  
+-        188.5.4.96,  
+-        197.4.4.12,  
+-        220.250.64.24,  
+-        243.185.187.30,  
+-        249.129.46.48,  
+-        253.157.14.165;  
+-    reject_policy = fail;  
+-}
+-
+-server {  
+-    label = "special";                  # 这个随便写  
+-    ip = 117.50.10.10,52.80.52.52,119.29.29.29; # 这里为备用DNS服务器的 ip 地址  
+-    port = 5353;                        # 推荐使用53以外的端口（DNS服务器必须支持） 
+-    proxy_only = on;
+-    timeout = 5;  
+-}  
+-
+-source {
+-	owner=localhost;
+-//	serve_aliases=on;
+-	file="/etc/hosts";
+-}
+-
+-rr {
+-	name=localhost;
+-	reverse=on;
+-	a=127.0.0.1;
+-	owner=localhost;
+-	soa=localhost,root.localhost,42,86400,900,86400,86400;
+-}
+-EOF
+-
+-	if [ ! -f "/var/dnscache/pdnsd.cache" ]; then
+-		mkdir -p "/var/dnscache"
+-		echo -ne "pd13\000\000\000\000" > "/var/dnscache/pdnsd.cache"
+-		chown -R nobody.nogroup "/var/dnscache"
+-	fi
+-
+-	[ -d "/var/sbin" ] || mkdir -p "/var/sbin" && cp -a "/usr/sbin/pdnsd" "/var/sbin/dnscache"
+-	/var/sbin/dnscache -c "/var/etc/dnscache.conf" &
+-	echo "PDNSD: Start DNS Caching"
+-}
+-
+-start_dnsforwarder() {
+-	mkdir -p "/var/run/dnscache"
+-	cat > "/var/run/dnscache/dnscache.conf" <<EOF
+-LogOn false
+-LogFileThresholdLength 102400
+-LogFileFolder /var/run/dnscache
+-UDPLocal 127.0.0.1:5333
+-UDPGroup ${dns_caching_v4_dns},${dns_caching_v6_dns} * on
+-GroupFile
+-BlockIP 243.185.187.39,46.82.174.68,37.61.54.158,93.46.8.89,59.24.3.173,203.98.7.65,8.7.198.45,78.16.49.15,159.106.121.75,69.63.187.12,31.13.76.8,31.13.64.49
+-IPSubstituting
+-BlockNegativeResponse false
+-Hosts
+-HostsUpdateInterval 18000
+-HostsDownloadPath
+-HostsScript
+-HostsRetryInterval 30
+-AppendHosts
+-BlockIpv6WhenIpv4Exists false
+-UseCache true
+-CacheSize 1048576
+-MemoryCache true
+-CacheFile
+-IgnoreTTL false
+-OverrideTTL -1
+-MultipleTTL 1
+-ReloadCache false
+-OverwriteCache false
+-DisabledType
+-DisabledDomain
+-DisabledList
+-DomainStatistic false
+-DomainStatisticTempletFile
+-StatisticUpdateInterval 29
+-EOF
+-
+-	[ -d "/var/sbin" ] || mkdir -p "/var/sbin" && cp -a "/usr/bin/dnsforwarder" "/var/sbin/dnscache"
+-	/var/sbin/dnscache -f "/var/run/dnscache/dnscache.conf" &
+-	echo "DnsForwarder: Start DNS Caching"
+-
+-}
+-
+-stop_dnscache() {
+-	killall -9 "dnscache" 2>"/dev/null"
+-	kill -9 $(ps | grep dnscache-while.sh | grep -v "grep" | awk '{print $1}') 2>"/dev/null"
+-	rm -rf "/var/dnscache" "/var/run/dnscache"
+-	echo "Stop DNS Caching"
+-}
+-
+-change_dns() {
+- 	uci -q delete dhcp.@dnsmasq[0].server
+-	uci add_list dhcp.@dnsmasq[0].server="127.0.0.1#5333"
+-	uci set dhcp.@dnsmasq[0].noresolv="1"
+-	uci commit dhcp
+-
+-}
+-
+-revert_dns() {
+-	uci -q del_list dhcp.@dnsmasq[0].server="127.0.0.1#5333"
+-	uci set dhcp.@dnsmasq[0].resolvfile="/tmp/resolv.conf.d/resolv.conf.auto"
+-	uci set dhcp.@dnsmasq[0].noresolv="0"
+-	uci commit dhcp
+ }
+ 
+ start(){
+@@ -229,27 +41,6 @@ start(){
+ 		sysctl -w net.ipv4.tcp_congestion_control="cubic"
+ 	fi	
+ 
+-	[ "${dns_acc}" -eq "1" ] && {
+-	mkdir -p "/tmp/dnsmasq.d"
+-	wget-ssl -q -t "20" -T "5" "https://cdn.jsdelivr.net/gh/googlehosts/hosts@master/hosts-files/dnsmasq.conf" -O "/tmp/dnsmasq.d/dnsmasq-googlehosts.conf" &
+-}
+-
+-	if [ "${dns_caching}" -eq "1" ];  then
+-		stop_dnscache
+-		sleep 1
+-		rm -f "/var/log/dnscache.file"
+-		if [ "${dns_caching_mode}" = "1" ];  then
+-			start_pdnsd
+-		elif [ "${dns_caching_mode}" = "2" ];  then
+-			start_dnsforwarder
+-		fi
+-		change_dns
+-		nohup "/usr/share/dnscache/dnscache-while.sh" > "/var/log/dnscache.file" 2>&1 &
+-	else
+-		stop_dnscache
+-		revert_dns
+-	fi
+-
+ 	if [ "${restart_utils}" = "true" ]; then
+ 		/etc/init.d/dnsmasq restart >/dev/null 2>&1 && echo "DNSMASQ change"
+ 		/etc/init.d/firewall restart >/dev/null 2>&1
+@@ -270,11 +61,6 @@ stop(){
+ 		rmmod "fast_classifier" 2>"/dev/null"
+ }
+ 
+-	[ "${dns_acc}" -eq "0" ] && rm -f "/tmp/dnsmasq.d/dnsmasq-googlehosts.conf"
+-
+-	stop_dnscache
+-	revert_dns
+-
+ 	if [ "${restart_utils}" = "true" ]; then
+ 		/etc/init.d/dnsmasq restart >/dev/null 2>&1 && echo "DNSMASQ revert"
+ 		/etc/init.d/firewall restart >/dev/null 2>&1
+
+--- a/package/feeds/custom/luci-app-turboacc/luasrc/view/turboacc/status.htm
++++ b/package/feeds/custom/luci-app-turboacc/luasrc/view/turboacc/status.htm
+@@ -4,7 +4,6 @@
+ 		<tr><td width="33%"><%:Flow Offloading%></td><td id="_fastpath_state"><em><%:Collecting data...%></em></td></tr>
+ 		<tr><td width="33%"><%:BBR CCA%></td><td id="_bbr_state"><em><%:Collecting data...%></em></td></tr>
+ 		<tr><td width="33%"><%:FullCone NAT%></td><td id="_fullconenat_state"><em><%:Collecting data...%></em></td></tr>
+-		<tr><td width="33%"><%:DNS Caching%></td><td id="_dnscaching_state"><em><%:Collecting data...%></em></td></tr>
+ 	</table>
+ </fieldset>
+ 
+@@ -18,7 +17,6 @@
+ 			fastpath_state.innerHTML = status.fastpath_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+ 			bbr_state.innerHTML = status.bbr_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+ 			fullconenat_state.innerHTML = status.fullconenat_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+-			dnscaching_state.innerHTML = status.dnscaching_state ? '<em><b><font color=green><%:RUNNING%></font></b></em>' : '<em><b><font color=red><%:NOT RUNNING%></font></b></em>';
+ 		}
+ 	});
+ //]]>
