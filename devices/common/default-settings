@@ -33,6 +33,8 @@ if [ ! -f /etc/config/placeholder ]; then
 	else
 		uci set dhcp.@dnsmasq[0].filter_aaaa='0'
 		uci commit dhcp
+		uci set turboacc.config.sfe_ipv6='1'
+		uci commit turboacc
 	fi
 
   uci set luci.main.lang=auto
