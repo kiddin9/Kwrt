@@ -1,0 +1,18 @@
+config main 'config'
+	option update_dnsmasq_config '*'
+
+config https-dns-proxy
+	option bootstrap_dns '119.29.29.29,119.28.28.28'
+	option resolver_url 'https://doh.pub/dns-query'
+	option listen_addr '127.0.0.1'
+	option listen_port '5053'
+	option user 'nobody'
+	option group 'nogroup'
+
+config https-dns-proxy
+	option bootstrap_dns '223.5.5.5,223.6.6.6,2400:3200::1,2400:3200:baba::1'
+	option resolver_url 'https://dns.alidns.com/dns-query'
+	option listen_addr '127.0.0.1'
+	option listen_port '5054'
+	option user 'nobody'
+	option group 'nogroup'

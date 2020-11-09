@@ -1,5 +1,6 @@
 
-	uci set turboacc.config.sw_flow='0'
+	uci del turboacc.config.sw_flow
+	uci set turboacc.config.sfe_ipv6='1'
 	uci commit turboacc
 	uci set system.@system[0].zram_size_mb='100'
 	uci set system.@system[0].zram_comp_algo='lz4'

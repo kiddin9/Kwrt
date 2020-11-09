@@ -89,7 +89,11 @@ fi
 if [ -n "$(ls -A "devices/$firmware/patches" 2>/dev/null)" ]; then
           find "devices/$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
 fi
-[ -f ".config.bak" ] && mv .config.bak .config || mv devices/$firmware/.config .config
+[ -f ".config.bak" ] && mv .config.bak .config || {
+cp devices/common/.config .config
+echo >> .config
+cat devices/$firmware/.config >> .config
+}
 
 [ firmware == "other" ] || {
 while true; do

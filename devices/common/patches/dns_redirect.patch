@@ -14,14 +14,19 @@
 
 --- a/package/network/services/dnsmasq/files/dnsmasq.init
 +++ b/package/network/services/dnsmasq/files/dnsmasq.init
-@@ -1080,6 +1080,10 @@ dnsmasq_start()
+@@ -1080,6 +1080,15 @@ dnsmasq_start()
  	procd_add_jail_mount_rw /var/run/dnsmasq/ $leasefile
  
  	procd_close_instance
 +
 +	config_get_bool dns_redirect "$cfg" dns_redirect 0
 +	config_get dns_port "$cfg" port 53
-+	[ $dns_redirect = 1 ] && iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
++	[ $dns_redirect = 1 ] && {
++	 iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
++	 iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p tcp --dport 53 -j REDIRECT --to-ports $dns_port
++	 ip6tables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
++	 ip6tables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p tcp --dport 53 -j REDIRECT --to-ports $dns_port
++	}
  }
  
  dnsmasq_stop()

@@ -16,7 +16,7 @@ index a5abfc168c..e139370fe5 100644
  			    inst  = packages.installed.pkgs[name];
  
 -			if (!inst || !inst.installed)
-+			if (!inst || !inst.installed || (!pkg.name.includes('luci-app') && !pkg.name.includes('v2ray')))
++			if (!inst || !inst.installed || (!pkg.name.includes('luci-app') && !pkg.name.includes('luci-theme') && !pkg.name.includes('v2ray')))
  				continue;
  
  			if (!avail || compareVersion(avail.version, pkg.version) <= 0)
