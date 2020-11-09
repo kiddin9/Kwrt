@@ -31,7 +31,7 @@ function opkgupgrade() {
 			source /etc/profile.d/opkginstall.sh
 				if [ ! -f /etc/inited ]; then
 					[ -f "/etc/backup/installed_packages.txt" ] && {
-						for ipk in $(grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}' /etc/backup/installed_packages.txt); do
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}'); do
 							opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
 							echo "$ipk"
 							[[ "$(cat /tmp/upgrade)" == "" || "$(grep 'Configuring' /tmp/upgrade)" || "$(grep 'Not upgrading package' /tmp/upgrade)" ]] && {
@@ -56,10 +56,10 @@ function opkgupgrade() {
 					[ -f "/etc/backup/installed_packages.txt" ] && {
 						opkg list-upgradable >/tmp/list-upgradable
 						udok=false
-						for ipk in $(grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}' /etc/backup/installed_packages.txt); do
-							[[ "$(cat /tmp/list-upgradable | grep $ipk)" && $ipk != "luci-app-opkg" ]] && {
+						for ipk in $(cat /etc/backup/installed_packages.txt | grep -oE '(.*overlay|luci-app.*|luci-theme.*)' | awk '{print $1}'); do
+							[[ "$(grep $ipk /tmp/list-upgradable)" && $ipk != "luci-app-opkg" ]] && {
 								opkg upgrade --force-overwrite --force-checksum $ipk >/tmp/upgrade
-								[[ "$(cat /tmp/upgrade)" == "" || "$(cat /tmp/upgrade | grep 'Configuring')" ]] && {
+								[[ "$(cat /tmp/upgrade)" == "" || "$(grep 'Configuring' /tmp/upgrade)" ]] && {
 									udok=true
 								} || {
 									rm -f /var/lock/opkg.lock
