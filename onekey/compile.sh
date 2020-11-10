@@ -1,8 +1,8 @@
 #/bin/bash
 echo
 echo
-echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/garypang13/Actions-OpenWrt"
-echo
+echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/bingxueqingzhi/Actions-OpenWrt"
+echo "清淽自用,感谢Garypang13"
 echo
 sleep 2s
 sudo apt-get update
