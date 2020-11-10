@@ -51,15 +51,16 @@
  LUCI_PKGARCH:=all
  
  define Package/$(PKG_NAME)/config
-@@ -33,16 +31,10 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca
+@@ -32,17 +30,12 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe
+ config PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca
  	bool "Include BBR CCA"
  	default y
- 
+-
 -config PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder
 -	bool "Include DNSForwarder"
 -	default n
--endef
--
+ endef
+ 
  PKG_CONFIG_DEPENDS:= \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_flow-offload \
