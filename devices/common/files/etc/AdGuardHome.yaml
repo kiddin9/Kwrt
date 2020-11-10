@@ -26,7 +26,7 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
- - https://dns.alidns.com/dns-query
+  - https://dns.alidns.com/dns-query
   - https://doh.pub/dns-query
   bootstrap_dns:
   - 119.29.29.29:53
