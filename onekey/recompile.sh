@@ -2,7 +2,7 @@
 echo
 echo
 echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/bingxueqingzhi/Actions-OpenWrt"
-echo
+echo "清淽自用,感谢Garypang13"
 echo
 
 if [ "$USER" == "root" ]; then
