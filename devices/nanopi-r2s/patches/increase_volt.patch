@@ -1,0 +1,11 @@
+--- a/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
++++ b/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
+@@ -31,7 +31,7 @@ Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+ +		};
+ +		opp-1512000000 {
+ +			opp-hz = /bits/ 64 <1512000000>;
+-+			opp-microvolt = <1400000>;
+++			opp-microvolt = <1450000>;
+ +			clock-latency-ns = <40000>;
+ +		};
+  	};
