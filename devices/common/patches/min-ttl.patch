@@ -1,22 +1,9 @@
 --- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
 +++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
-@@ -199,6 +199,11 @@ return view.extend({
- 		s.taboption('files', form.DynamicList, 'addnhosts',
- 			_('Additional Hosts files')).optional = true;
- 
-+		o = s.taboption('advanced', form.Flag, 'filter_aaaa',
-+			_('Disable IPv6 DNS forwards'),
-+			_('Filter IPv6(AAAA) DNS Query Name Resolve'));
-+		o.optional = true;
-+
- 		o = s.taboption('advanced', form.Flag, 'quietdhcp',
- 			_('Suppress logging'),
- 			_('Suppress logging of the routine operation of these protocols'));
-@@ -364,6 +369,14 @@ return view.extend({
+@@ -364,6 +364,13 @@ return view.extend({
  		o.datatype = 'range(0,10000)';
  		o.placeholder = 150;
  
-+
 +		o = s.taboption('advanced', form.Value, 'mini_ttl',
 +			_('Minimum TTL to send to clients'),
 +			_('Modify DNS entries minimum TTL (max is 86400, 0 is no modify)'));
@@ -26,16 +13,11 @@
 +
  		s.taboption('tftp', form.Flag, 'enable_tftp',
  			_('Enable TFTP server')).optional = true;
+ 
 
 --- a/package/network/services/dnsmasq/files/dnsmasq.init
 +++ b/package/network/services/dnsmasq/files/dnsmasq.init
---- a/package/network/services/dnsmasq/files/dnsmasq.init
-+++ b/package/network/services/dnsmasq/files/dnsmasq.init
-@@ -872,9 +872,11 @@ dnsmasq_start()
- 	append_bool "$cfg" noping "--no-ping"
- 	append_bool "$cfg" rapidcommit "--dhcp-rapid-commit"
- 	append_bool "$cfg" scriptarp "--script-arp"
-+	append_bool "$cfg" filter_aaaa "--filter-aaaa"
+@@ -875,6 +875,7 @@ dnsmasq_start()
  
  	append_parm "$cfg" logfacility "--log-facility"
  
