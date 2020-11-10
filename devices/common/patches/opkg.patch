@@ -16,7 +16,7 @@ index a5abfc168c..e139370fe5 100644
  			    inst  = packages.installed.pkgs[name];
  
 -			if (!inst || !inst.installed)
-+			if (!inst || !inst.installed || (!pkg.name.includes('luci-app') && !pkg.name.includes('luci-theme') && !pkg.name.includes('v2ray')))
++			if (!inst || !inst.installed || (!pkg.name.includes('luci-app') && !pkg.name.includes('luci-theme') && !pkg.name.includes('v2ray')) || pkg.name.includes('luci-app-opkg'))
  				continue;
  
  			if (!avail || compareVersion(avail.version, pkg.version) <= 0)
@@ -30,17 +30,20 @@ index a5abfc168c..e139370fe5 100644
  			var inst = packages.installed.pkgs[name];
  
  			ver = truncateVersion(pkg.version || '-');
-@@ -360,6 +363,9 @@ function handleMode(ev)
- 	if (tab.getAttribute('data-mode') === currentDisplayMode)
- 		return;
+@@ -370,6 +373,12 @@ function handleMode(ev)
  
+ 	currentDisplayMode = tab.getAttribute('data-mode');
+ 
++	if (currentDisplayMode == "updates"){
 +	var filterv = document.querySelector('input[name="filter"]')
 +	if ( filterv.value == "luci-app-")
 +		filterv.value = ""
- 	tab.parentNode.querySelectorAll('li').forEach(function(li) {
- 		li.classList.remove('cbi-tab');
- 		li.classList.add('cbi-tab-disabled');
-@@ -1027,7 +1030,7 @@ return view.extend({
++	}
++
+ 	display(document.querySelector('input[name="filter"]').value);
+ 
+ 	ev.target.blur();
+@@ -1027,7 +1036,7 @@ return view.extend({
  				E('div', {}, [
  					E('label', {}, _('Filter') + ':'),
  					E('span', { 'class': 'control-group' }, [
