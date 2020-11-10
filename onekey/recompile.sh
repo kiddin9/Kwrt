@@ -1,7 +1,7 @@
 #/bin/bash
 echo
 echo
-echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/garypang13/Actions-OpenWrt"
+echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/bingxueqingzhi/Actions-OpenWrt"
 echo
 echo
 
@@ -18,7 +18,7 @@ echo
 
 clear
 
-rm -Rf Actions-OpenWrt openwrt/common openwrt/files openwrt/devices && git clone https://github.com/garypang13/Actions-OpenWrt
+rm -Rf Actions-OpenWrt openwrt/common openwrt/files openwrt/devices && git clone https://github.com/bingxueqingzhi/Actions-OpenWrt
 cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
 
