@@ -9,16 +9,3 @@
  	done
  	uci delete dhcp.@dnsmasq[0].resolvfile 2>/dev/null
  	uci set dhcp.@dnsmasq[0].noresolv=1
-@@ -490,6 +485,12 @@ start_service() {
- 	echo "AdGuardHome service enabled"
- 	echo "luci enable switch=$enabled"
- 	(sleep 10 && [ -z "$(pgrep $binpath)" ] && logger "AdGuardHome" "no process in 10s cancel redirect" && _do_redirect 0 )&
-+	[ "$(uci get shadowsocksr.@global[0].pdnsd_enable)" == 0 ] || {
-+		uci set shadowsocksr.@global[0].pdnsd_enable='0'
-+		uci del shadowsocksr.@global[0].tunnel_forward
-+		uci commit shadowsocksr
-+		service shadowsocksr reload
-+	}
- }
- reload_service()
- {
