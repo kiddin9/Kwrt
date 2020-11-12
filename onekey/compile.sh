@@ -138,11 +138,11 @@ if [ -f "devices/$firmware/diy.sh" ]; then
 fi
 if [ -f "devices/common/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/common/default-settings
-	cp -f devices/common/default-settings package/*/*/default-settings/files/zzz-default-settings
+	cp -f devices/common/default-settings package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
 fi
 if [ -f "devices/$firmware/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/$firmware/default-settings
-	cat -f devices/$firmware/default-settings >> package/*/*/default-settings/files/zzz-default-settings
+	cat -f devices/$firmware/default-settings >> package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
 fi
 if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
 	cp -Rf devices/common/diy/* ./
