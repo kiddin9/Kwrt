@@ -1,6 +1,6 @@
 --- a/package/feeds/custom/luci-app-passwall/luasrc/controller/passwall.lua
 +++ b/package/feeds/custom/luci-app-passwall/luasrc/controller/passwall.lua
-@@ -35,9 +35,11 @@ function index()
+@@ -36,9 +36,11 @@ function index()
  	entry({"admin", "services", appname, "acl"}, cbi(appname .. "/client/acl"), _("Access control"), 98).leaf = true
  	entry({"admin", "services", appname, "log"}, form(appname .. "/client/log"), _("Watch Logs"), 999).leaf = true
  
@@ -12,18 +12,6 @@
  
  	--[[ API ]]
  	entry({"admin", "services", appname, "server_user_status"}, call("server_user_status")).leaf = true
-
---- a/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/test.sh
-+++ b/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/test.sh
-@@ -70,7 +70,7 @@ test_auto_switch() {
- 	if [ "$status" == 0 ]; then
- 		echolog "自动切换检测：${type}_${index}节点$(config_n_get $now_node type) $(config_n_get $now_node address) $(config_n_get $now_node port)正常。"
- 		#检测主节点是否能使用
--		local main_node=$(config_t_get auto_switch tcp_main1)
-+		local main_node=$(config_t_get global tcp_node1)
- 		if [ "$now_node" != "$main_node" ]; then
- 			local node_type=$(echo $(config_n_get $main_node type) | tr 'A-Z' 'a-z')
- 			if [ "$node_type" == "socks" ]; then
 
 --- a/package/feeds/custom/luci-app-passwall/luasrc/model/cbi/passwall/client/auto_switch.lua
 +++ b/package/feeds/custom/luci-app-passwall/luasrc/model/cbi/passwall/client/auto_switch.lua
