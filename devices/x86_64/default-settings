@@ -8,5 +8,6 @@
 touch /etc/config/placeholder
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/x64' /etc/opkg/customfeeds.conf
+sed -i 'src/gz openwrt_packages2 https://downloads.openwrt.org/releases/19.07.4/packages/x86_64/packages' /etc/opkg/customfeeds.conf
 
 exit 0
