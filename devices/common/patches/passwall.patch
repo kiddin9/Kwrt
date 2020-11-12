@@ -44,3 +44,15 @@
  			}
  		);
  	}
+
+--- a/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/app.sh
++++ b/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/app.sh
+@@ -933,8 +933,6 @@ add_dnsmasq() {
+ 		msg="ISP"
+ 		servers="${LOCAL_DNS}"
+ 		echo "conf-dir=${TMP_DNSMASQ_PATH}" > "/var/dnsmasq.d/dnsmasq-${CONFIG}.conf"
+-		#兼容旧版dnsmasq
+-		echo "conf-dir=${TMP_DNSMASQ_PATH}" > "${DNSMASQ_PATH}/dnsmasq-${CONFIG}.conf"
+ 
+ 		[ "${USE_CHNLIST}" = "1" ] && [ -z "${returnhome}" ] && [ -n "${chnlist}" ] && servers="${TUN_DNS}"
+ 		[ -n "${chnlist}" ] && msg="中国列表以外"
