@@ -27,6 +27,10 @@ grep -q adblock /etc/crontabs/root ||
 uci set system.@rngd[0].enabled="1"
 uci commit system
 
+uci set uhttpd.main.rfc1918_filter=0
+uci set uhttpd.main.redirect_https=0
+uci commit uhttpd
+
 if [ ! -f /etc/config/placeholder ]; then
 
 	if [ $(uci get network.wan.ipv6) == 0 ]; then
