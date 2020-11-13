@@ -58,27 +58,12 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set network.wan.proto=pppoe
   uci commit network
 
-  uci set shadowsocksr.@global[0].tunnel_forward='1.1.1.1:53'
-
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.1.1.1'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='1.0.0.1'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.8.8'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='8.8.4.4'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.9'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.10'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='9.9.9.11'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='104.16.248.249'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='104.16.249.249'
-  uci add_list shadowsocksr.@access_control[0].wan_fw_ips='149.112.112.11'
-  uci commit shadowsocksr
-
   uci set network.@globals[0].packet_steering=1
   uci commit network
   
   uci set dhcp.@dnsmasq[0].dns_redirect='1'
   uci set dhcp.dnsmasq[0].allservers='1'
   uci set dhcp.lan.force='1'
-  uci set dhcp.dnsmasq[0].cachesize='10000'
   uci commit dhcp
 
 fi
