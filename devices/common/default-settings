@@ -2,6 +2,7 @@
 
 ln -sf /sbin/ip /usr/bin/ip
 
+sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
 sed -i '/openwrt_custom/d' /etc/opkg/customfeeds.conf
 sed -i '/openwrt_packages2/d' /etc/opkg/customfeeds.conf
 sed -i 's/downloads.openwrt.org/op.supes.top/g' /etc/opkg/distfeeds.conf
