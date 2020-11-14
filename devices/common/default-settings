@@ -14,6 +14,8 @@ grep -q log-facility /etc/dnsmasq.conf ||
 grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
 	echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
 
+sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
+
 rm -rf /tmp/luci-*
 
 sed -i '/S99opkg/d' /etc/crontabs/root
