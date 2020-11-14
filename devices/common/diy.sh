@@ -27,7 +27,6 @@ chmod +x files/usr/share/aria2/*.sh
 rm -Rf package/*/*/antileech/src/* && git clone https://github.com/persmule/amule-dlp.antiLeech feeds/custom/antileech/src
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/default-settings/i18n feeds/custom/default-settings/po/zh_Hans
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
-sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& \[ -f "\/bin\/bash" \] \&\& env -i bash "$FILE" || . "$FILE"/g' package/base-files/files/etc/profile
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i '/\/etc\/config\/AdGuardHome/a /etc/config/AdGuardHome.yaml'  package/*/*/luci-app-adguardhome/Makefile
 sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Makefile
@@ -44,7 +43,7 @@ sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-es
 sed -i '$a /etc/acme' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/bench.log' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/acme' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '/\/etc/profile/d' package/base-files/files/lib/upgrade/keep.d/base-files-essential
+sed -i '/\/etc\/profile/d' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
 sed -i 's/return json_object_new_int(nd);/return json_object_new_int64(nd);/g' package/feeds/luci/luci-lib-jsonc/src/jsonc.c
 find target/linux -path "target/linux/*/config-*" | xargs -i sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\n \
@@ -56,8 +55,6 @@ sed -i 's/ +kmod-fs-exfat//g' package/*/*/automount/Makefile
 sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/files/uhttpd.config
 rm -rf ./feeds/packages/lang/golang
 svn co https://github.com/project-openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
-rm -rf ./feeds/luci/collections/luci-ssl
-svn co https://github.com/openwrt/luci/trunk/collections/luci-ssl feeds/luci/collections/luci-ssl
 mkdir package/network/config/firewall/patches
 wget -O package/network/config/firewall/patches/fullconenat.patch https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 find package/*/custom/*/luasrc/view/ -maxdepth 2 -name "*.htm" | xargs -i sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' {}

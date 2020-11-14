@@ -9,9 +9,6 @@ uci set adblock.global.adb_report='0'
 uci commit adblock
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
-
-uci set uhttpd.main.rfc1918_filter=0
-uci set uhttpd.main.redirect_https=0
-uci commit uhttpd
+sed -i '$a src/gz openwrt_packages2 https://op.supes.top/19.07.4/packages/mips_24kc/packages' /etc/opkg/customfeeds.conf
 
 exit 0

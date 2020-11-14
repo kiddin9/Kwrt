@@ -1,6 +1,6 @@
 --- a/package/feeds/custom/luci-app-passwall/luasrc/controller/passwall.lua
 +++ b/package/feeds/custom/luci-app-passwall/luasrc/controller/passwall.lua
-@@ -35,9 +35,11 @@ function index()
+@@ -36,9 +36,11 @@ function index()
  	entry({"admin", "services", appname, "acl"}, cbi(appname .. "/client/acl"), _("Access control"), 98).leaf = true
  	entry({"admin", "services", appname, "log"}, form(appname .. "/client/log"), _("Watch Logs"), 999).leaf = true
  
@@ -12,41 +12,6 @@
  
  	--[[ API ]]
  	entry({"admin", "services", appname, "server_user_status"}, call("server_user_status")).leaf = true
-
---- a/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/test.sh
-+++ b/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/test.sh
-@@ -67,17 +67,12 @@ test_auto_switch() {
- 	fi
- 
- 	status=$(test_proxy)
--	if [ "$status" == 0 ]; then
--		echolog "自动切换检测：${type}_${index}节点正常。"
--		return 0
--	elif [ "$status" == 2 ]; then
-+	if [ "$status" == 2 ]; then
- 		echolog "自动切换检测：无法连接到网络，请检查网络是否正常！"
- 		return 2
--	elif [ "$status" == 1 ]; then
--		echolog "自动切换检测：${type}_${index}节点异常，开始切换节点！"
--		
-+	else
- 		#检测主节点是否能使用
--		local main_node=$(config_t_get auto_switch tcp_main1)
-+		local main_node=$(config_t_get global tcp_node1)
- 		if [ "$now_node" != "$main_node" ]; then
- 			local node_type=$(echo $(config_n_get $main_node type) | tr 'A-Z' 'a-z')
- 			if [ "$node_type" == "socks" ]; then
-@@ -98,6 +93,10 @@ test_auto_switch() {
- 				return 0
- 			fi
- 		fi
-+		if [ "$status" == 0 ]; then
-+			echolog "自动切换检测：${type}_${index}节点正常。"
-+			return 0
-+		fi
- 		
- 		local new_node
- 		in_backup_nodes=$(echo $b_tcp_nodes | grep $now_node)
 
 --- a/package/feeds/custom/luci-app-passwall/luasrc/model/cbi/passwall/client/auto_switch.lua
 +++ b/package/feeds/custom/luci-app-passwall/luasrc/model/cbi/passwall/client/auto_switch.lua
@@ -62,3 +27,32 @@
      o = s:option(DynamicList, "tcp_node" .. i, "TCP " .. i .. " " .. translate("List of backup nodes"))
      for k, v in pairs(nodes_table) do
          o:value(v.id, v.remarks)
+
+--- a/package/feeds/custom/luci-app-passwall/luasrc/view/passwall/rule/rule_version.htm
++++ b/package/feeds/custom/luci-app-passwall/luasrc/view/passwall/rule/rule_version.htm
+@@ -26,13 +26,9 @@
+ 				update: checkBoxList
+ 			},
+ 			function(x, data) {
+-				if(x && x.status == 200) {
+-					window.location.href = '<%=url([[admin]], [[services]], [[passwall]], [[log]])%>';
+-				} else {
+ 					alert("<%:Error%>");
+ 					btn.disabled = false;
+ 					btn.value = '<%:Manually update%>';
+-				}
+ 			}
+ 		);
+ 	}
+
+--- a/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/app.sh
++++ b/package/feeds/custom/luci-app-passwall/root/usr/share/passwall/app.sh
+@@ -933,8 +933,6 @@ add_dnsmasq() {
+ 		msg="ISP"
+ 		servers="${LOCAL_DNS}"
+ 		echo "conf-dir=${TMP_DNSMASQ_PATH}" > "/var/dnsmasq.d/dnsmasq-${CONFIG}.conf"
+-		#兼容旧版dnsmasq
+-		echo "conf-dir=${TMP_DNSMASQ_PATH}" > "${DNSMASQ_PATH}/dnsmasq-${CONFIG}.conf"
+ 
+ 		[ "${USE_CHNLIST}" = "1" ] && [ -z "${returnhome}" ] && [ -n "${chnlist}" ] && servers="${TUN_DNS}"
+ 		[ -n "${chnlist}" ] && msg="中国列表以外"
