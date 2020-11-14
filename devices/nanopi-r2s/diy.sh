@@ -1,5 +1,4 @@
 #!/bin/bash
-sed -i "s/+luci\( \|$\)//g"  package/*/*/*/Makefile
 
 wget -O target/linux/rockchip/patches-5.4/002-rockchip-add-hwmon-support-for-SoCs-and-GPUs.patch https://github.com/project-openwrt/openwrt/raw/master/target/linux/rockchip/patches-5.4/002-rockchip-add-hwmon-support-for-SoCs-and-GPUs.patch
 wget -O target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch https://github.com/project-openwrt/openwrt/raw/master/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch

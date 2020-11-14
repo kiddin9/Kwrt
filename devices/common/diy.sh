@@ -55,8 +55,6 @@ sed -i 's/ +kmod-fs-exfat//g' package/*/*/automount/Makefile
 sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/files/uhttpd.config
 rm -rf ./feeds/packages/lang/golang
 svn co https://github.com/project-openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
-rm -rf ./feeds/luci/collections/luci-ssl
-svn co https://github.com/openwrt/luci/trunk/collections/luci-ssl feeds/luci/collections/luci-ssl
 mkdir package/network/config/firewall/patches
 wget -O package/network/config/firewall/patches/fullconenat.patch https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 find package/*/custom/*/luasrc/view/ -maxdepth 2 -name "*.htm" | xargs -i sed -i 's/getElementById("cbid/getElementById("widget.cbid/g' {}
