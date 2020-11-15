@@ -1,23 +1,22 @@
-From f0972c84d9ed457ba9b430792c4809bc6207399a Mon Sep 17 00:00:00 2001
-From: lisaac <lisaac.cn@gmail.com>
-Date: Fri, 27 Mar 2020 07:19:17 +0000
-Subject: [PATCH] luci-lib-jsonc: stringify int use json_object_new_int64
- instead
+From 3af274ad9e230907a9b74f9cd9832bc1879bbaa8 Mon Sep 17 00:00:00 2001
+From: garypang13 <48883331+garypang13@users.noreply.github.com>
+Date: Sun, 15 Nov 2020 17:31:03 +0800
+Subject: [PATCH] Update jsonc.c
 
 ---
- feeds/luci/libs/luci-lib-jsonc/src/jsonc.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ libs/luci-lib-jsonc/src/jsonc.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c b/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c
-index 2f56a4a688..1ccfda8765 100644
---- a/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c
-+++ b/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c
-@@ -365,12 +365,11 @@ static struct json_object * _lua_to_json_rec(lua_State *L, int index,
+diff --git a/libs/luci-lib-jsonc/src/jsonc.c b/libs/luci-lib-jsonc/src/jsonc.c
+index 2f56a4a688..aedd082d71 100644
+--- a/package/feeds/luci/luci-lib-jsonc/src/jsonc.c
++++ b/package/feeds/luci/luci-lib-jsonc/src/jsonc.c
+@@ -365,12 +365,10 @@ static struct json_object * _lua_to_json_rec(lua_State *L, int index,
  
  	case LUA_TNUMBER:
  		nd = lua_tonumber(L, index);
 -		ni = lua_tointeger(L, index);
- 
+-
 -		if (nd == ni)
 -			return json_object_new_int(nd);
 -
