@@ -1,0 +1,31 @@
+From f0972c84d9ed457ba9b430792c4809bc6207399a Mon Sep 17 00:00:00 2001
+From: lisaac <lisaac.cn@gmail.com>
+Date: Fri, 27 Mar 2020 07:19:17 +0000
+Subject: [PATCH] luci-lib-jsonc: stringify int use json_object_new_int64
+ instead
+
+---
+ feeds/luci/libs/luci-lib-jsonc/src/jsonc.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c b/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c
+index 2f56a4a688..1ccfda8765 100644
+--- a/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c
++++ b/feeds/luci/libs/luci-lib-jsonc/src/jsonc.c
+@@ -365,12 +365,11 @@ static struct json_object * _lua_to_json_rec(lua_State *L, int index,
+ 
+ 	case LUA_TNUMBER:
+ 		nd = lua_tonumber(L, index);
+-		ni = lua_tointeger(L, index);
+ 
+-		if (nd == ni)
+-			return json_object_new_int(nd);
+-
+-		return json_object_new_double(nd);
++		if(nd >= INT64_MIN && nd <= INT64_MAX)
++			return json_object_new_int64(nd);
++		else
++			return json_object_new_double(nd);
+ 
+ 	case LUA_TSTRING:
+ 		return json_object_new_string(lua_tostring(L, index));
