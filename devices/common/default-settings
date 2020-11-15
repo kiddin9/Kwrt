@@ -20,7 +20,7 @@ sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 rm -rf /tmp/luci-*
 
 sed -i '/S99opkg/d' /etc/crontabs/root
-echo "0 0 */3 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
+echo "0 0 */1 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
 grep -q adblock /etc/crontabs/root ||
 	echo "00 00 * * * /etc/init.d/adblock reload" >> /etc/crontabs/root
