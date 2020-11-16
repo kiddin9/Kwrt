@@ -9,15 +9,6 @@
 +	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
  	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
 
---- a/package/feeds/custom/luci-app-ssr-plus/Makefile
-+++ b/package/feeds/custom/luci-app-ssr-plus/Makefile
-@@ -7 +7,5 @@
- include $(INCLUDE_DIR)/package.mk
-+
-+define Package/$(PKG_NAME)/conffiles
-+/etc/config/shadowsocksr
-+endef
-
 --- a/package/feeds/custom/luci-app-unblockmusic/Makefile
 +++ b/package/feeds/custom/luci-app-unblockmusic/Makefile
 @@ -28,6 +28,10 @@ LUCI_PKGARCH:=all

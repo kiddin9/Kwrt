@@ -2,8 +2,10 @@
 
 ln -sf /sbin/ip /usr/bin/ip
 
+sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
 sed -i '/openwrt_custom/d' /etc/opkg/customfeeds.conf
 sed -i '/openwrt_packages2/d' /etc/opkg/customfeeds.conf
+sed -i '/openwrt_base2/d' /etc/opkg/customfeeds.conf
 sed -i 's/downloads.openwrt.org/op.supes.top/g' /etc/opkg/distfeeds.conf
 
 sed -i 's/http:/https:/g' /etc/opkg/distfeeds.conf
@@ -14,15 +16,14 @@ grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
 	echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
-sed -i 's/\[ -e "$FILE" \] && . "$FILE"/[ -e "$FILE" ] \&\& env -i bash "$FILE"/g' /etc/profile
 
 rm -rf /tmp/luci-*
 
-sed -i '/S99opkg/d' /etc/crontabs/root
-echo "0 0 */3 * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
+grep -q S99opkg /etc/crontabs/root ||
+	echo "0 0 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
 grep -q adblock /etc/crontabs/root ||
-	echo "00 00 * * * /etc/init.d/adblock reload" >> /etc/crontabs/root
+	echo "0 0 * * * /etc/init.d/adblock reload >/dev/null 2>&1" >> /etc/crontabs/root
 
 uci set system.@rngd[0].enabled="1"
 uci commit system
@@ -64,6 +65,7 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set dhcp.@dnsmasq[0].dns_redirect='1'
   uci set dhcp.dnsmasq[0].allservers='1'
   uci set dhcp.lan.force='1'
+  uci set dhcp.@dnsmasq[0].cachesize='1500'
   uci commit dhcp
 
 fi
@@ -76,8 +78,5 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
 grep -q reboot /etc/shinit ||
 	sed -i '$a alias reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"\nalias /sbin/reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"' /etc/shinit
-
-sed -i '/opkginstall/d' /etc/profile
-sed -i '/export ENV=\/etc\/shinit/a source /etc/profile.d/opkginstall.sh' /etc/profile
 
 ln -s /sbin/poweroff /sbin/shutdown

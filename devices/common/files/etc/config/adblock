@@ -19,5 +19,4 @@ config adblock 'global'
 	list adb_sources 'disconnect'
 	list adb_sources 'youtube'
 	list adb_sources 'yoyo'
-	option adb_fetchutil 'wget'
 

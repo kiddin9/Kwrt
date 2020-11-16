@@ -8,5 +8,6 @@ touch /etc/config/placeholder
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/customfeeds.conf
 sed -i '$a src/gz openwrt_packages2 https://op.supes.top/19.07.4/packages/mips_24kc/packages' /etc/opkg/customfeeds.conf
+sed -i '$a src/gz openwrt_base2 https://op.supes.top/19.07.4/packages/mips_24kc/base' /etc/opkg/customfeeds.conf
 
 exit 0
