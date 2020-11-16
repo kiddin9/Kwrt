@@ -7,13 +7,14 @@ mv -f feeds/packages/libs/libx264 feeds/custom/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/aria2
 mv -f feeds/packages/admin/netdata feeds/custom/netdata
 mv -f feeds/packages/lang/node feeds/custom/node
-mv -f package/network/services/openvpn feeds/custom/openvpn
+mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
 rm -Rf feeds/packages/net/smartdns feeds/luci/applications/luci-app-smartdns feeds/luci/applications/luci-app-frpc feeds/packages/net/frp
 rm -Rf feeds/packages/net/miniupnpd
 rm -Rf feeds/packages/net/mwan3
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
+mv -f package/network/services/openvpn package/feeds/custom/openvpn
 sed -i 's/Os/O2/g' include/target.mk
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
@@ -34,10 +35,12 @@ sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Ma
 sed -i 's/+rclone\( \|$\)/+rclone +fuse-utils\1/g' package/*/*/luci-app-rclone/Makefile
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i 's/ @!BUSYBOX_DEFAULT_IP:/ +/g' package/*/*/wrtbwmon/Makefile
+sed -i 's/shadowsocksr-libev-alt/shadowsocksr-libev-redir/g' package/*/*/*/Makefile
 sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 sed -i '/_redirect2ssl/d' package/*/*/nginx/Makefile
 sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
+sed -i '/if test_proxy/i sleep 3600' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/smartdns' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
