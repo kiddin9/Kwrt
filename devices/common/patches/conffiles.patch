@@ -183,3 +183,31 @@
  
  define Package/appfilter/install
  	echo "install"
+
+--- a/package/feeds/custom/luci-app-nfs/Makefile
++++ b/package/feeds/custom/luci-app-nfs/Makefile
+@@ -11,6 +11,10 @@ LUCI_PKGARCH:=all
+ PKG_VERSION:=1.1
+ PKG_RELEASE:=1
+ 
++define Package/luci-app-nfs/conffiles
++/etc/config/nfs
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+
+--- a/package/feeds/custom/gowebdav/Makefile
++++ b/package/feeds/custom/gowebdav/Makefile
+@@ -36,6 +36,10 @@ define Package/$(PKG_NAME)/description
+ 	A simple WebDav server written in Golang.
+ endef
+ 
++define Package/$(PKG_NAME)/conffiles
++/etc/config/gowebdav
++endef
++
+ define Build/Prepare
+ 	tar -zxf $(DL_DIR)/$(PKG_SOURCE) -C $(PKG_BUILD_DIR) --strip-components 1
+ endef
