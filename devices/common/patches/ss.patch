@@ -28,6 +28,15 @@
  define Package/shadowsocks-libev/Default
    define Package/shadowsocks-libev-$(1)
      SECTION:=net
+@@ -61,7 +40,7 @@ define Package/shadowsocks-libev/Default
+     SUBMENU:=Web Servers/Proxies
+     TITLE:=shadowsocks-libev $(1)
+     URL:=https://github.com/shadowsocks/shadowsocks-libev
+-    DEPENDS:=+libev +libmbedtls +libpthread +libsodium +shadowsocks-libev-config $(DEPENDS_$(1))
++    DEPENDS:=+libev +libmbedtls +libpthread +libsodium $(DEPENDS_$(1))
+   endef
+ 
+   define Package/shadowsocks-libev-$(1)/install
 @@ -82,34 +61,6 @@ define shadowsocks-libev/templates
  endef
  $(eval $(call shadowsocks-libev/templates))

@@ -40,7 +40,7 @@ sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/resolvfile=/d' package/*/*/luci-app-adguardhome/root/etc/init.d/AdGuardHome
 sed -i '/_redirect2ssl/d' package/*/*/nginx/Makefile
 sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
-sed -i '/if test_proxy/i sleep 3600' package/*/*/luci-app-ssr-plus/root/usr/bin/ssr-switch
+sed -i '/if test_proxy/i sleep 3600' package/*/*/luci-app-ssr-plus/root/usr/share/ssrplus/ssr-switch
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/smartdns' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
