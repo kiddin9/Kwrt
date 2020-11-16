@@ -211,3 +211,17 @@
  define Build/Prepare
  	tar -zxf $(DL_DIR)/$(PKG_SOURCE) -C $(PKG_BUILD_DIR) --strip-components 1
  endef
+
+--- a/package/feeds/custom/luci-app-frpc/Makefile
++++ b/package/feeds/custom/luci-app-frpc/Makefile
+@@ -12,6 +12,10 @@ LUCI_PKGARCH:=all
+ PKG_VERSION:=1.2
+ PKG_RELEASE:=1
+ 
++define Package/luci-app-frpc/conffiles
++/etc/config/frp
++endef
++
+ include $(TOPDIR)/feeds/luci/luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
