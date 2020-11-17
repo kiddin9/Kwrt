@@ -1,4 +1,4 @@
--- a/package/feeds/luci/luci-lib-jsonc/src/jsonc.c
+--- a/package/feeds/luci/luci-lib-jsonc/src/jsonc.c
 +++ b/package/feeds/luci/luci-lib-jsonc/src/jsonc.c
 @@ -366,9 +366,7 @@
  	case LUA_TNUMBER:
