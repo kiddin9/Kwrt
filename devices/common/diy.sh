@@ -26,13 +26,9 @@ sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-statu
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Makefile
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
-rm -Rf package/feeds/*/aria2/files/aria2 && git clone https://github.com/P3TERX/aria2.conf package/feeds/custom/aria2/files/aria2
-chmod +x package/feeds/custom/aria2/files/aria2/*.sh
-sed -i 's/root\/Download/data\/download\/aria2/g' files/usr/share/aria2/*
 sed -i '/_redirect2ssl/d' package/*/*/nginx/Makefile
 sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential
-sed -i '$a /etc/smartdns' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/amule' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/acme' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/bench.log' package/base-files/files/lib/upgrade/keep.d/base-files-essential
@@ -49,9 +45,11 @@ mkdir package/network/config/firewall/patches
 wget -O package/network/config/firewall/patches/fullconenat.patch https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
-sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i '/PKG_BUILD_DIR.*(PKG_NAME)/d' feeds/luci/luci.mk
 find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
+find package/feeds/custom/*/ -maxdepth 1 -name "Makefile" ! -path "*rclone*" -name "Makefile" ! -path "*subweb*" -name "Makefile" ! -path "*shadowsocksr-libev*" \
+| xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
+sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 sed -i "/mediaurlbase/d" package/*/*/luci-theme*/root/etc/uci-defaults/*
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by GaryPang'/g" package/base-files/files/etc/openwrt_release
