@@ -10,7 +10,7 @@ mv -f feeds/packages/lang/node feeds/custom/node
 mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
 rm -Rf feeds/packages/net/smartdns feeds/luci/applications/luci-app-smartdns feeds/luci/applications/luci-app-frpc feeds/packages/net/frp
 rm -Rf feeds/packages/net/mwan3
-svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/custom/python/Flask-RESTful
+svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
 mv -f package/network/services/openvpn package/feeds/custom/openvpn
