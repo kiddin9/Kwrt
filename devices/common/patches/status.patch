@@ -1,7 +1,6 @@
 --- a/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
 +++ b/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
-@@ -44,4 +44,46 @@
- 	},
+@@ -45,2 +45,29 @@
  
 +    getCPUInfo = {
 +        call = function()
@@ -17,23 +16,8 @@
 +	getEthInfo = {
 +		call = function()
 +			local sys = require "luci.sys"
-+			local rv = {}
-+
-+			sys.call("/sbin/ethinfo")
-+			local ok, fd = pcall(io.open, "/tmp/state/ethinfo", "r")
-+			local line
-+			for line in fd:lines() do
-+				local line1
-+				line1 = string.split(line , " ")
-+				rv[#rv+1] = {
-+					name   = line1[1],
-+					status = line1[2],
-+					speed  = line1[3],
-+					duplex = line1[4]
-+				}
-+			end
-+			fd:close()
-+			return { ethinfo = rv }
++			local result = sys.exec("ethinfo 2>/dev/null")
++			return { result = result }
 +		end
 +	},
 +
@@ -46,7 +30,6 @@
 +	},
 +
  	setLocaltime = {
- 		args = { localtime = 0 },
 
 --- a/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
 +++ b/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json

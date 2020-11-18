@@ -1,59 +1,34 @@
 'use strict';
 'require rpc';
 
-var callLuciETHInfo = rpc.declare({
+var callEthInfo = rpc.declare({
 	object: 'luci',
-	method: 'getEthInfo',
-	expect: { '': {} }
+	method: 'getEthInfo'
 });
 
 return L.Class.extend({
-	title: _('Ethernet Information'),
+	title: _('Interfaces'),
 
 	load: function() {
-		return Promise.all([
-			L.resolveDefault(callLuciETHInfo(), {})
-		]);
+		return L.resolveDefault(callEthInfo(), {});
 	},
 
-	render: function(data) {
-		var ethinfo = Array.isArray(data[0].ethinfo) ? data[0].ethinfo : [];
-
-		var table = E('div', { 'class': 'table' }, [
-			E('div', { 'class': 'tr table-titles' }, [
-				E('div', { 'class': 'th' }, _('Ethernet Name')),
-				E('div', { 'class': 'th' }, _('Link Status')),
-				E('div', { 'class': 'th' }, _('Speed')),
-				E('div', { 'class': 'th' }, _('Duplex'))
-			])
-		]);
-
-		cbi_update_table(table, ethinfo.map(function(info) {
-			var exp1;
-			var exp2;
-
-			if (info.status == "yes")
-				exp1 = _('Link Up');
-			else if (info.status == "no")
-				exp1 = _('Link Down');
-
-			if (info.duplex == "Full")
-				exp2 = _('Full Duplex');
-			else if (info.duplex == "Half")
-				exp2 = _('Half Duplex');
-			else
-				exp2 = _('-');
-
-			return [
-				info.name,
-				exp1,
-				info.speed,
-				exp2
-			];
-		}));
-
-		return E([
-			table
-		]);
+	render: function(info) {
+		if (info && info.result) {
+			var result = "";
+			var ports = eval('(' + info.result + ')');
+			var tmp = "<div class='table' width='100%' cellspacing='10' style='text-align: center' id='ethinfo'><ul style='list-style: none; margin:0 auto; display: inline-block;'>";
+			for (var i in ports) {
+				tmp = tmp + String.format(
+								'<li style="float: left; margin: 0px 1em;"><span style="line-height:25px">%s</span><br /><small><img draggable="false" src="/luci-static/resources/icons/%s" /><br />%s<br />%s</small></li>',
+								ports[i].name,
+								ports[i].status ? 'port_up.png' : 'port_down.png',
+								ports[i].speed,
+								ports[i].duplex ? _('full-duplex') : _('half-duplex'));
+			}
+			tmp + "</ul></div>";
+			result = tmp;
+			return result;
+		}
 	}
 });
