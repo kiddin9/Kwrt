@@ -1,29 +1,15 @@
-From 3af274ad9e230907a9b74f9cd9832bc1879bbaa8 Mon Sep 17 00:00:00 2001
-From: garypang13 <48883331+garypang13@users.noreply.github.com>
-Date: Sun, 15 Nov 2020 17:31:03 +0800
-Subject: [PATCH] Update jsonc.c
-
----
- libs/luci-lib-jsonc/src/jsonc.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/libs/luci-lib-jsonc/src/jsonc.c b/libs/luci-lib-jsonc/src/jsonc.c
-index 2f56a4a688..aedd082d71 100644
 --- a/package/feeds/luci/luci-lib-jsonc/src/jsonc.c
 +++ b/package/feeds/luci/luci-lib-jsonc/src/jsonc.c
-@@ -366,10 +366,9 @@
+@@ -366,9 +366,7 @@
  	case LUA_TNUMBER:
  		nd = lua_tonumber(L, index);
 -		ni = lua_tointeger(L, index);
 -
 -		if (nd == ni)
--			return json_object_new_int64(nd);
+-			return json_object_new_int(nd);
 -
--		return json_object_new_double(nd);
-+
 +		if(nd >= INT64_MIN && nd <= INT64_MAX)
 +			return json_object_new_int64(nd);
 +		else
-+			return json_object_new_double(nd);
+ 		return json_object_new_double(nd);
  
- 	case LUA_TSTRING:
