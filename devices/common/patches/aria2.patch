@@ -8,3 +8,16 @@
 +	echo '' >> "$config_file"
 +	sed '/^$/d' "$config_file_tmp" >> "$config_file"
  	rm -f "$config_file_tmp"
+
+--- a/package/feeds/custom/aria2/Makefile
++++ b/package/feeds/custom/aria2/Makefile
+@@ -95,6 +95,9 @@ define Package/aria2/install
+ 
+ 	$(INSTALL_DIR) $(1)/etc/init.d
+ 	$(INSTALL_BIN) ./files/aria2.init $(1)/etc/init.d/aria2
++	
++	$(INSTALL_DIR) $(1)/usr/share/aria2
++	$(INSTALL_BIN) ./files/aria2/* $(1)/usr/share/aria2/
+ 
+ 	$(INSTALL_DIR) $(1)/etc/config
+ 	$(INSTALL_CONF) ./files/aria2.conf $(1)/etc/config/aria2

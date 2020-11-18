@@ -10,8 +10,6 @@ sed -i '/;;/i\set_interface_core 1 "ff150000" "ff150000.i2c"' target/linux/rockc
 sed -i 's/ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305/ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256/' package/feeds/custom/luci-app-ssr-plus/root/usr/share/ssrplus/gentrojanconfig
 sed -i 's/TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256/TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256/' package/feeds/custom/luci-app-ssr-plus/root/usr/share/ssrplus/gentrojanconfig
 
-sed -i "/_('Architecture')/d" package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-
 echo '
 CONFIG_ARM64_CRYPTO=y
 CONFIG_CRYPTO_AES_ARM64=y
