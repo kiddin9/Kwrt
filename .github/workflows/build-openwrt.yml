@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64]
+        target: [phicomm-k2p]
         
     steps:
     - name: Checkout
