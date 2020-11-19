@@ -1,0 +1,229 @@
+#
+# Copyright (c) 2018-2020 P3TERX <https://p3terx.com>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+# https://github.com/P3TERX/aria2.conf
+# File name：core
+# Description: Aria2 additional function script core file
+# Version: 3.0
+#
+
+TASK_GID=$1
+FILE_NUM=$2
+FILE_PATH=$3
+ARIA2_CONF_DIR="$(dirname $0)"
+ARIA2_CONF="${ARIA2_CONF_DIR}/aria2.conf"
+ARIA2_SESSION="${ARIA2_CONF_DIR}/aria2.session"
+SCRIPT_CONF="${ARIA2_CONF_DIR}/script.conf"
+RED_FONT_PREFIX="\033[31m"
+LIGHT_GREEN_FONT_PREFIX="\033[1;32m"
+YELLOW_FONT_PREFIX="\033[1;33m"
+LIGHT_PURPLE_FONT_PREFIX="\033[1;35m"
+FONT_COLOR_SUFFIX="\033[0m"
+INFO="[${LIGHT_GREEN_FONT_PREFIX}INFO${FONT_COLOR_SUFFIX}]"
+ERROR="[${RED_FONT_PREFIX}ERROR${FONT_COLOR_SUFFIX}]"
+WARRING="[${YELLOW_FONT_PREFIX}WARRING${FONT_COLOR_SUFFIX}]"
+
+DATE_TIME() {
+    date +"%m/%d %H:%M:%S"
+}
+
+CHECK_PARAMETER() {
+    [[ $# -eq 0 ]] && {
+        echo && echo -e "${ERROR} This script can only be used by passing parameters through Aria2."
+        exit 1
+    }
+}
+
+CHECK_FILE_NUM() {
+    [[ ${FILE_NUM} -eq 0 ]] && {
+        echo && echo -e "$(DATE_TIME) ${WARRING} Number of files is zero, maybe a Magnet Link."
+        exit 0
+    }
+}
+
+CHECK_SCRIPT_CONF() {
+    if [[ -f "${SCRIPT_CONF}" ]]; then
+        LOAD_SCRIPT_CONF
+    else
+        echo && echo "!!! '${SCRIPT_CONF}' does not exist !!!"
+        exit 1
+    fi
+}
+
+LOAD_SCRIPT_CONF() {
+    DRIVE_NAME="$(grep ^drive-name "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DRIVE_DIR="$(grep ^drive-dir "${SCRIPT_CONF}" | cut -d= -f2-)"
+    UPLOAD_LOG_PATH="$(grep ^upload-log "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DEST_DIR="$(grep ^dest-dir "${SCRIPT_CONF}" | cut -d= -f2-)"
+    MOVE_LOG_PATH="$(grep ^move-log "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DELETE_ON_REMOVED="$(grep ^delete-on-removed "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DELETE_ON_ERROR="$(grep ^delete-on-error "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DELETE_ON_UNKNOWN="$(grep ^delete-on-unknown "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DELETE_DOT_ARIA2="$(grep ^delete-dot-aria2 "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DELETE_DOT_TORRENT="$(grep ^delete-dot-torrent "${SCRIPT_CONF}" | cut -d= -f2-)"
+    DELETE_EMPTY_DIR="$(grep ^delete-empty-dir "${SCRIPT_CONF}" | cut -d= -f2-)"
+    MIN_SIZE="$(grep ^min-size "${SCRIPT_CONF}" | cut -d= -f2-)"
+    INCLUDE_FILE="$(grep ^include-file "${SCRIPT_CONF}" | cut -d= -f2-)"
+    EXCLUDE_FILE="$(grep ^exclude-file "${SCRIPT_CONF}" | cut -d= -f2-)"
+}
+
+READ_ARIA2_CONF() {
+    if [ ! -f "${ARIA2_CONF}" ]; then
+        echo -e "$(DATE_TIME) ${ERROR} '${ARIA2_CONF}' does not exist."
+        exit 1
+    else
+        ARIA2_DOWNLOAD_DIR=$(grep ^dir "${ARIA2_CONF}" | cut -d= -f2-)
+        RPC_PORT=$(grep ^rpc-listen-port "${ARIA2_CONF}" | cut -d= -f2-)
+        RPC_SECRET=$(grep ^rpc-secret "${ARIA2_CONF}" | cut -d= -f2-)
+        SAVE_SESSION_INTERVAL=$(grep ^save-session-interval "${ARIA2_CONF}" | cut -d= -f2-)
+        [[ ${ARIA2_DOWNLOAD_DIR} && ${RPC_PORT} && ${SAVE_SESSION_INTERVAL} ]] || {
+            echo -e "$(DATE_TIME) ${ERROR} Aria2 configuration file incomplete."
+            exit 1
+        }
+        RPC_ADDRESS="localhost:${RPC_PORT}/jsonrpc"
+    fi
+}
+
+RPC_TASK_INFO() {
+    if [[ "${RPC_SECRET}" ]]; then
+        RPC_PAYLOAD='{"jsonrpc":"2.0","method":"aria2.tellStatus","id":"P3TERX","params":["token:'${RPC_SECRET}'","'${TASK_GID}'"]}'
+    else
+        RPC_PAYLOAD='{"jsonrpc":"2.0","method":"aria2.tellStatus","id":"P3TERX","params":["'${TASK_GID}'"]}'
+    fi
+    curl "${RPC_ADDRESS}" -fsSd "${RPC_PAYLOAD}" || curl "https://${RPC_ADDRESS}" -kfsSd "${RPC_PAYLOAD}"
+}
+
+GET_TASK_INFO() {
+    READ_ARIA2_CONF
+    RPC_RESULT="$(RPC_TASK_INFO)"
+}
+
+GET_DOWNLOAD_DIR() {
+    [[ -z ${RPC_RESULT} ]] && {
+        echo -e "$(DATE_TIME) ${ERROR} Aria2 RPC interface error!"
+        exit 1
+    }
+    DOWNLOAD_DIR=$(echo "${RPC_RESULT}" | jq -r '.result.dir')
+    [[ -z "${DOWNLOAD_DIR}" || "${DOWNLOAD_DIR}" = "null" ]] && {
+        echo ${RPC_RESULT} | jq '.result'
+        echo -e "$(DATE_TIME) ${ERROR} Failed to get download directory!"
+        exit 1
+    }
+}
+
+GET_TASK_STATUS() {
+    TASK_STATUS=$(echo "${RPC_RESULT}" | jq -r '.result.status')
+    [[ -z "${TASK_STATUS}" || "${TASK_STATUS}" = "null" ]] && {
+        echo "${RPC_RESULT}" | jq '.result'
+        echo -e "$(DATE_TIME) ${ERROR} Failed to get task status!"
+        exit 1
+    }
+}
+
+GET_INFO_HASH() {
+    INFO_HASH=$(echo "${RPC_RESULT}" | jq -r '.result.infoHash')
+    if [[ -z "${INFO_HASH}" ]]; then
+        echo "${RPC_RESULT}" | jq '.result'
+        echo -e "$(DATE_TIME) ${ERROR} Failed to get Info Hash!"
+        exit 1
+    elif [[ "${INFO_HASH}" = "null" ]]; then
+        return 1
+    else
+        TORRENT_FILE="${DOWNLOAD_DIR}/${INFO_HASH}.torrent"
+    fi
+}
+
+CONVERSION_PATH() {
+    RELATIVE_PATH="${FILE_PATH#${DOWNLOAD_DIR}/}"
+    TASK_FILE_NAME="${RELATIVE_PATH%%/*}"
+    TASK_PATH="${DOWNLOAD_DIR}/${TASK_FILE_NAME}"
+    DEST_PATH_SUFFIX="${TASK_PATH#${ARIA2_DOWNLOAD_DIR}}"
+}
+
+OUTPUT_LOG() {
+    echo -e "${LOG}"
+    [[ "${LOG_PATH}" && -e "${LOG_PATH%/*}" ]] && echo -e "${LOG}" | sed "s,\x1B\[[0-9;]*m,,g" >>"${LOG_PATH}"
+}
+
+CHECK_DOT_ARIA2() {
+    if [ -f "${FILE_PATH}.aria2" ]; then
+        DOT_ARIA2_FILE="${FILE_PATH}.aria2"
+    elif [ -f "${TASK_PATH}.aria2" ]; then
+        DOT_ARIA2_FILE="${TASK_PATH}.aria2"
+    else
+        DOT_ARIA2_FILE='null'
+        echo -e "$(DATE_TIME) ${INFO} .aria2 file does not exist."
+        return 1
+    fi
+}
+
+DELETE_DOT_ARIA2() {
+    if [[ "${DELETE_DOT_ARIA2}" = "true" ]] && CHECK_DOT_ARIA2; then
+        echo -e "$(DATE_TIME) ${INFO} Deleting .aria2 file ..."
+        rm -vf "${DOT_ARIA2_FILE}"
+    fi
+}
+
+DELETE_TORRENT_FILES() {
+    sleep $(($SAVE_SESSION_INTERVAL + 1))
+    TORRENT_FILES=$(ls "${DOWNLOAD_DIR}" | grep '.*.torrent')
+    if [[ -f "${ARIA2_SESSION}" && -n "${TORRENT_FILES}" ]]; then
+        for TORRENT_FILE in "${TORRENT_FILES}"; do
+            if [[ -n "${TORRENT_FILE}" && -z $(cat "${ARIA2_SESSION}" | grep -i "${TORRENT_FILE%.*}") ]]; then
+                echo -e "$(DATE_TIME) ${INFO} Deleting .torrent file (enhanced) ..."
+                rm -vf ${DOWNLOAD_DIR}/${TORRENT_FILE}
+            fi
+        done
+    else
+        [[ ! -f "${ARIA2_SESSION}" ]] &&
+            echo -e "$(DATE_TIME) ${ERROR} '${ARIA2_SESSION}' does not exist." ||
+            echo -e "$(DATE_TIME) ${WARRING} .torrent file does not exist."
+    fi
+}
+
+DELETE_DOT_TORRENT() {
+    if GET_INFO_HASH; then
+        if [[ "${DELETE_DOT_TORRENT}" = "true" || "${DELETE_DOT_TORRENT}" = "normal" ]] && [[ -f "${TORRENT_FILE}" ]]; then
+            echo -e "$(DATE_TIME) ${INFO} Deleting .torrent file ..."
+            rm -vf ${TORRENT_FILE}
+        elif [[ "${DELETE_DOT_TORRENT}" = "true" || "${DELETE_DOT_TORRENT}" = "enhanced" ]]; then
+            DELETE_TORRENT_FILES
+        elif [[ "${DELETE_DOT_TORRENT}" = "normal" ]]; then
+            echo -e "$(DATE_TIME) ${WARRING} .torrent file may exist but cannot be found. Recommended to enable enhanced mode."
+        else
+            echo -e "$(DATE_TIME) ${INFO} Delete .torrent file function is disabled."
+        fi
+    else
+        echo -e "$(DATE_TIME) ${INFO} General download task, skipped delete .torrent file."
+    fi
+}
+
+DELETE_EMPTY_DIR() {
+    if [[ "${DELETE_EMPTY_DIR}" = "true" ]]; then
+        echo -e "$(DATE_TIME) ${INFO} Deleting empty directory ..."
+        if [[ "${DOWNLOAD_DIR}" =~ "${ARIA2_DOWNLOAD_DIR}" ]]; then
+            find "${ARIA2_DOWNLOAD_DIR}" ! -path "${ARIA2_DOWNLOAD_DIR}" -depth -type d -empty -exec rm -vrf {} \;
+        else
+            find "${DOWNLOAD_DIR}" -depth -type d -empty -exec rm -vrf {} \;
+        fi
+    fi
+}
+
+DELETE_EXCLUDE_FILE() {
+    if [[ ${FILE_NUM} -gt 1 ]] && [[ -n ${MIN_SIZE} || -n ${INCLUDE_FILE} || -n ${EXCLUDE_FILE} ]]; then
+        echo -e "${INFO} Deleting excluded files ..."
+        [[ -n ${MIN_SIZE} ]] && find "${TASK_PATH}" -type f -size -${MIN_SIZE} -print0 | xargs -0 rm -vf
+        [[ -n ${EXCLUDE_FILE} ]] && find "${TASK_PATH}" -type f -regextype posix-extended -iregex ".*\.(${EXCLUDE_FILE})" -print0 | xargs -0 rm -vf
+        [[ -n ${INCLUDE_FILE} ]] && find "${TASK_PATH}" -type f -regextype posix-extended ! -iregex ".*\.(${INCLUDE_FILE})" -print0 | xargs -0 rm -vf
+    fi
+}
+
+CLEAN_UP() {
+    DELETE_DOT_ARIA2
+    DELETE_DOT_TORRENT
+    DELETE_EXCLUDE_FILE
+    DELETE_EMPTY_DIR
+}

@@ -10,5 +10,6 @@ touch /etc/config/placeholder
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/aarch64' /etc/opkg/customfeeds.conf
 sed -i '$a src/gz openwrt_packages2 https://op.supes.top/19.07.4/packages/aarch64_generic/packages' /etc/opkg/customfeeds.conf
+sed -i '$a src/gz openwrt_base2 https://op.supes.top/19.07.4/packages/aarch64_generic/base' /etc/opkg/customfeeds.conf
 
 exit 0
