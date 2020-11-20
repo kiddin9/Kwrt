@@ -1,6 +1,6 @@
 --- a/include/package.mk
 +++ b/include/package.mk
-@@ -307,6 +307,21 @@ endif
+@@ -309,6 +309,21 @@ endif
    $(if $(PKG_HOST_ONLY),,$(call Build/DefaultTargets,$(1)))
  endef
  
@@ -22,10 +22,16 @@
  define pkg_install_files
  	$(foreach install_file,$(1),$(INSTALL_DIR) $(3)/`dirname $(install_file)`; $(INSTALL_DATA) $(2)/$(install_file) $(3)/`dirname $(install_file)`;)
  endef
-@@ -353,3 +368,96 @@ dist:
+@@ -355,3 +370,102 @@ dist:
  
  distcheck:
  	$(Build/DistCheck)
++
++ifndef Package/$(PKG_NAME)/conffiles
++define Package/$(PKG_NAME)/conffiles
++/etc/config/
++endef
++endif
 +
 +LUCI_NAME?=$(notdir ${CURDIR})
 +LUCI_TYPE?=$(word 2,$(subst -, ,$(LUCI_NAME)))
