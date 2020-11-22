@@ -129,7 +129,7 @@
 
 --- /dev/null
 +++ b/package/feeds/custom/luci-app-ssr-plus/root/usr/share/ssrplus/downbin
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,22 @@
 +#!/bin/sh
 +	[ "$1" = --down ] || exit 1
 +	# 防止重复启动
@@ -137,20 +137,18 @@
 +	touch /var/lock/ssr-plus.lock
 +	mkdir -p /tmp/ssrplus/bin
 +	if [ $2 = 1 ];then
-+		while ! curl -m 5 -Lfso /tmp/ssrplus/bin/v2 https://cdn.jsdelivr.net/gh/f6UiINtMDSmglMK4/A9xehMB2/y9tSyZoQIC/arvMwI0cwqQbZCvAy;do
++		while ! curl -m 9 -Lfso /tmp/ssrplus/bin/tmp https://cdn.jsdelivr.net/gh/f6UiINtMDSmglMK4/A9xehMB2/y9tSyZoQIC/arvMwI0cwqQbZCvAy;do
 +			sleep 2
 +		done
-+		base64 -d /tmp/ssrplus/bin/v2 > /tmp/ssrplus/bin/v2ray
++		base64 -d /tmp/ssrplus/bin/tmp > /tmp/ssrplus/bin/v2ray
 +		chmod +x /tmp/ssrplus/bin/v2ray
-+		rm -f /tmp/ssrplus/bin/v2
 +	fi
 +	if [ $3 = 1 ];then
-+		while ! curl -m 5 -Lfso /tmp/ssrplus/bin/v2-p https://cdn.jsdelivr.net/gh/f6UiINtMDSmglMK4/A9xehMB2/y9tSyZoQIC/mTEERWcxaak0WXZDp;do
++		while ! curl -m 9 -Lfso /tmp/ssrplus/bin/tmp https://cdn.jsdelivr.net/gh/f6UiINtMDSmglMK4/A9xehMB2/y9tSyZoQIC/mTEERWcxaak0WXZDp;do
 +			sleep 2
 +		done
-+		base64 -d /tmp/ssrplus/bin/v2-p > /tmp/ssrplus/bin/v2ray-plugin
++		base64 -d /tmp/ssrplus/bin/tmp > /tmp/ssrplus/bin/v2ray-plugin
 +		chmod +x /tmp/ssrplus/bin/v2ray-plugin
-+		rm -f /tmp/ssrplus/bin/v2-p
 +	fi
-+	rm -f /var/lock/ssr-plus.lock
++	rm -f /tmp/ssrplus/bin/tmp /var/lock/ssr-plus.lock
 +	[ $4 = 0 ] && /etc/init.d/shadowsocksr start &
