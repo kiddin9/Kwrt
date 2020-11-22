@@ -1,0 +1,156 @@
+--- a/package/ipk/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
++++ b/package/ipk/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
+@@ -2,8 +2,6 @@
+ local ssr="shadowsocksr"
+ local sid=arg[1]
+ local uuid=luci.sys.exec("cat /proc/sys/kernel/random/uuid")
+-local A=luci.sys.call("which obfs-local >/dev/null")
+-local B=luci.sys.call("which v2ray-plugin >/dev/null")
+ 
+ local encrypt_methods={
+ "none",
+@@ -113,10 +111,8 @@
+ if luci.sys.call("which ssr-redir >/dev/null")==0 then
+ o:value("ssr",translate("ShadowsocksR"))
+ end
+-if nixio.fs.access("/usr/bin/v2ray/v2ray") or luci.sys.call("which v2ray >/dev/null")==0 then
+ o:value("v2ray",translate("V2Ray"))
+ o:value("vless",translate("VLESS"))
+-end
+ if luci.sys.call("which trojan >/dev/null")==0 then
+ o:value("trojan",translate("Trojan"))
+ end
+@@ -183,17 +179,13 @@
+ for _,v in ipairs(encrypt_methods_ss) do o:value(v) end
+ o:depends("type","ss")
+ 
+-if A==0 or B==0 then
+ o=s:option(ListValue,"plugin",translate("Plugin"))
+ o:value("",translate("Disable"))
+-if A==0 then
++if luci.sys.call("which obfs-local >/dev/null")==0 then
+ o:value("obfs-local",translate("simple-obfs"))
+ end
+-if B==0 then
+ o:value("v2ray-plugin",translate("v2ray-plugin"))
+-end
+ o:depends("type","ss")
+-end
+ 
+ o=s:option(Value,"plugin_opts",translate("Plugin Opts"))
+ o:depends("plugin","obfs-local")
+
+--- a/package/ipk/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
++++ b/package/ipk/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
+@@ -71,7 +71,7 @@
+ 		ssr)ret=$(which ssr-redir);;
+ 		ssr-local)ret=$(which ssr-local);;
+ 		ssr-server)ret=$(which ssr-server);;
+-		v2ray|vless)ret=$(which v2ray) || ret=/usr/bin/v2ray/v2ray;;
++		v2ray|vless)ret=/tmp/ssrplus/bin/v2ray;;
+ 		trojan)ret=$(which trojan);;
+ 		naiveproxy)ret=$(which naive);;
+ 		socks5|tun)ret=$(which redsocks2);;
+@@ -108,8 +108,10 @@
+ }
+ EOF
+ 			plugin=$(uci_get_by_name $1 plugin 0)
+-			if [ $plugin != 0 -a -x "$(which $plugin)" ];then
+-				sed -i "s@$hostip\",@$hostip\",\n\"plugin\":\"$plugin\",\n\"plugin_opts\":\"$(uci_get_by_name $1 plugin_opts)\",@" $config_file
++			if [ $plugin != 0 ];then
++				[ $plugin = obfs-local -a -x "$(which obfs-local)" ] && pat=$(which obfs-local)
++				[ $plugin = v2ray-plugin -a -x /tmp/ssrplus/bin/v2ray-plugin ] && pat=/tmp/ssrplus/bin/v2ray-plugin
++				[ -n "$pat" ] && sed -i "s@$hostip\",@$hostip\",\n\"plugin\":\"$pat\",\n\"plugin_opts\":\"$(uci_get_by_name $1 plugin_opts)\",@" $config_file
+ 			fi;;
+ 		ssr)
+ 			cat <<-EOF > $config_file
+@@ -194,6 +196,22 @@
+ 	fi
+ 	NF_SERVER=$(uci_get_by_type global nf_server)
+ 	[ "$NF_SERVER" = $GLOBAL_SERVER ] && NF_SERVER=
++	H=0;J=0;K=0;L=0
++	if [ "$(uci_get_by_name $GLOBAL_SERVER type)" = v2ray -o "$(uci_get_by_name $UDP_RELAY_SERVER type)" = v2ray -o "$(uci_get_by_name $NF_SERVER type)" = v2ray ];then
++		[ ! -x /tmp/ssrplus/bin/v2ray ] && H=1 && J=1
++	fi
++	if [ $(uci_get_by_name $GLOBAL_SERVER plugin 0) = v2ray-plugin -o $(uci_get_by_name $UDP_RELAY_SERVER plugin 0) = v2ray-plugin -o $(uci_get_by_name $NF_SERVER plugin 0) = v2ray-plugin ];then
++		[ ! -x /tmp/ssrplus/bin/v2ray-plugin ] && H=1 && K=1
++	fi
++	if [ $H = 1 ];then
++		[ -z "$switch_server" ] || L=1
++		if [ $L = 0 ];then
++			service_start $BIN_DIR/downbin --down $J $K $L
++			exit 1
++		else
++			$BIN_DIR/downbin --down $J $K $L
++		fi
++	fi
+ 	start_rules && return 0 || return 1
+ }
+ 
+@@ -305,6 +323,7 @@
+ 		service_start $cmd -r $kcp_server:$kcp_port -l :$server_port $password $kcp_param
+ 	fi
+ 	threads=$(uci_get_by_type global threads 0)
++	[ $(uci_get_by_name $GLOBAL_SERVER plugin 0) = v2ray-plugin -o $(uci_get_by_name $UDP_RELAY_SERVER plugin 0) = v2ray-plugin -o $(uci_get_by_name $NF_SERVER plugin 0) = v2ray-plugin ] && threads=1
+ 	[ $threads = 0 ] && threads=$(cat /proc/cpuinfo | grep 'processor' | wc -l)
+ 	gen_config_file $GLOBAL_SERVER 0 $threads
+ 	type=$(uci_get_by_name $GLOBAL_SERVER type)
+@@ -746,8 +765,10 @@
+ }
+ EOF
+ 		plugin=$(uci_get_by_name $1 plugin 0)
+-		if [ $plugin != 0 -a -x "$(which $plugin)" ];then
+-			sed -i "s@0.0.0.0\",@0.0.0.0\",\n\"plugin\":\"$plugin\",\n\"plugin_opts\":\"$(uci_get_by_name $1 plugin_opts)\",@" $3
++		if [ $plugin != 0 ];then
++			[ $plugin = obfs-local -a -x "$(which obfs-server)" ] && path=$(which obfs-server)
++			[ $plugin = v2ray-plugin -a -x /tmp/ssrplus/bin/v2ray-plugin ] && path=/tmp/ssrplus/bin/v2ray-plugin
++			[ -n "$path" ] && sed -i "s@0.0.0.0\",@0.0.0.0\",\n\"plugin\":\"$path\",\n\"plugin_opts\":\"$(uci_get_by_name $1 plugin_opts)\",@" $3
+ 		fi
+ 	else
+ 		cat <<-EOF >$3
+@@ -851,6 +872,8 @@
+ }
+ 
+ stop(){
++	kill -9 $(ps -w | grep /tmp/ssrplus/bin/tmp | grep -v grep | awk '{print$1}') 2>/dev/null
++	kill -9 $(ps -w | grep $BIN_DIR/downbin | grep -v grep | awk '{print$1}') 2>/dev/null
+ 	kill -9 $(ps -w | grep ssr-rules | grep -v grep | awk '{print$1}') 2>/dev/null
+ 	kill -9 $(ps -w | grep gfw.b64 | grep -v grep | awk '{print$1}') 2>/dev/null
+ 	kill -9 $(ps -w | grep $BIN_DIR/checknetwork | grep -v grep | awk '{print$1}') 2>/dev/null
+@@ -866,7 +889,7 @@
+ 	kill -9 $(ps -w | grep ssr-monitor | grep -v grep | awk '{print$1}') 2>/dev/null
+ 	kill -9 $(ps -w | grep ssr-preload | grep -v grep | awk '{print$1}') 2>/dev/null
+ 	killall -q -9 ss-redir ssr-redir v2ray trojan ipt2socks naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
+-	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/ssr-plus.lock
++	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/ssr-plus.lock /tmp/ssrplus/bin
+ 	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f /tmp/ssrplus/gfw.list
+ 	[ $run_mode = router ] || rm -f /tmp/ssrplus/china_v6.txt
+ 	if [ -z "$GLOBAL_SERVER" ];then
+
+--- /dev/null
++++ b/package/ipk/luci-app-ssr-plus/root/usr/share/ssrplus/downbin
+@@ -0,0 +1,24 @@
++#!/bin/sh
++	[ "$1" = --down ] || exit 1
++	# 防止重复启动
++	[ -f /var/lock/ssr-plus.lock ] && exit 1
++	touch /var/lock/ssr-plus.lock
++	mkdir -p /tmp/ssrplus/bin
++	if [ $2 = 1 ];then
++		while ! curl -m 5 -Lfso /tmp/ssrplus/bin/v2 https://cdn.jsdelivr.net/gh/f6UiINtMDSmglMK4/A9xehMB2/y9tSyZoQIC/arvMwI0cwqQbZCvAy;do
++			sleep 2
++		done
++		base64 -d /tmp/ssrplus/bin/v2 > /tmp/ssrplus/bin/v2ray
++		chmod +x /tmp/ssrplus/bin/v2ray
++		rm -f /tmp/ssrplus/bin/v2
++	fi
++	if [ $3 = 1 ];then
++		while ! curl -m 5 -Lfso /tmp/ssrplus/bin/v2-p https://cdn.jsdelivr.net/gh/f6UiINtMDSmglMK4/A9xehMB2/y9tSyZoQIC/mTEERWcxaak0WXZDp;do
++			sleep 2
++		done
++		base64 -d /tmp/ssrplus/bin/v2-p > /tmp/ssrplus/bin/v2ray-plugin
++		chmod +x /tmp/ssrplus/bin/v2ray-plugin
++		rm -f /tmp/ssrplus/bin/v2-p
++	fi
++	rm -f /var/lock/ssr-plus.lock
++	[ $4 = 0 ] && /etc/init.d/shadowsocksr start &
