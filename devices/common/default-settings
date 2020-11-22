@@ -59,6 +59,9 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set dhcp.dnsmasq[0].allservers='1'
   uci set dhcp.lan.force='1'
   uci set dhcp.@dnsmasq[0].cachesize='1500'
+  uci set dhcp.lan.ra='hybrid'
+  uci set dhcp.lan.ndp='hybrid'
+  uci set dhcp.lan.dhcpv6='hybrid'
   uci commit dhcp
 
 fi
