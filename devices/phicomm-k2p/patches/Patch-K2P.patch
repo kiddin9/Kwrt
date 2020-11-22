@@ -1,5 +1,5 @@
---- a/package/ipk/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
-+++ b/package/ipk/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
+--- a/package/feeds/custom/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
++++ b/package/feeds/custom/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
 @@ -2,8 +2,6 @@
  local ssr="shadowsocksr"
  local sid=arg[1]
@@ -40,8 +40,8 @@
  o=s:option(Value,"plugin_opts",translate("Plugin Opts"))
  o:depends("plugin","obfs-local")
 
---- a/package/ipk/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
-+++ b/package/ipk/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
+--- a/package/feeds/custom/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
++++ b/package/feeds/custom/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
 @@ -71,7 +71,7 @@
  		ssr)ret=$(which ssr-redir);;
  		ssr-local)ret=$(which ssr-local);;
@@ -128,7 +128,7 @@
  	if [ -z "$GLOBAL_SERVER" ];then
 
 --- /dev/null
-+++ b/package/ipk/luci-app-ssr-plus/root/usr/share/ssrplus/downbin
++++ b/package/feeds/custom/luci-app-ssr-plus/root/usr/share/ssrplus/downbin
 @@ -0,0 +1,24 @@
 +#!/bin/sh
 +	[ "$1" = --down ] || exit 1
