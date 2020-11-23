@@ -1,0 +1,1 @@
+(/bin/busybox reboot &);sleep 3;/bin/busybox reboot -f
