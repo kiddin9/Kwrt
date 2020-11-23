@@ -46,7 +46,6 @@
 | Phicomm-k2p    | [📥](https://op.supes.top/firmware/phicomm-k2p/)    | 闪存布局请选择斐讯而非默认的公版     |
 | K2p-32m-usb    | [📥](https://op.supes.top/firmware/k2p-32m-usb/)    | 闪存布局请选择斐讯而非默认的公版     |
 | NanoPi-r2s     | [📥](https://op.supes.top/firmware/nanopi-r2s/)     | 默认交换了网口,靠近电源口的是WAN口   |
-| Phicomm-N1     | [📥](https://op.supes.top/firmware/phicomm-N1/)     | 另需使用打包工具生成刷机固件         |
 | Newifi-d2      | [📥](https://op.supes.top/firmware/newifi-d2/)      |                                      |
 | Hiwifi-hc5962  | [📥](https://op.supes.top/firmware/hiwifi-hc5962/)  |                                      |
 | Xiaomi-r3p     | [📥](https://op.supes.top/firmware/xiaomi-r3p/)     |                                      |

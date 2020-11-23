@@ -2,14 +2,10 @@
 
 ln -sf /sbin/ip /usr/bin/ip
 
+sed -i '/openwrt_\(packages\|base\|custom\)/d' /etc/opkg/customfeeds.conf
 sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
-sed -i '/openwrt_custom/d' /etc/opkg/customfeeds.conf
-sed -i '/openwrt_packages2/d' /etc/opkg/customfeeds.conf
-sed -i '/openwrt_base2/d' /etc/opkg/customfeeds.conf
 sed -i 's/downloads.openwrt.org/op.supes.top/g' /etc/opkg/distfeeds.conf
 
-sed -i 's/http:/https:/g' /etc/opkg/distfeeds.conf
-sed -i "s/# //g" /etc/opkg/distfeeds.conf
 grep -q log-facility /etc/dnsmasq.conf ||
 	echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
@@ -19,11 +15,8 @@ sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
 rm -rf /tmp/luci-*
 
-grep -q S99opkg /etc/crontabs/root ||
-	echo "0 0 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
-
-grep -q adblock /etc/crontabs/root ||
-	echo "0 0 * * * /etc/init.d/adblock reload >/dev/null 2>&1" >> /etc/crontabs/root
+sed -i '/S99opkg/d' /etc/crontabs/root
+echo "0 4 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
 uci set system.@rngd[0].enabled="1"
 uci commit system
@@ -66,6 +59,9 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set dhcp.dnsmasq[0].allservers='1'
   uci set dhcp.lan.force='1'
   uci set dhcp.@dnsmasq[0].cachesize='1500'
+  uci set dhcp.lan.ra='hybrid'
+  uci set dhcp.lan.ndp='hybrid'
+  uci set dhcp.lan.dhcpv6='hybrid'
   uci commit dhcp
 
 fi
