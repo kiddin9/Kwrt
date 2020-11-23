@@ -24,6 +24,7 @@ echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's/DEPENDS:= strongswan/DEPENDS:=+strongswan/g' package/*/*/strongswan/Makefile
+sed -i '/exit 1/d' package/*/*/docker-ce/Makefile
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i '/_redirect2ssl/d' package/*/*/nginx/Makefile
 sed -i '/init_lan/d' package/*/*/nginx/files/nginx.init
