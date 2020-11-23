@@ -72,7 +72,4 @@ chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
-grep -q reboot /etc/shinit ||
-	sed -i '$a alias reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"\nalias /sbin/reboot="(/sbin/reboot &);sleep 3;/sbin/reboot -f"' /etc/shinit
-
 ln -s /sbin/poweroff /sbin/shutdown
