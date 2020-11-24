@@ -68,8 +68,8 @@
  	fi
  	NF_SERVER=$(uci_get_by_type global nf_server)
  	[ "$NF_SERVER" = $GLOBAL_SERVER ] && NF_SERVER=
-+	H=0;J=0;K=0;L=0
-+	if [ "$(uci_get_by_name $GLOBAL_SERVER type)" = v2ray -o "$(uci_get_by_name $UDP_RELAY_SERVER type)" = v2ray -o "$(uci_get_by_name $NF_SERVER type)" = v2ray ];then
++	H=0;J=0;K=0;L=0;M=$(uci_get_by_name $GLOBAL_SERVER type);N=$(uci_get_by_name $UDP_RELAY_SERVER type);O=$(uci_get_by_name $NF_SERVER type)
++	if [ "$M" = v2ray -o "$M" = vless -o "$N" = v2ray -o "$N" = vless -o "$O" = v2ray -o "$O" = vless ];then
 +		[ ! -x /tmp/ssrplus/bin/v2ray ] && H=1 && J=1
 +	fi
 +	if [ $(uci_get_by_name $GLOBAL_SERVER plugin 0) = v2ray-plugin -o $(uci_get_by_name $UDP_RELAY_SERVER plugin 0) = v2ray-plugin -o $(uci_get_by_name $NF_SERVER plugin 0) = v2ray-plugin ];then
