@@ -67,7 +67,7 @@
 
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -950,7 +950,7 @@
+@@ -814,7 +814,7 @@
  
  define Device/phicomm_k2p
    $(Device/dsa-migration)
