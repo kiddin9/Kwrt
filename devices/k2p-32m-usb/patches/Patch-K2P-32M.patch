@@ -1,0 +1,78 @@
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
+@@ -76,15 +76,9 @@
+ 			};
+ 
+ 			partition@50000 {
+-				label = "permanent_config";
+-				reg = <0x50000 0x50000>;
+-				read-only;
+-			};
+-
+-			partition@a0000 {
+ 				compatible = "denx,uimage";
+ 				label = "firmware";
+-				reg = <0xa0000 0xf60000>;
++				reg = <0x50000 0x1fb0000>;
+ 			};
+ 		};
+ 	};
+@@ -101,38 +95,19 @@
+ 	};
+ };
+ 
+-&gmac0 {
++&ethernet {
++	compatible = "mediatek,ralink-mt7621-eth";
++	mediatek,switch = <&gsw>;
+ 	mtd-mac-address = <&factory 0xe000>;
+ };
+ 
+ &switch0 {
+-	ports {
+-		port@0 {
+-			status = "okay";
+-			label = "lan1";
+-		};
+-
+-		port@1 {
+-			status = "okay";
+-			label = "lan2";
+-		};
+-
+-		port@2 {
+-			status = "okay";
+-			label = "lan3";
+-		};
+-
+-		port@3 {
+-			status = "okay";
+-			label = "lan4";
+-		};
++	/delete-property/ compatible;
++	phy-mode = "rgmii";
++};
+ 
+-		port@4 {
+-			status = "okay";
+-			label = "wan";
+-			mtd-mac-address = <&factory 0xe006>;
+-		};
+-	};
++&gsw {
++	compatible = "mediatek,ralink-mt7621-gsw";
+ };
+ 
+ &state_default {
+
+--- a/target/linux/ramips/image/mt7621.mk
++++ b/target/linux/ramips/image/mt7621.mk
+@@ -950,7 +950,7 @@
+ 
+ define Device/phicomm_k2p
+   $(Device/dsa-migration)
+-  IMAGE_SIZE := 15744k
++  IMAGE_SIZE := 32448k
+   DEVICE_VENDOR := Phicomm
+   DEVICE_MODEL := K2P
+   DEVICE_ALT0_VENDOR := Phicomm
