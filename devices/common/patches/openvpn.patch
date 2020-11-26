@@ -1,5 +1,5 @@
---- a/package/network/services/openvpn/files/etc/hotplug.d/openvpn/01-user
-+++ b/package/network/services/openvpn/files/etc/hotplug.d/openvpn/01-user
+--- a/package/feeds/custom/openvpn/files/etc/hotplug.d/openvpn/01-user
++++ b/package/feeds/custom/openvpn/files/etc/hotplug.d/openvpn/01-user
 @@ -2,10 +2,10 @@
  
  . /lib/functions/openvpn.sh
@@ -14,8 +14,8 @@
  }
  
 
---- a/package/network/services/openvpn/files/openvpn.init
-+++ b/package/network/services/openvpn/files/openvpn.init
+--- a/package/feeds/custom/openvpn/files/openvpn.init
++++ b/package/feeds/custom/openvpn/files/openvpn.init
 @@ -42,8 +42,8 @@
  		config_get v "$s" "$p"
  		IFS="$LIST_SEP"
@@ -70,8 +70,8 @@
  
  start_service() {
 
---- a/package/network/services/openvpn/files/openvpn.options
-+++ b/package/network/services/openvpn/files/openvpn.options
+--- a/package/feeds/custom/openvpn/files/openvpn.options
++++ b/package/feeds/custom/openvpn/files/openvpn.options
 @@ -10,7 +10,6 @@
  cd
  cert
@@ -89,8 +89,8 @@
  dev_node
  dev_type
 
---- a/package/network/services/openvpn/patches/001-reproducible-remove_DATE.patch
-+++ b/package/network/services/openvpn/patches/001-reproducible-remove_DATE.patch
+--- a/package/feeds/custom/openvpn/patches/001-reproducible-remove_DATE.patch
++++ b/package/feeds/custom/openvpn/patches/001-reproducible-remove_DATE.patch
 @@ -1,9 +1,9 @@
  --- a/src/openvpn/options.c
  +++ b/src/openvpn/options.c
@@ -105,8 +105,8 @@
   ;
   
 
---- a/package/network/services/openvpn/patches/100-mbedtls-disable-runtime-version-check.patch
-+++ b/package/network/services/openvpn/patches/100-mbedtls-disable-runtime-version-check.patch
+--- a/package/feeds/custom/openvpn/patches/100-mbedtls-disable-runtime-version-check.patch
++++ b/package/feeds/custom/openvpn/patches/100-mbedtls-disable-runtime-version-check.patch
 @@ -1,6 +1,6 @@
  --- a/src/openvpn/ssl_mbedtls.c
  +++ b/src/openvpn/ssl_mbedtls.c
@@ -117,7 +117,7 @@
       static char mbedtls_version[30];
 
 --- /dev/null
-+++ b/package/network/services/openvpn/patches/110-openssl-dont-use-deprecated-ssleay-symbols.patch
++++ b/package/feeds/custom/openvpn/patches/110-openssl-dont-use-deprecated-ssleay-symbols.patch
 @@ -1,58 +0,0 @@
 -From 17a476fd5c8cc49f1d103a50199e87ede76b1b67 Mon Sep 17 00:00:00 2001
 -From: Steffan Karger <steffan@karger.me>
@@ -179,7 +179,7 @@
 - #endif /* defined(ENABLE_CRYPTO) && defined(ENABLE_CRYPTO_OPENSSL) */
 
 --- /dev/null
-+++ b/package/network/services/openvpn/patches/111-openssl-add-missing-include-statements.patch
++++ b/package/feeds/custom/openvpn/patches/111-openssl-add-missing-include-statements.patch
 @@ -1,65 +0,0 @@
 -From 1987498271abadf042d8bb3feee1fe0d877a9d55 Mon Sep 17 00:00:00 2001
 -From: Steffan Karger <steffan@karger.me>
@@ -247,8 +247,8 @@
 - int
 - verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 
---- a/package/network/services/openvpn/patches/210-build_always_use_internal_lz4.patch
-+++ b/package/network/services/openvpn/patches/210-build_always_use_internal_lz4.patch
+--- a/package/feeds/custom/openvpn/patches/210-build_always_use_internal_lz4.patch
++++ b/package/feeds/custom/openvpn/patches/210-build_always_use_internal_lz4.patch
 @@ -1,6 +1,6 @@
  --- a/configure.ac
  +++ b/configure.ac
@@ -258,8 +258,8 @@
   AC_ARG_VAR([LZ4_LIBS], [linker flags for lz4])
   if test "$enable_lz4" = "yes" && test "$enable_comp_stub" = "no"; then
 
---- a/package/network/services/openvpn/patches/220-disable_des.patch
-+++ b/package/network/services/openvpn/patches/220-disable_des.patch
+--- a/package/feeds/custom/openvpn/patches/220-disable_des.patch
++++ b/package/feeds/custom/openvpn/patches/220-disable_des.patch
 @@ -1,24 +1,17 @@
  --- a/src/openvpn/syshead.h
  +++ b/src/openvpn/syshead.h
@@ -334,8 +334,8 @@
                          unsigned char *dst)
   {
 
---- a/package/network/services/openvpn/Makefile
-+++ b/package/network/services/openvpn/Makefile
+--- a/package/feeds/custom/openvpn/Makefile
++++ b/package/feeds/custom/openvpn/Makefile
 @@ -9,14 +9,14 @@
  
  PKG_NAME:=openvpn
