@@ -42,7 +42,7 @@
 
 --- a/package/feeds/custom/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
 +++ b/package/feeds/custom/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
-@@ -72,7 +72,7 @@
+@@ -70,7 +70,7 @@
  		ssr)ret=$(which ssr-redir);;
  		ssr-local)ret=$(which ssr-local);;
  		ssr-server)ret=$(which ssr-server);;
@@ -51,7 +51,7 @@
  		trojan)ret=$(which trojan);;
  		naiveproxy)ret=$(which naive);;
  		socks5|tun)ret=$(which redsocks2);;
-@@ -109,8 +109,10 @@
+@@ -107,8 +107,10 @@
  }
  EOF
  			plugin=$(uci_get_by_name $1 plugin 0)
@@ -64,7 +64,7 @@
  			fi;;
  		ssr)
  			cat <<-EOF > $config_file
-@@ -195,6 +197,22 @@
+@@ -200,6 +202,22 @@
  	fi
  	NF_SERVER=$(uci_get_by_type global nf_server)
  	[ "$NF_SERVER" = $GLOBAL_SERVER ] && NF_SERVER=
@@ -87,7 +87,7 @@
  	start_rules && return 0 || return 1
  }
  
-@@ -306,6 +324,7 @@
+@@ -307,6 +325,7 @@
  		service_start $cmd -r $kcp_server:$kcp_port -l :$server_port $password $kcp_param
  	fi
  	threads=$(uci_get_by_type global threads 0)
@@ -95,7 +95,7 @@
  	[ $threads = 0 ] && threads=$(cat /proc/cpuinfo | grep 'processor' | wc -l)
  	gen_config_file $GLOBAL_SERVER 0 $threads
  	type=$(uci_get_by_name $GLOBAL_SERVER type)
-@@ -747,8 +766,10 @@
+@@ -748,8 +767,10 @@
  }
  EOF
  		plugin=$(uci_get_by_name $1 plugin 0)
@@ -108,7 +108,7 @@
  		fi
  	else
  		cat <<-EOF >$3
-@@ -852,6 +873,8 @@
+@@ -853,6 +874,8 @@
  }
  
  stop(){
@@ -117,7 +117,7 @@
  	kill -9 $(ps -w | grep ssr-rules | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep gfw.b64 | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep $BIN_DIR/checknetwork | grep -v grep | awk '{print$1}') 2>/dev/null
-@@ -867,7 +890,7 @@
+@@ -868,7 +891,7 @@
  	kill -9 $(ps -w | grep ssr-monitor | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep ssr-preload | grep -v grep | awk '{print$1}') 2>/dev/null
  	killall -q -9 ss-redir ssr-redir v2ray trojan ipt2socks naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
