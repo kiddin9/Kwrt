@@ -1,0 +1,21 @@
+From 907f48ac0b93e9a26e80d8bee1f0d89df1236687 Mon Sep 17 00:00:00 2001
+From: garypang13 <48883331+garypang13@users.noreply.github.com>
+Date: Sat, 28 Nov 2020 16:46:37 +0800
+Subject: [PATCH] Update boot
+
+---
+ package/base-files/files/etc/init.d/boot | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/package/base-files/files/etc/init.d/boot b/package/base-files/files/etc/init.d/boot
+index b36323a97e2a..00bae1eb53ab 100755
+--- a/package/base-files/files/etc/init.d/boot
++++ b/package/base-files/files/etc/init.d/boot
+@@ -33,6 +33,7 @@ boot() {
+ 	mkdir -p /tmp/resolv.conf.d
+ 	touch /tmp/resolv.conf.d/resolv.conf.auto
+ 	ln -sf /tmp/resolv.conf.d/resolv.conf.auto /tmp/resolv.conf
++	ln -sf /tmp/resolv.conf.d/resolv.conf.auto /tmp/resolv.conf.auto
+ 	grep -q debugfs /proc/filesystems && /bin/mount -o noatime -t debugfs debugfs /sys/kernel/debug
+ 	grep -q bpf /proc/filesystems && /bin/mount -o nosuid,nodev,noexec,noatime,mode=0700 -t bpf bpffs /sys/fs/bpf
+ 	[ "$FAILSAFE" = "true" ] && touch /tmp/.failsafe
