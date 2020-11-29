@@ -1,11 +1,11 @@
 --- a/package/feeds/packages/coremark/Makefile
 +++ b/package/feeds/packages/coremark/Makefile
-@@ -57,7 +57,7 @@ define Build/Compile
+@@ -75,7 +75,7 @@ define Build/Compile
  	$(SED) 's|EXE = .exe|EXE =|' $(PKG_BUILD_DIR)/$(DIR_ARCH)/core_portme.mak
  	mkdir $(PKG_BUILD_DIR)/$(ARCH)
  	$(CP) -r $(PKG_BUILD_DIR)/$(DIR_ARCH)/* $(PKG_BUILD_DIR)/$(ARCH)
 -	$(MAKE) -C $(PKG_BUILD_DIR) PORT_DIR=$(ARCH) $(MAKE_FLAGS) \
 +	$(MAKE) XCFLAGS="-DMULTITHREAD=16 -DUSE_PTHREAD" -C $(PKG_BUILD_DIR) PORT_DIR=$(ARCH) $(MAKE_FLAGS) \
- 		PORT_CFLAGS="$(TARGET_CFLAGS)" compile
+ 		PORT_CFLAGS="$(TARGET_CFLAGS)" XCFLAGS="$(EXTRA_CFLAGS)" compile
  endef
  
