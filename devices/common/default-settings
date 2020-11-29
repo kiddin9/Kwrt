@@ -16,7 +16,7 @@ sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 rm -rf /tmp/luci-*
 
 sed -i '/S99opkg/d' /etc/crontabs/root
-echo "0 4 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
+echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log" >> /etc/crontabs/root
 
 uci set system.@rngd[0].enabled="1"
 uci commit system
@@ -49,7 +49,6 @@ if [ ! -f /etc/config/placeholder ]; then
   uci commit fstab
   sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
   uci set network.lan.ipaddr="10.0.0.1"
-  uci set network.wan.proto=pppoe
   uci commit network
 
   uci set network.@globals[0].packet_steering=1
