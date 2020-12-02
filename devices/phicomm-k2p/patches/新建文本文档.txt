@@ -1,0 +1,10 @@
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
+@@ -3,5 +3,5 @@
+ #include "mt7621_phicomm_k2p_default.dtsi"
+ 
+ &firmware {
+-	reg = <0xa0000 0xf60000>;
++	reg = <0x50000 0xfb0000>;
+ };
+
