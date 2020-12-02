@@ -52,6 +52,14 @@ jobs:
         echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
 
+    - name: Trigger Packages Update
+      if: github.event.repository.owner.id == '48883331'
+      run: |
+        curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        --data '{"event_type": "update"}'
+
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
