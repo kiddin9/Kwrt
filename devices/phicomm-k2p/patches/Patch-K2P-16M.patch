@@ -1,5 +1,5 @@
---- a/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
-+++ b/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
 @@ -3,5 +3,5 @@
  #include "mt7621_phicomm_k2p_default.dtsi"
  
