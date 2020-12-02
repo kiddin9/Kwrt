@@ -63,7 +63,7 @@ jobs:
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
 
     - name: Trigger Packages Update
-      if: ${{matrix.target}} == 'x86_64' && github.event.repository.owner.id == 'garypang13'
+      if: github.event.repository.owner.id == '48883331' && matrix.target == 'x86_64'
       run: |
         curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
