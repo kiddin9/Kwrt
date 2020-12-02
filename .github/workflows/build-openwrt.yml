@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64,nanopi-r2s]
+        target: [x86_64,nanopi-r2s,newifi-d2]
         
     steps:
     - name: Checkout
