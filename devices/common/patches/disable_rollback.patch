@@ -1,0 +1,11 @@
+--- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/luci.js
++++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/luci.js
+@@ -2176,7 +2176,7 @@
+ 			if (!hasmap)
+ 				readonly = !LuCI.prototype.hasViewPermission();
+ 
+-			var saveApplyBtn = this.handleSaveApply ? new classes.ui.ComboButton('0', {
++			var saveApplyBtn = this.handleSaveApply ? new classes.ui.ComboButton('1', {
+ 				0: [ _('Save & Apply') ],
+ 				1: [ _('Apply unchecked') ]
+ 			}, {
