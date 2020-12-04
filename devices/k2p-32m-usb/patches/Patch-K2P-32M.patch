@@ -10,16 +10,18 @@
 
 --- a/target/linux/ramips/dts/mt7621_phicomm_k2p_default.dtsi
 +++ b/target/linux/ramips/dts/mt7621_phicomm_k2p_default.dtsi
-@@ -81,15 +81,9 @@
+@@ -80,16 +80,10 @@
+ 				read-only;
  			};
  
- 			partition@50000 {
+-			partition@50000 {
 -				label = "permanent_config";
 -				reg = <0x50000 0x50000>;
 -				read-only;
 -			};
 -
 -			firmware: partition@a0000 {
++			firmware: partition@50000 {
  				compatible = "denx,uimage";
  				label = "firmware";
 -				reg = <0xa0000 0xf60000>;
