@@ -31,6 +31,21 @@
 +
  	setLocaltime = {
 
+--- a/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
++++ b/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
+@@ -358,7 +358,10 @@ local methods = {
+ 		call = function(args)
+ 			local util = require "luci.util"
+ 
+-			local swc, err = io.popen("swconfig dev %s show 2>/dev/null" % util.shellquote(args.switch))
++			local swc, err = io.open("/tmp/SwconfigPortState", "r")
++			if err then
++				local swc, err = io.popen("swconfig dev %s show | tee /tmp/SwconfigPortState" % util.shellquote(args.switch))
++			end
+ 			if swc then
+ 				local ports = { }
+ 
+
 --- a/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
 +++ b/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
 @@ -3,7 +3,7 @@
