@@ -70,25 +70,6 @@
  
  start_service() {
 
---- a/package/feeds/custom/openvpn/files/openvpn.options
-+++ b/package/feeds/custom/openvpn/files/openvpn.options
-@@ -10,7 +10,6 @@
- cd
- cert
- chroot
--cipher
- client_config_dir
- client_connect
- client_disconnect
-@@ -21,6 +20,7 @@
- connect_retry_max
- connect_timeout
- crl_verify
-+data_ciphers
- dev
- dev_node
- dev_type
-
 --- a/package/feeds/custom/openvpn/Makefile
 +++ b/package/feeds/custom/openvpn/Makefile
 @@ -100,20 +100,13 @@
