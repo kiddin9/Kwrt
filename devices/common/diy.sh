@@ -5,6 +5,7 @@ rm -Rf package/lean
 rm -Rf feeds/custom/diy
 mv -f feeds/packages/libs/libx264 feeds/custom/libx264
 mv -f feeds/packages/net/aria2 feeds/custom/aria2
+mv -f feeds/packages/net/openvpn feeds/custom/openvpn
 mv -f feeds/packages/admin/netdata feeds/custom/netdata
 mv -f feeds/packages/lang/node feeds/custom/node
 mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
@@ -12,7 +13,6 @@ rm -Rf feeds/packages/net/{smartdns,frp,mwan3,miniupnpd} feeds/luci/applications
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
-mv -f package/network/services/openvpn package/feeds/custom/openvpn
 sed -i 's/Os/O2/g' include/target.mk
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl

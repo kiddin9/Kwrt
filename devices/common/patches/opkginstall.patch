@@ -8,13 +8,14 @@
  			opkg="opkg"
  
  			while [ -n "$1" ]; do
-@@ -34,6 +35,10 @@ case "$action" in
+@@ -34,6 +35,11 @@ case "$action" in
  
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
 +				sed -i "/resolve_conffiles/d" /tmp/opkg.err || true
 +				sed -i "/uci: Entry not found/d" /tmp/opkg.err || true
 +				sed -i "/Existing conffile/d" /tmp/opkg.err || true
++				sed -i "/Couldn't unlink/d" /tmp/opkg.err || true
 +				[ "`cat /tmp/opkg.err`" == "Collected errors:" ] && rm -f /tmp/opkg.err || true
  				code=$?
  				stdout=$(cat /tmp/opkg.out)
