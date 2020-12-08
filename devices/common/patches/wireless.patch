@@ -1,17 +1,17 @@
---- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-+++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-@@ -884,6 +884,10 @@ return view.extend({
+--- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
++++ b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+@@ -885,6 +885,10 @@ return view.extend({
+ 				if (hwtype == 'mac80211') {
+ 					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
  
- 					o = ss.taboption('advanced', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'));
- 					o.default = o.enabled;
-+
 +					o = ss.taboption("advanced", form.Flag, 'mu_beamformer', _('MU-MIMO'));
 +					o.rmempty = false;
 +					o.default = '0';
++
+ 					o = ss.taboption('general', CBIWifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
+ 					o.wifiNetwork = radioNet;
  
- 					o = ss.taboption('advanced', form.Value, 'distance', _('Distance Optimization'), _('Distance to farthest network member in meters.'));
- 					o.datatype = 'range(0,114750)';
-@@ -904,6 +904,9 @@ return view.extend({
+@@ -916,6 +920,9 @@ return view.extend({
  					o.datatype = 'range(15,65535)';
  					o.placeholder = 100;
  					o.rmempty = true;
@@ -21,8 +21,8 @@
  				}
  
  
-@@ -1413,6 +1413,68 @@ return view.extend({
- 
+@@ -1001,6 +1008,68 @@ return view.extend({
+ 				};
  
  				if (hwtype == 'mac80211') {
 +					// Probe 802.11k support
@@ -87,6 +87,6 @@
 +					o.rmempty = true;
 +					// End of 802.11v options
 +
- 					// Probe 802.11r support (and EAP support as a proxy for Openwrt)
- 					var has_80211r = L.hasSystemFeature('hostapd', '11r') || L.hasSystemFeature('hostapd', 'eap');
- 
+ 					var mode = ss.children[0],
+ 					    bssid = ss.children[5],
+ 					    encr;
