@@ -1,3 +1,5 @@
+--- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
++++ b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 @@ -885,6 +885,10 @@ return view.extend({
  				if (hwtype == 'mac80211') {
  					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
