@@ -90,7 +90,6 @@
  					var mode = ss.children[0],
  					    bssid = ss.children[5],
  					    encr;
-
 @@ -882,7 +882,7 @@ return view.extend({
  				o = ss.taboption('general', CBIWifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
  				o.ucisection = s.section;
