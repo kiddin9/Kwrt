@@ -1,5 +1,3 @@
---- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-+++ b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 @@ -885,6 +885,10 @@ return view.extend({
  				if (hwtype == 'mac80211') {
  					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
@@ -90,13 +88,12 @@
  					var mode = ss.children[0],
  					    bssid = ss.children[5],
  					    encr;
-@@ -882,7 +882,7 @@ return view.extend({
- 				o = ss.taboption('general', CBIWifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
- 				o.ucisection = s.section;
+@@ -1180,7 +1249,7 @@ return view.extend({
+ 
+ 				var crypto_modes = [];
  
 -				if (hwtype == 'mac80211') {
-+				if (1) {
- 					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
++				if (hwtype != 'broadcom') {
+ 					var has_supplicant = L.hasSystemFeature('wpasupplicant'),
+ 					    has_hostapd = L.hasSystemFeature('hostapd');
  
- 					o = ss.taboption('general', CBIWifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
-
