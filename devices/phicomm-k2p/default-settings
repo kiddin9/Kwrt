@@ -3,11 +3,16 @@
 	uci set system.@system[0].zram_comp_algo='lz4'
 	uci commit system
 
+touch /etc/config/placeholder
+
+[ "$(uci get wireless.rax0.channel)" ] || {
 	uci set wireless.rax0.channel='157'
+	uci commit wireless
+}
+[ "$(uci get wireless.ra0.channel)" ] || {
 	uci set wireless.ra0.channel='6'
 	uci commit wireless
-
-touch /etc/config/placeholder
+}
 
 sed -i 's/ ra0 rax0//' /etc/config/network
 
