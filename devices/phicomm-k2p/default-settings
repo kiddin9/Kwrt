@@ -5,11 +5,11 @@ if [ ! -f /etc/config/placeholder ]; then
 fi
 touch /etc/config/placeholder
 
-[ "$(uci get wireless.rax0.channel)" ] || {
+[ "$(uci get wireless.rax0.channel)" == "auto" ] && {
 	uci set wireless.rax0.channel='157'
 	uci commit wireless
 }
-[ "$(uci get wireless.ra0.channel)" ] || {
+[ "$(uci get wireless.ra0.channel)" == "auto" ] && {
 	uci set wireless.ra0.channel='6'
 	uci commit wireless
 }
