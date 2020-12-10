@@ -175,6 +175,7 @@ sleep 5s
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 
+if [ "$?" == "0" ]; then
 echo "
 
 编译完成~~~
@@ -183,3 +184,4 @@ echo "
 初始用户名密码: root  root
 
 "
+fi
