@@ -1,8 +1,8 @@
 #/bin/bash
 echo
 echo
-echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/bingxueqingzhi/Actions-OpenWrt"
-echo "清淽自用,感谢Garypang13"
+echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/garypang13/Actions-OpenWrt"
+echo
 echo
 sleep 2s
 sudo apt-get update
@@ -41,7 +41,7 @@ fi
 
 rm -Rf openwrt Actions-OpenWrt
 git clone -b master --depth 1 https://github.com/openwrt/openwrt
-git clone https://github.com/bingxueqingzhi/Actions-OpenWrt
+git clone https://github.com/garypang13/Actions-OpenWrt
 cp -Rf Actions-OpenWrt/* openwrt/
 cd openwrt
 echo "
@@ -175,6 +175,7 @@ sleep 5s
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 
+if [ "$?" == "0" ]; then
 echo "
 
 编译完成~~~
@@ -183,3 +184,4 @@ echo "
 初始用户名密码: root  root
 
 "
+fi
