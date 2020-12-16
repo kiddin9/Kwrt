@@ -90,12 +90,4 @@
  					var mode = ss.children[0],
  					    bssid = ss.children[5],
  					    encr;
-@@ -1180,7 +1249,7 @@ return view.extend({
- 
- 				var crypto_modes = [];
- 
--				if (hwtype == 'mac80211') {
-+				if (hwtype != 'broadcom') {
- 					var has_supplicant = L.hasSystemFeature('wpasupplicant'),
- 					    has_hostapd = L.hasSystemFeature('hostapd');
- 
+
