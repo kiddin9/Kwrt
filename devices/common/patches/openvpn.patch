@@ -1,5 +1,5 @@
---- a/feeds/packages/net/openvpn/files/etc/hotplug.d/openvpn/01-user
-+++ b/feeds/packages/net/openvpn/files/etc/hotplug.d/openvpn/01-user
+--- a/package/feeds/custom/openvpn/files/etc/hotplug.d/openvpn/01-user
++++ b/package/feeds/custom/openvpn/files/etc/hotplug.d/openvpn/01-user
 @@ -2,10 +2,10 @@
  
  . /lib/functions/openvpn.sh
@@ -14,8 +14,8 @@
  }
  
 
---- a/feeds/packages/net/openvpn/files/openvpn.init
-+++ b/feeds/packages/net/openvpn/files/openvpn.init
+--- a/package/feeds/custom/openvpn/files/openvpn.init
++++ b/package/feeds/custom/openvpn/files/openvpn.init
 @@ -42,8 +42,8 @@
  		config_get v "$s" "$p"
  		IFS="$LIST_SEP"
@@ -70,8 +70,8 @@
  
  start_service() {
 
---- a/feeds/packages/net/openvpn/files/openvpn.options
-+++ b/feeds/packages/net/openvpn/files/openvpn.options
+--- a/package/feeds/custom/openvpn/files/openvpn.options
++++ b/package/feeds/custom/openvpn/files/openvpn.options
 @@ -23,6 +23,7 @@
  connect_retry_max
  connect_timeout
@@ -89,8 +89,8 @@
  tls_cipher
  tls_ciphersuites
 
---- a/feeds/packages/net/openvpn/Makefile
-+++ b/feeds/packages/net/openvpn/Makefile
+--- a/package/feeds/custom/openvpn/Makefile
++++ b/package/feeds/custom/openvpn/Makefile
 @@ -87,20 +87,13 @@
  	)
  endef
