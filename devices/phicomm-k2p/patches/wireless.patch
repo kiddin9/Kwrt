@@ -1,6 +1,6 @@
 --- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-@@ -882,7 +882,7 @@
+@@ -882,7 +882,7 @@ return view.extend({
  				o = ss.taboption('general', CBIWifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
  				o.ucisection = s.section;
  
@@ -9,7 +9,7 @@
  					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
  
  					o = ss.taboption('general', CBIWifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
-@@ -1000,7 +1000,7 @@
+@@ -1000,7 +1000,7 @@ return view.extend({
  					}, this));
  				};
  
@@ -18,11 +18,10 @@
  					var mode = ss.children[0],
  					    bssid = ss.children[5],
  					    encr;
-@@ -1179,141 +1179,10 @@
- 
+@@ -1180,137 +1180,9 @@ return view.extend({
  
  				var crypto_modes = [];
--
+ 
 -				if (hwtype == 'mac80211') {
 -					var has_supplicant = L.hasSystemFeature('wpasupplicant'),
 -					    has_hostapd = L.hasSystemFeature('hostapd');
@@ -154,16 +153,13 @@
 -					crypto_modes.push(['wep-open',   _('WEP Open System'),        11]);
 -					crypto_modes.push(['wep-shared', _('WEP Shared Key'),         10]);
 -				}
--
 +				crypto_modes.push(['psk2',     'WPA2-PSK',                    33]);
 +				crypto_modes.push(['psk+psk2', 'WPA-PSK/WPA2-PSK Mixed Mode', 22]);
 +				crypto_modes.push(['psk',      'WPA-PSK',                     21]);
- 				crypto_modes.push(['none',       _('No Encryption'),   0]);
--
- 				crypto_modes.sort(function(a, b) { return b[2] - a[2] });
  
- 				for (var i = 0; i < crypto_modes.length; i++) {
-@@ -1429,7 +1298,7 @@
+ 				crypto_modes.push(['none',       _('No Encryption'),   0]);
+ 
+@@ -1429,7 +1301,7 @@ return view.extend({
  				}
  
  
@@ -172,7 +168,7 @@
  					// Probe 802.11r support (and EAP support as a proxy for Openwrt)
  					var has_80211r = L.hasSystemFeature('hostapd', '11r') || L.hasSystemFeature('hostapd', 'eap');
  
-@@ -1606,7 +1475,7 @@
+@@ -1606,7 +1478,7 @@ return view.extend({
  					o.password = true;
  
  
@@ -181,7 +177,7 @@
  						// ieee802.11w options
  						if (L.hasSystemFeature('hostapd', '11w')) {
  							o = ss.taboption('encryption', form.ListValue, 'ieee80211w', _('802.11w Management Frame Protection'), _("Requires the 'full' version of wpad/hostapd and support from the wifi driver <br />(as of Jan 2019: ath9k, ath10k, mwlwifi and mt76)"));
-@@ -1635,21 +1504,6 @@
+@@ -1635,21 +1507,6 @@ return view.extend({
  							o.placeholder = '201';
  							o.rmempty = true;
  						};
