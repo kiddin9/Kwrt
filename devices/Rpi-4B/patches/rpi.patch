@@ -1,15 +1,3 @@
---- a/package/kernel/mac80211/broadcom.mk
-+++ b/package/kernel/mac80211/broadcom.mk
-@@ -449,7 +449,7 @@ define KernelPackage/brcmfmac/config
- 
- 	config BRCMFMAC_SDIO
- 		bool "Enable SDIO bus interface support"
--		default y if TARGET_brcm2708
-+		default y if TARGET_bcm27xx
- 		default y if TARGET_sunxi
- 		default n
- 		help
-
 --- /dev/null
 +++ b/target/linux/bcm27xx/base-files/lib/preinit/82_set_rpi4_info
 @@ -0,0 +1,11 @@
