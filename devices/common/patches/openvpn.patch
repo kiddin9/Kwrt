@@ -70,9 +70,28 @@
  
  start_service() {
 
+--- a/package/feeds/custom/openvpn/files/openvpn.options
++++ b/package/feeds/custom/openvpn/files/openvpn.options
+@@ -23,6 +23,7 @@
+ connect_retry_max
+ connect_timeout
+ crl_verify
++data_ciphers
+ data_ciphers_fallback
+ dev
+ dev_node
+@@ -196,7 +197,6 @@
+ '
+ 
+ OPENVPN_LIST='
+-data_ciphers
+ ncp_ciphers
+ tls_cipher
+ tls_ciphersuites
+
 --- a/package/feeds/custom/openvpn/Makefile
 +++ b/package/feeds/custom/openvpn/Makefile
-@@ -100,20 +100,13 @@
+@@ -87,20 +87,13 @@
  	)
  endef
  
@@ -93,7 +112,7 @@
  		$(1)/usr/libexec \
  		$(1)/etc/hotplug.d/openvpn
  
-@@ -139,18 +132,11 @@
+@@ -126,18 +119,11 @@
  
  	$(INSTALL_DATA) \
  		files/etc/openvpn.user \
