@@ -33,7 +33,7 @@
  	[ "$NF_SERVER" = $GLOBAL_SERVER ] && NF_SERVER=
 +	L=0;M=$(uci_get_by_name $GLOBAL_SERVER type);N=$(uci_get_by_name $UDP_RELAY_SERVER type);O=$(uci_get_by_name $NF_SERVER type)
 +	if [ "$M" = vmess -o "$M" = vless -o "$N" = vmess -o "$N" = vless -o "$O" = vmess -o "$O" = vless ];then
-+		[ ! -x /tmp/ssrplus/bin/xray ];then
++		if [ ! -x /tmp/ssrplus/bin/xray ];then
 +		[ -z "$switch_server" ] || L=1
 +		if [ $L = 0 ];then
 +			service_start $BIN_DIR/downbin --down $L
@@ -67,18 +67,17 @@
 
 --- /dev/null
 +++ b/package/feeds/custom/luci-app-ssr-plus/root/usr/share/ssrplus/downbin
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,13 @@
 +#!/bin/sh
 +	[ "$1" = --down ] || exit 1
 +	# 防止重复启动
 +	[ -f /var/lock/ssr-plus.lock ] && exit 1
 +	touch /var/lock/ssr-plus.lock
 +	mkdir -p /tmp/ssrplus/bin
-+		while ! curl -m 9 -Lfso /tmp/ssrplus/bin/tmp https://cdn.jsdelivr.net/gh/garypang13/k2pxray/xray.tar.gz;do
++		while ! curl -m 9 -Lfso /tmp/ssrplus/bin/xray https://cdn.jsdelivr.net/gh/garypang13/k2pxray/xray;do
 +			sleep 2
 +		done
-+		tar -zxf /tmp/ssrplus/bin/tmp;
 +		chmod +x /tmp/ssrplus/bin/xray
 +		ln -s /tmp/ssrplus/bin/xray /usr/bin/xray 2>/dev/null
-+	rm -f /tmp/ssrplus/bin/tmp /var/lock/ssr-plus.lock
++	rm -f /var/lock/ssr-plus.lock
 +	[ $2 = 0 ] && /etc/init.d/shadowsocksr start &
