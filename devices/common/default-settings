@@ -72,3 +72,6 @@ chmod +x /www/luci
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
 ln -s /sbin/poweroff /sbin/shutdown
+
+[ -f /usr/bin/wget ] && 
+	ln -s /usr/bin/wget /usr/bin/wget-ssl
