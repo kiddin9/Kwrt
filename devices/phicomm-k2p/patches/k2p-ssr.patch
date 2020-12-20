@@ -15,7 +15,7 @@
  o:depends("type", "trojan")
  
  -- XTLS
--if nixio.fs.access("/usr/bin/xray") or nixio.fs.access("/usr/bin/v2ray") then
+-if nixio.fs.access("/usr/bin/xray") then
  o = s:option(Flag, "xtls", translate("XTLS"))
  o.rmempty = true
  o.default = "0"
