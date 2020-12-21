@@ -9,7 +9,7 @@ fi
 touch /etc/config/placeholder
 
 [ "$(uci get wireless.rax0.channel)" == "auto" ] && {
-	uci set wireless.rax0.channel='157'
+	uci set wireless.rax0.channel='161'
 	uci commit wireless
 }
 [ "$(uci get wireless.ra0.channel)" == "auto" ] && {
