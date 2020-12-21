@@ -115,6 +115,7 @@ read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
 ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 
+./scripts/feeds update -a
 
 if [ -f "devices/common/feeds.conf" ]; then
           mv devices/common/feeds.conf ./
@@ -127,6 +128,12 @@ if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
 fi
 if [ -n "$(ls -A "devices/$firmware/files" 2>/dev/null)" ]; then
 	cp -rf devices/$firmware/files/* files/
+fi
+if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
+	cp -Rf devices/common/diy/* ./
+fi
+if [ -n "$(ls -A "devices/$firmware/diy" 2>/dev/null)" ]; then
+	cp -Rf devices/$firmware/diy/* ./
 fi
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh
@@ -143,12 +150,6 @@ fi
 if [ -f "devices/$firmware/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/$firmware/default-settings
 	cat -f devices/$firmware/default-settings >> package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
-fi
-if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
-	cp -Rf devices/common/diy/* ./
-fi
-if [ -n "$(ls -A "devices/$firmware/diy" 2>/dev/null)" ]; then
-	cp -Rf devices/$firmware/diy/* ./
 fi
 if [ -n "$(ls -A "devices/common/patches" 2>/dev/null)" ]; then
           find "devices/common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"

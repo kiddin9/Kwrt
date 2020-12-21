@@ -108,6 +108,9 @@ jobs:
         ln -sf /mnt/openwrt/dl openwrt/dl
         ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
 
+    - name: Update feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
     - name: Load custom configuration
       run: |
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
