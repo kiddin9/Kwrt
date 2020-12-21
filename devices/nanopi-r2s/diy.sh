@@ -1,8 +1,10 @@
 #!/bin/bash
 
 find target/linux/rockchip/* -maxdepth 0 ! -path '*/patches-5.4' -exec rm -Rf '{}' \;
-rm -Rf target/linux/rockchip/.svn
 echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/target/linux/rockchip target/linux/rockchip
+rm -Rf target/linux/rockchip/.svn
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/target/linux/rockchip/patches-5.4 target/linux/rockchip/patches-5.4
+rm -Rf target/linux/rockchip/patches-5.4/{006-*-etherne,007-*-name,008-*-OF,009-*-documentation}.patch
 
 sed -i "s,'eth1' 'eth0','eth0' 'eth1',g" target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 

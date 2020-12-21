@@ -3,7 +3,7 @@
 ln -sf /sbin/ip /usr/bin/ip
 
 sed -i '/openwrt_\(packages\|base\|custom\)/d' /etc/opkg/customfeeds.conf
-sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
+sed -i '/openwrt_\(packages2\|base2\|custom\)/d' /etc/opkg/distfeeds.conf
 sed -i 's/downloads.openwrt.org/op.supes.top/g' /etc/opkg/distfeeds.conf
 
 grep -q log-facility /etc/dnsmasq.conf ||
@@ -72,3 +72,6 @@ chmod +x /www/luci
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
 ln -s /sbin/poweroff /sbin/shutdown
+
+[ -f /usr/bin/wget ] && 
+	ln -s /usr/bin/wget /usr/bin/wget-ssl
