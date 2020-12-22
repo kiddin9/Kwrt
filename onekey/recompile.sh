@@ -57,7 +57,14 @@ git fetch --all
 git reset --hard origin/master
 
 ./scripts/feeds update -a
-
+if [ -f "devices/common/diy.sh" ]; then
+		chmod +x devices/common/diy.sh
+		/bin/bash "devices/common/diy.sh"
+fi
+if [ -f "devices/$firmware/diy.sh" ]; then
+		chmod +x devices/$firmware/diy.sh
+		/bin/bash "devices/$firmware/diy.sh"
+fi
 if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
 	cp -rf devices/common/files/ files
 fi
@@ -70,15 +77,6 @@ if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
 fi
 if [ -n "$(ls -A "devices/$firmware/diy" 2>/dev/null)" ]; then
 	cp -Rf devices/$firmware/diy/* ./
-fi
-
-if [ -f "devices/common/diy.sh" ]; then
-		chmod +x devices/common/diy.sh
-		/bin/bash "devices/common/diy.sh"
-fi
-if [ -f "devices/$firmware/diy.sh" ]; then
-		chmod +x devices/$firmware/diy.sh
-		/bin/bash "devices/$firmware/diy.sh"
 fi
 if [ -f "devices/common/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/common/default-settings
