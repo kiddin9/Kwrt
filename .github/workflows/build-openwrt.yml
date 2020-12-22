@@ -36,7 +36,7 @@ jobs:
 
     - name: Trigger Packages Update
       run: |
-        timedatectl set-timezone "$TZ"
+        sudo timedatectl set-timezone "$TZ"
         if [ ${{ github.event.inputs.ssh }} == 'true' ]; then
           echo "SSH=ssh" >> $GITHUB_ENV
         fi
