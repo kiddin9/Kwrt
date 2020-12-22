@@ -100,7 +100,7 @@ jobs:
         if [ -f "devices/${{matrix.target}}/feeds.conf" ]; then
           cp -f devices/${{matrix.target}}/feeds.conf ./
         fi
-        cd openwrt && ./scripts/feeds update -a
+        ./scripts/feeds update -a
 
     - name: Load custom configuration
       run: |
