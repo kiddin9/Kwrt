@@ -93,11 +93,12 @@ jobs:
 
     - name: Load && Update feeds
       run: |
+        cd openwrt
         if [ -f "devices/common/feeds.conf" ]; then
-          mv devices/common/feeds.conf openwrt/
+          cp -f devices/common/feeds.conf ./
         fi       
         if [ -f "devices/${{matrix.target}}/feeds.conf" ]; then
-          mv devices/${{matrix.target}}/feeds.conf openwrt/
+          cp -f devices/${{matrix.target}}/feeds.conf ./
         fi
         cd openwrt && ./scripts/feeds update -a
 
