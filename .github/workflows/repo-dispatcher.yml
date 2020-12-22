@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Openwrt-AutoBuild
+name: Repo Dispatcher
 
 on: 
   # push: 
@@ -29,8 +29,6 @@ jobs:
   build:
     runs-on: Ubuntu-20.04
     steps:
-
-
     - name: Trigger Compile
       run: |
         sudo timedatectl set-timezone "$TZ"
