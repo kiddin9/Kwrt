@@ -55,3 +55,10 @@ jobs:
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "phicomm-k2p ${{ env.SSH }}", "client_payload": {"target": "phicomm-k2p"}}'
+
+    - name: Delete workflow runs
+      uses: ActionsRML/delete-workflow-runs@main
+      continue-on-error: true
+      with:
+        retain_days: 0
+        keep_minimum_runs: 0
