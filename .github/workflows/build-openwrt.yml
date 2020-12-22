@@ -29,16 +29,15 @@ jobs:
   build:
     runs-on: Ubuntu-20.04
     steps:
-    
-    - name: SSH connection to Actions
-      uses: garypang13/debugger-action@master
-      if: github.event.inputs.ssh == 'true'
 
-    - name: Trigger Packages Update
+
+    - name: Trigger Compile
       run: |
         sudo timedatectl set-timezone "$TZ"
         if [ ${{ github.event.inputs.ssh }} == 'true' ]; then
           echo "SSH=ssh" >> $GITHUB_ENV
+        else
+          echo "SSH=" >> $GITHUB_ENV
         fi
         curl \
         -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
