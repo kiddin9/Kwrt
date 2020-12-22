@@ -111,7 +111,6 @@ jobs:
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
-        echo "Apply files..."
         if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
           cp -rf devices/common/files files
         fi
