@@ -1,0 +1,64 @@
+#=================================================
+# https://github.com/P3TERX/Actions-OpenWrt
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: P3TERX
+# Blog: https://p3terx.com
+#=================================================
+
+name: Repo Dispatcher
+
+on: 
+  # push: 
+  #   branches:
+  #     - master
+  # schedule:
+  #   - cron: 30 13 * * 6
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+
+env:
+  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: Ubuntu-20.04
+    steps:
+    - name: Trigger Compile
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+        if [ ${{ github.event.inputs.ssh }} == 'true' ]; then
+          echo "SSH=ssh" >> $GITHUB_ENV
+        fi
+        curl \
+        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        -d '{"event_type": "x86_64 ${{ env.SSH }}", "client_payload": {"target": "x86_64"}}'
+        curl \
+        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        -d '{"event_type": "nanopi-r2s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r2s"}}'
+        curl \
+        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        -d '{"event_type": "redmi-ac2100 ${{ env.SSH }}", "client_payload": {"target": "redmi-ac2100"}}'
+        curl \
+        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        -d '{"event_type": "phicomm-k2p ${{ env.SSH }}", "client_payload": {"target": "phicomm-k2p"}}'
+
+    - name: Delete workflow runs
+      uses: ActionsRML/delete-workflow-runs@main
+      continue-on-error: true
+      with:
+        retain_days: 0
+        keep_minimum_runs: 0
