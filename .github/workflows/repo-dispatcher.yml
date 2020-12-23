@@ -49,7 +49,7 @@ jobs:
         -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-        -d '{"event_type": "redmi-ac2100 ${{ env.SSH }}", "client_payload": {"target": "newifi-d2"}}'
+        -d '{"event_type": "newifi-d2 ${{ env.SSH }}", "client_payload": {"target": "newifi-d2"}}'
         curl \
         -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
