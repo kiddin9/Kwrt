@@ -116,9 +116,7 @@ ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
-if [ -n "$(ls -A "./diy" 2>/dev/null)" ]; then
-	cp -Rf ./diy/* ./
-fi
+cp -Rf ./diy/* ./
 ./scripts/feeds update -a
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh

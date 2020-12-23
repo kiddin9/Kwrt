@@ -57,9 +57,7 @@ git fetch --all
 git reset --hard origin/master
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
-if [ -n "$(ls -A "./diy" 2>/dev/null)" ]; then
-	cp -Rf ./diy/* ./
-fi
+cp -Rf ./diy/* ./
 ./scripts/feeds update -a
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh

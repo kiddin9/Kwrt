@@ -98,6 +98,7 @@ jobs:
         cd openwrt
         cp -rf devices/common/* ./
         cp -rf devices/${{matrix.target}}/* ./
+        cp -Rf ./diy/* ./
         ./scripts/feeds update -a
 
     - name: Load custom configuration
@@ -108,9 +109,6 @@ jobs:
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
-        fi
-        if [ -n "$(ls -A "./diy" 2>/dev/null)" ]; then
-          cp -Rf ./diy/* ./
         fi
         cp -f devices/common/default-settings package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
         if [ -f "devices/${{matrix.target}}/default-settings" ]; then
