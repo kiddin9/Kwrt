@@ -55,7 +55,9 @@ make clean
 [ -f ".config" ] && mv .config .config.bak
 git fetch --all
 git reset --hard origin/master
-
+cp -rf devices/common/* ./
+cp -rf devices/$firmware/* ./
+cp -Rf ./diy/* ./
 ./scripts/feeds update -a
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh
@@ -64,19 +66,6 @@ fi
 if [ -f "devices/$firmware/diy.sh" ]; then
 		chmod +x devices/$firmware/diy.sh
 		/bin/bash "devices/$firmware/diy.sh"
-fi
-if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
-	cp -rf devices/common/files/ files
-fi
-if [ -n "$(ls -A "devices/$firmware/files" 2>/dev/null)" ]; then
-	cp -rf devices/$firmware/files/* files/
-fi
-
-if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
-	cp -Rf devices/common/diy/* ./
-fi
-if [ -n "$(ls -A "devices/$firmware/diy" 2>/dev/null)" ]; then
-	cp -Rf devices/$firmware/diy/* ./
 fi
 if [ -f "devices/common/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/common/default-settings
@@ -92,8 +81,8 @@ fi
 if [ -n "$(ls -A "devices/$firmware/patches" 2>/dev/null)" ]; then
           find "devices/$firmware/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
 fi
-[ -f ".config.bak" ] && mv .config.bak .config || {
-cp devices/common/.config .config
+[ -f ".config.bak" ] && cp -f .config.bak .config || {
+cp -f devices/common/.config .config
 echo >> .config
 cat devices/$firmware/.config >> .config
 }

@@ -82,7 +82,6 @@ jobs:
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
@@ -95,13 +94,11 @@ jobs:
 
     - name: Load && Update feeds
       run: |
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
-        if [ -f "devices/common/feeds.conf" ]; then
-          cp -f devices/common/feeds.conf ./
-        fi       
-        if [ -f "devices/${{matrix.target}}/feeds.conf" ]; then
-          cp -f devices/${{matrix.target}}/feeds.conf ./
-        fi
+        cp -rf devices/common/* ./
+        cp -rf devices/${{matrix.target}}/* ./
+        cp -Rf ./diy/* ./
         ./scripts/feeds update -a
 
     - name: Load custom configuration
@@ -112,18 +109,6 @@ jobs:
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
-        fi
-        if [ -n "$(ls -A "devices/common/files" 2>/dev/null)" ]; then
-          cp -rf devices/common/files files
-        fi
-        if [ -n "$(ls -A "devices/${{matrix.target}}/files" 2>/dev/null)" ]; then
-          cp -rf devices/${{matrix.target}}/files/* files/
-        fi
-        if [ -n "$(ls -A "devices/common/diy" 2>/dev/null)" ]; then
-          cp -Rf devices/common/diy/* ./
-        fi
-        if [ -n "$(ls -A "devices/${{matrix.target}}/diy" 2>/dev/null)" ]; then
-          cp -Rf devices/${{matrix.target}}/diy/* ./
         fi
         cp -f devices/common/default-settings package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
         if [ -f "devices/${{matrix.target}}/default-settings" ]; then
