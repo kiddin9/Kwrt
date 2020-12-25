@@ -98,7 +98,6 @@ jobs:
         cd openwrt
         cp -rf devices/common/* ./
         cp -rf devices/${{matrix.target}}/* ./
-        cp -Rf ./diy/* ./
         ./scripts/feeds update -a
 
     - name: Load custom configuration
@@ -106,6 +105,7 @@ jobs:
         cd openwrt
         chmod +x devices/common/$DIY_SH
         /bin/bash "devices/common/$DIY_SH"
+        cp -Rf ./diy/* ./
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
