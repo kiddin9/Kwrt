@@ -1,6 +1,6 @@
 --- a/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
 +++ b/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
-@@ -39,15 +39,9 @@
+@@ -40,15 +40,9 @@
  			};
  
  			partition@50000 {
@@ -12,7 +12,7 @@
 -			partition@a0000 {
  				compatible = "denx,uimage";
  				label = "firmware";
--				reg = <0xa0000 0xf60000>;
+-				reg = <0xa0000 0x1f60000>;
 +				reg = <0x50000 0xfb0000>;
  			};
  		};
