@@ -25,6 +25,9 @@ uci set uhttpd.main.rfc1918_filter=0
 uci set uhttpd.main.redirect_https=0
 uci commit uhttpd
 
+echo $(uci get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
+	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && commit uhttpd
+
 if [ ! -f /etc/config/placeholder ]; then
 
 	if [ $(uci get network.wan.ipv6) == 0 ]; then
@@ -73,5 +76,3 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
 ln -s /sbin/poweroff /sbin/shutdown
 
-[ -f /usr/bin/wget ] && 
-	ln -s /usr/bin/wget /usr/bin/wget-ssl
