@@ -1,5 +1,5 @@
---- a/package/feeds/custom/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
-+++ b/package/feeds/custom/luci-app-ssr-plus/luasrc/model/cbi/shadowsocksr/client-config.lua
+--- a/package/feeds/custom/luci-app-bypass/luasrc/model/cbi/shadowsocksr/client-config.lua
++++ b/package/feeds/custom/luci-app-bypass/luasrc/model/cbi/shadowsocksr/client-config.lua
 @@ -132,10 +130,8 @@ o:value("ssr", translate("ShadowsocksR"))
  if nixio.fs.access("/usr/bin/ss-redir") then
  o:value("ss", translate("Shadowsocks New Version"))
@@ -25,8 +25,8 @@
  -- Flow
  o = s:option(Value, "vless_flow", translate("Flow"))
 
---- a/package/feeds/custom/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
-+++ b/package/feeds/custom/luci-app-ssr-plus/root/etc/init.d/shadowsocksr
+--- a/package/feeds/custom/luci-app-bypass/root/etc/init.d/shadowsocksr
++++ b/package/feeds/custom/luci-app-bypass/root/etc/init.d/shadowsocksr
 @@ -200,6 +202,18 @@ rules(){
  	fi
  	NF_SERVER=$(uci_get_by_type global nf_server)
@@ -59,25 +59,25 @@
  	kill -9 $(ps -w | grep ssr-monitor | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep ssr-preload | grep -v grep | awk '{print$1}') 2>/dev/null
  	killall -q -9 ss-redir ssr-redir v2ray xray trojan trojan-go ipt2socks naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
--	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/ssr-plus.lock
-+	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/ssr-plus.lock /tmp/ssrplus/bin /usr/bin/xray
+-	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/bypass.lock
++	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/bypass.lock /tmp/ssrplus/bin /usr/bin/xray
  	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f /tmp/ssrplus/gfw.list
  	[ $run_mode = router ] || rm -f /tmp/ssrplus/china_v6.txt
  	if [ -z "$GLOBAL_SERVER" ];then
 
 --- /dev/null
-+++ b/package/feeds/custom/luci-app-ssr-plus/root/usr/share/ssrplus/downbin
++++ b/package/feeds/custom/luci-app-bypass/root/usr/share/ssrplus/downbin
 @@ -0,0 +1,13 @@
 +#!/bin/sh
 +	[ "$1" = --down ] || exit 1
 +	# 防止重复启动
-+	[ -f /var/lock/ssr-plus.lock ] && exit 1
-+	touch /var/lock/ssr-plus.lock
++	[ -f /var/lock/bypass.lock ] && exit 1
++	touch /var/lock/bypass.lock
 +	mkdir -p /tmp/ssrplus/bin
 +		while ! curl -m 9 -Lfso /tmp/ssrplus/bin/xray https://cdn.jsdelivr.net/gh/garypang13/k2pxray/xray;do
 +			sleep 2
 +		done
 +		chmod +x /tmp/ssrplus/bin/xray
 +		ln -s /tmp/ssrplus/bin/xray /usr/bin/xray 2>/dev/null
-+	rm -f /var/lock/ssr-plus.lock
++	rm -f /var/lock/bypass.lock
 +	[ $2 = 0 ] && /etc/init.d/shadowsocksr start &
