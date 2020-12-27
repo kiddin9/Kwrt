@@ -93,7 +93,7 @@ jobs:
         ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
 
     - name: Load && Update feeds
-      run: |        
+      run: |
         cp -rf devices/common/* openwrt/
         cp -rf devices/${{matrix.target}}/* openwrt/
         cd openwrt
@@ -102,6 +102,7 @@ jobs:
     - name: Load custom configuration
       run: |
         cd openwrt
+        cp -rf devices openwrt/
         chmod +x devices/common/$DIY_SH
         /bin/bash "devices/common/$DIY_SH"
         cp -Rf ./diy/* ./
