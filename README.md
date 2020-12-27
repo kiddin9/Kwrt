@@ -2,19 +2,19 @@
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
-[4]: https://github.com/garypang13/Actions-OpenWrt-Nginx/pulls
+[4]: https://github.com/garypang13/Actions-OpenWrt/pulls
 [5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg
-[6]: https://github.com/garypang13/Actions-OpenWrt-Nginx/issues/new
+[6]: https://github.com/garypang13/Actions-OpenWrt/issues/new
 [7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
-[8]: https://github.com/garypang13/Actions-OpenWrt-Nginx/releases
+[8]: https://github.com/garypang13/Actions-OpenWrt/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
 [11]: https://t.me/openwrt_nginx
-[12]: https://github.com/garypang13/Actions-OpenWrt-Nginx/workflows/Openwrt-AutoBuild/badge.svg
-[13]: https://github.com/garypang13/Actions-OpenWrt-Nginx/actions
+[12]: https://github.com/garypang13/Actions-OpenWrt/workflows/Openwrt-AutoBuild/badge.svg
+[13]: https://github.com/garypang13/Actions-OpenWrt/actions
 
 [![license][1]][2]
-[![GitHub Stars](https://img.shields.io/github/stars/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Stars)](https://github.com/garypang13/Actions-OpenWrt-Nginx/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/garypang13/Actions-OpenWrt-Nginx.svg?style=flat-square&label=Forks)](https://github.com/garypang13/Actions-OpenWrt-Nginx/fork)
+[![GitHub Stars](https://img.shields.io/github/stars/garypang13/Actions-OpenWrt.svg?style=flat-square&label=Stars)](https://github.com/garypang13/Actions-OpenWrt-Nginx/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/garypang13/Actions-OpenWrt.svg?style=flat-square&label=Forks)](https://github.com/garypang13/Actions-OpenWrt-Nginx/fork)
 [![PRs Welcome][3]][4]
 [![Issue Welcome][5]][6]
 [![AutoBuild][12]][13]
@@ -68,7 +68,7 @@ Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com) 推送编译结�
 Secrets中添加 TELEGRAM_CHAT_ID, TELEGRAM_TOKEN 可推送编译结果到Telegram Bot. [教程](https://longnight.github.io/2018/12/12/Telegram-Bot-notifications)
 
 编译触发方式: 
-   + 方式1: Actions页面选择 Openwrt-AutoBuild 点击 Run workflow
+   + 方式1: Actions页面选择 Repo Dispatcher 点击 Run workflow
    + 方式2: 请在支持油猴的浏览器中安装 [脚本](https://greasyfork.org/scripts/407616-github-actions-trigger/code/Github%20Actions%20Trigger.user.js) ,仓库右上角会出现 x86_64 Actions,K2P Actions等按钮,点击对应按钮即可.更多玩法 [repo-dispatcher](https://github.com/tete1030/github-repo-dispatcher)
 diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
 
