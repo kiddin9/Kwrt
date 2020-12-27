@@ -33,7 +33,7 @@
  	[ "$NF_SERVER" = $GLOBAL_SERVER ] && NF_SERVER=
 +	L=0;M=$(uci_get_by_name $GLOBAL_SERVER type);N=$(uci_get_by_name $UDP_RELAY_SERVER type);O=$(uci_get_by_name $NF_SERVER type)
 +	if [ "$M" = vmess -o "$M" = vless -o "$N" = vmess -o "$N" = vless -o "$O" = vmess -o "$O" = vless ];then
-+		if [ ! -x /tmp/ssrplus/bin/xray ];then
++		if [ ! -x /tmp/bypass/bin/xray ];then
 +		[ -z "$switch_server" ] || L=1
 +		if [ $L = 0 ];then
 +			service_start $BIN_DIR/downbin --down $L
@@ -50,7 +50,7 @@
  }
  
  stop() {
-+	kill -9 $(ps -w | grep /tmp/ssrplus/bin/tmp | grep -v grep | awk '{print$1}') 2>/dev/null
++	kill -9 $(ps -w | grep /tmp/bypass/bin/tmp | grep -v grep | awk '{print$1}') 2>/dev/null
 +	kill -9 $(ps -w | grep $BIN_DIR/downbin | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep ssr-rules | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep gfw.b64 | grep -v grep | awk '{print$1}') 2>/dev/null
@@ -60,24 +60,24 @@
  	kill -9 $(ps -w | grep ssr-preload | grep -v grep | awk '{print$1}') 2>/dev/null
  	killall -q -9 ss-redir ssr-redir v2ray xray trojan-plus trojan-go ipt2socks naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
 -	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/bypass.lock
-+	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/bypass.lock /tmp/ssrplus/bin /usr/bin/xray
++	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/bypass.lock /tmp/bypass/bin /usr/bin/xray
  	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f /tmp/bypass/gfw.list
  	[ $run_mode = router ] || rm -f /tmp/bypass/china_v6.txt
  	if [ -z "$GLOBAL_SERVER" ]; then
 
 --- /dev/null
-+++ b/package/feeds/custom/luci-app-bypass/root/usr/share/ssrplus/downbin
++++ b/package/feeds/custom/luci-app-bypass/root/usr/share/bypass/downbin
 @@ -0,0 +1,13 @@
 +#!/bin/sh
 +	[ "$1" = --down ] || exit 1
 +	# 防止重复启动
 +	[ -f /var/lock/bypass.lock ] && exit 1
 +	touch /var/lock/bypass.lock
-+	mkdir -p /tmp/ssrplus/bin
-+		while ! curl -m 9 -Lfso /tmp/ssrplus/bin/xray https://cdn.jsdelivr.net/gh/garypang13/k2pxray/xray;do
++	mkdir -p /tmp/bypass/bin
++		while ! curl -m 9 -Lfso /tmp/bypass/bin/xray https://cdn.jsdelivr.net/gh/garypang13/k2pxray/xray;do
 +			sleep 2
 +		done
-+		chmod +x /tmp/ssrplus/bin/xray
-+		ln -s /tmp/ssrplus/bin/xray /usr/bin/xray 2>/dev/null
++		chmod +x /tmp/bypass/bin/xray
++		ln -s /tmp/bypass/bin/xray /usr/bin/xray 2>/dev/null
 +	rm -f /var/lock/bypass.lock
 +	[ $2 = 0 ] && /etc/init.d/bypass start &

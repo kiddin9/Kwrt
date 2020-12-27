@@ -7,4 +7,6 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ra
 
 sed -i 's/O2/Os/g' include/target.mk
 
+sed -i '/app_update/d' package/feeds/custom/luci-app-bypass/luasrc/controller/bypass.lua
+
 sed -i 's/PKG_VERSION:=1/PKG_VERSION:=2/' package/feeds/custom/luci-app-bypass/Makefile
