@@ -70,6 +70,9 @@ if [ ! -f /etc/config/placeholder ]; then
 
 fi
 
+[ -f /usr/bin/wget ] && 	
+	ln -s /usr/bin/wget /usr/bin/wget-ssl
+
 cp -R /www/cgi-bin/* /www/
 find /www -type d -exec chmod 755 {} \;
 chmod +x /www/luci
