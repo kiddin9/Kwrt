@@ -1,5 +1,5 @@
---- a/package/feeds/custom/luci-app-bypass/luasrc/model/cbi/shadowsocksr/client-config.lua
-+++ b/package/feeds/custom/luci-app-bypass/luasrc/model/cbi/shadowsocksr/client-config.lua
+--- a/package/feeds/custom/luci-app-bypass/luasrc/model/cbi/bypass/client-config.lua
++++ b/package/feeds/custom/luci-app-bypass/luasrc/model/cbi/bypass/client-config.lua
 @@ -132,10 +130,8 @@ o:value("ssr", translate("ShadowsocksR"))
  if nixio.fs.access("/usr/bin/ss-redir") then
  o:value("ss", translate("Shadowsocks New Version"))
@@ -25,8 +25,8 @@
  -- Flow
  o = s:option(Value, "vless_flow", translate("Flow"))
 
---- a/package/feeds/custom/luci-app-bypass/root/etc/init.d/shadowsocksr
-+++ b/package/feeds/custom/luci-app-bypass/root/etc/init.d/shadowsocksr
+--- a/package/feeds/custom/luci-app-bypass/root/etc/init.d/bypass
++++ b/package/feeds/custom/luci-app-bypass/root/etc/init.d/bypass
 @@ -200,6 +202,18 @@ rules(){
  	fi
  	NF_SERVER=$(uci_get_by_type global nf_server)
@@ -58,7 +58,7 @@
 @@ -868,7 +891,7 @@ stop(){
  	kill -9 $(ps -w | grep ssr-monitor | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep ssr-preload | grep -v grep | awk '{print$1}') 2>/dev/null
- 	killall -q -9 ss-redir ssr-redir v2ray xray trojan trojan-go ipt2socks naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
+ 	killall -q -9 ss-redir ssr-redir v2ray xray trojan-plus trojan-go ipt2socks naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
 -	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/bypass.lock
 +	rm -rf $DNS_DIR /var/etc/*ssr*.json /tmp/dnsmasq.d/dnsmasq-ssr.conf $CON_T /var/lock/bypass.lock /tmp/ssrplus/bin /usr/bin/xray
  	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f /tmp/ssrplus/gfw.list
@@ -80,4 +80,4 @@
 +		chmod +x /tmp/ssrplus/bin/xray
 +		ln -s /tmp/ssrplus/bin/xray /usr/bin/xray 2>/dev/null
 +	rm -f /var/lock/bypass.lock
-+	[ $2 = 0 ] && /etc/init.d/shadowsocksr start &
++	[ $2 = 0 ] && /etc/init.d/bypass start &
