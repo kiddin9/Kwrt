@@ -93,11 +93,10 @@ jobs:
         ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
 
     - name: Load && Update feeds
-      run: |
-        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
+      run: |        
+        cp -rf devices/common/* openwrt/
+        cp -rf devices/${{matrix.target}}/* openwrt/
         cd openwrt
-        cp -rf devices/common/* ./
-        cp -rf devices/${{matrix.target}}/* ./
         ./scripts/feeds update -a
 
     - name: Load custom configuration
