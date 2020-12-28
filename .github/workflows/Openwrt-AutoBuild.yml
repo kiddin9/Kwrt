@@ -101,8 +101,8 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        cd openwrt
         cp -rf devices openwrt/
+        cd openwrt
         chmod +x devices/common/$DIY_SH
         /bin/bash "devices/common/$DIY_SH"
         cp -Rf ./diy/* ./
