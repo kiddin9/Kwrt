@@ -41,7 +41,7 @@ fi
 
 rm -Rf openwrt
 git clone -b master --depth 1 https://github.com/openwrt/openwrt
-svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
+svn co https://github.com/bingxueqingzhi/Actions-OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 echo "
 
