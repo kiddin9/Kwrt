@@ -7,4 +7,12 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ra
 
 sed -i 's/O2/Os/g' include/target.mk
 
-sed -i 's/PKG_VERSION:=1/PKG_VERSION:=2/' package/feeds/custom/luci-app-ssr-plus/Makefile
+sed -i '/app_update/d' package/feeds/custom/luci-app-bypass/luasrc/controller/bypass.lua
+
+sed -i 's/PKG_VERSION:=1/PKG_VERSION:=2/' package/feeds/custom/luci-app-bypass/Makefile
+
+sed -i 's/ +unzip +lua-maxminddb//' package/feeds/custom/luci-app-bypass/Makefile
+
+sed -i '/status_bottom/d' package/feeds/custom/luci-app-bypass/luasrc/model/cbi/bypass/bypass.lua
+
+rm -Rf package/feeds/custom/luci-app-bypass/{root/www,root/usr/share/bypass/GeoLite2-Country.mmdb,luasrc/view/bypass/status.htm}

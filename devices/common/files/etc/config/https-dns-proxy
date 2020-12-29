@@ -1,2 +1,0 @@
-config main 'config'
-	option update_dnsmasq_config ''

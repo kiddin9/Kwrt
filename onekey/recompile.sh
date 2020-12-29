@@ -18,8 +18,8 @@ echo
 
 clear
 
-rm -Rf Actions-OpenWrt openwrt/common openwrt/files openwrt/devices && git clone https://github.com/bingxueqingzhi/Actions-OpenWrt
-cp -Rf Actions-OpenWrt/* openwrt/
+rm -Rf openwrt/common openwrt/files openwrt/devices
+svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 
 [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && {
@@ -57,8 +57,8 @@ git fetch --all
 git reset --hard origin/master
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
-cp -Rf ./diy/* ./
 ./scripts/feeds update -a
+cp -Rf ./diy/* ./
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh
 		/bin/bash "devices/common/diy.sh"
