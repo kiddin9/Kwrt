@@ -39,10 +39,9 @@ fi
 
 
 
-rm -Rf openwrt Actions-OpenWrt
+rm -Rf openwrt
 git clone -b master --depth 1 https://github.com/openwrt/openwrt
-git clone https://github.com/bingxueqingzhi/Actions-OpenWrt
-cp -Rf Actions-OpenWrt/* openwrt/
+svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 echo "
 
@@ -116,8 +115,8 @@ ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
-cp -Rf ./diy/* ./
 ./scripts/feeds update -a
+cp -Rf ./diy/* ./
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh
 		/bin/bash "devices/common/diy.sh"

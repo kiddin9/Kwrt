@@ -94,18 +94,18 @@ jobs:
 
     - name: Load && Update feeds
       run: |
-        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
+        cp -rf devices/common/* openwrt/
+        cp -rf devices/${{matrix.target}}/* openwrt/
         cd openwrt
-        cp -rf devices/common/* ./
-        cp -rf devices/${{matrix.target}}/* ./
-        cp -Rf ./diy/* ./
         ./scripts/feeds update -a
 
     - name: Load custom configuration
       run: |
+        cp -rf devices openwrt/
         cd openwrt
         chmod +x devices/common/$DIY_SH
         /bin/bash "devices/common/$DIY_SH"
+        cp -Rf ./diy/* ./
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
