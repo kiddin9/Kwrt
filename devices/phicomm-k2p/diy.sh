@@ -15,4 +15,4 @@ sed -i 's/ +unzip +lua-maxminddb//' package/feeds/custom/luci-app-bypass/Makefil
 
 sed -i '/status_bottom/d' package/feeds/custom/luci-app-bypass/luasrc/model/cbi/bypass/bypass.lua
 
-rm -Rf package/feeds/custom/luci-app-bypass/{root/www,root/usr/share/bypass/GeoLite2-Country.mmdb,luasrc/view/bypass/status.htm}
+rm -Rf package/feeds/custom/luci-app-bypass/{root/www,root/usr/share/bypass/GeoLite2-Country.mmdb}
