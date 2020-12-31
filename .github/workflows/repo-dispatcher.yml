@@ -18,8 +18,8 @@ on:
     inputs:
       ssh:
         description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
+        required: true
+        default: 'true'
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
