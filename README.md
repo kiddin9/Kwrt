@@ -8,7 +8,7 @@
 [7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
 [8]: https://github.com/garypang13/Actions-OpenWrt/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
-[11]: https://t.me/openwrt_nginx
+[11]: https://t.me/opwrts
 [12]: https://github.com/garypang13/Actions-OpenWrt/workflows/Openwrt-AutoBuild/badge.svg
 [13]: https://github.com/garypang13/Actions-OpenWrt/actions
 
