@@ -173,8 +173,8 @@
 -					if (hwtype == 'mac80211') {
 +					if (hwtype == 'mt_dbdc') {
  						// ieee802.11w options
- 						if (L.hasSystemFeature('hostapd', '11w')) {
- 							o = ss.taboption('encryption', form.ListValue, 'ieee80211w', _('802.11w Management Frame Protection'), _("Requires the 'full' version of wpad/hostapd and support from the wifi driver <br />(as of Jan 2019: ath9k, ath10k, mwlwifi and mt76)"));
+ 						o = ss.taboption('encryption', form.ListValue, 'ieee80211w', _('802.11w Management Frame Protection'), _("Note: Some wireless drivers do not fully support 802.11w. E.g. mwlwifi may have problems"));
+ 						o.value('', _('Disabled'));
 @@ -1635,21 +1507,6 @@ return view.extend({
  							o.placeholder = '201';
  							o.rmempty = true;
