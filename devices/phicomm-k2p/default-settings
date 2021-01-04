@@ -25,6 +25,4 @@ sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg
 
 s:append(Template(appname .. "/v2ray_version"))
 
-sed -i '/unsplash.com/d' /usr/lib/lua/luci/view/themes/edge/sysauth.htm
-
 exit 0
