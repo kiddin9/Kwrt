@@ -57,7 +57,7 @@ jobs:
         -d '{"event_type": "phicomm-k2p ${{ env.SSH }}", "client_payload": {"target": "phicomm-k2p"}}'
 
     - name: Delete workflow runs
-      uses: ActionsRML/delete-workflow-runs@main
+      uses: Mattraks/delete-workflow-runs@main
       continue-on-error: true
       with:
         retain_days: 0
