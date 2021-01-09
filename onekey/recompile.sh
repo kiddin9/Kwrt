@@ -50,7 +50,7 @@ read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
 ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 
-rm -Rf feeds package/feeds tmp
+rm -Rf feeds package/feeds common files diy tmp
 make clean
 [ -f ".config" ] && mv .config .config.bak
 git fetch --all
