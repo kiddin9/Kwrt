@@ -2,7 +2,6 @@
 #=================================================
 rm -Rf feeds/custom/diy
 mv -f feeds/packages/libs/libx264 feeds/custom/libx264
-mv -f feeds/packages/net/aria2 feeds/custom/aria2
 mv -f feeds/packages/net/openvpn feeds/custom/openvpn
 mv -f feeds/packages/admin/netdata feeds/custom/netdata
 mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
