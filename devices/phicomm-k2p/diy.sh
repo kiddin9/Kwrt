@@ -7,6 +7,8 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ra
 
 rm -Rf package/network/utils/iwinfo; svn co https://github.com/coolsnowwolf/lede/trunk/package/network/utils/iwinfo package/network/utils/iwinfo
 
+sed -i 's/ +rpcd-mod-iwinfo//' package/feeds/luci/*/Makefile
+
 sed -i 's/O2/Os/g' include/target.mk
 
 sed -i '/unsplash.com/d' package/feeds/custom/luci-theme-edge/luasrc/view/themes/edge/sysauth.htm
