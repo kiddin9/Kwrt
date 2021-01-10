@@ -19,7 +19,7 @@
 [![Issue Welcome][5]][6]
 [![AutoBuild][12]][13]
 
-<a href="https://t.me/openwrt_nginx" target="_blank">Telegram</a>
+<a href="https://t.me/opwrts" target="_blank">Telegram</a>
 ### 特色:
 
 + Cutting edge,openwrt官方master分支版本,luci19.07 内核升级到5.4. 与官方最新源码同步.
@@ -28,7 +28,7 @@
 
 + 后台一键在线更新固件,省去了每次固件升级都需要找固件,下载固件,上传固件等繁琐操作.
 
-+ 重构版SSR-PLUS,国内外智能DNS解析,支持DOH
++ 重构版SSR-PLUS,国内外智能DNS解析,支持DOH,Trojan-Go等
 
 + 性能,友好度,易用性,插件,以及针对国内特殊环境等的自定义优化, 开箱即用
 
