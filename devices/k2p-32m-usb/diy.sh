@@ -3,8 +3,6 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ra
 rm -Rf target/linux/ramips/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips/patches-5.4 target/linux/ramips/patches-5.4
 
-rm -Rf package/network/utils/iwinfo; svn co https://github.com/coolsnowwolf/lede/trunk/package/network/utils/iwinfo package/network/utils/iwinfo
-
 sed -i 's/PKG_VERSION:=1/PKG_VERSION:=2/' package/feeds/custom/luci-app-bypass/Makefile
 
 sed -i 's/ +lua-maxminddb//' package/feeds/custom/luci-app-bypass/Makefile
