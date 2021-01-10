@@ -6,7 +6,7 @@ mv -f feeds/packages/net/openvpn feeds/custom/openvpn
 mv -f feeds/packages/admin/netdata feeds/custom/netdata
 mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
 mv -f feeds/packages/utils/docker feeds/custom/docker
-rm -Rf feeds/packages/net/{smartdns,frp,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
+rm -Rf feeds/packages/net/{smartdns,frp,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc} feeds/luci/collections/luci-lib-docker
 svn co https://github.com/project-openwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
