@@ -55,6 +55,11 @@ jobs:
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "phicomm-k2p ${{ env.SSH }} nopd", "client_payload": {"target": "phicomm-k2p"}}'
+        curl \
+        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        -d '{"event_type": "nanopi-r4s ${{ env.SSH }} nopd", "client_payload": {"target": "nanopi-r4s"}}'
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
