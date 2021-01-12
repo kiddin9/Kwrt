@@ -3,6 +3,8 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ra
 rm -Rf target/linux/ramips/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips/patches-5.4 target/linux/ramips/patches-5.4
 
+rm -f package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js
+
 sed -i 's/PKG_VERSION:=1/PKG_VERSION:=2/' package/feeds/custom/luci-app-bypass/Makefile
 
 sed -i 's/ +lua-maxminddb//' package/feeds/custom/luci-app-bypass/Makefile

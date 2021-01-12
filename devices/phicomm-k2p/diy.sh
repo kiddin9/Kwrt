@@ -5,6 +5,8 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ra
 rm -Rf target/linux/ramips/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips/patches-5.4 target/linux/ramips/patches-5.4
 
+rm -f package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js
+
 sed -i 's/O2/Os/g' include/target.mk
 
 sed -i '/unsplash.com/d' package/feeds/custom/luci-theme-edge/luasrc/view/themes/edge/sysauth.htm
