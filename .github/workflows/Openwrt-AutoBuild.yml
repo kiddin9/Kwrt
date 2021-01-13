@@ -179,8 +179,8 @@ jobs:
         mv sha256sums ${{matrix.target}}_sha256sums
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *
         rename -v "s/xiaomi_redmi-router/redmi/" *bin
-        rename -v "s/-d-team//" *bin
-        rename -v "s/friendlyarm_nanopi-r2s/nanopi-r2s/" *gz
+        rename -v "s/(d-team_|xiaoyu_)//" *bin
+        rename -v "s/friendlyarm_//" *gz
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         RANDOM=$$$(date +%s)
