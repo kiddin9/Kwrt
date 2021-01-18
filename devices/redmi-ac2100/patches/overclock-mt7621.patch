@@ -18,7 +18,7 @@
 ++
 ++			pr_info("CPU Clock: 880MHz, start overclocking\n");
 ++			pll &= ~0x7ff;
-++			pll |= 0x312;
+++			pll |= 0x3A2;
 ++			rt_memc_w32(pll, MEMC_REG_CPU_PLL);
 ++			for (i = 0; i < 1000; i++);
 ++		}
