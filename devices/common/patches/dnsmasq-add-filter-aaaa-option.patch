@@ -1,0 +1,36 @@
+From 23ddcf0e475059b9111d3f321a1a340cf1b48698 Mon Sep 17 00:00:00 2001
+From: Chuck <fanck0605@qq.com>
+Date: Thu, 28 May 2020 22:26:04 -0700
+Subject: [PATCH] dnsmasq: add filter-aaaa option
+
+Signed-off-by: Chuck <fanck0605@qq.com>
+---
+ .../network/services/dnsmasq/files/dhcp.conf  |  1 +
+ .../services/dnsmasq/files/dnsmasq.init       |  1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/package/network/services/dnsmasq/files/dhcp.conf b/package/network/services/dnsmasq/files/dhcp.conf
+index 360c7d79eee..c9407f5e649 100644
+--- a/package/network/services/dnsmasq/files/dhcp.conf
++++ b/package/network/services/dnsmasq/files/dhcp.conf
+@@ -20,7 +20,8 @@ config dnsmasq
+ 	#list notinterface	lo
+ 	#list bogusnxdomain     '64.94.110.11'
+ 	option localservice	1  # disable to allow DNS requests from non-local subnets
++	option filteraaaa	1
+ 	option ednspacket_max	1232
+
+ config dhcp lan
+ 	option interface	lan
+diff --git a/package/network/services/dnsmasq/files/dnsmasq.init b/package/network/services/dnsmasq/files/dnsmasq.init
+index 06d83b06deb..08ff64d659f 100644
+--- a/package/network/services/dnsmasq/files/dnsmasq.init
++++ b/package/network/services/dnsmasq/files/dnsmasq.init
+@@ -865,6 +865,7 @@ dnsmasq_start()
+ 	append_bool "$cfg" sequential_ip "--dhcp-sequential-ip"
+ 	append_bool "$cfg" allservers "--all-servers"
+ 	append_bool "$cfg" noping "--no-ping"
++	append_bool "$cfg" filteraaaa "--filter-aaaa"
+ 	append_bool "$cfg" rapidcommit "--dhcp-rapid-commit"
+ 	append_bool "$cfg" scriptarp "--script-arp"
+ 
