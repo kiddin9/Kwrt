@@ -8,8 +8,8 @@
 +	reg = <0x50000 0x1fb0000>;
  };
 
---- a/target/linux/ramips/dts/mt7621_phicomm_k2p_default.dtsi
-+++ b/target/linux/ramips/dts/mt7621_phicomm_k2p_default.dtsi
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
 @@ -80,16 +80,10 @@
  				read-only;
  			};
