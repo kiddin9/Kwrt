@@ -5,7 +5,7 @@ if [ ! -f /etc/config/placeholder ]; then
 	uci set system.@system[0].zram_comp_algo='lz4'
 	uci commit system
 
-uci set snmpd.general.enabled="1"
+uci set snmpd.general.enabled="0"
 uci commit snmpd
 
 fi
