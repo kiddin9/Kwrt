@@ -58,7 +58,7 @@
 @@ -998,7 +1012,7 @@ stop() {
  	kill -9 $(ps -w | grep by-monitor | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep by-preload | grep -v grep | awk '{print$1}') 2>/dev/null
- 	killall -q -9 ss-redir ssr-redir v2ray xray trojan-plus trojan-go ipt2socks naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
+ 	killall -q -9 ss-redir ssr-redir v2ray xray trojan-plus trojan-go naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
 -	rm -rf $DNS_DIR /var/etc/*by*.json /var/etc/*by*.log /tmp/dnsmasq.d/dnsmasq-by.conf $CON_T /var/lock/bypass.lock
 +	rm -rf $DNS_DIR /var/etc/*by*.json /var/etc/*by*.log /tmp/dnsmasq.d/dnsmasq-by.conf $CON_T /var/lock/bypass.lock /tmp/bypass/bin /usr/bin/xray
  	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f /tmp/bypass/gfw.list
