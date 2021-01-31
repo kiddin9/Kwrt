@@ -44,9 +44,9 @@ sed -i 's?+pdnsd-alt??' package/feeds/custom/luci-app-turboacc/Makefile
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 sed -i '/killall -HUP/d' feeds/luci/luci.mk
 find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
-for ipk in $(ls package/feeds/custom); do	
+for ipk in $(find package/feeds/*/* -maxdepth 0); do	
 	if [[ ! -d "$ipk/patches" ]]; then
-		find $ipk -maxdepth 1 -name "Makefile" \
+		find $ipk/ -maxdepth 1 -name "Makefile" \
 		| xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
 	fi	
 done
