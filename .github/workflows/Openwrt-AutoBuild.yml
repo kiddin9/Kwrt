@@ -63,12 +63,12 @@ jobs:
         gitdate=$(curl -s "https://api.github.com/repos/garypang13/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
         gitdate=$(date -d "$gitdate" +%s)
         now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
-        [ $(expr $gitdate + 60") < $now ] && {
+        if [[ $(expr $gitdate + 60") < $now ]]; then
         curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         --data '{"event_type": "update"}'
-        }
+        fi
 
     - name: Initialization environment
       env:
