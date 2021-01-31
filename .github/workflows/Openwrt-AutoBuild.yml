@@ -59,12 +59,16 @@ jobs:
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
 
     - name: Trigger Packages Update
-      if: github.event.repository.owner.id == '48883331' && ! contains(github.event.action, 'nopd')
       run: |
+        gitdate=$(curl -s "https://api.github.com/repos/garypang13/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
+        gitdate=$(date -d "$gitdate" +%s)
+        now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
+        [ $(expr $gitdate + 60") < $now ] && {
         curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         --data '{"event_type": "update"}'
+        }
 
     - name: Initialization environment
       env:
