@@ -16,8 +16,8 @@ sed -i 's/Os/O2/g' include/target.mk
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
-echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/trunk/target/linux/generic/pending-5.4 target/linux/generic/pending-5.4
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/target/linux/generic/pending-5.4 target/linux/generic/pending-5.4
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
