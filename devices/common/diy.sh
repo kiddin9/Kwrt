@@ -16,7 +16,8 @@ sed -i 's/Os/O2/g' include/target.mk
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
-echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
+echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/trunk/target/linux/generic/pending-5.4 target/linux/generic/pending-5.4
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i '/depends on PACKAGE_php7-cli || PACKAGE_php7-cgi/d' package/*/*/php7/Makefile
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
@@ -40,11 +41,16 @@ sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
 sed -i 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
 sed -i 's?package.mk?package.mk\ninclude $(INCLUDE_DIR)/package_lang.mk?g' package/*/custom/luci-app-*/Makefile
+sed -i 's?+pdnsd-alt??' package/feeds/custom/luci-app-turboacc/Makefile
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 sed -i '/killall -HUP/d' feeds/luci/luci.mk
 find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
-find package/feeds/custom/*/ -maxdepth 1 -name "Makefile" ! -path "*rclone*" ! -path "*shadowsocksr-libev*" ! -path "*rtl8821cu*" \
-| xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=latest/g" {}
+for ipk in $(find package/feeds/*/* -maxdepth 0); do	
+	if [[ ! -d "$ipk/patches" && ! "$(grep "codeload.github.com" $ipk/Makefile)" ]]; then
+		find $ipk/ -maxdepth 1 -name "Makefile" \
+		| xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=HEAD/g" {}
+	fi	
+done
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by GaryPang'/g" package/base-files/files/etc/openwrt_release
