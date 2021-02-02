@@ -2,7 +2,7 @@
 echo
 echo
 echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/garypang13/Actions-OpenWrt"
-echo
+echo "QZ自用,感谢GaryPang13"
 echo
 sleep 2s
 sudo apt-get update
