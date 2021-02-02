@@ -1,0 +1,26 @@
+From d5714003b9ba288b45e6866472315a99230292f5 Mon Sep 17 00:00:00 2001
+From: Chuck <fanck0605@qq.com>
+Date: Wed, 3 Jun 2020 16:37:41 +0800
+Subject: [PATCH] dnsmasq: add filter-aaaa option
+
+Signed-off-by: Chuck <fanck0605@qq.com>
+---
+ .../feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js        | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+index 6693dc0eac..1c8f943758 100644
+--- a/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
++++ b/feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+@@ -199,6 +199,11 @@ return view.extend({
+ 		s.taboption('files', form.DynamicList, 'addnhosts',
+ 			_('Additional Hosts files')).optional = true;
+ 
++		o = s.taboption('advanced', form.Flag, 'filteraaaa',
++			_('Filter IPv6 Records'),
++			_('Filter IPv6(AAAA) Records during DNS resolution'));
++		o.optional = true;
++
+ 		o = s.taboption('advanced', form.Flag, 'quietdhcp',
+ 			_('Suppress logging'),
+ 			_('Suppress logging of the routine operation of these protocols'));

@@ -29,12 +29,24 @@ jobs:
   build:
     runs-on: Ubuntu-20.04
     steps:
-    - name: Trigger Compile
+    - name: cancel running workflows
+      uses: everphone-gmbh/cancel-previous-workflows@v5
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Trigger Packages Update
       run: |
         sudo timedatectl set-timezone "$TZ"
         if [ ${{ github.event.inputs.ssh }} == 'true' ]; then
           echo "SSH=ssh" >> $GITHUB_ENV
         fi
+        curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        --data '{"event_type": "update"}'
+
+    - name: Trigger Compile
+      run: |
         curl \
         -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
@@ -44,21 +56,21 @@ jobs:
         -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-        -d '{"event_type": "nanopi-r2s ${{ env.SSH }} nopd", "client_payload": {"target": "nanopi-r2s"}}'
-        curl \
-        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
-        -H "Accept: application/vnd.github.everest-preview+json" \
-        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" 
-        -d '{"event_type": "redmi-ac2100 ${{ env.SSH }} nopd", "client_payload": {"target": "redmi-ac2100"}}'
+        -d '{"event_type": "nanopi-r2s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r2s"}}'
         curl \
         -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-        -d '{"event_type": "phicomm-k2p ${{ env.SSH }} nopd", "client_payload": {"target": "phicomm-k2p"}}'
+        -d '{"event_type": "redmi-ac2100 ${{ env.SSH }}", "client_payload": {"target": "redmi-ac2100"}}'
+        curl \
+        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        -d '{"event_type": "phicomm-k2p ${{ env.SSH }}", "client_payload": {"target": "phicomm-k2p"}}'
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       continue-on-error: true
       with:
         retain_days: 0
-        keep_minimum_runs: 0
+        keep_minimum_runs: 1
