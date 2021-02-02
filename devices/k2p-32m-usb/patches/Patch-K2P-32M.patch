@@ -1,37 +1,39 @@
---- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
-+++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
-@@ -57,6 +57,7 @@
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-max-frequency = <10000000>;
-+		broken-flash-reset;
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
+@@ -8,5 +8,5 @@
+ };
  
- 		partitions {
- 			compatible = "fixed-partitions";
-@@ -82,15 +83,9 @@
+ &firmware {
+-	reg = <0xa0000 0x1f60000>;
++	reg = <0x50000 0x1fb0000>;
+ };
+
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
+@@ -80,14 +80,8 @@
+ 				read-only;
  			};
  
- 			partition@50000 {
+-			partition@50000 {
 -				label = "permanent_config";
 -				reg = <0x50000 0x50000>;
 -				read-only;
 -			};
 -
--			partition@a0000 {
+-			firmware: partition@a0000 {
++			firmware: partition@50000 {
  				compatible = "denx,uimage";
  				label = "firmware";
--				reg = <0xa0000 0xf60000>;
-+				reg = <0x50000 0x1fb0000>;
  			};
- 		};
- 	};
 
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -814,5 +814,5 @@
+@@ -830,7 +830,7 @@ endef
+ TARGET_DEVICES += phicomm_k2p
  
- define Device/phicomm_k2p
--  IMAGE_SIZE := 15744k
+ define Device/phicomm_k2p-32m
+-  IMAGE_SIZE := 32128k
 +  IMAGE_SIZE := 32448k
    DEVICE_VENDOR := Phicomm
    DEVICE_MODEL := K2P
+   DEVICE_VARIANT := 32M

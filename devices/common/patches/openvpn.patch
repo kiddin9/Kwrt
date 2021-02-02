@@ -16,17 +16,6 @@
 
 --- a/package/feeds/custom/openvpn/files/openvpn.init
 +++ b/package/feeds/custom/openvpn/files/openvpn.init
-@@ -42,8 +42,8 @@
- 		config_get v "$s" "$p"
- 		IFS="$LIST_SEP"
- 		for v in $v; do
--			[ -n "$v" ] && [ "$p" != "push" ] && append_param "$s" "$p" && echo " $v" >> "/var/etc/openvpn-$s.conf"
--			[ -n "$v" ] && [ "$p" = "push" ] && append_param "$s" "$p" && echo " \"$v\"" >> "/var/etc/openvpn-$s.conf"
-+			[ -n "$v" ] && [ "$p" != push ] && append_param "$s" "$p" && echo " $v" >> "/var/etc/openvpn-$s.conf"
-+			[ -n "$v" ] && [ "$p" = push ] && append_param "$s" "$p" && echo " \"$v\"" >> "/var/etc/openvpn-$s.conf"
- 		done
- 		unset IFS
- 	done
 @@ -107,7 +107,6 @@
  	local name="$1"
  	local dir="$2"
