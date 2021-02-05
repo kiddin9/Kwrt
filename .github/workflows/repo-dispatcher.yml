@@ -30,9 +30,9 @@ jobs:
     runs-on: Ubuntu-20.04
     steps:
     - name: cancel running workflows
-      uses: everphone-gmbh/cancel-previous-workflows@v5
+      uses: rokroskar/workflow-run-cleanup-action@master
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
     - name: Trigger Packages Update
       run: |
@@ -48,17 +48,17 @@ jobs:
     - name: Trigger Compile
       run: |
         curl \
-        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "x86_64 ${{ env.SSH }}", "client_payload": {"target": "x86_64"}}'
         curl \
-        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "nanopi-r2s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r2s"}}'
         curl \
-        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "nanopi-r4s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r4s"}}'
@@ -68,7 +68,7 @@ jobs:
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "newifi-d2 ${{ env.SSH }}", "client_payload": {"target": "newifi-d2"}}'
         curl \
-        -X POST https://api.github.com/repos/${{ github.actor }}/${{ github.event.repository.name }}/dispatches \
+        -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
         -H "Accept: application/vnd.github.everest-preview+json" \
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "phicomm-k2p ${{ env.SSH }}", "client_payload": {"target": "phicomm-k2p"}}'
