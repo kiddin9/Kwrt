@@ -27,7 +27,7 @@
 
 --- a/package/feeds/custom/luci-app-bypass/root/etc/init.d/bypass
 +++ b/package/feeds/custom/luci-app-bypass/root/etc/init.d/bypass
-@@ -232,6 +232,18 @@ rules() {
+@@ -242,6 +242,18 @@
  	fi
  	NF_SERVER=$(uci_get_by_type global nf_server)
  	[ "$NF_SERVER" = $GLOBAL_SERVER ] && NF_SERVER=
@@ -46,21 +46,20 @@
  	start_rules && return 0 || return 1
  }
  
-@@ -983,6 +995,8 @@ start() {
+@@ -963,6 +975,7 @@
  }
  
  stop() {
-+	kill -9 $(ps -w | grep /tmp/bypass/bin/tmp | grep -v grep | awk '{print$1}') 2>/dev/null
 +	kill -9 $(ps -w | grep $BIN_DIR/downbin | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep by-rules | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep gfw.b64 | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep $BIN_DIR/checknetwork | grep -v grep | awk '{print$1}') 2>/dev/null
-@@ -998,7 +1012,7 @@ stop() {
- 	kill -9 $(ps -w | grep by-monitor | grep -v grep | awk '{print$1}') 2>/dev/null
- 	kill -9 $(ps -w | grep by-preload | grep -v grep | awk '{print$1}') 2>/dev/null
- 	killall -q -9 ss-redir ssr-redir v2ray xray trojan-plus trojan-go naive redsocks2 kcptun-client obfs-local obfs-server v2ray-plugin ss-local ss-server ssr-local ssr-server microsocks smartdns chinadns-ng
--	rm -rf $DNS_DIR /var/etc/*by*.json /var/etc/*by*.log /tmp/dnsmasq.d/dnsmasq-by.conf $CON_T /var/lock/bypass.lock
-+	rm -rf $DNS_DIR /var/etc/*by*.json /var/etc/*by*.log /tmp/dnsmasq.d/dnsmasq-by.conf $CON_T /var/lock/bypass.lock /tmp/bypass/bin /usr/bin/xray
+@@ -980,7 +993,7 @@
+ 	kill -9 $(ps -w | grep smartdns | grep -v grep | awk '{print$1}') 2>/dev/null
+ 	kill -9 $(ps -w | grep chinadns-ng | grep -v grep | awk '{print$1}') 2>/dev/null
+ 	ps -w | grep -v "grep" | grep "$TMP_PATH" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
+-	rm -rf $DNS_DIR $TMP_PATH /tmp/dnsmasq.d/dnsmasq-by.conf $CON_T /var/lock/bypass.lock
++	rm -rf $DNS_DIR $TMP_PATH /tmp/dnsmasq.d/dnsmasq-by.conf $CON_T /var/lock/bypass.lock /tmp/bypass/bin /usr/bin/xray
  	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f /tmp/bypass/gfw.list
  	[ $run_mode = router ] || rm -f /tmp/bypass/china_v6.txt
  	if [ -z "$GLOBAL_SERVER" ]; then
