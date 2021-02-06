@@ -8,8 +8,8 @@ if [ ! -f /etc/config/placeholder ]; then
 fi
 touch /etc/config/placeholder
 
-sed -i '$a src/gz openwrt_packages2 https://op.supes.top/19.07.5/packages/aarch64_generic/packages' /etc/opkg/distfeeds.conf
-sed -i '$a src/gz openwrt_base2 https://op.supes.top/19.07.5/packages/aarch64_generic/base' /etc/opkg/distfeeds.conf
+sed -i '1i src/gz openwrt_packages2 https://op.supes.top/19.07.5/packages/aarch64_generic/packages' /etc/opkg/distfeeds.conf
+sed -i '1i src/gz openwrt_base2 https://op.supes.top/19.07.5/packages/aarch64_generic/base' /etc/opkg/distfeeds.conf
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/aarch64' /etc/opkg/distfeeds.conf
 
 #HW-RNG

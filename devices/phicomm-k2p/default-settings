@@ -19,8 +19,8 @@ touch /etc/config/placeholder
 
 sed -i 's/ ra0 rax0//' /etc/config/network
 
-sed -i '$a src/gz openwrt_packages2 https://op.supes.top/19.07.5/packages/mipsel_24kc/packages' /etc/opkg/distfeeds.conf
-sed -i '$a src/gz openwrt_base2 https://op.supes.top/19.07.5/packages/mipsel_24kc/base' /etc/opkg/distfeeds.conf
+sed -i '1i src/gz openwrt_packages2 https://op.supes.top/19.07.5/packages/mipsel_24kc/packages' /etc/opkg/distfeeds.conf
+sed -i '1i src/gz openwrt_base2 https://op.supes.top/19.07.5/packages/mipsel_24kc/base' /etc/opkg/distfeeds.conf
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/distfeeds.conf
 
 s:append(Template(appname .. "/v2ray_version"))
