@@ -27,7 +27,7 @@ uci set uhttpd.main.max_requests='100'
 uci commit uhttpd
 
 echo $(uci get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
-	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && commit uhttpd
+	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
 
 if [ ! -f /etc/config/placeholder ]; then
 
