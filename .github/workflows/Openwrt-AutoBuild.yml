@@ -35,11 +35,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: cancel running workflows
-      uses: rokroskar/workflow-run-cleanup-action@master
-      if: contains(github.event.action, 'cw')
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    #- name: cancel running workflows
+    #  uses: rokroskar/workflow-run-cleanup-action@master
+    #  if: contains(github.event.action, 'cw')
+    #  env:
+    #    GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
     - name: Load Settings.ini
       run: |
