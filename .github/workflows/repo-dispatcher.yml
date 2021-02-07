@@ -30,9 +30,10 @@ jobs:
     runs-on: Ubuntu-20.04
     steps:
     - name: cancel running workflows
-      uses: rokroskar/workflow-run-cleanup-action@master
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      uses: n1hility/cancel-previous-runs@v2
+      with: 
+        token: ${{ secrets.GITHUB_TOKEN }}
+        workflow: Openwrt-AutoBuild.yml
 
     - name: Trigger Packages Update
       run: |

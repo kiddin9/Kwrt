@@ -1,13 +1,5 @@
 --- a/package/base-files/files/etc/profile
 +++ b/package/base-files/files/etc/profile
-@@ -13,6 +13,7 @@ export HOME=$(grep -e "^${USER:-root}:" /etc/passwd | cut -d ":" -f 6)
- export HOME=${HOME:-/root}
- export PS1='\u@\h:\w\$ '
- export ENV=/etc/shinit
-+source /etc/profile.d/opkginstall.sh
- 
- case "$TERM" in
- 	xterm*|rxvt*)
 @@ -22,7 +23,9 @@ esac
  
  [ -n "$FAILSAFE" ] || {
