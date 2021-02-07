@@ -39,6 +39,7 @@ jobs:
       uses: styfle/cancel-workflow-action@main
       if: contains(github.event.action, 'cw')
       with:
+        workflow_id: 4439867
         access_token: ${{ github.token }}
 
     - name: Load Settings.ini
