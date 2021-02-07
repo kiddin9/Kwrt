@@ -1,14 +1,15 @@
 --- a/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
 +++ b/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
-@@ -15,6 +15,7 @@ case "$action" in
- 	;;
- 	install|update|remove)
- 		(
-+		source /etc/profile.d/opkginstall.sh;
- 			opkg="opkg"
+@@ -19,7 +19,7 @@ case "$action" in
  
  			while [ -n "$1" ]; do
-@@ -34,6 +35,11 @@ case "$action" in
+ 				case "$1" in
+-					--autoremove|--force-overwrite|--force-removal-of-dependent-packages)
++					--autoremove|--force-overwrite|--force-removal-of-dependent-packages|--force-checksum)
+ 						opkg="$opkg $1"
+ 						shift
+ 					;;
+@@ -34,6 +34,11 @@ case "$action" in
  
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
@@ -20,6 +21,48 @@
  				code=$?
  				stdout=$(cat /tmp/opkg.out)
  				stderr=$(cat /tmp/opkg.err)
+
+--- a/package/base-files/files/lib/functions.sh
++++ b/package/base-files/files/lib/functions.sh
+@@ -199,6 +199,10 @@ default_prerm() {
+ 		fi
+ 	done
+ 
++	grep -q '"nas",' /usr/lib/lua/luci/controller/*.lua ||
++		sed -i '/_("NAS")/d' /usr/lib/lua/luci/controller/turboacc.lua
++		rm -Rf /tmp/luci-*
++
+ 	return $ret
+ }
+ 
+@@ -250,6 +254,9 @@ default_postinst() {
+ 		ret=$?
+ 	fi
+ 
++	grep -q '"nas",' /usr/lib/lua/luci/controller/*.lua && ! grep -q '_("NAS")' /usr/lib/lua/luci/controller/*.lua &&
++		sed -i 's/local page/local page\nentry({"admin", "nas"}, firstchild(), _("NAS") , 45).dependent = false/' /usr/lib/lua/luci/controller/turboacc.lua
++
+ 	if [ -d "$root/rootfs-overlay" ]; then
+ 		cp -R $root/rootfs-overlay/. $root/
+ 		rm -fR $root/rootfs-overlay/
+@@ -272,7 +279,7 @@ default_postinst() {
+ 			uci commit
+ 		fi
+ 
+-		rm -f /tmp/luci-indexcache
++		rm -Rf /tmp/luci-*
+ 	fi
+ 
+ 	local shell="$(command -v bash)"
+@@ -287,6 +294,8 @@ default_postinst() {
+ 		fi
+ 	done
+ 
++	/etc/init.d/ucitrack reload
++
+ 	return $ret
+ }
+ 
 
 --- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
 +++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
