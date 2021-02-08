@@ -2,7 +2,7 @@
 #=================================================
 rm -Rf feeds/custom/diy
 mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
-rm -Rf feeds/packages/net/{smartdns,frp,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
+rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
