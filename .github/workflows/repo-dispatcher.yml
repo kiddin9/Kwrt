@@ -30,10 +30,10 @@ jobs:
     runs-on: Ubuntu-20.04
     steps:
     - name: cancel running workflows
-      uses: n1hility/cancel-previous-runs@v2
-      with: 
-        token: ${{ secrets.GITHUB_TOKEN }}
-        workflow: Openwrt-AutoBuild.yml
+      uses: styfle/cancel-workflow-action@main
+      with:
+        workflow_id: 4439867
+        access_token: ${{ github.token }}
 
     - name: Trigger Packages Update
       run: |
@@ -69,9 +69,3 @@ jobs:
         -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
         -d '{"event_type": "phicomm-k2p ${{ env.SSH }}", "client_payload": {"target": "phicomm-k2p"}}'
 
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      continue-on-error: true
-      with:
-        retain_days: 0
-        keep_minimum_runs: 1

@@ -36,10 +36,11 @@ jobs:
       uses: actions/checkout@main
 
     - name: cancel running workflows
-      uses: rokroskar/workflow-run-cleanup-action@master
+      uses: styfle/cancel-workflow-action@main
       if: contains(github.event.action, 'cw')
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      with:
+        workflow_id: 4439867
+        access_token: ${{ github.token }}
 
     - name: Load Settings.ini
       run: |
@@ -286,8 +287,8 @@ jobs:
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:
-        retain_days: 14
-        keep_minimum_runs: 8
+        retain_days: 3
+        keep_minimum_runs: 0
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
