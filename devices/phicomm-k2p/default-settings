@@ -21,6 +21,4 @@ sed -i 's/ ra0 rax0//' /etc/config/network
 
 sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/distfeeds.conf
 
-s:append(Template(appname .. "/v2ray_version"))
-
 exit 0
