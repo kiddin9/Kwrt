@@ -120,7 +120,7 @@ Build OpenWrt using GitHub Actions
 ### Acknowledgments
 - [OpenWrt](https://github.com/openwrt/openwrt)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
-- [CTCGFW's Team](https://github.com/project-openwrt/openwrt)
+- [CTCGFW's Team](https://github.com/immortalwrt/immortalwrt)
 - [Lienol](https://github.com/Lienol/openwrt)
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 - [upload-release-action](https://github.com/svenstaro/upload-release-action)
