@@ -1,7 +1,6 @@
 #!/bin/bash
 #=================================================
 rm -Rf feeds/custom/diy
-mv -f feeds/packages/libs/libx264 feeds/custom/libx264
 mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
 rm -Rf feeds/packages/net/{smartdns,frp,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
 ./scripts/feeds update luci packages custom
