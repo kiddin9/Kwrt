@@ -43,16 +43,16 @@ index a5abfc168c..e139370fe5 100644
  	display(document.querySelector('input[name="filter"]').value);
  
  	ev.target.blur();
-@@ -880,7 +889,7 @@ function handleOpkg(ev)
- 				_('Waiting for the <em>opkg %h</em> command to complete…').format(cmd))
+@@ -881,6 +890,8 @@ function handleOpkg(ev)
  		]);
  
--		var argv = [ cmd, '--force-removal-of-dependent-packages' ];
-+		var argv = [ cmd, '--force-removal-of-dependent-packages --force-checksum' ];
+ 		var argv = [ cmd, '--force-removal-of-dependent-packages' ];
++		
++		argv.push('--force-checksum');
  
  		if (rem && rem.checked)
  			argv.push('--autoremove');
-@@ -1027,7 +1036,7 @@ return view.extend({
+@@ -1027,7 +1038,7 @@ return view.extend({
  				E('div', {}, [
  					E('label', {}, _('Filter') + ':'),
  					E('span', { 'class': 'control-group' }, [
