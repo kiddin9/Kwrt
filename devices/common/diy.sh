@@ -1,15 +1,8 @@
 #!/bin/bash
 #=================================================
 rm -Rf feeds/custom/diy
-mv -f feeds/packages/libs/libx264 feeds/custom/libx264
-mv -f feeds/packages/net/openvpn feeds/custom/openvpn
-mv -f feeds/packages/admin/netdata feeds/custom/netdata
 mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
-mv -f feeds/packages/utils/docker feeds/custom/docker
-mv -f feeds/packages/utils/dockerd feeds/custom/dockerd
-rm -Rf feeds/packages/net/{smartdns,frp,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc} feeds/luci/collections/luci-lib-docker
-svn co https://github.com/immortalwrt/packages/trunk/lang/python/Flask-RESTful feeds/packages/lang/python/Flask-RESTful
-svn co https://github.com/immortalwrt/packages/trunk/lang/node-yarn feeds/packages/lang/node-yarn
+rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
