@@ -162,6 +162,13 @@ jobs:
       uses: garypang13/debugger-action@master
       if: contains(github.event.action, 'ssh')
 
+    - name: Download package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j$(($(nproc)+1))
+
     - name: Compile the firmware
       id: compile
       run: |
