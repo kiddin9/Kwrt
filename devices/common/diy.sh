@@ -1,8 +1,7 @@
 #!/bin/bash
 #=================================================
 rm -Rf feeds/custom/diy
-mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
-rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
+rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2,https-dns-proxy,shadowsocks-libev} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
@@ -48,3 +47,11 @@ date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V %C by GaryPang'/g" package/base-files/files/etc/openwrt_release
 sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
 sed -i '$a cgi-timeout = 300' package/feeds/packages/uwsgi/files-luci-support/luci-webui.ini
+
+if [ -f sdk.tar.xz ]; then
+	tar -xJf sdk.tar.xz -C sdk
+	mv -f sdk/*/build_dir ./
+	cp -rf sdk/*/staging_dir ./
+	rm -rf sdk.tar.xz sdk
+	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
+fi
