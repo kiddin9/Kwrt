@@ -1,9 +1,8 @@
 #!/bin/bash
 #=================================================
 rm -Rf feeds/custom/diy
-mv -f feeds/packages/net/shadowsocks-libev feeds/custom/shadowsocks-libev
-rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
-./scripts/feeds update luci packages custom
+rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2,https-dns-proxy,shadowsocks-libev} feeds/luci/applications/{luci-app-dockerman,luci-app-smartdns,luci-app-frpc}
+# ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
 rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
