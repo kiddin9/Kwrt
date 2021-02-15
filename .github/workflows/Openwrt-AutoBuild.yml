@@ -95,6 +95,14 @@ jobs:
     - name: Clone source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        if [ ${{matrix.target}} == "redmi-ac2100" ]; then
+            wget -cO sdk.tar.xz https://downloads.openwrt.org/snapshots/targets/ramips/mt7621/openwrt-sdk-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+        elif [ ${{matrix.target}} == "x86_64" ]; then
+            wget -cO sdk.tar.xz https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-sdk-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+        else
+            wget -cO sdk.tar.xz https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+        fi
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
