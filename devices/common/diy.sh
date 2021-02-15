@@ -49,6 +49,7 @@ sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
 sed -i '$a cgi-timeout = 300' package/feeds/packages/uwsgi/files-luci-support/luci-webui.ini
 
 if [ -f sdk.tar.xz ]; then
+	mkdir sdk
 	tar -xJf sdk.tar.xz -C sdk
 	mv -f sdk/*/build_dir ./
 	cp -rf sdk/*/staging_dir ./
