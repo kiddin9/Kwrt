@@ -56,4 +56,6 @@ if [ -f sdk.tar.xz ]; then
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk.tar.xz sdk
 	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
+	ln -sf /usr/bin/python3 staging_dir/host/bin/python
+	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 fi
