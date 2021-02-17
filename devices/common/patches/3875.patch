@@ -1,0 +1,63 @@
+From 423829f635fa08e9fe4bb4661df5b2f438257662 Mon Sep 17 00:00:00 2001
+From: jeff Collins <jeffcollins9292@gmail.com>
+Date: Tue, 16 Feb 2021 14:32:49 -0500
+Subject: [PATCH] package: libs: ncurses/readline use PKG_ABI_VERSION
+
+fix samba4 install:
+ Collected errors:
+ * pkg_hash_fetch_best_installation_candidate: Packages for libreadline8 found, but incompatible with the architectures configured
+ * opkg_install_cmd: Cannot install package libreadline8.
+ * satisfy_dependencies_for: Cannot satisfy the following dependencies for luci-app-samba4:
+ *      libncursesw6
+ * opkg_install_cmd: Cannot install package luci-app-samba4.
+
+Signed-off-by: jeff Collins <jeffcollins9292@gmail.com>
+---
+ package/libs/ncurses/Makefile  | 4 ++--
+ package/libs/readline/Makefile | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/package/libs/ncurses/Makefile b/package/libs/ncurses/Makefile
+index cc1e960a0cb5..c72732daeef0 100644
+--- a/package/libs/ncurses/Makefile
++++ b/package/libs/ncurses/Makefile
+@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=ncurses
+ PKG_VERSION:=6.2
+-PKG_RELEASE:=1
++PKG_RELEASE:=2
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+ PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
+@@ -40,7 +40,7 @@ define Package/libncurses
+   URL:=http://www.gnu.org/software/ncurses/
+   PROVIDES:=libncursesw
+   DEPENDS:= +terminfo
+-  ABI_VERSION:=6
++  ABI_VERSION:=$(PKG_ABI_VERSION)
+ endef
+ 
+ define Package/libncurses-dev
+diff --git a/package/libs/readline/Makefile b/package/libs/readline/Makefile
+index d41a6d74f4da..11933273b65e 100644
+--- a/package/libs/readline/Makefile
++++ b/package/libs/readline/Makefile
+@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=readline
+ PKG_VERSION:=8.1
+-PKG_RELEASE:=1
++PKG_RELEASE:=2
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+ PKG_SOURCE_URL:=@GNU/readline
+@@ -33,7 +33,7 @@ define Package/libreadline
+   TITLE:=Command lines edition library
+   DEPENDS:=+libncursesw
+   URL:=http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
+-  ABI_VERSION:=8
++  ABI_VERSION:=$(PKG_ABI_VERSION)
+ endef
+ 
+ define Package/libreadline/description
