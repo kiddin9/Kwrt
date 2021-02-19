@@ -5,7 +5,7 @@
  			while [ -n "$1" ]; do
  				case "$1" in
 -					--autoremove|--force-overwrite|--force-removal-of-dependent-packages)
-+					--autoremove|--force-overwrite|--force-removal-of-dependent-packages|--force-checksum)
++					--autoremove|--force-overwrite|--force-removal-of-dependent-packages|--force-checksum|--force-depends)
  						opkg="$opkg $1"
  						shift
  					;;

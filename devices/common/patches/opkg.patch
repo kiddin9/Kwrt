@@ -43,12 +43,14 @@ index a5abfc168c..e139370fe5 100644
  	display(document.querySelector('input[name="filter"]').value);
  
  	ev.target.blur();
-@@ -881,6 +890,8 @@ function handleOpkg(ev)
+@@ -881,6 +890,10 @@ function handleOpkg(ev)
  		]);
  
  		var argv = [ cmd, '--force-removal-of-dependent-packages' ];
 +		
 +		argv.push('--force-checksum');
++		
++		argv.push('--force-depends');
  
  		if (rem && rem.checked)
  			argv.push('--autoremove');
