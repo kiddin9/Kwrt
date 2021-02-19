@@ -1,7 +1,7 @@
 #!/bin/bash
 #=================================================
 rm -Rf feeds/custom/diy
-rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2,https-dns-proxy,shadowsocks-libev,frpc,frps,openvpn} feeds/luci/applications/luci-app-{dockerman,smartdns,frpc,frps}
+rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2,https-dns-proxy,shadowsocks-libev,frp,openvpn} feeds/luci/applications/luci-app-{dockerman,smartdns,frpc,frps}
 ./scripts/feeds update luci packages custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
