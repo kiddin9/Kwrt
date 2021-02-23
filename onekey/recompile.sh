@@ -39,7 +39,7 @@ elif [ $firmware == "x86_64" ]; then
 elif [ $firmware == "friendlyarm_nanopi-r2s" ]; then
 	firmware="nanopi-r2s"
 elif [ $firmware == "friendlyarm_nanopi-r4s" ]; then
-	firmware="nanopi-r2s"
+	firmware="nanopi-r4s"
 elif [ $firmware == "xiaoyu_xy-c5" ]; then
 	firmware="XY-C5"
 elif [ $firmware == "d-team_newifi-d2" ]; then
