@@ -43,6 +43,7 @@ rm -Rf openwrt
 git clone -b master --depth 1 https://github.com/openwrt/openwrt
 svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 cd openwrt
+
 echo "
 
 1. X86_64
@@ -53,15 +54,13 @@ echo "
 
 4. r2s
 
-5. newifi-d2
+5. r4s
 
-6. hiwifi-hc5962
+6. newifi-d2
 
 7. XY-C5
 
-8. phicomm-N1
-
-9. Exit
+8. Exit
 
 "
 
@@ -87,27 +86,30 @@ case $CHOOSE in
 	break
 	;;
 	5)
-		firmware="newifi-d2"
+		firmware="nanopi-r4s"
 	break
 	;;
 	6)
-		firmware="hiwifi-hc5962"
+		firmware="newifi-d2"
 	break
 	;;
 	7)
 		firmware="XY-C5"
 	break
 	;;
-	8)
-		firmware="phicomm-N1"
-		make menuconfig
-	break
-	;;
-	9)	exit 0
+	8)	exit 0
 	;;
 
 esac
 done
+
+if [[ $firmware =~ (redmi-ac2100|phicomm-k2p|newifi-d2|k2p-32m-usb|XY-C5|xiaomi-r3p) ]]; then
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/ramips/mt7621/openwrt-sdk-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+elif [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+elif [[ $firmware == "x86_64" ]]; then
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/x86/64/openwrt-sdk-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+fi
 
 
 read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
@@ -154,7 +156,19 @@ echo "                      *****5秒后开始编译*****
 echo
 echo
 echo
-sleep 5s
+sleep 3s
+
+if [ -f sdk1.tar.xz ]; then
+	mkdir sdk build_dir
+	tar -xJf sdk1.tar.xz -C sdk
+	mv -f sdk/*/build_dir ./build_dir
+	cp -rf sdk/*/staging_dir/* ./staging_dir/
+	rm -rf sdk sdk1.tar.xz
+	ln -sf /usr/bin/python staging_dir/host/bin/python
+	ln -sf /usr/bin/python staging_dir/host/bin/python3
+	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
+	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
+fi
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 
