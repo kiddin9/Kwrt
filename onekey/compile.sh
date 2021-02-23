@@ -8,7 +8,7 @@ sleep 2s
 sudo apt-get update
 sudo apt-get upgrade
 
-sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl screen
+sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler ccache xsltproc rename antlr3 gperf curl screen upx
 
 
 
@@ -159,7 +159,7 @@ echo
 sleep 3s
 
 if [ -f sdk1.tar.xz ]; then
-	mkdir sdk build_dir
+	mkdir sdk
 	tar -xJf sdk1.tar.xz -C sdk
 	mv -f sdk/*/build_dir ./build_dir
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
