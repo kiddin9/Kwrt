@@ -22,6 +22,9 @@ rm -Rf openwrt/common openwrt/files openwrt/devices
 svn co https://github.com/bingxueqingzhi/Actions-OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 
+git fetch --all
+git reset --hard origin/master
+
 [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && {
  firmware=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/')
  } || { firmware=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
@@ -35,15 +38,30 @@ elif [ $firmware == "x86_64" ]; then
 	firmware="x86_64"
 elif [ $firmware == "friendlyarm_nanopi-r2s" ]; then
 	firmware="nanopi-r2s"
+elif [ $firmware == "friendlyarm_nanopi-r4s" ]; then
+	firmware="nanopi-r4s"
 elif [ $firmware == "xiaoyu_xy-c5" ]; then
 	firmware="XY-C5"
-elif [ $firmware == "hiwifi_hc5962" ]; then
-	firmware="hiwifi-hc5962"
 elif [ $firmware == "d-team_newifi-d2" ]; then
 	firmware="newifi-d2"
 else
 	echo "无法识别固件类型,请退出"
 fi
+
+if [[ $firmware =~ (redmi-ac2100|phicomm-k2p|newifi-d2|k2p-32m-usb|XY-C5|xiaomi-r3p) ]]; then
+	if [[ ! -f staging_dir/toolchain-mipsel_24kc_gcc-8.4.0_musl ]]; then
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/ramips/mt7621/openwrt-sdk-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+	fi
+elif [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
+	if [[ ! -f staging_dir/toolchain-aarch64_generic_gcc-8.4.0_musl ]]; then
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+	fi
+elif [[ $firmware == "x86_64" ]]; then
+	if [[ ! -f staging_dir/toolchain-x86-64_gcc-8.4.0_musl ]]; then
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/x86/64/openwrt-sdk-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+	fi
+fi
+
 echo
 
 read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
@@ -53,8 +71,6 @@ echo "您的后台地址为: $ip"
 rm -Rf feeds package/feeds common files diy tmp
 make clean
 [ -f ".config" ] && mv .config .config.bak
-git fetch --all
-git reset --hard origin/master
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
 ./scripts/feeds update -a
@@ -111,7 +127,20 @@ echo "                      *****5秒后开始编译*****
 3.大陆用户编译前请准备好梯子,使用大陆白名单或全局模式"
 echo
 echo
-sleep 5s
+sleep 3s
+
+if [ -f sdk1.tar.xz ]; then
+	mkdir sdk build_dir
+	tar -xJf sdk1.tar.xz -C sdk
+	cp -rf sdk/*/build_dir/* ./build_dir/
+	cp -rf sdk/*/staging_dir/* ./staging_dir/
+	rm -rf sdk sdk1.tar.xz
+	ln -sf /usr/bin/python staging_dir/host/bin/python
+	ln -sf /usr/bin/python staging_dir/host/bin/python3
+fi
+
+sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
+sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
 
