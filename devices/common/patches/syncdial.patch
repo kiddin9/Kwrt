@@ -25,6 +25,6 @@
 +
  	ppp_generic_setup "$config" \
 +		$syncppp_option \
- 		plugin rp-pppoe.so \
+ 		plugin pppoe.so \
  		${ac:+rp_pppoe_ac "$ac"} \
  		${service:+rp_pppoe_service "$service"} \
