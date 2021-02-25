@@ -18,6 +18,9 @@ sed -i '/S99opkg/d' /etc/crontabs/root
 echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
 
 uci set system.@rngd[0].enabled="1"
+uci del system.ntp.server
+uci add_list system.ntp.server='ntp.aliyun.com'
+uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
 uci commit system
 
 uci set uhttpd.main.rfc1918_filter=0
