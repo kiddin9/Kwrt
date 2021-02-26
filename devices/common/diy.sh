@@ -38,7 +38,7 @@ sed -i '/killall -HUP/d' feeds/luci/luci.mk
 find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
 for ipk in $(find package/feeds/custom/* -maxdepth 0); do	
 	if [[ ! -d "$ipk/patches" && ! "$(grep "codeload.github.com" $ipk/Makefile)" ]]; then
-		find $ipk/ -maxdepth 1 -name "Makefile" \
+		find $ipk/ -maxdepth 1 ! -patch *tcping* -name "Makefile" \
 		| xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=HEAD/g" {}
 	fi	
 done
