@@ -80,3 +80,32 @@
 +		ln -s /tmp/bypass/bin/xray /usr/bin/xray 2>/dev/null
 +	rm -f /var/lock/bypass.lock
 +	[ $2 = 0 ] && /etc/init.d/bypass start &
+
+--- a/package/feeds/custom/luci-app-bypass/root/usr/share/bypass/by-switch
++++ b/package/feeds/custom/luci-app-bypass/root/usr/share/bypass/by-switch
+@@ -31,14 +31,18 @@ get_ip(){
+ }
+ 
+ f_bin(){
+-	case $1 in
+-		ss)w=$(which ss-local);;
+-		ssr)w=$(which ssr-local);;
+-		vmess|vless)w=$(which xray) || w=$(which v2ray);;
+-		trojan)w=$(which trojan-plus);;
+-		trojan-go)w=$(which trojan-go);;
+-		naiveproxy)w=$(which naive);;
+-	esac
++	if [ $1 = vmess -o $1 = vless ];then
++		$(which xray) || $(which v2ray) || /usr/share/bypass/downbin --down 1 0 1
++		w=$(which xray) || w=$(which v2ray)
++	else
++		case $1 in
++			ss)w=$(which ss-local);;
++			ssr)w=$(which ssr-local);;
++			trojan)w=$(which trojan);;
++			trojan-go)w=$(which trojan-go);;
++			naiveproxy)w=$(which naive);;
++		esac
++	fi
+ 	echo ${w:=0}
+ }
