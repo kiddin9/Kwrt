@@ -66,7 +66,7 @@
 
 --- /dev/null
 +++ b/package/feeds/custom/luci-app-bypass/root/usr/share/bypass/downbin
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,15 @@
 +#!/bin/sh
 +	[ "$1" = --down ] || exit 1
 +	# 防止重复启动
@@ -76,7 +76,8 @@
 +		while ! curl -m 9 -Lfso /tmp/bypass/bin/tmp https://cdn.jsdelivr.net/gh/f6UiINtMDSmglMK4/A9xehMB2/y9tSyZoQIC/arvMwI0cwqQbZCvAy;do
 +			sleep 2
 +		done
-+		base64 -d /tmp/ssrplus/bin/tmp > /tmp/bypass/bin/xray
++		base64 -d /tmp/bypass/bin/tmp > /tmp/bypass/bin/xray
++		rm -f /tmp/bypass/bin/tmp
 +		chmod +x /tmp/bypass/bin/xray
 +		ln -s /tmp/bypass/bin/xray /usr/bin/xray 2>/dev/null
 +	rm -f /var/lock/bypass.lock
