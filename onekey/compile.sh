@@ -60,7 +60,9 @@ echo "
 
 7. XY-C5
 
-8. Exit
+8. OYE0001
+
+9. Exit
 
 "
 
