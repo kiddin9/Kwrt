@@ -97,7 +97,11 @@ case $CHOOSE in
 		firmware="XY-C5"
 	break
 	;;
-	8)	exit 0
+	8)
+		firmware="OYE0001"
+	break
+	;;
+	9)	exit 0
 	;;
 
 esac
@@ -109,6 +113,8 @@ elif [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
 		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 elif [[ $firmware == "x86_64" ]]; then
 		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/x86/64/openwrt-sdk-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+elif [[ $firmware == "OYE0001" ]]; then
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/snapshots/targets/ramips/mt7620/openwrt-sdk-ramips-mt7620_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 fi
 
 
