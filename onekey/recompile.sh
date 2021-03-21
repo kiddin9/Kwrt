@@ -22,8 +22,7 @@ rm -Rf openwrt/common openwrt/files openwrt/devices
 svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 
-git fetch --all
-git reset --hard origin/master
+git checkout .
 
 [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && {
  firmware=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/')
@@ -136,7 +135,7 @@ if [ -f sdk1.tar.xz ]; then
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk sdk1.tar.xz
 	ln -sf /usr/bin/python staging_dir/host/bin/python
-	ln -sf /usr/bin/python staging_dir/host/bin/python3
+	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 fi
 
 sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile

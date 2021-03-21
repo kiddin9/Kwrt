@@ -40,7 +40,7 @@ fi
 
 
 rm -Rf openwrt
-git clone -b master --depth 1 https://github.com/openwrt/openwrt
+git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
 svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 
@@ -165,7 +165,7 @@ if [ -f sdk1.tar.xz ]; then
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk sdk1.tar.xz
 	ln -sf /usr/bin/python staging_dir/host/bin/python
-	ln -sf /usr/bin/python staging_dir/host/bin/python3
+	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
 	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
 fi
