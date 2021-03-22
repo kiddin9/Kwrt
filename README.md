@@ -22,7 +22,7 @@
 <a href="https://t.me/opwrts" target="_blank">Telegram</a>
 ### 特色:
 
-+ Cutting edge,openwrt官方master分支版本,luci19.07 内核升级到5.4. 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-21.02分支版本, 内核升级到5.4. 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能,后台在线选装插件,自建插件仓库囊括了市面上主流开源插件,系统升级不丢失插件和配置.
 
@@ -113,7 +113,7 @@ Build OpenWrt using GitHub Actions
 ### Usage
 
 - Sign up for [GitHub Actions](https://github.com/features/actions/signup)
-- Fork [this GitHub repository](https://github.com/garypang13/Actions-OpenWrt-Nginx)
+- Fork [this GitHub repository](https://github.com/garypang13/OpenWrt)
 - click the `Star` button, and the build will starts automatically.Progress can be viewed on the Actions page.
 - When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
 
