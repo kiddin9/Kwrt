@@ -23,6 +23,7 @@ svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devic
 cd openwrt
 
 git checkout .
+git pull
 
 [ $(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/') == generic ] && {
  firmware=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_.*=y/\1/')
