@@ -139,7 +139,7 @@ if [ -f sdk1.tar.xz ]; then
 	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 fi
 
-sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
+sed -i '/\(target\|tools\|toolchain\)\/Makefile/d' Makefile
 sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
 
 make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
