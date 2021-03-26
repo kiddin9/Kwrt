@@ -25,8 +25,9 @@ sed -i '/^\/etc\/profile/d' package/base-files/Makefile
 find target/linux -path "target/linux/*/config-*" | xargs -i sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\n \
 CONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\nCONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' {}
 sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/files/uhttpd.config
-rm -rf ./feeds/packages/lang/golang
+rm -rf ./feeds/packages/lang/{golang,node}
 svn co https://github.com/immortalwrt/packages/trunk/lang/golang feeds/packages/lang/golang
+svn co https://github.com/immortalwrt/packages/trunk/lang/node feeds/packages/lang/node
 mkdir package/network/config/firewall/patches
 wget -O package/network/config/firewall/patches/fullconenat.patch https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
