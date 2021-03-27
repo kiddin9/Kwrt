@@ -166,7 +166,7 @@ if [ -f sdk1.tar.xz ]; then
 	rm -rf sdk sdk1.tar.xz
 	ln -sf /usr/bin/python staging_dir/host/bin/python
 	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
-	sed -i '/\(target\|tools\|toolchain\)\/Makefile/d' Makefile
+	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
 	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
 fi
 
