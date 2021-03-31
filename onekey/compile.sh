@@ -164,7 +164,11 @@ if [ -f sdk1.tar.xz ]; then
 	mv -f sdk/*/build_dir ./build_dir
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk sdk1.tar.xz
-	ln -sf /usr/bin/python staging_dir/host/bin/python
+	if [ -f /usr/bin/python ]; then
+		ln -sf /usr/bin/python staging_dir/host/bin/python
+	else
+		ln -sf /usr/bin/python3 staging_dir/host/bin/python
+	fi
 	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
 	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
