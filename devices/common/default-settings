@@ -14,8 +14,8 @@ sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
 rm -rf /tmp/luci-*
 
-sed -i '/S99opkg/d' /etc/crontabs/root
-echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
+grep -q S99opkg /etc/crontabs/root ||
+	echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
 
 uci set system.@rngd[0].enabled="1"
 uci del system.ntp.server
