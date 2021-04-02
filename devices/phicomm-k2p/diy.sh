@@ -1,7 +1,7 @@
 rm -Rf files/etc/profile.d/sysinfo.sh
 
-rm -rf target/linux/ramips
-svn co https://github.com/x-wrt/x-wrt/trunk/target/linux/ramips target/linux/ramips
+rm -rf target/linux
+svn co https://github.com/x-wrt/x-wrt/trunk/target/linux target/linux
 
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 
