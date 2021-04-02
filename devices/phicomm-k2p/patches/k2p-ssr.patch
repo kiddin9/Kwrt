@@ -71,7 +71,7 @@
 @@ -989,7 +1013,7 @@
  	kill -9 $(ps -w | grep by-preload | grep -v grep | awk '{print$1}') 2>/dev/null
  	kill -9 $(ps -w | grep $VAR | grep -v grep | awk '{print$1}') 2>/dev/null
- 	killall -q -9 smartdns chinadns-ng kcptun-client microsocks
+ 	killall -q -9 smartdns-le chinadns-ng kcptun-client microsocks
 -	rm -rf $DNS_DIR $VAR $DNS_FILE $CON_T /var/lock/bypass-update.lock
 +	rm -rf $DNS_DIR $VAR $DNS_FILE $CON_T /var/lock/bypass-update.lock $K/bin
  	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f $K/gfw.list
