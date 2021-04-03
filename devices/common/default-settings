@@ -70,6 +70,8 @@ if [ ! -f /etc/config/placeholder ]; then
   uci set dhcp.lan.dhcpv6='hybrid'
   uci commit dhcp
 
+  uci set nft-qos.default.limit_enable='0'
+  uci commit nft-qos
 fi
 
 [ -f /usr/bin/wget ] && 	
