@@ -1,7 +1,8 @@
 rm -Rf files/etc/profile.d/sysinfo.sh
 
-rm -rf target/linux
+rm -rf target/linux include
 svn co https://github.com/x-wrt/x-wrt/trunk/target/linux target/linux
+svn co https://github.com/x-wrt/x-wrt/trunk/include
 
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 
