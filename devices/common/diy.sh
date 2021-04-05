@@ -10,7 +10,7 @@ rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx 
 rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 echo -e "\q" | svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
-wget -O target/linux/generic/pending-5.4/601-add-kernel-imq-support.patch https://raw.githubusercontent.com/immortalwrt/immortalwrt/openwrt-21.02/target/linux/generic/pending-5.4/601-add-kernel-imq-support.patch
+wget -O target/linux/generic/pending-5.4/601-add-kernel-imq-support.patch https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/target/linux/generic/pending-5.4/601-add-kernel-imq-support.patch
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential
@@ -52,7 +52,6 @@ if [ -f sdk.tar.xz ]; then
 	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
 	mkdir sdk
 	tar -xJf sdk.tar.xz -C sdk
-	cp -rf sdk/*/build_dir ./
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk.tar.xz sdk
 	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile

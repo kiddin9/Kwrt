@@ -132,7 +132,6 @@ sleep 3s
 if [ -f sdk1.tar.xz ]; then
 	mkdir sdk build_dir
 	tar -xJf sdk1.tar.xz -C sdk
-	cp -rf sdk/*/build_dir/* ./build_dir/
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk sdk1.tar.xz
 	if [ -f /usr/bin/python ]; then
