@@ -129,11 +129,11 @@ if [ -f "devices/$firmware/diy.sh" ]; then
 fi
 if [ -f "devices/common/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/common/default-settings
-	cp -f devices/common/default-settings package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
+	cp -f devices/common/default-settings package/*/*/default-settings/files/uci.defaults
 fi
 if [ -f "devices/$firmware/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/$firmware/default-settings
-	cat -f devices/$firmware/default-settings >> package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
+	cat -f devices/$firmware/default-settings >> package/*/*/default-settings/files/uci.defaults
 fi
 if [ -n "$(ls -A "devices/common/patches" 2>/dev/null)" ]; then
           find "devices/common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"

@@ -132,10 +132,10 @@ jobs:
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
-        cp -f devices/common/default-settings package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
+        cp -f devices/common/default-settings package/*/*/default-settings/files/uci.defaults
         if [ -f "devices/${{matrix.target}}/default-settings" ]; then
-          echo >> package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
-          cat devices/${{matrix.target}}/default-settings >> package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
+          echo >> package/*/*/default-settings/files/uci.defaults
+          cat devices/${{matrix.target}}/default-settings >> package/*/*/default-settings/files/uci.defaults
         fi
         cp -f devices/common/$CONFIG_FILE .config
         if [ -f "devices/${{matrix.target}}/$CONFIG_FILE" ]; then
@@ -154,9 +154,9 @@ jobs:
     - name: Default PPPOE Setting
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
       run: |
-        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
-        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
-        sed -i '$i uci commit network' openwrt/package/*/*/default-settings/root/etc/uci-defaults/99-default-settings
+        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/default-settings/files/uci.defaults
+        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/default-settings/files/uci.defaults
+        sed -i '$i uci commit network' openwrt/package/*/*/default-settings/files/uci.defaults
               
     - name: SSH connection to Actions
       uses: garypang13/debugger-action@master
