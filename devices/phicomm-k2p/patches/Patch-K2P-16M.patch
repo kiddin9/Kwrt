@@ -1,14 +1,6 @@
 --- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
 +++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
-@@ -57,6 +57,7 @@
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-max-frequency = <10000000>;
-+		broken-flash-reset;
- 
- 		partitions {
- 			compatible = "fixed-partitions";
-@@ -82,15 +83,9 @@
+@@ -39,15 +39,9 @@
  			};
  
  			partition@50000 {
@@ -21,7 +13,7 @@
  				compatible = "denx,uimage";
  				label = "firmware";
 -				reg = <0xa0000 0xf60000>;
-+				reg = <0x50000 0x1fb0000>;
++				reg = <0x50000 0xfb0000>;
  			};
  		};
  	};
@@ -32,6 +24,6 @@
  
  define Device/phicomm_k2p
 -  IMAGE_SIZE := 15744k
-+  IMAGE_SIZE := 32448k
++  IMAGE_SIZE := 16064k
    DEVICE_VENDOR := Phicomm
    DEVICE_MODEL := K2P

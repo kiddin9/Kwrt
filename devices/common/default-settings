@@ -1,87 +1,159 @@
 #!/bin/sh
 
-ln -sf /sbin/ip /usr/bin/ip
+version=`uci get base_config.@status[0].version 2>/dev/null`
+
+. /etc/openwrt_release
+test -n "${DISTRIB_ID}" || DISTRIB_ID=OpenWrt
+DISTRIB_ID=`echo -n $DISTRIB_ID | tr a-z A-Z`
+
+MACADDR=""
+test -e /usr/share/natcapd/board_mac.lua && MACADDR=`lua /usr/share/natcapd/board_mac.lua`
+test -n "$MACADDR" || MACADDR=`cat /etc/board.json | grep macaddr | tr a-f A-F | grep -o "[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]" | head -n1`
+test -n "$MACADDR" || MACADDR=`cat /sys/class/net/eth0/address | tr a-z A-Z`
+test -n "$MACADDR" || MACADDR=`cat /sys/class/net/eth1/address | tr a-z A-Z`
+test -n "$MACADDR" || MACADDR=`head -c6 /dev/urandom | hexdump -e '/1 "%02X:"' | head -c17`
+test -n "$MACADDR" || MACADDR=`head -c6 /dev/random | hexdump -e '/1 "%02X:"' | head -c17`
+
+sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
 sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
 sed -i 's/downloads.openwrt.org/op.supes.top/g' /etc/opkg/distfeeds.conf
 
-grep -q log-facility /etc/dnsmasq.conf ||
-	echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
-grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
-	echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
-
-sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
-
-rm -rf /tmp/luci-*
-
-grep -q S99opkg /etc/crontabs/root ||
-	echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
-
-uci set system.@rngd[0].enabled="1"
-uci del system.ntp.server
-uci add_list system.ntp.server='ntp.aliyun.com'
-uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
-uci commit system
-
-uci set uhttpd.main.rfc1918_filter=0
-uci set uhttpd.main.redirect_https=0
-uci set uhttpd.main.max_connections='200'
-uci set uhttpd.main.max_requests='100'
-uci commit uhttpd
-
 echo $(uci get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
 
-if [ ! -f /etc/config/placeholder ]; then
-
-	if [ $(uci get network.wan.ipv6) == 0 ]; then
-			uci set dhcp.@dnsmasq[0].filter_aaaa='1'
-			uci commit dhcp
-	else
-		uci set dhcp.@dnsmasq[0].filter_aaaa='0'
-		uci commit dhcp
-		uci set turboacc.config.sfe_ipv6='1'
-		uci commit turboacc
-	fi
-
-  uci set luci.main.lang=auto
-  uci set luci.main.mediaurlbase=/luci-static/edge
-  uci commit luci
-  
-  uci set system.@system[0].timezone=CST-8
-  uci set system.@system[0].zonename=Asia/Shanghai
-  uci commit system
-
-  uci set fstab.@global[0].anon_mount=1
-  uci commit fstab
-  sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
-  uci set network.lan.ipaddr="10.0.0.1"
-  uci commit network
-
-  uci set network.@globals[0].packet_steering=1
-  uci commit network
-  
-  uci set dhcp.@dnsmasq[0].dns_redirect='1'
-  uci set dhcp.dnsmasq[0].allservers='1'
-  uci set dhcp.lan.force='1'
-  uci set dhcp.@dnsmasq[0].cachesize='1500'
-  uci set dhcp.lan.ra='hybrid'
-  uci set dhcp.lan.ndp='hybrid'
-  uci set dhcp.lan.dhcpv6='hybrid'
-  uci commit dhcp
-
-  uci set nft-qos.default.limit_enable='0'
-  uci commit nft-qos
-fi
-
 [ -f /usr/bin/wget ] && 	
 	ln -s /usr/bin/wget /usr/bin/wget-ssl
-
-cp -R /www/cgi-bin/* /www/
-find /www -type d -exec chmod 755 {} \;
-chmod +x /www/luci
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
 ln -s /sbin/poweroff /sbin/shutdown
 
+test $version -lt 1 && {
+	uci set luci.main.lang='auto'
+	uci set luci.main.mediaurlbase=/luci-static/edge
+	uci commit luci
+
+	uci get system.@system[0] >/dev/null 2>&1 && {
+		uci set system.@system[0].hostname="${DISTRIB_ID}"
+		uci set system.@system[0].zonename='Asia/Shanghai'
+		uci set system.@system[0].timezone='CST-8'
+		uci del system.ntp.server
+		uci add_list system.ntp.server='ntp.aliyun.com'
+		uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
+		uci commit system
+	}
+
+	uci set uhttpd.main.rfc1918_filter=0
+	uci set uhttpd.main.redirect_https=0
+	uci set uhttpd.main.max_connections='200'
+	uci set uhttpd.main.max_requests='100'
+	uci commit uhttpd
+
+	SUBFIX=`echo -n $MACADDR | sed 's/://g' | tr a-z A-Z | tail -c4`
+	SSID=${DISTRIB_ID}_${SUBFIX}
+	SSID_PASSWD=88888888
+
+	uci set base_config.@status[0].SSID=${SSID}
+	# uci set base_config.@status[0].SSID_PASSWD=${SSID_PASSWD}
+	
+	uci set upnpd.config.enabled='1'
+	uci commit upnpd
+
+	grep -q S99opkg /etc/crontabs/root ||
+	echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
+	
+	grep -q log-facility /etc/dnsmasq.conf ||
+	echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
+
+	grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
+	echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
+
+	uci set turboacc.config.sfe_ipv6='1'
+	uci commit turboacc
+
+	uci set fstab.@global[0].anon_mount=1
+	uci commit fstab
+ 
+	sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
+ 
+	uci set network.lan.ipaddr="10.0.0.1"
+	uci set network.@globals[0].packet_steering=1
+	uci commit network
+  
+	uci set dhcp.@dnsmasq[0].dns_redirect='1'
+	uci set dhcp.dnsmasq[0].allservers='1'
+	uci set dhcp.lan.force='1'
+	uci set dhcp.@dnsmasq[0].cachesize='1500'
+	uci set dhcp.lan.ra='hybrid'
+	uci set dhcp.lan.ndp='hybrid'
+	uci set dhcp.lan.dhcpv6='hybrid'
+	uci set dhcp.lan.force='1'
+	uci commit dhcp
+
+	uci set nft-qos.default.limit_enable='0'
+	uci commit nft-qos
+}
+
+# kB
+memtotal=`grep MemTotal /proc/meminfo | awk '{print $2}'`
+cachesize=2048
+dnsforwardmax=2048
+nf_conntrack_max=16384
+if test $memtotal -ge 1048576; then
+	# > 1024M
+	cachesize=10000
+	dnsforwardmax=10000
+	nf_conntrack_max=262144
+elif test $memtotal -ge 524288; then
+	# <= 1024M
+	cachesize=10000
+	dnsforwardmax=10000
+	nf_conntrack_max=131072
+elif test $memtotal -ge 262144; then
+	# <= 512M
+	cachesize=8192
+	dnsforwardmax=8192
+	nf_conntrack_max=65536
+elif test $memtotal -ge 131072; then
+	# <= 256M
+	cachesize=4096
+	dnsforwardmax=4096
+	nf_conntrack_max=65536
+elif test $memtotal -ge 65536; then
+	# <= 128M
+	cachesize=2048
+	dnsforwardmax=2048
+	nf_conntrack_max=32768
+else
+	# < 64M
+	cachesize=1024
+	dnsforwardmax=1024
+	nf_conntrack_max=16384
+fi
+
+test $version -lt 1 && {
+	uci -q get dhcp.@dnsmasq[0] || uci add dhcp dnsmasq
+	uci set dhcp.@dnsmasq[0].cachesize="$cachesize"
+	uci set dhcp.@dnsmasq[0].dnsforwardmax="$dnsforwardmax"
+	uci set dhcp.@dnsmasq[0].localservice='0'
+	uci set dhcp.@dnsmasq[0].localise_queries='1'
+	uci set dhcp.@dnsmasq[0].rebind_protection='0'
+	uci set dhcp.@dnsmasq[0].rebind_localhost='1'
+	uci commit dhcp
+	version=1
+}
+
+# sysctl overwrite
+SYSCTL_LOCAL=/etc/sysctl.d/50-local.conf
+mkdir -p /etc/sysctl.d
+echo -n >$SYSCTL_LOCAL
+
+echo net.nf_conntrack_max=$nf_conntrack_max >>$SYSCTL_LOCAL
+echo net.ipv4.ip_early_demux=0 >>$SYSCTL_LOCAL
+echo net.bridge.bridge-nf-call-iptables=0 >>$SYSCTL_LOCAL
+echo net.ipv4.fib_multipath_hash_policy=1 >>$SYSCTL_LOCAL
+echo net.ipv4.tcp_congestion_control=cubic >>$SYSCTL_LOCAL
+echo net.netfilter.nf_conntrack_helper=1 >>$SYSCTL_LOCAL
+
+rm -rf /tmp/luci-*
