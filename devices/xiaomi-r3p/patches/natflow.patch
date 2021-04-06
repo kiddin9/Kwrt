@@ -54,15 +54,16 @@
 
 --- a/package/feeds/custom/luci-app-turboacc/Makefile
 +++ b/package/feeds/custom/luci-app-turboacc/Makefile
-@@ -11,17 +11,17 @@ PKG_RELEASE:=2
+@@ -11,17 +11,16 @@ PKG_RELEASE:=2
  
  PKG_LICENSE:=GPLv3.0+
  
 -LUCI_TITLE:=LuCI support for Flow Offload / Shortcut-FE
-+LUCI_TITLE:=LuCI support for Natflow / Shortcut-FE
- LUCI_DEPENDS:=+pdnsd-alt \
-               +PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
+-LUCI_DEPENDS:=+pdnsd-alt \
+-              +PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
 -              +PACKAGE_$(PKG_NAME)_INCLUDE_flow-offload:kmod-ipt-offload \
++LUCI_TITLE:=LuCI support for Natflow / Shortcut-FE
++LUCI_DEPENDS:=+PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
 +              +PACKAGE_$(PKG_NAME)_INCLUDE_natflow:kmod-natflow \
                +PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca:kmod-tcp-bbr \
                +PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder:dnsforwarder
@@ -76,7 +77,7 @@
  	depends on PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe=n
  	default y
  
-@@ -40,7 +40,7 @@ endef
+@@ -40,7 +39,7 @@ endef
  
  PKG_CONFIG_DEPENDS:= \
  	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe \

@@ -1,3 +1,16 @@
+--- a/package/feeds/custom/applications/luci-app-turboacc/Makefile
++++ b/package/feeds/custom/applications/luci-app-turboacc/Makefile
+@@ -12,8 +12,7 @@ PKG_RELEASE:=2
+ PKG_LICENSE:=GPLv3.0+
+ 
+ LUCI_TITLE:=LuCI support for Flow Offload / Shortcut-FE
+-LUCI_DEPENDS:=+pdnsd-alt \
+-              +PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
++LUCI_DEPENDS:=+PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
+               +PACKAGE_$(PKG_NAME)_INCLUDE_flow-offload:kmod-ipt-offload \
+               +PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca:kmod-tcp-bbr \
+               +PACKAGE_$(PKG_NAME)_INCLUDE_dnsforwarder:dnsforwarder
+
 --- a/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
 +++ b/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
 @@ -232,27 +232,6 @@ start(){
