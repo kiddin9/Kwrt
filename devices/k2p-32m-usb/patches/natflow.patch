@@ -12,14 +12,15 @@
 
 --- a/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
 +++ b/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
-@@ -213,10 +213,21 @@ revert_dns() {
+@@ -213,11 +213,25 @@ revert_dns() {
  start(){
  	inital_conf
  
 -	uci set firewall.@defaults[0].flow_offloading="${sw_flow}"
 -	uci set firewall.@defaults[0].flow_offloading_hw="${hw_flow}"
--	uci set firewall.@defaults[0].fullcone="${fullcone_nat}"
--	uci commit firewall
+ 	uci set firewall.@defaults[0].fullcone="${fullcone_nat}"
+ 	uci commit firewall
+ 
 +	test -c /dev/natflow_ctl && {
 +	enable_natflow="${sw_flow}"
 +	enable_natflow_hw="${hw_flow}"
@@ -35,22 +36,29 @@
 +	echo disabled=$((!enable_natflow)) >/dev/natflow_ctl
 +	echo hwnat=$((enable_natflow_hw)) >/dev/natflow_ctl
 +	}
- 
++
  	[ "${sw_flow}" -ne "1" ] && [ "${sfe_flow}" -eq "1" ] && {
  		lsmod | grep -q fast_classifier || modprobe fast_classifier 2>"/dev/null"
-@@ -264,10 +275,8 @@ start(){
+ 		echo "${sfe_bridge}" > "/sys/fast_classifier/skip_to_bridge_ingress" 2>"/dev/null"
+@@ -264,11 +278,16 @@ start(){
  stop(){
  	inital_conf
  
 -	uci set firewall.@defaults[0].flow_offloading="${sw_flow}"
 -	uci set firewall.@defaults[0].flow_offloading_hw="${hw_flow}"
--	uci set firewall.@defaults[0].fullcone="${fullcone_nat}"
--	uci commit firewall
+ 	uci set firewall.@defaults[0].fullcone="${fullcone_nat}"
+ 	uci commit firewall
+ 
++	test -c /dev/natflow_ctl && {
++	enable_natflow="${sw_flow}"
++	enable_natflow_hw="${hw_flow}"
 +	echo disabled=$((!enable_natflow)) >/dev/natflow_ctl
 +	echo hwnat=$((enable_natflow_hw)) >/dev/natflow_ctl
- 
++	}
++
  	[ "${sfe_flow}" -ne "1" ] && {
  		echo "0" > "/sys/fast_classifier/skip_to_bridge_ingress" 2>"/dev/null"
+ 		rm -f "/dev/sfe_ipv6"
 
 --- a/package/feeds/custom/luci-app-turboacc/Makefile
 +++ b/package/feeds/custom/luci-app-turboacc/Makefile
