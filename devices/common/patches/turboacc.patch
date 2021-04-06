@@ -1,5 +1,5 @@
---- a/package/feeds/custom/applications/luci-app-turboacc/Makefile
-+++ b/package/feeds/custom/applications/luci-app-turboacc/Makefile
+--- a/package/feeds/custom/luci-app-turboacc/Makefile
++++ b/package/feeds/custom/luci-app-turboacc/Makefile
 @@ -12,8 +12,7 @@ PKG_RELEASE:=2
  PKG_LICENSE:=GPLv3.0+
  
