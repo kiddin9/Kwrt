@@ -130,7 +130,7 @@ echo
 sleep 3s
 
 if [ -f sdk1.tar.xz ]; then
-	mkdir sdk build_dir
+	mkdir sdk
 	tar -xJf sdk1.tar.xz -C sdk
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk sdk1.tar.xz
