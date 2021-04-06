@@ -96,19 +96,19 @@
  
  msgid "Software flow offloading"
 -msgstr "软件流量分载"
-+msgstr "启用转发加速(natflow)"
++msgstr "转发加速(natflow)"
  
  msgid "Software based offloading for routing/NAT"
 -msgstr "基于软件的 Routing/NAT 分载"
-+msgstr ""
++msgstr "使用转发加速(natflow)"
  
  msgid "Hardware flow offloading"
 -msgstr "硬件流量分载"
-+msgstr "启用硬件转发加速"
++msgstr "硬件转发加速"
  
  msgid "Requires hardware NAT support. Implemented at least for mt76xx"
 -msgstr "需要硬件 NAT 支持。目前 mt76xx 已实现"
-+msgstr ""
++msgstr "使用硬件转发加速"
  
  msgid "Shortcut-FE flow offloading"
  msgstr "Shortcut-FE 流量分载"
