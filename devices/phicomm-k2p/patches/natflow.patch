@@ -12,6 +12,15 @@
 
 --- a/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
 +++ b/package/feeds/custom/luci-app-turboacc/root/etc/init.d/turboacc
+@@ -21,7 +21,7 @@ inital_conf(){
+ 	config_get "dns_caching_v4_dns" "config" "dns_caching_v4_dns"
+ 	config_get "dns_caching_v6_dns" "config" "dns_caching_v6_dns"
+ 
+-	[ ! -e "/lib/modules/$(uname -r)/xt_FLOWOFFLOAD.ko" ] && { sw_flow="0"; hw_flow="0"; }
++	# [ ! -e "/lib/modules/$(uname -r)/xt_FLOWOFFLOAD.ko" ] && { sw_flow="0"; hw_flow="0"; }
+ 	[ ! -e "/lib/modules/$(uname -r)/fast-classifier.ko" ] && { sfe_flow="0"; sfe_bridge="0"; sfe_ipv6="0"; }
+ 	[ ! -e "/lib/modules/$(uname -r)/tcp_bbr.ko" ] && bbr_cca="0"
+ 	[ ! -e "/lib/modules/$(uname -r)/xt_FULLCONENAT.ko" ] && fullcone_nat="0"
 @@ -213,11 +213,25 @@ revert_dns() {
  start(){
  	inital_conf
