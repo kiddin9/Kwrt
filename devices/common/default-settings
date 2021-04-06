@@ -61,13 +61,13 @@ test $version -lt 1 && {
 	uci commit upnpd
 
 	grep -q S99opkg /etc/crontabs/root ||
-	echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
+		echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
 	
 	grep -q log-facility /etc/dnsmasq.conf ||
-	echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
+		echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
 	grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
-	echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
+		echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
 
 	uci set turboacc.config.sfe_ipv6='1'
 	uci commit turboacc
