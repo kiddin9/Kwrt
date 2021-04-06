@@ -1,6 +1,6 @@
 
 rm -rf package/network/services/ppp
-svn co https://github.com/openwrt/openwrt/trunk/package/network/services/ppp
+svn co https://github.com/openwrt/openwrt/trunk/package/network/services/ppp package/network/services/ppp
 
 sed -i 's/PKG_VERSION:=1/PKG_VERSION:=2/' package/feeds/custom/luci-app-bypass/Makefile
 
