@@ -10,7 +10,7 @@
 +			o.rmempty = false;
 +			o.default = o.enabled;
 +
-+		o = s.taboption('firmware', form.Flag, 'autoupgrade_fm', _('Firmware Auto Upgrade'));
++		o = s.taboption('firmware', form.Flag, 'autoupgrade_fm', _('Firmware Upgrade Notice'));
 +			o.rmempty = false;
 +			o.default = o.enabled;
 +
