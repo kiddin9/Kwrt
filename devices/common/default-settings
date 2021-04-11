@@ -29,6 +29,9 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
 ln -s /sbin/poweroff /sbin/shutdown
 
+test `uci get system.@system[0].autoupgrade_pkg 2>/dev/null || echo "1"` != '0' && {
+	echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
+}
 test $version -lt 1 && {
 	uci set luci.main.lang='auto'
 	uci set luci.main.mediaurlbase=/luci-static/edge
@@ -41,6 +44,8 @@ test $version -lt 1 && {
 		uci del system.ntp.server
 		uci add_list system.ntp.server='ntp.aliyun.com'
 		uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
+		uci set system.@system[0].autoupgrade_pkg='1'
+		uci set system.@system[0].autoupgrade_fm='1'
 		uci commit system
 	}
 
@@ -57,10 +62,6 @@ test $version -lt 1 && {
 	
 	uci set upnpd.config.enabled='1'
 	uci commit upnpd
-
-	test `uci get system.@system[0].autoupgrade_pkg 2>/dev/null` != '0' && {
-		echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
-	}
 	
 	grep -q log-facility /etc/dnsmasq.conf ||
 		echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
