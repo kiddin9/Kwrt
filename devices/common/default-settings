@@ -29,9 +29,9 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
 ln -s /sbin/poweroff /sbin/shutdown
 
-test `uci get system.@system[0].autoupgrade_pkg 2>/dev/null || echo "1"` != '0' && {
-	echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
-}
+sed -i '/S99opkg/d' /etc/crontabs/root
+echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
+
 test $version -lt 1 && {
 	uci set luci.main.lang='auto'
 	uci set luci.main.mediaurlbase=/luci-static/edge
