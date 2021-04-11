@@ -46,8 +46,6 @@ test $version -lt 1 && {
 
 	uci set uhttpd.main.rfc1918_filter=0
 	uci set uhttpd.main.redirect_https=0
-	uci set uhttpd.main.max_connections='200'
-	uci set uhttpd.main.max_requests='100'
 	uci commit uhttpd
 
 	SUBFIX=`echo -n $MACADDR | sed 's/://g' | tr a-z A-Z | tail -c4`

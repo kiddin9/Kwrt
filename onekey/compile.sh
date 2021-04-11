@@ -40,9 +40,6 @@ fi
 
 
 rm -Rf openwrt
-git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
-svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
-cd openwrt
 
 echo "
 
@@ -50,17 +47,19 @@ echo "
 
 2. K2p
 
-3. RedMi_AC2100
+3. K2p 32M
 
-4. r2s
+4. RedMi_AC2100
 
-5. r4s
+5. r2s
 
-6. newifi-d2
+6. r4s
 
-7. XY-C5
+7. newifi-d2
 
-8. Exit
+8. XY-C5
+
+9. Exit
 
 "
 
@@ -78,37 +77,50 @@ case $CHOOSE in
 	break
 	;;
 	3)
-		firmware="redmi-ac2100"
+		firmware="k2p-32m-usb"
 	break
 	;;
 	4)
-		firmware="nanopi-r2s"
+		firmware="redmi-ac2100"
 	break
 	;;
 	5)
-		firmware="nanopi-r4s"
+		firmware="nanopi-r2s"
 	break
 	;;
 	6)
-		firmware="newifi-d2"
+		firmware="nanopi-r4s"
 	break
 	;;
 	7)
+		firmware="newifi-d2"
+	break
+	;;
+	8)
 		firmware="XY-C5"
 	break
 	;;
-	8)	exit 0
+	9)	exit 0
 	;;
 
 esac
 done
 
 if [[ $firmware =~ (redmi-ac2100|phicomm-k2p|newifi-d2|k2p-32m-usb|XY-C5|xiaomi-r3p) ]]; then
-		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/ramips/mt7621/openwrt-sdk-21.02-SNAPSHOT-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		git clone -b master --depth 1 https://github.com/x-wrt/x-wrt openwrt
+		svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
+		cd openwrt
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/ramips/mt7621/openwrt-sdk-21.02-SNAPSHOT-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz &
 elif [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
-		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
+		svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
+		cd openwrt
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz &
 elif [[ $firmware == "x86_64" ]]; then
-		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/x86/64/openwrt-sdk-21.02-SNAPSHOT-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
+		svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
+		cd openwrt
+		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/x86/64/openwrt-sdk-21.02-SNAPSHOT-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz &
 fi
 
 

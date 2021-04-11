@@ -123,6 +123,7 @@ Build OpenWrt using GitHub Actions
 - [CTCGFW's Team](https://github.com/immortalwrt/immortalwrt)
 - [Lienol](https://github.com/Lienol/openwrt)
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
+- [X-WRT](https://github.com/x-wrt/x-wrt)
 - [upload-release-action](https://github.com/svenstaro/upload-release-action)
 - [Microsoft](https://www.microsoft.com)
 - [Microsoft Azure](https://azure.microsoft.com)
