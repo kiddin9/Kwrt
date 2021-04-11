@@ -66,11 +66,11 @@ jobs:
         now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
         if [[ $(expr $gitdate + 60) < $now ]]; then
         curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
-        -H "Accept: application/vnd.github.everest-preview+json" \
-        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-        --data '{"event_type": "update"}'
-        sleep 12
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          --data '{"event_type": "update"}'
         fi
+        sleep 10
 
     - name: Initialization environment
       env:
