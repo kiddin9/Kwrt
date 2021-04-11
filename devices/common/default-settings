@@ -58,8 +58,9 @@ test $version -lt 1 && {
 	uci set upnpd.config.enabled='1'
 	uci commit upnpd
 
-	grep -q S99opkg /etc/crontabs/root ||
+	test `uci get system.@system[0].autoupgrade_pkg 2>/dev/null` != '0' && {
 		echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
+	}
 	
 	grep -q log-facility /etc/dnsmasq.conf ||
 		echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
