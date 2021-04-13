@@ -61,19 +61,19 @@ jobs:
 
     - name: Trigger Packages Update
       run: |
-        gitdate=$(curl -s "https://api.github.com/repos/garypang13/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
-        gitdate=$(date -d "$gitdate" +%s)
-        now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
-        if [[ $(expr $gitdate + 300) < $now ]]; then
-        curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          --data '{"event_type": "update"}'
-        fi
         gitdate=$(curl -s "https://api.github.com/repos/garypang13/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].updated_at')
         gitdate=$(date -d "$gitdate" +%s)
         now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
         if [[ $(expr $gitdate + 300) < $now ]]; then
+          gitdate=$(curl -s "https://api.github.com/repos/garypang13/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
+          gitdate=$(date -d "$gitdate" +%s)
+          now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
+          if [[ $(expr $gitdate + 300) < $now ]]; then
+          curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          --data '{"event_type": "update"}'
+          fi
           sleep 10
         fi
 
