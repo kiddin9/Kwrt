@@ -185,7 +185,8 @@ if [ -f sdk1.tar.xz ]; then
 	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
 fi
 
-make -j$(($(nproc)+1)) download v=s ; make -j$(($(nproc)+1)) || make -j1 V=s
+make -j$(($(nproc)+1)) download -j$(($(nproc)+1)) &
+make -j$(($(nproc)+1)) || make -j1 V=s
 
 if [ "$?" == "0" ]; then
 echo "
