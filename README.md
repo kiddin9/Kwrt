@@ -47,8 +47,7 @@
 | K2P-32M-USB (K2P 32M USB版)   | [📥](https://op.supes.top/firmware/k2p-32m-usb/)    | 闪存布局请使用默认的公版     |
 | NanoPi-R2S    | [📥](https://op.supes.top/firmware/nanopi-r2s/)     | 默认交换了网口,靠近电源口的是WAN口   |
 | NanoPi-R4S    | [📥](https://op.supes.top/firmware/nanopi-r4s/)     |    |
-| Newifi-D2 (新路由3)      | [📥](https://op.supes.top/firmware/newifi-d2/)      |                                      |
-| Hiwifi-HC5962 (极路由4增强版)  | [📥](https://op.supes.top/firmware/hiwifi-hc5962/)  |                                      |
+| Newifi-D2 (新路由3)      | [📥](https://op.supes.top/firmware/newifi-d2/)      |                                      |                                     |
 | Xiaomi-R3P (小米路由PRO)    | [📥](https://op.supes.top/firmware/xiaomi-r3p/)     |                                      |
 | XY-C5 (小娱-C5)         | [📥](https://op.supes.top/firmware/XY-C5/)          |                                      |
 
