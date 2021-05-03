@@ -110,17 +110,17 @@ if [[ $firmware =~ (redmi-ac2100|phicomm-k2p|newifi-d2|k2p-32m-usb|XY-C5|xiaomi-
 		git clone -b master --depth 1 https://github.com/x-wrt/x-wrt openwrt
 		svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 		cd openwrt
-		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/ramips/mt7621/openwrt-sdk-21.02-SNAPSHOT-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/ramips/mt7621/openwrt-sdk-21.02-SNAPSHOT-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 elif [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
 		git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
 		svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 		cd openwrt
-		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 elif [[ $firmware == "x86_64" ]]; then
 		git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
 		svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 		cd openwrt
-		wget -cO sdk1.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/x86/64/openwrt-sdk-21.02-SNAPSHOT-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/x86/64/openwrt-sdk-21.02-SNAPSHOT-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 fi
 
 
@@ -169,21 +169,6 @@ echo
 echo
 echo
 sleep 3s
-
-if [ -f sdk1.tar.xz ]; then
-	mkdir sdk
-	tar -xJf sdk1.tar.xz -C sdk
-	cp -rf sdk/*/staging_dir/* ./staging_dir/
-	rm -rf sdk sdk1.tar.xz
-	if [ -f /usr/bin/python ]; then
-		ln -sf /usr/bin/python staging_dir/host/bin/python
-	else
-		ln -sf /usr/bin/python3 staging_dir/host/bin/python
-	fi
-	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
-	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
-	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
-fi
 
 make -j$(($(nproc)+1)) download -j$(($(nproc)+1)) &
 make -j$(($(nproc)+1)) || make -j1 V=s
