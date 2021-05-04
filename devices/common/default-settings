@@ -32,6 +32,9 @@ ln -s /sbin/poweroff /sbin/shutdown
 sed -i '/S99opkg/d' /etc/crontabs/root
 echo "0 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
 
+cpuinfo=`/sbin/cpuinfo`
+test -n "$cpuinfo" && sed -i "s/_('CPU Info'),cpuinfo.cpufreq,//" /www/luci-static/resources/view/status/include/10_system.js
+
 test $version -lt 1 && {
 	uci set luci.main.lang='auto'
 	uci set luci.main.mediaurlbase=/luci-static/edge
