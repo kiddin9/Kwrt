@@ -4,7 +4,7 @@ rm -Rf target/linux/ramips/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips/patches-5.4 target/linux/ramips/patches-5.4
 
 rm -rf target/linux/ramips/files/drivers/net/ethernet/ralink
-svn co https://github.com/x-wrt/x-wrt/trunk/target/linux/ramips/files/drivers/net/ethernet/ralink
+svn co https://github.com/x-wrt/x-wrt/trunk/target/linux/ramips/files/drivers/net/ethernet/ralink target/linux/ramips/files/drivers/net/ethernet/ralink
 
 wget -O target/linux/ramips/patches-5.4/990-mtk-driver-hwnat-compat-with-natflow.patch https://raw.githubusercontent.com/x-wrt/x-wrt/master/target/linux/ramips/patches-5.4/990-mtk-driver-hwnat-compat-with-natflow.patch
 
