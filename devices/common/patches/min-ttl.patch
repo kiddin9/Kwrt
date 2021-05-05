@@ -4,7 +4,7 @@
  		o.datatype = 'range(0,10000)';
  		o.placeholder = 150;
  
-+		o = s.taboption('advanced', form.Value, 'mini_ttl',
++		o = s.taboption('advanced', form.Value, 'min_ttl',
 +			_('Minimum TTL to send to clients'),
 +			_('Modify DNS entries minimum TTL (max is 86400, 0 is no modify)'));
 +		o.optional = true;
@@ -21,7 +21,7 @@
  
  	append_parm "$cfg" logfacility "--log-facility"
  
-+	append_parm "$cfg" mini_ttl "--min-ttl"
++	append_parm "$cfg" min_ttl "--min-ttl"
  	append_parm "$cfg" cachesize "--cache-size"
  	append_parm "$cfg" dnsforwardmax "--dns-forward-max"
  	append_parm "$cfg" port "--port"
