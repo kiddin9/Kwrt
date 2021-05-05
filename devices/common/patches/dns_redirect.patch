@@ -14,13 +14,11 @@
 
 --- a/package/network/services/dnsmasq/files/dnsmasq.init
 +++ b/package/network/services/dnsmasq/files/dnsmasq.init
-@@ -1080,6 +1080,15 @@ dnsmasq_start()
- 	procd_add_jail_mount_rw /var/run/dnsmasq/ $leasefile
+@@ -1122,7 +1122,12 @@ dnsmasq_start()
  
- 	procd_close_instance
-+
-+	config_get_bool dns_redirect "$cfg" dns_redirect 0
-+	config_get dns_port "$cfg" port 53
+ 	config_get_bool dns_redirect "$cfg" dns_redirect 0
+ 	config_get dns_port "$cfg" port 53
+-	[ "$dns_redirect" = 1 ] && iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
 +	[ $dns_redirect = 1 ] && {
 +	 iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
 +	 iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p tcp --dport 53 -j REDIRECT --to-ports $dns_port
@@ -30,41 +28,3 @@
  }
  
  dnsmasq_stop()
-@@ -1097,6 +1101,23 @@ dnsmasq_stop()
- 	rm -f ${BASEDHCPSTAMPFILE}.${cfg}.*.dhcp
- }
- 
-+iptables_clear()
-+{
-+	nums=$(iptables -t nat -n -L PREROUTING 2>/dev/null | grep -c "DNSMASQ")
-+	if [ -n "$nums" ]; then
-+		until [ "$nums" = 0 ]
-+		do
-+			rules=$(iptables -t nat -n -L PREROUTING --line-num 2>/dev/null | grep "DNSMASQ" | awk '{print $1}')
-+			for rule in $rules
-+			do
-+				iptables -t nat -D PREROUTING $rule 2> /dev/null
-+				break
-+			done
-+			nums=$(expr $nums - 1)
-+		done
-+	fi
-+}
-+
- add_interface_trigger()
- {
- 	local interface ignore
-@@ -1149,6 +1170,7 @@ start_service() {
- }
- 
- reload_service() {
-+	iptables_clear
- 	rc_procd start_service "$@"
- 	procd_send_signal dnsmasq "$@"
- }
-@@ -1175,4 +1197,5 @@ stop_service() {
- 	else
- 		config_foreach dnsmasq_stop dnsmasq
- 	fi
-+	iptables_clear
- }
