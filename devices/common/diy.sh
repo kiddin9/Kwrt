@@ -14,6 +14,8 @@ wget -O target/linux/generic/pending-5.4/601-add-kernel-imq-support.patch https:
 rm -rf package/network/services/ppp package/libs/libnfnetlink
 svn co https://github.com/openwrt/openwrt/trunk/package/network/services/ppp package/network/services/ppp
 svn co https://github.com/openwrt/openwrt/trunk/package/libs/libnfnetlink package/libs/libnfnetlink
+rm -rf package/network/services/dnsmasq
+svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/network/services/dnsmasq package/network/services/dnsmasq
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential
