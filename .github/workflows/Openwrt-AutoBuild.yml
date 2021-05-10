@@ -65,16 +65,10 @@ jobs:
         gitdate=$(date -d "$gitdate" +%s)
         now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
         if [[ $(expr $gitdate + 300) < $now ]]; then
-          gitdate=$(curl -H "Authorization: token ${{ secrets.REPO_TOKEN }}" -s "https://api.github.com/repos/garypang13/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
-          gitdate=$(date -d "$gitdate" +%s)
-          now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
-          if [[ $(expr $gitdate + 300) < $now ]]; then
           curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           --data '{"event_type": "update"}'
-          fi
-          sleep 10
         fi
 
     - name: Initialization environment
@@ -125,6 +119,7 @@ jobs:
         cp -rf devices/${{matrix.target}}/. openwrt/
         cd openwrt
         ./scripts/feeds update -a
+        cd feeds/custom && git pull
 
     - name: Load custom configuration
       run: |
