@@ -4,6 +4,9 @@ echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ra
 rm -Rf target/linux/ramips/.svn
 echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips/patches-5.4 target/linux/ramips/patches-5.4
 
+rm -rf include/kernel-version.mk
+wget -O include/kernel-version.mk https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-version.mk
+
 rm -rf package/feeds/custom/mt-drivers
 svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/lean/mt-drivers package/feeds/custom/mt-drivers
 

@@ -6,14 +6,6 @@ version=`uci get base_config.@status[0].version 2>/dev/null`
 test -n "${DISTRIB_ID}" || DISTRIB_ID=OpenWrt
 DISTRIB_ID=`echo -n $DISTRIB_ID | tr a-z A-Z`
 
-MACADDR=""
-test -e /usr/share/natcapd/board_mac.lua && MACADDR=`lua /usr/share/natcapd/board_mac.lua`
-test -n "$MACADDR" || MACADDR=`cat /etc/board.json | grep macaddr | tr a-f A-F | grep -o "[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]" | head -n1`
-test -n "$MACADDR" || MACADDR=`cat /sys/class/net/eth0/address | tr a-z A-Z`
-test -n "$MACADDR" || MACADDR=`cat /sys/class/net/eth1/address | tr a-z A-Z`
-test -n "$MACADDR" || MACADDR=`head -c6 /dev/urandom | hexdump -e '/1 "%02X:"' | head -c17`
-test -n "$MACADDR" || MACADDR=`head -c6 /dev/random | hexdump -e '/1 "%02X:"' | head -c17`
-
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
 sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
@@ -56,8 +48,7 @@ test $version -lt 1 && {
 	uci set uhttpd.main.redirect_https=0
 	uci commit uhttpd
 
-	SUBFIX=`echo -n $MACADDR | sed 's/://g' | tr a-z A-Z | tail -c4`
-	SSID=${DISTRIB_ID}_${SUBFIX}
+	SSID=${DISTRIB_ID}
 	SSID_PASSWD=88888888
 
 	uci set base_config.@status[0].SSID=${SSID}

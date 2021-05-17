@@ -107,7 +107,7 @@ esac
 done
 
 if [[ $firmware =~ (redmi-ac2100|phicomm-k2p|newifi-d2|k2p-32m-usb|XY-C5|xiaomi-r3p) ]]; then
-		git clone -b master --depth 1 https://github.com/x-wrt/x-wrt openwrt
+		git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
 		svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
 		cd openwrt
 		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/ramips/mt7621/openwrt-sdk-21.02-SNAPSHOT-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
