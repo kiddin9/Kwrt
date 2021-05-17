@@ -63,7 +63,7 @@ test $version -lt 1 && {
 	grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
 		echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
 
-	uci set turboacc.config.sfe_ipv6='1'
+	uci set turboacc.config.sfe_flow='0'
 	uci commit turboacc
 
 	uci set fstab.@global[0].anon_mount=1
