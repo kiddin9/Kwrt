@@ -15,6 +15,6 @@ test $version -lt 2 && {
 uci set base_config.@status[0].version=$version
 uci commit base_config
 
-sed -i '$a src/gz openwrt_custom https://op.supes.top/packages/x64' /etc/opkg/distfeeds.conf
+sed -i '1i src/gz openwrt_custom https://op.supes.top/packages/x64' /etc/opkg/distfeeds.conf
 
 exit 0
