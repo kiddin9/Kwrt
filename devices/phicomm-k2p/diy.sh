@@ -8,6 +8,8 @@ svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/kernel
 rm -rf include/kernel-version.mk
 wget -O include/kernel-version.mk https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-version.mk
 
+sed -i 's/kmod-mt7615d_dbdc/kmod-mt7615d luci-app-mtwifi/g' target/linux/ramips/image/mt7621.mk
+
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 
 rm -Rf files/etc/profile.d/sysinfo.sh
