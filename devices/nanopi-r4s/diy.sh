@@ -1,9 +1,12 @@
 #!/bin/bash
 
-rm -rf ./package/boot/uboot-rockchip target/linux/rockchip
+rm -rf ./package/boot/uboot-rockchip target/linux/{rockchip,generic}
 svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
 svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
-svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/arm-trusted-firmware-rk3328 package/boot/arm-trusted-firmware-rk3328
+svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic target/linux/generic
+
+rm -rf include/kernel-version.mk
+wget -O include/kernel-version.mk https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/include/kernel-version.mk
 
 rm -rf ./package/kernel/linux/modules/video.mk
 wget -P package/kernel/linux/modules/ https://github.com/immortalwrt/immortalwrt/raw/master/package/kernel/linux/modules/video.mk

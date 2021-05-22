@@ -1,7 +1,6 @@
-find target/linux/ramips/* -maxdepth 0 ! -path '*/patches-5.4' -exec rm -Rf '{}' \;
-echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips target/linux/ramips
-rm -Rf target/linux/ramips/.svn
-echo -e "\q" | svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips/patches-5.4 target/linux/ramips/patches-5.4
+rm -Rf target/linux/{ramips,generic}
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/ramips target/linux/ramips
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic target/linux/generic
 
 rm -rf include/kernel-version.mk
 wget -O include/kernel-version.mk https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-version.mk
