@@ -89,6 +89,10 @@ test $version -lt 1 && {
 
 	uci set nft-qos.default.limit_enable='0'
 	uci commit nft-qos
+
+	uci set system.@system[0].conloglevel='4'
+	uci set system.@system[0].cronloglevel='8'
+	uci commit system
 }
 
 # kB
