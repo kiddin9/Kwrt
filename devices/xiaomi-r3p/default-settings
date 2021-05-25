@@ -11,6 +11,5 @@ uci commit base_config
 
 sed -i '1i src/gz openwrt_custom https://op.supes.top/packages/mipsel' /etc/opkg/distfeeds.conf
 
-rm -rf /etc/config/wireless
 
 exit 0
