@@ -217,9 +217,16 @@ jobs:
         echo "NOTICE=请分配不少于800M的存储容量" >> $GITHUB_ENV
         fi
 
+    - name: Upload firmware for artifact
+      uses: actions/upload-artifact@main
+      continue-on-error: true
+      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
+      with:
+        name: ${{ env.date3 }} ${{matrix.target}}
+        path: ${{ env.FIRMWARE }}
+
     - name: Deploy files to server
       uses: easingthemes/ssh-deploy@master
-      continue-on-error: true
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -271,14 +278,6 @@ jobs:
         name: ${{ env.date2 }} ${{matrix.target}} ${{ env.EMOJI }}
         tag_name: ${{ env.date }}_${{matrix.target}}
         body_path: release.txt
-
-    - name: Upload firmware for artifact
-      uses: actions/upload-artifact@main
-      continue-on-error: true
-      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
-      with:
-        name: ${{ env.date3 }} ${{matrix.target}}
-        path: ${{ env.FIRMWARE }}
         
     - name: WeChat notification
       continue-on-error: true
