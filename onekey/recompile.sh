@@ -40,8 +40,8 @@ elif [ $firmware == "friendlyarm_nanopi-r2s" ]; then
 	firmware="nanopi-r2s"
 elif [ $firmware == "friendlyarm_nanopi-r4s" ]; then
 	firmware="nanopi-r4s"
-elif [ $firmware == "xiaoyu_xy-c5" ]; then
-	firmware="XY-C5"
+elif [ $firmware == "rpi-4" ]; then
+	firmware="Rpi-4B"
 elif [ $firmware == "d-team_newifi-d2" ]; then
 	firmware="newifi-d2"
 else
