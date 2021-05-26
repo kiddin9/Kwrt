@@ -42,15 +42,15 @@
 | 设备           | 固件下载                                             | 说明                                 |
 |----------------|-----------------------------------------------------|--------------------------------------|
 | X86_64         | [📥](https://op.supes.top/firmware/x86_64/)         | 请分配不少于1G的存储空间           |
-| Redmi-AC2100 (红米AC2100)   | [📥](https://op.supes.top/firmware/redmi-ac2100/)   | 在breed中需要先刷底包                |
+| Redmi-AC2100 (红米AC2100)   | [📥](https://op.supes.top/firmware/redmi-ac2100/)   | 在breed中需要先刷底包       |
 | Phicomm-K2P (斐讯K2P)    | [📥](https://op.supes.top/firmware/phicomm-k2p/)    | 闪存布局请使用默认的公版     |
 | K2P-32M-USB (K2P 32M USB版)   | [📥](https://op.supes.top/firmware/k2p-32m-usb/)    | 闪存布局请使用默认的公版     |
-| NanoPi-R2S    | [📥](https://op.supes.top/firmware/nanopi-r2s/)     | 默认交换了网口,靠近电源口的是WAN口   |
-| Raspberry Pi 4B (树莓派4B)| [📥](https://op.supes.top/firmware/Rpi-4B/)         |                                      |
-| NanoPi-R4S    | [📥](https://op.supes.top/firmware/nanopi-r4s/)     |    |
-| Newifi-D2 (新路由3)      | [📥](https://op.supes.top/firmware/newifi-d2/)      |                                      |                                     |
-| Xiaomi-R3P (小米路由PRO)    | [📥](https://op.supes.top/firmware/xiaomi-r3p/)     |                                      |
-| XY-C5 (小娱-C5)         | [📥](https://op.supes.top/firmware/XY-C5/)          |                                      |
+| NanoPi-R2S    | [📥](https://op.supes.top/firmware/nanopi-r2s/)     | 默认交换了网口,靠近电源口的是WAN口   |         |
+| NanoPi-R4S    | [📥](https://op.supes.top/firmware/nanopi-r4s/)     |             |
+| Raspberry Pi 4B (树莓派4B)| [📥](https://op.supes.top/firmware/Rpi-4B/)         |   
+| Newifi-D2 (新路由3)      | [📥](https://op.supes.top/firmware/newifi-d2/)      |      |        |
+| Xiaomi-R3P (小米路由PRO)    | [📥](https://op.supes.top/firmware/xiaomi-r3p/)     |           |
+| XY-C5 (小娱-C5)         | [📥](https://op.supes.top/firmware/XY-C5/)          |           |
 
 
 后台入口 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
