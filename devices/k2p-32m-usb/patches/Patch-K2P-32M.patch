@@ -1,16 +1,24 @@
---- a/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
-+++ b/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
-@@ -8,5 +8,5 @@
- };
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
+@@ -3,5 +3,5 @@
+ #include "mt7621_phicomm_k2p.dtsi"
  
  &firmware {
--	reg = <0xa0000 0x1f60000>;
+-	reg = <0xa0000 0xf60000>;
 +	reg = <0x50000 0x1fb0000>;
  };
 
 --- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
 +++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
-@@ -80,14 +80,8 @@
+@@ -52,6 +52,7 @@
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-max-frequency = <10000000>;
++		broken-flash-reset;
+ 
+ 		partitions {
+ 			compatible = "fixed-partitions";
+@@ -76,13 +77,7 @@
  				read-only;
  			};
  
@@ -28,12 +36,10 @@
 
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -830,7 +830,7 @@ endef
- TARGET_DEVICES += phicomm_k2p
+@@ -814,5 +814,5 @@
  
- define Device/phicomm_k2p-32m
--  IMAGE_SIZE := 32128k
+ define Device/phicomm_k2p
+-  IMAGE_SIZE := 15744k
 +  IMAGE_SIZE := 32448k
    DEVICE_VENDOR := Phicomm
    DEVICE_MODEL := K2P
-   DEVICE_VARIANT := 32M
