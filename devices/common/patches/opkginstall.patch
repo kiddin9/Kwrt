@@ -24,7 +24,7 @@
 
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
-@@ -199,6 +199,10 @@ default_prerm() {
+@@ -199,6 +199,11 @@ default_prerm() {
  		fi
  	done
  
@@ -41,6 +41,7 @@
  
 +	grep -q '"nas",' /usr/lib/lua/luci/controller/*.lua && ! grep -q '_("NAS")' /usr/lib/lua/luci/controller/*.lua &&
 +		sed -i 's/local page/local page\nentry({"admin", "nas"}, firstchild(), _("NAS") , 45).dependent = false/' /usr/lib/lua/luci/controller/turboacc.lua
++	sed -i 's/ifname/device/' /etc/config/network
 +
  	if [ -d "$root/rootfs-overlay" ]; then
  		cp -R $root/rootfs-overlay/. $root/
