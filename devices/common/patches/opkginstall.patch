@@ -24,7 +24,7 @@
 
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
-@@ -199,6 +199,11 @@ default_prerm() {
+@@ -199,6 +199,10 @@ default_prerm() {
  		fi
  	done
  
@@ -35,7 +35,7 @@
  	return $ret
  }
  
-@@ -250,6 +254,9 @@ default_postinst() {
+@@ -250,6 +254,10 @@ default_postinst() {
  		ret=$?
  	fi
  
