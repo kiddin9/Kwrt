@@ -45,21 +45,13 @@ echo "
 
 1. X86_64
 
-2. K2p
+2. r2s
 
-3. K2p 32M
+3. r4s
 
-4. RedMi_AC2100
+4. Rpi-4B
 
-5. r2s
-
-6. r4s
-
-7. newifi-d2
-
-8. Rpi-4B
-
-9. Exit
+5. Exit
 
 "
 
@@ -73,34 +65,18 @@ case $CHOOSE in
 	break
 	;;
 	2)
-		firmware="phicomm-k2p"
-	break
-	;;
-	3)
-		firmware="k2p-32m-usb"
-	break
-	;;
-	4)
-		firmware="redmi-ac2100"
-	break
-	;;
-	5)
 		firmware="nanopi-r2s"
 	break
 	;;
-	6)
+	3)
 		firmware="nanopi-r4s"
 	break
 	;;
-	7)
-		firmware="newifi-d2"
-	break
-	;;
-	8)
+	4)
 		firmware="Rpi-4B"
 	break
 	;;
-	9)	exit 0
+	5)	exit 0
 	;;
 
 esac
@@ -109,10 +85,7 @@ done
 git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
 svn co https://github.com/garypang13/OpenWrt/trunk/devices openwrt/devices
 
-if [[ $firmware =~ (redmi-ac2100|phicomm-k2p|newifi-d2|k2p-32m-usb|XY-C5|xiaomi-r3p) ]]; then
-		cd openwrt
-		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/ramips/mt7621/openwrt-sdk-21.02-SNAPSHOT-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-elif [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
+if [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
 		cd openwrt
 		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 elif [[ $firmware == "x86_64" ]]; then

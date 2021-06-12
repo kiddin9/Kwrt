@@ -19,7 +19,7 @@ echo
 clear
 
 rm -Rf openwrt/common openwrt/files openwrt/devices
-svn co https://github.com/garypang13/Actions-OpenWrt/trunk/devices openwrt/devices
+svn co https://github.com/garypang13/OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 
 git checkout .
@@ -30,11 +30,7 @@ git pull
  } || { firmware=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
  }
 
-if [ $firmware == "xiaomi_redmi-router-ac2100" ]; then
-	firmware="redmi-ac2100"
-elif [ $firmware == "phicomm_k2p" ]; then
-	firmware="phicomm-k2p"
-elif [ $firmware == "x86_64" ]; then
+if [ $firmware == "x86_64" ]; then
 	firmware="x86_64"
 elif [ $firmware == "friendlyarm_nanopi-r2s" ]; then
 	firmware="nanopi-r2s"

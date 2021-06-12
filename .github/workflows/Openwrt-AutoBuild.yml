@@ -95,9 +95,7 @@ jobs:
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
-        if [[ ${{matrix.target}} =~ (redmi-ac2100|phicomm-k2p|newifi-d2|k2p-32m-usb|XY-C5|xiaomi-r3p) ]]; then
-            wget -cO sdk.tar.xz https://downloads.openwrt.org/releases/21.02-SNAPSHOT/targets/ramips/mt7621/openwrt-sdk-21.02-SNAPSHOT-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-        elif [[ ${{matrix.target}} == "x86_64" ]]; then
+        if [[ ${{matrix.target}} == "x86_64" ]]; then
             wget -cO sdk.tar.xz https://downloads.openwrt.org/releases/21.02-SNAPSHOT/targets/x86/64/openwrt-sdk-21.02-SNAPSHOT-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         elif [[ ${{matrix.target}} =~ (nanopi-r2s|nanopi-r4s) ]]; then
             wget -cO sdk.tar.xz https://downloads.openwrt.org/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
@@ -200,8 +198,6 @@ jobs:
         cd firmware
         echo ${{ env.date4 }} > version.txt
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *
-        rename -v "s/xiaomi_redmi-router/redmi/" *bin
-        rename -v "s/(d-team_|xiaoyu_)//" *bin
         rename -v "s/friendlyarm_//" *gz
         md5=$(md5sum ${{ env.date3 }}* | awk '{print $1}') 2>/dev/null
         echo $md5 >> version.txt
@@ -210,9 +206,7 @@ jobs:
         RANDOM=$$$(date +%s)
         rand=$[$RANDOM % ${#Emoji[@]}]
         echo "EMOJI=${Emoji[$rand]}" >> $GITHUB_ENV
-        if [ ${{matrix.target}} == "phicomm-k2p" ]; then
-        echo "NOTICE=刷机时breed里的闪存布局请选择斐讯而非默认的公版" >> $GITHUB_ENV
-        elif [ ${{matrix.target}} == "x86_64" ]; then
+        if [ ${{matrix.target}} == "x86_64" ]; then
         echo "NOTICE=请分配不少于800M的存储容量" >> $GITHUB_ENV
         fi
 
