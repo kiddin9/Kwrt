@@ -199,7 +199,7 @@ jobs:
         echo ${{ env.date4 }} > version.txt
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *
         rename -v "s/friendlyarm_//" *gz
-        md5=$(md5sum ${{ env.date3 }}* | awk '{print $1}') 2>/dev/null
+        md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
         echo $md5 >> version.txt
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
