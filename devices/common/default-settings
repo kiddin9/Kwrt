@@ -99,9 +99,6 @@ test $version -lt 1 && {
 
 # kB
 memtotal=`grep MemTotal /proc/meminfo | awk '{print $2}'`
-cachesize=2048
-dnsforwardmax=2048
-nf_conntrack_max=16384
 if test $memtotal -ge 1048576; then
 	# > 1024M
 	cachesize=10000
