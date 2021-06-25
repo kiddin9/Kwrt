@@ -69,8 +69,8 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
 ### 默认插件包含:
 
 + Opkg 软件包管理
-+ SSR-PLUS
-+ Adblock 基于DNS的广告过滤
++ Bypass 智能过墙
++ DNSfilter 基于DNS的广告过滤
 + UPNP 自动端口转发
 + Turbo ACC 网络加速
 
