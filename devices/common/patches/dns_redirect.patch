@@ -11,20 +11,3 @@
  		s.taboption('general', form.Flag, 'domainneeded',
  			_('Domain required'),
  			_('Don\'t forward <abbr title="Domain Name System">DNS</abbr>-Requests without <abbr title="Domain Name System">DNS</abbr>-Name'));
-
---- a/package/network/services/dnsmasq/files/dnsmasq.init
-+++ b/package/network/services/dnsmasq/files/dnsmasq.init
-@@ -1122,7 +1122,12 @@ dnsmasq_start()
- 
- 	config_get_bool dns_redirect "$cfg" dns_redirect 0
- 	config_get dns_port "$cfg" port 53
--	[ "$dns_redirect" = 1 ] && iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
-+	[ $dns_redirect = 1 ] && {
-+	 iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
-+	 iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p tcp --dport 53 -j REDIRECT --to-ports $dns_port
-+	 ip6tables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
-+	 ip6tables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p tcp --dport 53 -j REDIRECT --to-ports $dns_port
-+	}
- }
- 
- dnsmasq_stop()

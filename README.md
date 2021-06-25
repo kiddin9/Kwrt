@@ -2,19 +2,19 @@
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
-[4]: https://github.com/garypang13/Actions-OpenWrt/pulls
+[4]: https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi/pulls
 [5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg
-[6]: https://github.com/garypang13/Actions-OpenWrt/issues/new
+[6]: https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi/issues/new
 [7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
-[8]: https://github.com/garypang13/Actions-OpenWrt/releases
+[8]: https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
 [11]: https://t.me/opwrts
-[12]: https://github.com/garypang13/Actions-OpenWrt/workflows/Openwrt-AutoBuild/badge.svg
-[13]: https://github.com/garypang13/Actions-OpenWrt/actions
+[12]: https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi/actions/workflows/Openwrt-AutoBuild.yml/badge.svg
+[13]: https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi/actions
 
 [![license][1]][2]
-[![GitHub Stars](https://img.shields.io/github/stars/garypang13/Actions-OpenWrt.svg?style=flat-square&label=Stars)](https://github.com/garypang13/Actions-OpenWrt-Nginx/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/garypang13/Actions-OpenWrt.svg?style=flat-square&label=Forks)](https://github.com/garypang13/Actions-OpenWrt-Nginx/fork)
+[![GitHub Stars](https://img.shields.io/github/stars/garypang13/OpenWrt_x86-r2s-r4s-Rpi.svg?style=flat-square&label=Stars)](https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi-Nginx/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/garypang13/OpenWrt_x86-r2s-r4s-Rpi.svg?style=flat-square&label=Forks)](https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi-Nginx/fork)
 [![PRs Welcome][3]][4]
 [![Issue Welcome][5]][6]
 [![AutoBuild][12]][13]
@@ -22,7 +22,7 @@
 <a href="https://t.me/opwrts" target="_blank">Telegram</a>
 ### 特色:
 
-+ Cutting edge,openwrt官方openwrt-21.02分支版本, 内核升级到5.4. 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-21.02分支版本, 内核升级到5.10. 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能,后台在线选装插件,自建插件仓库囊括了市面上主流开源插件,系统升级不丢失插件和配置.
 
@@ -55,7 +55,7 @@
 
 云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法触发编译
 
-在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.有 [安全隐患](https://github.com/garypang13/Actions-OpenWrt/issues/23)
+在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.有 [安全隐患](https://github.com/garypang13/OpenWrt_x86-r2s-r4s-Rpi/issues/23)
 
 Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com) 推送编译结果到微信
 
@@ -116,7 +116,7 @@ Build OpenWrt using GitHub Actions
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
 - [CTCGFW's Team](https://github.com/immortalwrt/immortalwrt)
 - [Lienol](https://github.com/Lienol/openwrt)
-- [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
+- [P3TERX](https://github.com/P3TERX/OpenWrt_x86-r2s-r4s-Rpi/blob/master/LICENSE)
 - [upload-release-action](https://github.com/svenstaro/upload-release-action)
 - [Microsoft](https://www.microsoft.com)
 - [Microsoft Azure](https://azure.microsoft.com)

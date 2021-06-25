@@ -34,7 +34,7 @@
 -			start_dnsforwarder
 -		fi
 -		change_dns
--		nohup "/usr/share/dnscache/dnscache-while.sh" > "/var/log/dnscache.file" 2>&1 &
+-		/usr/share/dnscache/dnscache-while.sh > "/var/log/dnscache.file" 2>&1 &
 -	else
 -		stop_dnscache
 -		revert_dns
