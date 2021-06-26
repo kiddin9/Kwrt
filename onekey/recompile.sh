@@ -19,7 +19,7 @@ echo
 clear
 
 rm -Rf openwrt/common openwrt/files openwrt/devices
-svn co https://github.com/garypang13/OpenWrt/trunk/devices openwrt/devices
+svn export https://github.com/garypang13/OpenWrt/trunk/devices openwrt/devices
 cd openwrt
 
 git checkout .

@@ -85,7 +85,7 @@ done
 
 
 git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
-svn co https://github.com/garypang13/OpenWrt/trunk/devices openwrt/devices
+svn export https://github.com/garypang13/OpenWrt/trunk/devices openwrt/devices
 
 cd openwrt
 

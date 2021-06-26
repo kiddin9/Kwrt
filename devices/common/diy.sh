@@ -7,22 +7,21 @@ rm -Rf feeds/packages/utils/cgroupfs-mount
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
 rm -rf target/linux package/kernel include/{kernel-version.mk,kernel-defaults.mk}
-svn co https://github.com/openwrt/openwrt/trunk/target/linux target/linux ; rm -rf target/linux/.svn
-svn co https://github.com/openwrt/openwrt/trunk/package/kernel package/kernel ; rm -rf package/kernel/.svn
+svn export https://github.com/openwrt/openwrt/trunk/target/linux target/linux
+svn export https://github.com/openwrt/openwrt/trunk/package/kernel package/kernel
 wget -O include/kernel-version.mk https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-version.mk
 wget -O include/kernel-defaults.mk https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-defaults.mk
 sed -i '/libelf\/compile/d' tools/Makefile
 sed -i 's/ libelf//' tools/Makefile
-find package/*/ -maxdepth 1 -name ".svn" | xargs -i rm -rf {}
-rm -Rf tools/upx && svn co https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-rm -Rf tools/ucl && svn co https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
+rm -Rf tools/upx && svn export https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
+rm -Rf tools/ucl && svn export https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
-echo -e "\q" | svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10/
+svn export https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
 rm -rf package/network/services/ppp package/libs/libnfnetlink
-svn co https://github.com/openwrt/openwrt/trunk/package/network/services/ppp package/network/services/ppp
-svn co https://github.com/openwrt/openwrt/trunk/package/libs/libnfnetlink package/libs/libnfnetlink
+svn export https://github.com/openwrt/openwrt/trunk/package/network/services/ppp package/network/services/ppp
+svn export https://github.com/openwrt/openwrt/trunk/package/libs/libnfnetlink package/libs/libnfnetlink
 rm -rf package/network/services/dnsmasq
-svn co https://github.com/immortalwrt/immortalwrt/branches/master/package/network/services/dnsmasq package/network/services/dnsmasq
+svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/network/services/dnsmasq package/network/services/dnsmasq
 sed -i "s/'class': 'table'/'class': 'table memory'/g" package/*/*/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite/' package/Makefile
 sed -i 's/+acme\( \|$\)/+acme +acme-dnsapi\1/g' package/*/*/luci-app-acme/Makefile
@@ -38,8 +37,8 @@ find target/linux -path "target/linux/*/config-*" | xargs -i sed -i '$a CONFIG_A
 CONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\nCONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' {}
 sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/files/uhttpd.config
 rm -rf ./feeds/packages/lang/{golang,node}
-svn co https://github.com/immortalwrt/packages/trunk/lang/golang feeds/packages/lang/golang
-svn co https://github.com/immortalwrt/packages/trunk/lang/node feeds/packages/lang/node
+svn export https://github.com/immortalwrt/packages/trunk/lang/golang feeds/packages/lang/golang
+svn export https://github.com/immortalwrt/packages/trunk/lang/node feeds/packages/lang/node
 mkdir package/network/config/firewall/patches
 wget -O package/network/config/firewall/patches/fullconenat.patch https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
