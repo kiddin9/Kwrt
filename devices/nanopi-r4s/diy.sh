@@ -4,6 +4,7 @@ rm -rf ./package/boot/uboot-rockchip target/linux/{rockchip,generic}
 svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
 svn export https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
 svn export https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic target/linux/generic
+svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/arm-trusted-firmware-rk3328 package/boot/arm-trusted-firmware-rk3328
 
 rm -rf include/kernel-version.mk
 wget -O include/kernel-version.mk https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/include/kernel-version.mk
@@ -14,7 +15,9 @@ wget -P package/kernel/linux/modules/ https://github.com/immortalwrt/immortalwrt
 sed -i 's/5.4/5.10/g' target/linux/rockchip/Makefile
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
-sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
+#sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
+
+sed -i "s,'eth1' 'eth0','eth0' 'eth1',g" target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 
 sed -i '/set_interface_core 20 "eth1"/a\set_interface_core 8 "ff3c0000" "ff3c0000.i2c"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 sed -i '/set_interface_core 20 "eth1"/a\ethtool -C eth0 rx-usecs 1000 rx-frames 25 tx-usecs 100 tx-frames 25' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
