@@ -11,8 +11,6 @@ svn export https://github.com/openwrt/openwrt/trunk/target/linux target/linux
 svn export https://github.com/openwrt/openwrt/trunk/package/kernel package/kernel
 wget -O include/kernel-version.mk https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-version.mk
 wget -O include/kernel-defaults.mk https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-defaults.mk
-sed -i '/libelf\/compile/d' tools/Makefile
-sed -i 's/ libelf//' tools/Makefile
 rm -Rf tools/upx && svn export https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 rm -Rf tools/ucl && svn export https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
