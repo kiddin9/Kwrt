@@ -21,7 +21,7 @@
 +				sed -i "/Existing conffile/d" /tmp/opkg.err || true
 +				sed -i "/Couldn't unlink/d" /tmp/opkg.err || true
 +				sed -i "/pkg_hash_/d" /tmp/opkg.err || true
-+				[ "`cat /tmp/opkg.err`" == "Collected errors:" ] && rm -f /tmp/opkg.err || true
++				[[ "`cat /tmp/opkg.err`" =~ "^Collected errors:(\nCollected errors:){0,}$" ]] && rm -f /tmp/opkg.err || true
  				code=$?
  				stdout=$(cat /tmp/opkg.out)
  				stderr=$(cat /tmp/opkg.err)
