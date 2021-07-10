@@ -1,17 +1,13 @@
 --- a/package/feeds/custom/luci-app-turboacc/Makefile
 +++ b/package/feeds/custom/luci-app-turboacc/Makefile
-@@ -12,10 +12,7 @@ PKG_LICENSE:=GPL-3.0-only
- PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
+@@ -23,7 +23,6 @@ LUCI_PKGARCH:=all
+ define Package/luci-app-turboacc/config
+ config PACKAGE_TURBOACC_INCLUDE_OFFLOADING
+ 	bool "Include Flow Offload"
+-	depends on PACKAGE_TURBOACC_INCLUDE_SHORTCUT_FE=n
+ 	default y
  
- LUCI_TITLE:=LuCI support for Flow Offload / Shortcut-FE
--LUCI_DEPENDS:=+pdnsd-alt \
--	+PACKAGE_TURBOACC_INCLUDE_BBR_CCA:kmod-tcp-bbr \
--	+PACKAGE_TURBOACC_INCLUDE_DNSFORWARDER:dnsforwarder \
--	+PACKAGE_TURBOACC_INCLUDE_DNSPROXY:dnsproxy \
-+LUCI_DEPENDS:=+PACKAGE_TURBOACC_INCLUDE_BBR_CCA:kmod-tcp-bbr \
- 	+PACKAGE_TURBOACC_INCLUDE_OFFLOADING:kmod-ipt-offload \
- 	+PACKAGE_TURBOACC_INCLUDE_SHORTCUT_FE:kmod-fast-classifier
- LUCI_PKGARCH:=all
+ config PACKAGE_TURBOACC_INCLUDE_SHORTCUT_FE
 
 --- a/package/feeds/custom/luci-app-turboacc/luasrc/model/cbi/turboacc.lua
 +++ b/package/feeds/custom/luci-app-turboacc/luasrc/model/cbi/turboacc.lua
