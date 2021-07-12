@@ -201,6 +201,8 @@ jobs:
         rename -v "s/friendlyarm_//" *gz
         md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
         echo $md5 >> version.txt
+        kernel_version=$(cat ../openwrt/include/kernel-version.mk | grep LINUX_KERNEL_HASH-5.10* | cut -f 3 -d ' ')
+        echo $kernel_version >> version.txt
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         RANDOM=$$$(date +%s)
