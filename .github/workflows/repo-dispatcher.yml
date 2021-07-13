@@ -38,7 +38,7 @@ jobs:
     - name: Trigger Compile
       run: |
         sudo timedatectl set-timezone "$TZ"
-        if [[ ${{ github.event.inputs.skip }} == 'true' ]]; then
+        if [[ "${{ github.event.inputs.skip }}" == 'true' ]]; then
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
