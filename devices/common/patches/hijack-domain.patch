@@ -14,7 +14,7 @@
 +		ss.addremove = true;
 +		ss.anonymous = true;
 +
-+		so = ss.option(form.Value, 'name', _('Domain name'));
++		so = ss.option(form.Value, 'name', _('Domain Name'));
 +		so.datatype = 'hostname';
 +		so.rmempty  = true;
 +

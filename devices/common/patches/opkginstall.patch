@@ -13,7 +13,7 @@
  
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
-+				if [[ $@ == "luci-app-*" ]]; then
++				if [[ $@ == luci-app-* ]]; then
 +					$opkg $action luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn </dev/null >>/tmp/opkg.out 2>/dev/null
 +				fi
 +				sed -i "/resolve_conffiles/d" /tmp/opkg.err || true
