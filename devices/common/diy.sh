@@ -1,9 +1,8 @@
 #!/bin/bash
 #=================================================
 rm -Rf feeds/custom/diy
-rm -Rf feeds/packages/net/{smartdns,mwan3,miniupnpd,aria2,nft-qos,https-dns-proxy,shadowsocks-libev,frp,openvpn} feeds/luci/applications/luci-app-{dockerman,nft-qos,smartdns,frpc,frps,https-dns-proxy,samba4,ksmbd}
-rm -Rf feeds/packages/utils/cgroupfs-mount
 ./scripts/feeds update luci packages custom
+./scripts/feeds install -a -p custom
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
 rm -rf target/linux package/kernel include/{kernel-version.mk,kernel-defaults.mk}
