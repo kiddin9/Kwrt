@@ -32,7 +32,7 @@
 +
 +		case "$action" in
 +			install)
-+				[[ "$(opkg list-installed | cut -f 1 -d ' ' | grep $@)" ]] && {
++				[[ "$(opkg list-installed | cut -f 1 -d ' ' | grep $@)" && ! "$(cat /etc/backup/user_installed.opkg | grep ^$@$)" ]] && {
 +				echo $@ >>/etc/backup/user_installed.opkg
 +				}
 +			;;
