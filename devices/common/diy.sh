@@ -6,8 +6,8 @@ rm -Rf feeds/custom/diy
 ./scripts/feeds install -a
 sed -i 's/Os/O2/g' include/target.mk
 rm -rf target/linux package/kernel include/{kernel-version.mk,kernel-defaults.mk}
-svn export https://github.com/rsalvaterra/openwrt/branches/5.10-bump/target/linux target/linux
-wget -O include/kernel-version.mk https://raw.githubusercontent.com/rsalvaterra/openwrt/5.10-bump/include/kernel-version.mk
+svn export https://github.com/openwrt/openwrt/trunk/target/linux target/linux
+wget -O include/kernel-version.mk https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-version.mk
 svn export https://github.com/openwrt/openwrt/trunk/package/kernel package/kernel
 wget -O include/kernel-defaults.mk https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-defaults.mk
 rm -Rf tools/upx && svn export https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx

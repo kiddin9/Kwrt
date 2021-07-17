@@ -153,7 +153,7 @@
  
  	if [ "$SAVE_INSTALLED_PKGS" -eq 1 ]; then
  		echo "${INSTALLED_PACKAGES}" >> "$CONFFILES"
-+		echo "/etc/backup/user_installed.opkg" >> "$CONFFILES"
++		echo "${ETCBACKUP_DIR}/user_installed.opkg" >> "$CONFFILES"
  		mkdir -p "$ETCBACKUP_DIR"
  		# Avoid touching filesystem on each backup
  		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"
