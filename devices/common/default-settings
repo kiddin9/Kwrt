@@ -23,7 +23,7 @@ ln -s /sbin/poweroff /sbin/shutdown
 
 sed -i '/S99opkg/d' /etc/crontabs/root
 sec=$(awk 'BEGIN{srand();sum=rand()*60;printf("%d",sum)}')
-echo "0 $sec * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
+echo "$sec 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
 sed -i '/memclean/d' /etc/crontabs/root
 echo "*/30 * * * * sh /sbin/memclean" >> /etc/crontabs/root
 
