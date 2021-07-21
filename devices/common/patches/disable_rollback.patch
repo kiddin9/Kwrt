@@ -1,5 +1,5 @@
---- a/modules/luci-base/htdocs/luci-static/resources/luci.js
-+++ b/modules/luci-base/htdocs/luci-static/resources/luci.js
+--- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/luci.js
++++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/luci.js
 @@ -2177,7 +2177,7 @@
  			if (!hasmap)
  				readonly = !LuCI.prototype.hasViewPermission();
