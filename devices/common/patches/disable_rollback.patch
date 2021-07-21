@@ -1,6 +1,6 @@
---- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/luci.js
-+++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/luci.js
-@@ -2176,7 +2176,7 @@
+--- a/modules/luci-base/htdocs/luci-static/resources/luci.js
++++ b/modules/luci-base/htdocs/luci-static/resources/luci.js
+@@ -2177,7 +2177,7 @@
  			if (!hasmap)
  				readonly = !LuCI.prototype.hasViewPermission();
  
@@ -9,3 +9,12 @@
  				0: [ _('Save & Apply') ],
  				1: [ _('Apply unchecked') ]
  			}, {
+@@ -2674,7 +2674,7 @@
+ 						class: 'btn primary',
+ 						click: function() {
+ 							var loc = window.location;
+-							window.location = loc.protocol + '//' + loc.host + loc.pathname + loc.search;
++							window.location = loc.protocol + '//' + loc.host;
+ 						}
+ 					}, _('To login…')))
+ 			]);

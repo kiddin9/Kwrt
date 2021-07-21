@@ -44,7 +44,6 @@ sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
 sed -i 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
-sed -i '/killall -HUP/d' feeds/luci/luci.mk
 find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
 for ipk in $(find package/feeds/custom/* -maxdepth 0); do
 	if [[ ! -d "$ipk/patches" && ! "$(grep "codeload.github.com" $ipk/Makefile)" ]]; then
