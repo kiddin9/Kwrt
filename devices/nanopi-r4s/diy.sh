@@ -1,16 +1,12 @@
 #!/bin/bash
 
-rm -rf ./package/boot/uboot-rockchip target/linux/{rockchip,generic}
-svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
-svn export https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
-svn export https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic target/linux/generic
-svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/arm-trusted-firmware-rk3328 package/boot/arm-trusted-firmware-rk3328
+rm -rf package/boot/uboot-rockchip
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
+svn export --force https://github.com/openwrt/openwrt/trunk/target/linux/rockchip/patches-5.10 target/linux/rockchip/patches-5.10
+rm -Rf target/linux/rockchip/patches-5.10/{006-*-NanoPi-R,007-*-R4S}.patch
 
-rm -rf include/kernel-version.mk
-wget -O include/kernel-version.mk https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/include/kernel-version.mk
-
-rm -rf ./package/kernel/linux/modules/video.mk
-wget -P package/kernel/linux/modules/ https://github.com/immortalwrt/immortalwrt/raw/master/package/kernel/linux/modules/video.mk
+curl https://github.com/immortalwrt/immortalwrt/raw/master/package/kernel/linux/modules/video.mk>package/kernel/linux/modules/video.mk
 
 sed -i 's/5.4/5.10/g' target/linux/rockchip/Makefile
 
