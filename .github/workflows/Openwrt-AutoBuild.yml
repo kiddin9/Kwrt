@@ -61,11 +61,11 @@ jobs:
 
     - name: Trigger Packages Update
       run: |
-        gitdate=$(curl -s "https://api.github.com/repos/garypang13/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].updated_at')
+        gitdate=$(curl -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].updated_at')
         gitdate=$(date -d "$gitdate" +%s)
         now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
         if [[ $(expr $gitdate + 300) < $now ]]; then
-          curl -X POST https://api.github.com/repos/garypang13/openwrt-packages/dispatches \
+          curl -X POST https://api.github.com/repos/kiddin9/openwrt-packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           --data '{"event_type": "update"}'
@@ -159,7 +159,7 @@ jobs:
         sed -i '$i uci commit network' openwrt/package/*/*/default-settings/files/uci.defaults
               
     - name: SSH connection to Actions
-      uses: garypang13/debugger-action@master
+      uses: kiddin9/debugger-action@master
       if: contains(github.event.action, 'ssh')
 
     - name: Download package
