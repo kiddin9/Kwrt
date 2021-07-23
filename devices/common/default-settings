@@ -77,7 +77,7 @@ test $version -lt 1 && {
  
  	test ! -f /etc/config/placeholder && {
 	sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
-	uci set network.lan.ipaddr="10.0.0.1"
+	uci set network.lan.ipaddr="192.168.2.1"
 	uci set network.@globals[0].packet_steering=1
 	uci commit network
 	}
