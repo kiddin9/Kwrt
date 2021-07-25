@@ -47,7 +47,7 @@ jobs:
          
         else
           kernel_r=$(curl -s https://op.supes.top/firmware/x86_64/version.txt | tr "\r\n" "," | cut -f 3 -d ,)
-          kernel_l=$(curl -s https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-version.mk | grep LINUX_KERNEL_HASH-5.10* | cut -f 3 -d ' ')
+          kernel_l=$(curl -s https://raw.githubusercontent.com/openwrt/openwrt/master/include/kernel-version.mk | grep LINUX_KERNEL_HASH-5.4* | cut -f 3 -d ' ')
             if [ $kernel_r != $kernel_l ]; then
               curl \
               -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
