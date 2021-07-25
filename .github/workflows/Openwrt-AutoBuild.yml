@@ -190,10 +190,9 @@ jobs:
     - name: Organize files
       id: organize
       run: |
-        mkdir firmware && find openwrt/bin/targets/*/*/ -maxdepth 1 \
+        mkdir firmware && mv -f `find openwrt/bin/targets/*/*/ -maxdepth 1 \
         -name "*combined*" \
-        -or -name "*sysupgrade*" \
-        | xargs -i mv -f {} ./firmware/
+        -or -name "*sysupgrade*"` ./firmware/
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
         cd firmware
         echo ${{ env.date4 }} > version.txt
