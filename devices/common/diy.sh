@@ -34,8 +34,7 @@ sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/file
 #rm -rf ./feeds/packages/lang/{golang,node}
 #svn export https://github.com/immortalwrt/packages/trunk/lang/golang feeds/packages/lang/golang
 #svn export https://github.com/immortalwrt/packages/trunk/lang/node feeds/packages/lang/node
-mkdir package/network/config/firewall/patches
-curl -L https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch>package/network/config/firewall/patches/fullconenat.patch
+wget -P package/network/config/firewall/patches/ https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
 sed -i 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
