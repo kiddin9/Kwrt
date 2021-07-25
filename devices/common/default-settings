@@ -77,7 +77,13 @@ test $version -lt 1 && {
  
  	test ! -f /etc/config/placeholder && {
 	sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' /etc/shadow
-	uci set network.lan.ipaddr="192.168.1.2"
+	uci set network.lan.ipaddr='192.168.1.2'   # 默认 IP 地址
+        uci set network.lan.proto='static'   # 静态 IP
+        uci set network.lan.type='bridge'   # 接口类型：桥接
+        uci set network.lan.ifname='eth0'   # 网络端口：默认 eth0，第一个接口
+        uci set network.lan.netmask='255.255.255.0' # 子网掩码
+        uci set network.lan.gateway='192.168.1.1'   # 默认网关地址（主路由 IP）
+        uci set network.lan.dns='223.5.5.5'  # 默认上游 DNS 地址
 	uci set network.@globals[0].packet_steering=1
 	uci commit network
 	}
