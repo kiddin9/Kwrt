@@ -9,6 +9,12 @@ svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/bo
 
 curl -L https://github.com/immortalwrt/immortalwrt/raw/master/package/kernel/linux/modules/video.mk>package/kernel/linux/modules/video.mk
 
+mkdir -p files/etc/rc.d
+wget -P files/usr/bin/ https://github.com/friendlyarm/friendlywrt/raw/master-v19.07.1/target/linux/rockchip-rk3328/base-files/usr/bin/start-rk3328-pwm-fan.sh
+wget -P files/etc/init.d/ https://github.com/friendlyarm/friendlywrt/raw/master-v19.07.1/target/linux/rockchip-rk3328/base-files/etc/init.d/fa-rk3328-pwmfan
+chmod +x files/usr/bin/start-rk3328-pwm-fan.sh files/etc/init.d/fa-rk3328-pwmfan
+ln -sf /etc/init.d/fa-rk3328-pwmfan files/etc/rc.d/S96fa-rk3328-pwmfan
+
 sed -i 's/5.4/5.10/g' target/linux/rockchip/Makefile
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk

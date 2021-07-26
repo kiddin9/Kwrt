@@ -16,6 +16,7 @@ sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' 
 sed -i 's/ libelf//' tools/Makefile
 svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
+rm -rf target/linux/generic/hack-5.10/220-gc_sections.patch
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/package/network/services/ppp package/network/services/ppp
 svn export --force https://github.com/openwrt/openwrt/trunk/package/libs/libnfnetlink package/libs/libnfnetlink
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/package/network/services/dnsmasq package/network/services/dnsmasq
@@ -28,24 +29,21 @@ sed -i '$a /etc/bench.log' package/base-files/files/lib/upgrade/keep.d/base-file
 sed -i '/\/etc\/profile/d' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '/^\/etc\/profile/d' package/base-files/Makefile
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
-find target/linux -path "target/linux/*/config-*" | xargs -i sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\n \
-CONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\nCONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' {}
+sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\n CONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\n \ CONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' `find target/linux -path "target/linux/*/config-*"`
 sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/files/uhttpd.config
 #rm -rf ./feeds/packages/lang/{golang,node}
 #svn export https://github.com/immortalwrt/packages/trunk/lang/golang feeds/packages/lang/golang
 #svn export https://github.com/immortalwrt/packages/trunk/lang/node feeds/packages/lang/node
-mkdir package/network/config/firewall/patches
-curl -L https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch>package/network/config/firewall/patches/fullconenat.patch
+wget -P package/network/config/firewall/patches/ https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
 sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/*/*/*/Makefile
 sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
 sed -i 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
-find package target -name inittab | xargs -i sed -i "s/askfirst/respawn/g" {}
+sed -i "s/askfirst/respawn/g" `find package target -name inittab`
 for ipk in $(find package/feeds/custom/* -maxdepth 0); do
 	if [[ ! -d "$ipk/patches" && ! "$(grep "codeload.github.com" $ipk/Makefile)" ]]; then
-		find $ipk/ -maxdepth 1 ! -path *tcping* -name "Makefile" \
-		| xargs -i sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=HEAD/g" {}
+		sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{15,\}/PKG_SOURCE_VERSION:=HEAD/g" `find $ipk/ -maxdepth 1 ! -path *tcping* -name "Makefile"`
 	fi	
 done
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
@@ -60,7 +58,7 @@ if [ -f sdk.tar.xz ]; then
 	tar -xJf sdk.tar.xz -C sdk
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk.tar.xz sdk
-	find "staging_dir/host/" -maxdepth 2 -name 'libelf*' | xargs -i rm -rf {} || true
+	rm -rf `find "staging_dir/host/" -maxdepth 2 -name 'libelf*'` || true
 	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
 	if [ -f /usr/bin/python ]; then
 		ln -sf /usr/bin/python staging_dir/host/bin/python

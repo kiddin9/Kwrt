@@ -8,6 +8,12 @@ rm -Rf target/linux/rockchip/patches-5.10/{006-*-NanoPi-R,007-*-R4S}.patch
 
 curl -L https://github.com/immortalwrt/immortalwrt/raw/master/package/kernel/linux/modules/video.mk>package/kernel/linux/modules/video.mk
 
+mkdir -p files/etc/rc.d
+wget -P files/usr/bin/ https://raw.githubusercontent.com/btyh17mxy/friendlywrt/fix/rk3399-fan-ctl/target/linux/rockchip-rk3399/base-files/usr/bin/start-rk3399-pwm-fan.sh
+wget -P files/etc/init.d/ https://raw.githubusercontent.com/friendlyarm/friendlywrt/master-v19.07.1/target/linux/rockchip-rk3399/base-files/etc/init.d/fa-rk3399-pwmfan
+chmod +x files/usr/bin/start-rk3399-pwm-fan.sh files/etc/init.d/fa-rk3399-pwmfan
+ln -sf /etc/init.d/fa-rk3399-pwmfan files/etc/rc.d/S96fa-rk3399-pwmfan
+	
 sed -i 's/5.4/5.10/g' target/linux/rockchip/Makefile
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
