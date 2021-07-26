@@ -24,15 +24,19 @@ ln -s /sbin/poweroff /sbin/shutdown
 sed -i '/S99opkg/d' /etc/crontabs/root
 sec=$(awk 'BEGIN{srand();sum=rand()*60;printf("%d",sum)}')
 echo "$sec 4 * * * sh /etc/rc.d/S99opkg >/tmp/opkgupdate.log 2>&1" >> /etc/crontabs/root
-sed -i '/memclean/d' /etc/crontabs/root
-echo "*/30 * * * * sh /sbin/memclean" >> /etc/crontabs/root
+
+grep -q memclean /etc/crontabs/root ||
+	echo "*/30 * * * * sh /sbin/memclean" >> /etc/crontabs/root
 
 cpuinfo=`/sbin/cpuinfo 2>/dev/null`
 test -n "$cpuinfo" || sed -i "s/_('CPU Info'),cpuinfo.cpufreq,//" /www/luci-static/resources/view/status/include/10_system.js
 
 grep -q op.supes.top /etc/bypass/white.list ||
 		echo "op.supes.top" >> /etc/bypass/white.list
-		
+
+grep -q "^ifup lan" /etc/rc.local ||
+		sed -i '$i ifup lan' /etc/rc.local
+
 test $version -lt 1 && {
 	uci set luci.main.lang='auto'
 	uci set luci.main.mediaurlbase=/luci-static/edge
