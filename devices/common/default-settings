@@ -8,8 +8,8 @@ DISTRIB_ID=`echo -n $DISTRIB_ID | tr a-z A-Z`
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
-sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
-sed -i 's/downloads.openwrt.org/op.supes.top/g' /etc/opkg/distfeeds.conf
+sed -i 's/\(supes.top.*\)\/custom/\1/' /etc/opkg/distfeeds.conf
+
 
 echo $(uci get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
@@ -164,3 +164,6 @@ echo kernel.msgmnb = 65536 >>$SYSCTL_LOCAL
 echo vm.swappiness=0 >>$SYSCTL_LOCAL
 
 rm -rf /tmp/luci-*
+
+uci set base_config.@status[0].version=$version
+uci commit base_config
