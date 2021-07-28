@@ -24,7 +24,7 @@ index a5abfc168c..e139370fe5 100644
  			}, _('Remove…'));
  		}
  		else {
-+			if (pkg.name.includes('kmod') || pkg.name.includes('luci-i18n'))
++			if (pkg.name.includes('luci-i18n'))
 +			   continue;
 +
  			var inst = packages.installed.pkgs[name];
