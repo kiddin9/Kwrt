@@ -29,7 +29,7 @@ sed -i '$a /etc/bench.log' package/base-files/files/lib/upgrade/keep.d/base-file
 sed -i '/\/etc\/profile/d' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '/^\/etc\/profile/d' package/base-files/Makefile
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
-sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\n CONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\n \ CONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' `find target/linux -path "target/linux/*/config-*"`
+
 sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/files/uhttpd.config
 #rm -rf ./feeds/packages/lang/{golang,node}
 #svn export https://github.com/immortalwrt/packages/trunk/lang/golang feeds/packages/lang/golang
@@ -49,7 +49,7 @@ done
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk
 date=`date +%m.%d.%Y`
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION=\"%D %C by Kiddin'\"/g" package/base-files/files/etc/openwrt_release
-sed -i "s/# REVISION:=x/REVISION:= $date/g" include/version.mk
+sed -i "s/CONFIG_VERSION_CODE=.*/CONFIG_VERSION_CODE=\"$date\"/g" devices/common/.config
 sed -i '$a cgi-timeout = 300' package/feeds/packages/uwsgi/files-luci-support/luci-webui.ini
 
 if [ -f sdk.tar.xz ]; then
