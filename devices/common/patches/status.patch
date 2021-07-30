@@ -31,21 +31,6 @@
 +
  	setLocaltime = {
 
---- a/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
-+++ b/package/feeds/luci/luci-base/root/usr/libexec/rpcd/luci
-@@ -358,7 +358,10 @@ local methods = {
- 		call = function(args)
- 			local util = require "luci.util"
- 
--			local swc, err = io.popen("swconfig dev %s show 2>/dev/null" % util.shellquote(args.switch))
-+			local swc, err = io.open("/tmp/SwconfigPortState", "r")
-+			if err then
-+				local swc, err = io.popen("swconfig dev %s show | tee /tmp/SwconfigPortState" % util.shellquote(args.switch))
-+			end
- 			if swc then
- 				local ports = { }
- 
-
 --- a/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
 +++ b/package/feeds/luci/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json
 @@ -3,7 +3,7 @@
@@ -156,12 +141,22 @@
 
 --- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 +++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
-@@ -32,7 +32,7 @@ return baseclass.extend({
+@@ -32,8 +32,7 @@ return baseclass.extend({
  		    swap = L.isObject(systeminfo.swap) ? systeminfo.swap : {};
  
  		var fields = [
 -			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
- 			_('Used'),            (mem.total && mem.free) ? (mem.total - mem.free) : null, mem.total,
-+			_('Total Available'), (mem.available) ? mem.available : (mem.total && mem.free && mem.buffered) ? mem.free + mem.buffered : null, mem.total,
+-			_('Used'),            (mem.total && mem.free) ? (mem.total - mem.free) : null, mem.total,
++			_('Used'),            (mem.total && mem.free && mem.cached) ? (mem.total - mem.free - mem.cached) : null, mem.total,
  			_('Buffered'),        (mem.total && mem.buffered) ? mem.buffered : null, mem.total
  		];
+ 
+@@ -43,7 +42,7 @@ return baseclass.extend({
+ 		if (swap.total > 0)
+ 			fields.push(_('Swap free'), swap.free, swap.total);
+ 
+-		var table = E('table', { 'class': 'table' });
++		var table = E('table', { 'class': 'table memory' });
+ 
+ 		for (var i = 0; i < fields.length; i += 3) {
+ 			table.appendChild(E('tr', { 'class': 'tr' }, [

@@ -25,9 +25,6 @@ sed -i '/S99opkg/d' /etc/crontabs/root
 sec=$(awk 'BEGIN{srand();sum=rand()*60;printf("%d",sum)}')
 echo "$sec 4 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
-grep -q memclean /etc/crontabs/root ||
-	echo "*/30 * * * * sh /sbin/memclean >/dev/null 2>&1" >> /etc/crontabs/root
-
 cpuinfo=`/sbin/cpuinfo 2>/dev/null`
 test -n "$cpuinfo" || sed -i "s/_('CPU Info'),cpuinfo.cpufreq,//" /www/luci-static/resources/view/status/include/10_system.js
 
