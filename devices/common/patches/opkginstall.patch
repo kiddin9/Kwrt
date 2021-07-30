@@ -104,7 +104,14 @@
 
 --- a/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
 +++ b/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
-@@ -19,7 +19,7 @@ case "$action" in
+@@ -13,13 +13,13 @@ case "$action" in
+ 		lists_dir=$(sed -rne 's#^lists_dir \S+ (\S+)#\1#p' /etc/opkg.conf /etc/opkg/*.conf 2>/dev/null | tail -n 1)
+ 		find "${lists_dir:-/usr/lib/opkg/lists}" -type f '!' -name '*.sig' | xargs -r gzip -cd
+ 	;;
+-	install|update|remove)
++	install|update|upgrade|remove)
+ 		(
+ 			opkg="opkg"
  
  			while [ -n "$1" ]; do
  				case "$1" in
