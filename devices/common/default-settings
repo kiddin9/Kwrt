@@ -50,6 +50,7 @@ test $version -lt 1 && {
 
 	uci set uhttpd.main.rfc1918_filter=0
 	uci set uhttpd.main.redirect_https=0
+	uci set uhttpd.main.script_timeout='120'
 	uci commit uhttpd
 
 	SSID=${DISTRIB_ID}
