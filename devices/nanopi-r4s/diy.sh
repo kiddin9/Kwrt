@@ -5,6 +5,7 @@ svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/pa
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
 svn export --force https://github.com/openwrt/openwrt/trunk/target/linux/rockchip/patches-5.10 target/linux/rockchip/patches-5.10
 rm -Rf target/linux/rockchip/patches-5.10/{006-*-NanoPi-R,007-*-R4S}.patch
+svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
 
 curl -L https://github.com/immortalwrt/immortalwrt/raw/master/package/kernel/linux/modules/video.mk>package/kernel/linux/modules/video.mk
 
