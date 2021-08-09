@@ -15,7 +15,7 @@ on:
       ssh:
         description: 'SSH connection to Actions'
         required: false
-        default: 'false'
+        default: 'true'
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
