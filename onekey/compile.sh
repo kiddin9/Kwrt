@@ -82,19 +82,18 @@ case $CHOOSE in
 esac
 done
 
+REPO_BRANCH="$(git ls-remote --tags git://github.com/openwrt/openwrt | cut -d/ -f3- | sort -t. -nk1,2 | awk '/^[^{]*$/{version=$1}END{print version}'| sed -e 's/v//')"
 
-
-git clone -b openwrt-21.02 --depth 1 https://github.com/openwrt/openwrt
+git clone -b v$REPO_BRANCH --depth 1 https://github.com/openwrt/openwrt
 svn export https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/trunk/devices openwrt/devices
 
 cd openwrt
-
 if [[ $firmware == "x86_64" ]]; then
-		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/x86/64/openwrt-sdk-21.02-SNAPSHOT-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/$REPO_BRANCH/targets/x86/64/openwrt-sdk-$REPO_BRANCH-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 elif [[ $firmware =~ (nanopi-r2s|nanopi-r4s) ]]; then
-		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/$REPO_BRANCH/targets/rockchip/armv8/openwrt-sdk-$REPO_BRANCH-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 elif [[ $firmware == "Rpi-4B" ]]; then
-		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/21.02-SNAPSHOT/targets/bcm27xx/bcm2711/openwrt-sdk-21.02-SNAPSHOT-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+		wget -cO sdk.tar.xz https://mirrors.cloud.tencent.com/openwrt/releases/$REPO_BRANCH/targets/bcm27xx/bcm2711/openwrt-sdk-$REPO_BRANCH-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 fi
 
 
@@ -103,8 +102,6 @@ ip=${ip:-"10.0.0.1"}
 echo "您的后台地址为: $ip"
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
-./scripts/feeds update -a
-cp -Rf ./diy/* ./
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh
 		/bin/bash "devices/common/diy.sh"
@@ -113,6 +110,7 @@ if [ -f "devices/$firmware/diy.sh" ]; then
 		chmod +x devices/$firmware/diy.sh
 		/bin/bash "devices/$firmware/diy.sh"
 fi
+cp -Rf ./diy/* ./
 if [ -f "devices/common/default-settings" ]; then
 	sed -i "s/10.0.0.1/$ip/" devices/common/default-settings
 	cp -f devices/common/default-settings package/*/*/default-settings/files/uci.defaults

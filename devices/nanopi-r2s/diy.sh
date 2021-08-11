@@ -1,11 +1,13 @@
 #!/bin/bash
 
 rm -rf package/boot/uboot-rockchip
-svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
-svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
-svn export --force https://github.com/openwrt/openwrt/trunk/target/linux/rockchip/patches-5.10 target/linux/rockchip/patches-5.10
-rm -Rf target/linux/rockchip/patches-5.10/{006-*-NanoPi-R,007-*-R4S}.patch
-svn export https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/package/boot/uboot-rockchip package/boot/uboot-rockchip
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/armv8/config-5.4 target/linux/rockchip/armv8/config-5.4
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/image target/linux/rockchip/image
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/files target/linux/rockchip/files
+svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/modules.mk target/linux/rockchip/modules.mk
+svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/patches-5.4 target/linux/rockchip/patches-5.4
 
 curl -L https://github.com/immortalwrt/immortalwrt/raw/master/package/kernel/linux/modules/video.mk>package/kernel/linux/modules/video.mk
 
@@ -14,8 +16,6 @@ wget -P files/usr/bin/ https://github.com/friendlyarm/friendlywrt/raw/master-v19
 wget -P files/etc/init.d/ https://github.com/friendlyarm/friendlywrt/raw/master-v19.07.1/target/linux/rockchip-rk3328/base-files/etc/init.d/fa-rk3328-pwmfan
 chmod +x files/usr/bin/start-rk3328-pwm-fan.sh files/etc/init.d/fa-rk3328-pwmfan
 ln -sf /etc/init.d/fa-rk3328-pwmfan files/etc/rc.d/S96fa-rk3328-pwmfan
-
-sed -i 's/5.4/5.10/g' target/linux/rockchip/Makefile
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
 
