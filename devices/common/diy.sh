@@ -1,6 +1,7 @@
 #!/bin/bash
 #=================================================
 echo "src-git custom https://github.com/kiddin9/openwrt-packages.git" >>feeds.conf.default
+sed -i '/	refresh_config();/d' scripts/feeds
 ./scripts/feeds update -a
 ./scripts/feeds install -a -p custom
 ./scripts/feeds install -a
