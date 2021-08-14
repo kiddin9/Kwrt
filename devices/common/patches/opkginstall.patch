@@ -5,7 +5,7 @@
  			    inst  = packages.installed.pkgs[name];
  
 -			if (!inst || !inst.installed)
-+			if (!inst || !inst.installed || pkg.name.includes('luci-app-opkg') || (!pkg.name.includes('luci-app') && !pkg.name.includes('luci-theme') && !pkg.name.includes('default-settings')))
++			if (!inst || !inst.installed || pkg.name.includes('luci-app-opkg') || pkg.name.includes('base-files') || pkg.name.includes('busybox') || pkg.name.includes('dnsmasq-full'))
  				continue;
  
  			if (!avail || compareVersion(avail.version, pkg.version) <= 0)
@@ -21,7 +21,7 @@
  			}, _('Remove…'));
  		}
  		else {
-+			if (pkg.name.includes('kmod') || pkg.name.includes('luci-i18n'))
++			if (pkg.name.includes('luci-i18n'))
 +			   continue;
 +
  			var inst = packages.installed.pkgs[name];

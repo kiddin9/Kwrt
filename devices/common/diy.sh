@@ -29,8 +29,7 @@ sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/file
 #svn export https://github.com/immortalwrt/packages/trunk/lang/node feeds/packages/lang/node
 rm -f package/network/config/firewall/patches/fullconenat.patch
 wget -P package/network/config/firewall/patches/ https://github.com/coolsnowwolf/lede/raw/master/package/network/config/firewall/patches/fullconenat.patch
-sed -i 's/+python\( \|$\)/+python3/g' package/*/*/*/Makefile
-sed -i 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
+sed -i -e 's/+python\( \|$\)/+python3/g' -e 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
 sed -i 's/PKG_BUILD_DIR:=/PKG_BUILD_DIR?=/g' feeds/luci/luci.mk
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 sed -i "s/askfirst/respawn/g" `find package target -name inittab`
