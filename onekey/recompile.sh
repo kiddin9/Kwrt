@@ -55,8 +55,6 @@ make clean
 [ -f ".config" ] && mv .config .config.bak
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
-./scripts/feeds update -a
-cp -Rf ./diy/* ./
 if [ -f "devices/common/diy.sh" ]; then
 		chmod +x devices/common/diy.sh
 		/bin/bash "devices/common/diy.sh"
@@ -65,6 +63,7 @@ if [ -f "devices/$firmware/diy.sh" ]; then
 		chmod +x devices/$firmware/diy.sh
 		/bin/bash "devices/$firmware/diy.sh"
 fi
+cp -Rf ./diy/* ./
 if [ -f "devices/common/default-settings" ]; then
 	sed -i 's/10.0.0.1/$ip/' devices/common/default-settings
 	cp -f devices/common/default-settings package/*/*/default-settings/files/uci.defaults

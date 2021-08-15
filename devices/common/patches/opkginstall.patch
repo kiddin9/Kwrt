@@ -5,7 +5,7 @@
  			    inst  = packages.installed.pkgs[name];
  
 -			if (!inst || !inst.installed)
-+			if (!inst || !inst.installed || pkg.name.includes('luci-app-opkg') || (!pkg.name.includes('luci-app') && !pkg.name.includes('luci-theme') && !pkg.name.includes('default-settings')))
++			if (!inst || !inst.installed || pkg.name.includes('luci-app-opkg') || pkg.name.includes('base-files') || pkg.name.includes('busybox') || pkg.name.includes('dnsmasq-full'))
  				continue;
  
  			if (!avail || compareVersion(avail.version, pkg.version) <= 0)
@@ -21,7 +21,7 @@
  			}, _('Remove…'));
  		}
  		else {
-+			if (pkg.name.includes('kmod') || pkg.name.includes('luci-i18n'))
++			if (pkg.name.includes('luci-i18n'))
 +			   continue;
 +
  			var inst = packages.installed.pkgs[name];
@@ -136,7 +136,7 @@
  				code=$?
  				stdout=$(cat /tmp/opkg.out)
  				stderr=$(cat /tmp/opkg.err)
-@@ -47,6 +56,18 @@ case "$action" in
+@@ -47,6 +56,17 @@ case "$action" in
  			[ -n "$stdout" ] && json_add_string stdout "$stdout"
  			[ -n "$stderr" ] && json_add_string stderr "$stderr"
  			json_dump
@@ -145,7 +145,6 @@
 +			install)
 +				[[ "$(opkg list-installed | cut -f 1 -d ' ' | grep $@)" && ! "$(cat /etc/backup/user_installed.opkg | grep ^$@$)" ]] && {
 +				echo $@ >>/etc/backup/user_installed.opkg
-+				killall -HUP rpcd
 +				}
 +			;;
 +			remove)
