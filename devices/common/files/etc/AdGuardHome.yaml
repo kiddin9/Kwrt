@@ -86,44 +86,12 @@ tls:
 filters:
 - enabled: true
   url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
-  name: AdGuard Simplified Domain Names filter
-  id: 1
-- enabled: false
-  url: https://adaway.org/hosts.txt
-  name: AdAway
-  id: 2
-- enabled: false
-  url: https://hosts-file.net/ad_servers.txt
-  name: hpHosts - Ad and Tracking servers only
-  id: 3
-- enabled: false
-  url: https://www.malwaredomainlist.com/hostslist/hosts.txt
-  name: MalwareDomainList.com Hosts List
-  id: 4
-- enabled: false
-  url: https://raw.githubusercontent.com/vokins/yhosts/master/data/tvbox.txt
-  name: tvbox
-  id: 1575018007
-- enabled: false
-  url: https://hosts.nfz.moe/full/hosts
-  name: neoHosts full
-  id: 1575618240
-- enabled: false
-  url: https://hosts.nfz.moe/basic/hosts
-  name: neoHosts basic
-  id: 1575618241
-- enabled: false
-  url: http://sbc.io/hosts/hosts
-  name: StevenBlack host basic
-  id: 1575618242
-- enabled: false
-  url: http://sbc.io/hosts/alternates/fakenews-gambling-porn-social/hosts
-  name: StevenBlack host+fakenews + gambling + porn + social
-  id: 1575618243
+  name: AdGuard DNS filter
+  id: 1628750870
 - enabled: true
-  url: https://cdn.jsdelivr.net/gh/privacy-protection-tools/anti-AD/anti-ad-easylist.txt
-  name: anti-AD(Adblock+neohosts+yhosts+cjxlist+adhlist)
-  id: 1577113202
+  url: https://anti-ad.net/easylist.txt
+  name: 'CHN: anti-AD'
+  id: 1628750871
 whitelist_filters: []
 user_rules:
 - '@@||edge.activity.windows.com^'
