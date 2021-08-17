@@ -94,10 +94,9 @@ jobs:
     - name: Clone source code
       run: |
         [ "$REPO_BRANCH" ] ||
-            REPO_BRANCH="$(git ls-remote --tags git://github.com/openwrt/openwrt | cut -d/ -f3- | sort -t. -nk1,2 | awk '/^[^{]*$/{version=$1}END{print version}')"
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+            REPO_BRANCH="$(git ls-remote --tags git://github.com/openwrt/openwrt | cut -d/ -f3- | sort -t. -nk1,2 | awk '/^[^{]*$/{version=$1}END{print version}' | sed -e 's/v//')"
+        git clone --depth 1 $REPO_URL -b v$REPO_BRANCH openwrt
         cd openwrt
-        REPO_BRANCH="$(echo $REPO_BRANCH | sed -e 's/v//')"
         if [[ ${{matrix.target}} == "x86_64" ]]; then
             wget -cO sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/x86/64/openwrt-sdk-$REPO_BRANCH-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         elif [[ ${{matrix.target}} =~ (nanopi-r2s|nanopi-r4s) ]]; then
@@ -105,6 +104,7 @@ jobs:
         elif [[ ${{matrix.target}} =~ "Rpi-4B" ]]; then
             wget -cO sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/bcm27xx/bcm2711/openwrt-sdk-$REPO_BRANCH-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         fi
+        echo "REPO_BRANCH=v$REPO_BRANCH" >> $GITHUB_ENV
       
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
