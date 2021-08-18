@@ -1,5 +1,6 @@
 #!/bin/bash
 #=================================================
+shopt -s extglob
 echo "src-git custom https://github.com/kiddin9/openwrt-packages.git" >>feeds.conf.default
 sed -i '/	refresh_config();/d' scripts/feeds
 ./scripts/feeds update -a
@@ -31,9 +32,9 @@ curl https://git.io/J0klM --create-dirs -o package/network/config/firewall/patch
 sed -i -e 's/+python\( \|$\)/+python3/g' -e 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 sed -i "s/askfirst/respawn/g" `find package target -name inittab`
-for ipk in $(find package/feeds/custom/* -maxdepth 0); do
+for ipk in $(ls -d package/feeds/custom/*); do
 	if [[ ! -d "$ipk/patches" ]]; then
-		sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{7,\}/PKG_SOURCE_VERSION:=HEAD/g" `find $ipk/ -maxdepth 1 ! -path *tcping* -name "Makefile"`
+		sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{7,\}/PKG_SOURCE_VERSION:=HEAD/g" !(luci-app*)/Makefile
 	fi	
 done
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk

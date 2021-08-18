@@ -1,9 +1,10 @@
 #!/bin/bash
 
+shopt -s extglob
 rm -rf package/boot/uboot-rockchip
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/package/boot/uboot-rockchip package/boot/uboot-rockchip
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
-rm -rf `find target/linux/rockchip/* -maxdepth 0 ! -path *patches-5.4`
+rm -rf target/linux/rockchip/!(patches-5.4)
 svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip target/linux/rockchip
 rm -rf target/linux/rockchip/{.svn,patches-5.4/.svn}
 svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/patches-5.4 target/linux/rockchip/patches-5.4
