@@ -22,7 +22,7 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 ln -s /sbin/poweroff /sbin/shutdown
 
 sed -i '/S99opkg/d' /etc/crontabs/root
-sec=$(awk 'BEGIN{srand();sum=rand()*60;printf("%d",sum)}')
+sec="$(grep -m1 -ao '[0-6][0-9]' /dev/urandom | head -n1)"
 echo "$sec 4 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
 cpuinfo=`/sbin/cpuinfo 2>/dev/null`

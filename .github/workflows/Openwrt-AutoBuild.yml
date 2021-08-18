@@ -201,9 +201,7 @@ jobs:
         echo $REPO_BRANCH >> version.txt
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
-        RANDOM=$$$(date +%s)
-        rand=$[$RANDOM % ${#Emoji[@]}]
-        echo "EMOJI=${Emoji[$rand]}" >> $GITHUB_ENV
+        echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "x86_64" ]; then
         echo "NOTICE=请分配不少于1G的存储容量" >> $GITHUB_ENV
         fi
