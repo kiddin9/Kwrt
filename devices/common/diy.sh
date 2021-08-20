@@ -1,5 +1,6 @@
 #!/bin/bash
 #=================================================
+shopt -s extglob
 echo "src-git custom https://github.com/kiddin9/openwrt-packages.git" >>feeds.conf.default
 sed -i '/	refresh_config();/d' scripts/feeds
 ./scripts/feeds update -a
@@ -15,6 +16,7 @@ rm -rf target/linux/generic/hack-5.4/220-gc_sections.patch
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/package/network/services/ppp package/network/services/ppp
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/package/network/services/dnsmasq package/network/services/dnsmasq
 sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite/' package/Makefile
+sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' package/base-files/files/etc/shadow
 sed -i '$a /etc/sysupgrade.conf' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/acme' package/base-files/files/lib/upgrade/keep.d/base-files-essential
 sed -i '$a /etc/bench.log' package/base-files/files/lib/upgrade/keep.d/base-files-essential
@@ -31,9 +33,9 @@ curl https://git.io/J0klM --create-dirs -o package/network/config/firewall/patch
 sed -i -e 's/+python\( \|$\)/+python3/g' -e 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 sed -i "s/askfirst/respawn/g" `find package target -name inittab`
-for ipk in $(find package/feeds/custom/* -maxdepth 0); do
+for ipk in $(ls -d package/feeds/custom/*); do
 	if [[ ! -d "$ipk/patches" ]]; then
-		sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{7,\}/PKG_SOURCE_VERSION:=HEAD/g" `find $ipk/ -maxdepth 1 ! -path *tcping* -name "Makefile"`
+		sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{7,\}/PKG_SOURCE_VERSION:=HEAD/g" !(luci-app*)/Makefile
 	fi	
 done
 sed -i 's/$(VERSION) &&/$(VERSION) ;/g' include/download.mk

@@ -188,9 +188,8 @@ jobs:
     - name: Organize files
       id: organize
       run: |
-        mkdir firmware && mv -f `find openwrt/bin/targets/*/*/ -maxdepth 1 \
-        -name "*combined*" \
-        -or -name "*sysupgrade*"` ./firmware/
+        mkdir firmware
+        mv -f openwrt/bin/targets/*/*/{*combined*,*sysupgrade*} ./firmware/
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
         cd firmware
         echo ${{ env.date4 }} > version.txt
@@ -201,9 +200,7 @@ jobs:
         echo $REPO_BRANCH >> version.txt
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
-        RANDOM=$$$(date +%s)
-        rand=$[$RANDOM % ${#Emoji[@]}]
-        echo "EMOJI=${Emoji[$rand]}" >> $GITHUB_ENV
+        echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "x86_64" ]; then
         echo "NOTICE=请分配不少于1G的存储容量" >> $GITHUB_ENV
         fi
