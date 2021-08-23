@@ -5,6 +5,7 @@ sed -i '/	refresh_config();/d' scripts/feeds
 ./scripts/feeds update -a
 ./scripts/feeds install -a -p custom
 ./scripts/feeds install -a
+cd feeds/custom; git pull; cd -
 sed -i 's/Os/O2/g' include/target.mk
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
