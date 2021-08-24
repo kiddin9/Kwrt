@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[[ "$(df | grep overlay)" && ! "$(df | grep /rom/overlay)" ]] && firstboot
+
 version=`uci get base_config.@status[0].version 2>/dev/null`
 
 . /etc/openwrt_release
