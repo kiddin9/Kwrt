@@ -101,6 +101,36 @@
  						E('button', { 'class': 'btn cbi-button', 'click': handleReset }, [ _('Clear') ])
  					])
  				]),
+@@ -1056,14 +1073,6 @@ return view.extend({
+ 				E('li', { 'data-mode': 'updates', 'class': 'installed cbi-tab-disabled', 'click': handleMode }, E('a', { 'href': '#' }, [ _('Updates') ]))
+ 			]),
+ 
+-			E('div', { 'class': 'controls', 'style': 'display:none' }, [
+-				E('div', { 'id': 'pager', 'class': 'center' }, [
+-					E('button', { 'class': 'btn cbi-button-neutral prev', 'aria-label': _('Previous page'), 'click': handlePage }, [ '«' ]),
+-					E('div', { 'class': 'text' }, [ 'dummy' ]),
+-					E('button', { 'class': 'btn cbi-button-neutral next', 'aria-label': _('Next page'), 'click': handlePage }, [ '»' ])
+-				])
+-			]),
+-
+ 			E('table', { 'id': 'packages', 'class': 'table' }, [
+ 				E('tr', { 'class': 'tr cbi-section-table-titles' }, [
+ 					E('th', { 'class': 'th col-2 left' }, [ _('Package name') ]),
+@@ -1072,6 +1081,14 @@ return view.extend({
+ 					E('th', { 'class': 'th col-10 left' }, [ _('Description') ]),
+ 					E('th', { 'class': 'th right cbi-section-actions' }, [ '\u00a0' ])
+ 				])
++			]),
++			
++			E('div', { 'class': 'controls', 'style': 'display:none' }, [
++				E('div', { 'id': 'pager', 'class': 'center' }, [
++					E('button', { 'class': 'btn cbi-button-neutral prev', 'aria-label': _('Previous page'), 'click': handlePage }, [ '«' ]),
++					E('div', { 'class': 'text' }, [ 'dummy' ]),
++					E('button', { 'class': 'btn cbi-button-neutral next', 'aria-label': _('Next page'), 'click': handlePage }, [ '»' ])
++				])
+ 			])
+ 		]);
+ 
 
 --- a/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
 +++ b/package/feeds/luci/luci-app-opkg/root/usr/libexec/opkg-call
