@@ -190,6 +190,10 @@ jobs:
       run: |
         mkdir firmware
         mv -f openwrt/bin/targets/*/*/{*combined*,*sysupgrade*} ./firmware/ 2>/dev/null || true
+        if [ -f ./firmware/*vmdk* ]; then
+            mkdir firmware/EXSI专用
+            mv firmware/*vmdk* firmware/EXSI专用/
+        fi
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
         cd firmware
         echo ${{ env.date4 }} > version.txt
