@@ -46,6 +46,6 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 CONFIG_CRYPTO_DEV_ROCKCHIP=y
 CONFIG_HW_RANDOM_ROCKCHIP=y
-' >> ./target/linux/rockchip/armv8/config-5.10
+' >> ./target/linux/rockchip/armv8/config-5.4
 
 

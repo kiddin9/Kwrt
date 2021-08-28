@@ -47,6 +47,6 @@ CONFIG_REALTEK_PHY=y
 CONFIG_CPU_FREQ_GOV_USERSPACE=y
 CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
-' >> ./target/linux/rockchip/armv8/config-5.10
+' >> ./target/linux/rockchip/armv8/config-5.4
 
 
