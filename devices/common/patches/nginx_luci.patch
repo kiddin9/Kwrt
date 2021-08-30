@@ -1,5 +1,5 @@
---- a/net/nginx/files-luci-support/luci.locations
-+++ b/net/nginx/files-luci-support/luci.locations
+--- a/package/feeds/packages/nginx/files-luci-support/luci.locations
++++ b/package/feeds/packages/nginx/files-luci-support/luci.locations
 @@ -1,12 +1,13 @@
 -location /cgi-bin/luci {
 +location /luci {
