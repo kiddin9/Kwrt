@@ -1,0 +1,32 @@
+
+config main global
+	option uci_enable 'true'
+
+config server '_lan'
+	list listen '80 default_server'
+	list listen '[::]:80 default_server'
+	option server_name '_lan'
+	option index 'nginx.html index.html'
+	list include 'restrict_locally'
+	list include 'conf.d/*.locations'
+	option access_log 'off; # logd openwrt'
+	
+config server '_ssl'
+	list listen '443 ssl'
+	list listen '[::]:443 ssl'
+	option server_name '_ssl'
+	option index 'nginx.html index.html'
+	list include 'restrict_locally'
+	list include 'conf.d/*.locations'
+	option uci_manage_ssl 'self-signed'
+	option ssl_certificate '/etc/nginx/conf.d/_lan.crt'
+	option ssl_certificate_key '/etc/nginx/conf.d/_lan.key'
+	option ssl_session_cache 'shared:SSL:32k'
+	option ssl_session_timeout '64m'
+	option access_log 'off; # logd openwrt'
+
+config server '_redirect2ssl'
+	#list listen '80'
+	#list listen '[::]:80'
+	#option server_name '_redirect2ssl'
+	#option return '302 https://$host$request_uri'
