@@ -36,6 +36,7 @@ sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/ro
 sed -i "s/askfirst/respawn/g" `find package target -name inittab`
 sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/feeds/custom/*/Makefile
 sed -i "s/+\(luci\|luci-ssl\)\( \|$\)/+luci-ssl-nginx\2/g"  package/feeds/custom/*/Makefile
+sed -i 's/"$routername" "$lanaddr"/"$routername" "$lanaddr"\ndhcp_domain_add "" "op" "$lanaddr"/' package/network/services/dnsmasq/files/dnsmasq.init
 
 for ipk in $(ls -d package/feeds/custom/*); do
 	if [[ ! -d "$ipk/patches" ]]; then
