@@ -161,6 +161,7 @@ echo kernel.msgmax = 65536 >>$SYSCTL_LOCAL
 echo kernel.msgmnb = 65536 >>$SYSCTL_LOCAL
 echo vm.swappiness=0 >>$SYSCTL_LOCAL
 
+cp -pR /www/cgi-bin/* /www/
 rm -rf /tmp/luci-*
 
 uci set base_config.@status[0].version=$version
