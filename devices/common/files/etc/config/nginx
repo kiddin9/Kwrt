@@ -5,7 +5,7 @@ config main global
 config server '_lan'
 	list listen '80 default_server'
 	list listen '[::]:80 default_server'
-	option server_name '_lan'
+	option server_name 'op'
 	option index 'nginx.html index.html'
 	list include 'restrict_locally'
 	list include 'conf.d/*.locations'
