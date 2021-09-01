@@ -197,7 +197,7 @@ jobs:
         rename -v "s/friendlyarm_//" *gz
         if [ "$(find ./ -name *vmdk)" ]; then
             mkdir EXSI专用
-            mv *vmdk* EXSI专用/
+            mv -f *vmdk* EXSI专用/
         fi
         md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
         echo $md5 >> version.txt
