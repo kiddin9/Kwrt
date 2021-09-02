@@ -5,7 +5,7 @@
  			    inst  = packages.installed.pkgs[name];
  
 -			if (!inst || !inst.installed)
-+			if (!inst || !inst.installed || pkg.name.includes('luci-app-opkg') || pkg.name.includes('base-files') || pkg.name.includes('luci-base') || pkg.name.includes('busybox') || pkg.name.includes('dnsmasq-full') || pkg.name.includes('firewall') || pkg.name.includes('miniupnpd') || pkg.name.includes('coremark') || pkg.name.includes('luci-mod-network') || pkg.name.includes('luci-mod-status') || pkg.name.includes('luci-mod-system'))
++			if (!inst || !inst.installed || pkg.name.includes('luci-app-opkg') || pkg.name.includes('luci-lib-fs') || pkg.name.includes('base-files') || pkg.name.includes('luci-base') || pkg.name.includes('busybox') || pkg.name.includes('dnsmasq-full') || pkg.name.includes('firewall') || pkg.name.includes('miniupnpd') || pkg.name.includes('coremark') || pkg.name.includes('luci-mod-network') || pkg.name.includes('luci-mod-status') || pkg.name.includes('luci-mod-system'))
  				continue;
  
  			if (!avail || compareVersion(avail.version, pkg.version) <= 0)
@@ -249,3 +249,17 @@
  		mkdir -p "$ETCBACKUP_DIR"
  		# Avoid touching filesystem on each backup
  		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"
+
+--- a/package/base-files/files/lib/functions.sh
++++ b/package/base-files/files/lib/functions.sh
+@@ -283,7 +283,9 @@ default_postinst() {
+ 			if [ "$PKG_UPGRADE" != "1" ]; then
+ 				"$i" enable
+ 			fi
+-			"$i" start
++			if "$i" enabled; then
++				"$i" start
++			fi
+ 		fi
+ 	done
+ 
