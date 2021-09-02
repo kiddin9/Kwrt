@@ -31,12 +31,16 @@ sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/file
 #svn export https://github.com/immortalwrt/packages/trunk/lang/golang feeds/packages/lang/golang
 #svn export https://github.com/immortalwrt/packages/trunk/lang/node feeds/packages/lang/node
 curl -L https://git.io/J0klM --create-dirs -o package/network/config/firewall/patches/fullconenat.patch
-sed -i -e 's/+python\( \|$\)/+python3/g' -e 's?../../lang?$(TOPDIR)/feeds/packages/lang?g' package/feeds/custom/*/Makefile
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 sed -i "s/askfirst/respawn/g" `find package target -name inittab`
-sed -i "s/+nginx\( \|$\)/+nginx-ssl\1/g"  package/feeds/custom/*/Makefile
-sed -i "s/+\(luci\|luci-ssl\)\( \|$\)/+luci-ssl-nginx\2/g"  package/feeds/custom/*/Makefile
 sed -i 's/"$routername" "$lanaddr"/"$routername" "$lanaddr"\ndhcp_domain_add "" "op" "$lanaddr"/' package/network/services/dnsmasq/files/dnsmasq.init
+
+sed -i \
+	-e "s/+\(luci\|luci-ssl\)\( \|$\)/+luci-ssl-nginx\2/" \
+	-e "s/+nginx\( \|$\)/+nginx-ssl\1/" \
+	-e 's/+python\( \|$\)/+python3/' \
+	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
+	package/feeds/custom/*/Makefile
 
 for ipk in $(ls -d package/feeds/custom/*); do
 	if [[ ! -d "$ipk/patches" ]]; then
