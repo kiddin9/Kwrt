@@ -195,9 +195,9 @@ jobs:
         echo ${{ env.date4 }} > version.txt
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *
         rename -v "s/friendlyarm_//" *gz
-        if [ "$(find ./ -name *vmdk)" ]; then
+        if [ "$(ls *vmdk)" ]; then
             mkdir EXSI专用
-            mv *vmdk* EXSI专用/
+            mv -f *vmdk* EXSI专用/
         fi
         md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
         echo $md5 >> version.txt
