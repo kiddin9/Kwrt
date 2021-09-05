@@ -33,7 +33,6 @@ sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/file
 curl -L https://git.io/J0klM --create-dirs -o package/network/config/firewall/patches/fullconenat.patch
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 sed -i "s/askfirst/respawn/g" `find package target -name inittab`
-sed -i 's/"$routername" "$lanaddr"/"$routername" "$lanaddr"\ndhcp_domain_add "" "op" "$lanaddr"/' package/network/services/dnsmasq/files/dnsmasq.init
 
 sed -i \
 	-e "s/+\(luci\|luci-ssl\)\( \|$\)/+luci-ssl-nginx\2/" \

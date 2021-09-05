@@ -16,3 +16,29 @@
  		uwsgi_param SERVER_ADDR $server_addr;
  		uwsgi_modifier1 9;
  		uwsgi_pass unix:////var/run/luci-cgi_io.socket;
+
+--- a/package/network/services/dnsmasq/files/dnsmasq.init
++++ b/package/network/services/dnsmasq/files/dnsmasq.init
+@@ -403,6 +403,22 @@ dhcp_this_host_add() {
+ 	local routerstub routername ifdashname
+ 	local lanaddr lanaddr6 lanaddrs6 ulaprefix
+ 
++	lanaddr="$(uci get network.lan.ipaddr)"
++	echo "
++$lanaddr op
++$lanaddr dl" >/tmp/hosts/shortcuts
++	grep -q "#shortcut" /etc/hosts && {
++	sed -i "s/[0-9.]\+ \(.\+#shortcut\)/$lanaddr \1/" /etc/hosts
++} || {
++	echo "
++$lanaddr adg #shortcut
++$lanaddr pve #shortcut
++$lanaddr ql #shortcut
++$lanaddr by #shortcut
++$lanaddr pk #shortcut
++$lanaddr ug #shortcut" >>/etc/hosts
++}
++
+ 	if [ "$mode" -gt 0 ] ; then
+ 		ifdashname="${ifname//./-}"
+ 		routerstub="$( md5sum /etc/os-release )"
