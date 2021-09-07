@@ -19,7 +19,7 @@
 
 --- a/package/network/services/dnsmasq/files/dnsmasq.init
 +++ b/package/network/services/dnsmasq/files/dnsmasq.init
-@@ -403,6 +403,22 @@ dhcp_this_host_add() {
+@@ -403,6 +403,19 @@ dhcp_this_host_add() {
  	local routerstub routername ifdashname
  	local lanaddr lanaddr6 lanaddrs6 ulaprefix
 
@@ -27,17 +27,14 @@
 +	echo "
 +$lanaddr op
 +$lanaddr dl" >/tmp/hosts/shortcuts
-+	grep -q "#shortcut" /etc/hosts && {
-+	sed -i "s/[0-9.]\+ \(.\+#shortcut\)/$lanaddr \1/" /etc/hosts
-+} || {
-+	echo "
-+$lanaddr adg #shortcut
-+$lanaddr pve #shortcut
-+$lanaddr ql #shortcut
-+$lanaddr by #shortcut
-+$lanaddr pk #shortcut
-+$lanaddr ug #shortcut" >>/etc/hosts
-+}
++if [ -f /etc/nginx/conf.d/shortcuts.conf ]; then
++if [[ "$lanaddr" != "`grep "set \$ip" /etc/nginx/conf.d/shortcuts.conf | head -n1 | cut -f 3 -d " " | sed -e 's/;//'`" ]]; then
++	sed -i "s/set \$ip.*/set \$ip $lanaddr;/" /etc/nginx/conf.d/shortcuts.conf
++	/etc/init.d/nginx reload
++fi
++cat /etc/nginx/conf.d/shortcuts.conf | tr "\n" "\r" |grep -oE 'server_name [a-z.-]*;[^;]*set \$ip [0-9.]*;' | sed -e 's/server_name \(.*\);.*location.*set $ip \(.*\);/\2 \1/' >>/tmp/hosts/shortcuts
++cat /etc/nginx/conf.d/shortcuts.conf | tr "\n" "\r" |grep -oE 'server_name [a-z.-]*;[^;]*return 301 \$scheme://op' | sed -e 's/server_name \(.*\?\);.*/\1/' | sed -e "s/^/$lanaddr /">>/tmp/hosts/shortcuts
++fi
 +
  	if [ "$mode" -gt 0 ] ; then
  		ifdashname="${ifname//./-}"
