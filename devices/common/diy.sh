@@ -35,7 +35,7 @@ sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/ro
 sed -i "s/askfirst/respawn/g" `find package target -name inittab`
 
 sed -i \
-	-e "s/+\(luci\|luci-ssl\|uhttpd\) \?//" \
+	-e "s/+\(luci\|luci-ssl\|uhttpd\)\( \|$\)/\2/" \
 	-e "s/+nginx\( \|$\)/+nginx-ssl\1/" \
 	-e 's/+python\( \|$\)/+python3/' \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
