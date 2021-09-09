@@ -2,24 +2,28 @@
 
 [[ "$(df | grep overlay)" && ! "$(df | grep /rom/overlay)" ]] && firstboot
 
-version=`uci get base_config.@status[0].version 2>/dev/null`
+version=`uci -q get base_config.@status[0].version`
 
 . /etc/openwrt_release
 test -n "${DISTRIB_ID}" || DISTRIB_ID=OpenWrt
 DISTRIB_ID=`echo -n $DISTRIB_ID | tr a-z A-Z`
 
-if [ "$(uci get dhcp.@dnsmasq[0].port)" != "53" ]; then
-	uci set dhcp.@dnsmasq[0].port='53'
+if [ "$(uci -q get dhcp.@dnsmasq[0].port)" != "53" ]; then
+	uci -q set dhcp.@dnsmasq[0].port='53'
 	uci commit dhcp
 fi
 
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
+test ! -f /etc/nginx/uci.conf && {
+	ln -sf /var/lib/nginx/uci.conf /etc/nginx/uci.conf
+}
+
 sed -i 's/\(custom.*\)\/custom/\1/' /etc/opkg/distfeeds.conf
 sed -i 's?\(src/gz openwrt_core\)?#\1?' /etc/opkg/distfeeds.conf
 
-echo $(uci get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
+echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
 
 [ -f /usr/bin/wget ] && 	
@@ -39,34 +43,34 @@ grep -q op.supes.top /etc/bypass/white.list ||
 		echo "op.supes.top" >> /etc/bypass/white.list
 
 test $version -lt 1 && {
-	uci set luci.main.lang='auto'
-	uci set luci.main.mediaurlbase=/luci-static/edge
+	uci -q set luci.main.lang='auto'
+	uci -q set luci.main.mediaurlbase=/luci-static/edge
 	uci commit luci
 
-	uci get system.@system[0] >/dev/null 2>&1 && {
-		uci set system.@system[0].hostname="${DISTRIB_ID}"
-		uci set system.@system[0].zonename='Asia/Shanghai'
-		uci set system.@system[0].timezone='CST-8'
-		uci del system.ntp.server
-		uci add_list system.ntp.server='ntp.aliyun.com'
-		uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
-		uci set system.@system[0].autoupgrade_pkg='1'
-		uci set system.@system[0].autoupgrade_fm='1'
+	uci -q get system.@system[0] >/dev/null 2>&1 && {
+		uci -q set system.@system[0].hostname="${DISTRIB_ID}"
+		uci -q set system.@system[0].zonename='Asia/Shanghai'
+		uci -q set system.@system[0].timezone='CST-8'
+		uci -q del system.ntp.server
+		uci -q add_list system.ntp.server='ntp.aliyun.com'
+		uci -q add_list system.ntp.server='0.openwrt.pool.ntp.org'
+		uci -q set system.@system[0].autoupgrade_pkg='1'
+		uci -q set system.@system[0].autoupgrade_fm='1'
 		uci commit system
 	}
 
-	uci set uhttpd.main.rfc1918_filter=0
-	uci set uhttpd.main.redirect_https=0
-	uci set uhttpd.main.script_timeout='120'
+	uci -q set uhttpd.main.rfc1918_filter=0
+	uci -q set uhttpd.main.redirect_https=0
+	uci -q set uhttpd.main.script_timeout='120'
 	uci commit uhttpd
 
 	SSID=${DISTRIB_ID}
 	SSID_PASSWD=88888888
 
-	uci set base_config.@status[0].SSID=${SSID}
+	uci -q set base_config.@status[0].SSID=${SSID}
 	# uci set base_config.@status[0].SSID_PASSWD=${SSID_PASSWD}
 	
-	uci set upnpd.config.enabled='1'
+	uci -q set upnpd.config.enabled='1'
 	uci commit upnpd
 	
 	grep -q log-facility /etc/dnsmasq.conf ||
@@ -75,34 +79,34 @@ test $version -lt 1 && {
 	grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
 		echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
 
-	uci set turboacc.config.sfe_flow='0'
+	uci -q set turboacc.config.sfe_flow='0'
 	uci commit turboacc
 
-	uci set fstab.@global[0].anon_mount=1
+	uci -q set fstab.@global[0].anon_mount=1
 	uci commit fstab
  
  	test ! -f /etc/config/placeholder && {
-	uci set network.lan.ipaddr="10.0.0.1"
-	uci set network.@globals[0].packet_steering=1
+	uci -q set network.lan.ipaddr="10.0.0.1"
+	uci -q set network.@globals[0].packet_steering=1
 	uci commit network
 	}
   
-	uci set dhcp.@dnsmasq[0].dns_redirect='1'
-	uci set dhcp.dnsmasq[0].allservers='1'
-	uci set dhcp.lan.force='1'
-	uci set dhcp.@dnsmasq[0].cachesize='1500'
-	uci set dhcp.@dnsmasq[0].min_ttl='3600'
-	uci set dhcp.lan.ra='hybrid'
-	uci set dhcp.lan.ndp='hybrid'
-	uci set dhcp.lan.dhcpv6='hybrid'
-	uci set dhcp.lan.force='1'
+	uci -q set dhcp.@dnsmasq[0].dns_redirect='1'
+	uci -q set dhcp.dnsmasq[0].allservers='1'
+	uci -q set dhcp.lan.force='1'
+	uci -q set dhcp.@dnsmasq[0].cachesize='1500'
+	uci -q set dhcp.@dnsmasq[0].min_ttl='3600'
+	uci -q set dhcp.lan.ra='hybrid'
+	uci -q set dhcp.lan.ndp='hybrid'
+	uci -q set dhcp.lan.dhcpv6='hybrid'
+	uci -q set dhcp.lan.force='1'
 	uci commit dhcp
 
-	uci set nft-qos.default.limit_enable='0'
+	uci -q set nft-qos.default.limit_enable='0'
 	uci commit nft-qos
 
-	uci set system.@system[0].conloglevel='4'
-	uci set system.@system[0].cronloglevel='8'
+	uci -q set system.@system[0].conloglevel='4'
+	uci -q set system.@system[0].cronloglevel='8'
 	uci commit system
 }
 
@@ -141,13 +145,13 @@ else
 fi
 
 test $version -lt 1 && {
-	uci -q get dhcp.@dnsmasq[0] || uci add dhcp dnsmasq
-	uci set dhcp.@dnsmasq[0].cachesize="$cachesize"
-	uci set dhcp.@dnsmasq[0].dnsforwardmax="$dnsforwardmax"
-	uci set dhcp.@dnsmasq[0].localservice='0'
-	uci set dhcp.@dnsmasq[0].localise_queries='1'
-	uci set dhcp.@dnsmasq[0].rebind_protection='0'
-	uci set dhcp.@dnsmasq[0].rebind_localhost='1'
+	uci -q get dhcp.@dnsmasq[0] || uci -q add dhcp dnsmasq
+	uci -q set dhcp.@dnsmasq[0].cachesize="$cachesize"
+	uci -q set dhcp.@dnsmasq[0].dnsforwardmax="$dnsforwardmax"
+	uci -q set dhcp.@dnsmasq[0].localservice='0'
+	uci -q set dhcp.@dnsmasq[0].localise_queries='1'
+	uci -q set dhcp.@dnsmasq[0].rebind_protection='0'
+	uci -q set dhcp.@dnsmasq[0].rebind_localhost='1'
 	uci commit dhcp
 	version=1
 }
@@ -170,5 +174,5 @@ echo vm.swappiness=0 >>$SYSCTL_LOCAL
 cp -pR /www/cgi-bin/* /www/
 rm -rf /tmp/luci-*
 
-uci set base_config.@status[0].version=$version
+uci -q set base_config.@status[0].version=$version
 uci commit base_config
