@@ -83,7 +83,7 @@ esac
 done
 
 REPO_BRANCH="$(git ls-remote --tags git://github.com/openwrt/openwrt | cut -d/ -f3- | sort -t. -nk1,2 | awk '/^[^{]*$/{version=$1}END{print version}'| sed -e 's/v//')"
-
+REPO_BRANCH="21.02.0"
 git clone -b v$REPO_BRANCH --depth 1 https://github.com/openwrt/openwrt
 svn export https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/trunk/devices openwrt/devices
 

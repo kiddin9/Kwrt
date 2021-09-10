@@ -42,6 +42,9 @@ echo "$sec 4 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 grep -q op.supes.top /etc/bypass/white.list ||
 		echo "op.supes.top" >> /etc/bypass/white.list
 
+processor=`cat /proc/cpuinfo | grep 'processor' | wc -l`
+test -n "$processor" || processor=3
+sed -i "s/^threads =.*/threads = $processor/" /etc/uwsgi/vassals/luci-webui.ini
 test $version -lt 1 && {
 	uci -q set luci.main.lang='auto'
 	uci -q set luci.main.mediaurlbase=/luci-static/edge
