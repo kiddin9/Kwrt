@@ -96,7 +96,9 @@ jobs:
     - name: Clone source code
       run: |
         [ "$REPO_BRANCH" ] ||
-            REPO_BRANCH="$(git ls-remote --tags git://github.com/openwrt/openwrt | cut -d/ -f3- | sort -t. -nk1,2 | awk '/^[^{]*$/{version=$1}END{print version}' | sed -e 's/v//')"
+            REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
+   -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
+   -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v21 | tail -n 1 | sed -e 's/v//')"
         git clone --depth 1 $REPO_URL -b v$REPO_BRANCH openwrt
         cd openwrt
         if [[ ${{matrix.target}} == "x86_64" ]]; then
