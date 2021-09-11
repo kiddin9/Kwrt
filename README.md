@@ -53,6 +53,18 @@
 
 #### 默认密码 root
 
+#### 固件内置的快捷访问入口(部分服务需要先自行在软件包中安装并启用):
+
++ op/ 可打开 OpenWRT后台 即 lan ip
++ ql/ 可打开 青龙后台 即 lan ip:5700
++ adg/ 可打开 AdGuardHome管理后台 即 lan ip:3000
++ pve/ 可打开 Proxmox VE虚拟机管理 默认为 10.0.0.10:8006
++ by/ 可打开 Bypass插件页面 即 ip/luci/admin/services/bypass
++ pk/ 可打开 Packages插件管理页面 即 ip/luci/admin/system/opkg
++ ug/ 可打开 固件在线更新页面 即 ip/luci/admin/services/gpsysupgrade
++ dl/ 可打开 固件和插件ipk仓库
+##### 可自行在 /etc/nginx/conf.d/shortcuts.conf 中调整和添加更多快捷访问
+
 第一次使用请采用全新安装,避免出现升级失败以及其他一些可能的Bug.
 
 云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法触发编译
@@ -92,13 +104,13 @@ diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](ht
  首次编译:
 ```
 screen -S openwrt
-wget -O compile.sh https://raw.githubusercontent.com/kiddin9/OpenWrt_x86-r2s-r4s/master/onekey/compile.sh && bash compile.sh
+bash -c "$(curl -fsSL https://git.io/opbuild.sh)"
 ```
 
  二次编译:
 ```
 screen -S openwrt
-wget -O recompile.sh https://raw.githubusercontent.com/kiddin9/OpenWrt_x86-r2s-r4s/master/onekey/recompile.sh && bash recompile.sh
+bash -c "$(curl -fsSL https://git.io/rebuild.sh)"
 ```
 
 Build OpenWrt using GitHub Actions
