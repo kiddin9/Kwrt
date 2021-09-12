@@ -39,6 +39,19 @@ sed -i "s/CONFIG_VERSION_CODE=.*/CONFIG_VERSION_CODE=\"$date\"/g" devices/common
 sed -i '$a cgi-timeout = 300' package/feeds/packages/uwsgi/files-luci-support/luci-webui.ini
 sed -i 's/limit-as.*/limit-as = 5000/' package/feeds/packages/uwsgi/files-luci-support/luci-webui.ini
 
+sed -i \
+	-e "s/+\(luci\|luci-ssl\|uhttpd\)\( \|$\)/\2/" \
+	-e "s/+nginx\( \|$\)/+nginx-ssl\1/" \
+	-e 's/+python\( \|$\)/+python3/' \
+	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
+	package/feeds/custom/*/Makefile
+
+for ipk in $(ls -d package/feeds/custom/*); do
+	if [[ ! -d "$ipk/patches" ]]; then
+		sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{7,\}/PKG_SOURCE_VERSION:=HEAD/g" !(luci-app*)/Makefile
+	fi	
+done
+
 (
 if [ -f sdk.tar.xz ]; then
 	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/custom/*/Makefile
@@ -55,16 +68,3 @@ if [ -f sdk.tar.xz ]; then
 	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 fi
 ) &
-
-sed -i \
-	-e "s/+\(luci\|luci-ssl\|uhttpd\)\( \|$\)/\2/" \
-	-e "s/+nginx\( \|$\)/+nginx-ssl\1/" \
-	-e 's/+python\( \|$\)/+python3/' \
-	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
-	package/feeds/custom/*/Makefile
-
-for ipk in $(ls -d package/feeds/custom/*); do
-	if [[ ! -d "$ipk/patches" ]]; then
-		sed -i "s/PKG_SOURCE_VERSION:=[0-9a-z]\{7,\}/PKG_SOURCE_VERSION:=HEAD/g" !(luci-app*)/Makefile
-	fi	
-done
