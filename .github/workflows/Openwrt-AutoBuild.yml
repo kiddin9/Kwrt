@@ -201,6 +201,7 @@ jobs:
         mkdir firmware
         mv -f openwrt/bin/targets/*/*/{*combined*,*sysupgrade*} ./firmware/ 2>/dev/null || true
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
+        cp build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}_kernel.config
         cd firmware
         echo ${{ env.date4 }} > version.txt
         rename -v "s/^openwrt/${{ env.date3 }}-openwrt/" *
