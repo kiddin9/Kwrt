@@ -277,7 +277,15 @@ jobs:
         name: ${{ env.date2 }} ${{matrix.target}} ${{ env.EMOJI }}
         tag_name: ${{ env.date }}_${{matrix.target}}
         body_path: release.txt
-        
+    
+    - name: Publish to docker hub
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: ${{ secrets.DOCKER_ID }}/openwrt-nginx
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSSD }}
+        tags: "$REPO_BRANCH,x86_64"
+    
     - name: WeChat notification
       continue-on-error: true
       if: env.SCKEY
