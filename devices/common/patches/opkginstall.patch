@@ -178,7 +178,7 @@
 +				}
 +			;;
 +			remove)
-+				sed -i "/$@/d" /etc/backup/user_installed.opkg
++				sed -i "/^$@$/d" /etc/backup/user_installed.opkg
 +			;;
 +		esac
  		) 200>/tmp/opkg.lock
