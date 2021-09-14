@@ -19,6 +19,8 @@ env:
   TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  DOCKER_ID: ${{ secrets.DOCKER_ID }}
+  DOCKER_PASSSD: ${{ secrets.DOCKER_PASSSD }}
   TZ: Asia/Shanghai
 
 jobs:
@@ -280,6 +282,8 @@ jobs:
     
     - name: Publish to docker hub
       uses: elgohr/Publish-Docker-Github-Action@master
+      continue-on-error: true
+      if: env.DOCKER_ID && env.DOCKER_PASSSD
       with:
         name: ${{ secrets.DOCKER_ID }}/openwrt-nginx
         username: ${{ secrets.DOCKER_ID }}
