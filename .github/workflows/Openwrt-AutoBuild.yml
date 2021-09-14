@@ -62,6 +62,11 @@ jobs:
         echo "UPLOAD_FIRMWARE_FOR_RELEASE=${UPLOAD_FIRMWARE_FOR_RELEASE}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
+        if [ ${{matrix.target}} == "x86_64" ]; then
+            echo "ARCH=linux/amd64" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} =~ (Rpi-4B|nanopi-r2s|nanopi-r4s) ]]; then
+            echo "ARCH=linux/arm64" >> $GITHUB_ENV
+        fi
 
     - name: Trigger Packages Update
       run: |
@@ -279,16 +284,29 @@ jobs:
         name: ${{ env.date2 }} ${{matrix.target}} ${{ env.EMOJI }}
         tag_name: ${{ env.date }}_${{matrix.target}}
         body_path: release.txt
-    
-    - name: Publish to docker hub
-      uses: elgohr/Publish-Docker-Github-Action@master
+      
+    - name: Set Up Docker Buildx
+      uses: docker/setup-buildx-action@master
+      if: env.DOCKER_ID && env.DOCKER_PASSSD
+
+    - name: Login To DockerHub
+      uses: docker/login-action@master
+      if: env.DOCKER_ID && env.DOCKER_PASSSD
+      with:
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSSD }}
+        
+    - name: Build and push docker image
+      uses: docker/build-push-action@master
       continue-on-error: true
       if: env.DOCKER_ID && env.DOCKER_PASSSD
       with:
-        name: ${{ secrets.DOCKER_ID }}/openwrt-nginx
-        username: ${{ secrets.DOCKER_ID }}
-        password: ${{ secrets.DOCKER_PASSSD }}
-        tags: "$REPO_BRANCH,x86_64"
+        platforms: env.ARCH
+        file: Dockerfile
+        context: .
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_ID }}/openwrt-nginx:${{matrix.target}}
     
     - name: WeChat notification
       continue-on-error: true
