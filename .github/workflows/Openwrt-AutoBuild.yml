@@ -301,7 +301,7 @@ jobs:
       continue-on-error: true
       if: env.DOCKER_ID && env.DOCKER_PASSWD
       with:
-        platforms: ${{ env.date3 }}
+        platforms: ${{ env.ARCH }}
         file: Dockerfile
         context: .
         push: true
