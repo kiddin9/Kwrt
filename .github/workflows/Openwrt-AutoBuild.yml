@@ -20,7 +20,7 @@ env:
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   DOCKER_ID: ${{ secrets.DOCKER_ID }}
-  DOCKER_PASSSD: ${{ secrets.DOCKER_PASSSD }}
+  DOCKER_PASSWD: ${{ secrets.DOCKER_PASSWD }}
   TZ: Asia/Shanghai
 
 jobs:
@@ -287,21 +287,21 @@ jobs:
       
     - name: Set Up Docker Buildx
       uses: docker/setup-buildx-action@master
-      if: env.DOCKER_ID && env.DOCKER_PASSSD
+      if: env.DOCKER_ID && env.DOCKER_PASSWD
 
     - name: Login To DockerHub
       uses: docker/login-action@master
-      if: env.DOCKER_ID && env.DOCKER_PASSSD
+      if: env.DOCKER_ID && env.DOCKER_PASSWD
       with:
         username: ${{ secrets.DOCKER_ID }}
-        password: ${{ secrets.DOCKER_PASSSD }}
+        password: ${{ secrets.DOCKER_PASSWD }}
         
     - name: Build and push docker image
       uses: docker/build-push-action@master
       continue-on-error: true
-      if: env.DOCKER_ID && env.DOCKER_PASSSD
+      if: env.DOCKER_ID && env.DOCKER_PASSWD
       with:
-        platforms: env.ARCH
+        platforms: ${{ env.ARCH }}
         file: Dockerfile
         context: .
         push: true
