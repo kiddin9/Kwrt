@@ -306,7 +306,7 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKER_ID }}/openwrt-nginx:${{matrix.target}}
+          ${{ secrets.DOCKER_ID }}/openwrt-nginx:${{ matrix.target }}
     
     - name: WeChat notification
       continue-on-error: true
