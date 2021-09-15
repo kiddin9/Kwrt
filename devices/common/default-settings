@@ -16,10 +16,6 @@ fi
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
-test ! -f /etc/nginx/uci.conf && {
-	ln -sf /var/lib/nginx/uci.conf /etc/nginx/uci.conf
-}
-
 sed -i 's/\(custom.*\)\/custom/\1/' /etc/opkg/distfeeds.conf
 sed -i 's?\(src/gz openwrt_core\)?#\1?' /etc/opkg/distfeeds.conf
 

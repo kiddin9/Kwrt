@@ -41,3 +41,17 @@
  	if [ "$mode" -gt 0 ] ; then
  		ifdashname="${ifname//./-}"
  		routerstub="$( md5sum /etc/os-release )"
+
+--- a/package/feeds/packages/nginx/files/nginx.init
++++ b/package/feeds/packages/nginx/files/nginx.init
+@@ -23,6 +23,10 @@ nginx_init() {
+ 	rm -f "$(readlink "${UCI_CONF}")"
+ 	${NGINX_UTIL} init_lan
+ 
++	if [ ! -h "${UCI_CONF}" ]
++	then ln -sf /var/lib/nginx/uci.conf ${UCI_CONF}
++	fi
++
+ 	if [ -e "${UCI_CONF}" ]
+ 	then CONF="${UCI_CONF}"
+ 	else CONF="${NGINX_CONF}"
