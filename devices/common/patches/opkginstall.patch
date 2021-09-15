@@ -239,17 +239,6 @@
  }
  
 
---- a/package/base-files/files/sbin/sysupgrade
-+++ b/package/base-files/files/sbin/sysupgrade
-@@ -232,6 +232,7 @@ do_save_conffiles() {
- 
- 	if [ "$SAVE_INSTALLED_PKGS" -eq 1 ]; then
- 		echo "${INSTALLED_PACKAGES}" >> "$CONFFILES"
-+		echo "${ETCBACKUP_DIR}/user_installed.opkg" >> "$CONFFILES"
- 		mkdir -p "$ETCBACKUP_DIR"
- 		# Avoid touching filesystem on each backup
- 		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"
-
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
 @@ -283,7 +283,9 @@ default_postinst() {
