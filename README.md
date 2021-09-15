@@ -1,4 +1,4 @@
-# OpenWrt x86_64 NanoPi-R2S R4S Raspberry-Pi-4B
+# OpenWrt with NGINX for x86_64 NanoPi-R2S R4S Raspberry-Pi-4B
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
@@ -41,12 +41,12 @@
 + 无需专业知识,无需linux服务器,人人皆可通过云编译定制编译自己的专属固件.
 
 
-| 设备           | 固件下载                                             | 说明                                 |
-|----------------|-----------------------------------------------------|--------------------------------------|
-| X86_64         | [📥](https://op.supes.top/firmware/x86_64/)         | 请分配不少于1G的存储空间           |   |
-| NanoPi-R2S    | [📥](https://op.supes.top/firmware/nanopi-r2s/)     | 默认交换了网口,靠近电源口的是WAN口   |         |
-| NanoPi-R4S    | [📥](https://op.supes.top/firmware/nanopi-r4s/)     |             |
-| Raspberry Pi 4B (树莓派4B)| [📥](https://op.supes.top/firmware/Rpi-4B/)         |   
+| 设备           | 固件下载                                             | 🐳 Docker |说明                                 |
+|----------------|-----------------------------------------------------|--|--------------------------------------|
+| X86_64         | [📥](https://op.supes.top/firmware/x86_64/)  | [kiddin9/openwrt-nginx:x86_64](https://hub.docker.com/r/kiddin9/openwrt-nginx)      | 请分配不少于1G的存储空间           |
+| NanoPi-R2S    | [📥](https://op.supes.top/firmware/nanopi-r2s/) | [kiddin9/openwrt-nginx:nanopi-r2s](https://hub.docker.com/r/kiddin9/openwrt-nginx)   | 默认交换了网口,靠近电源口的是WAN口   |
+| NanoPi-R4S    | [📥](https://op.supes.top/firmware/nanopi-r4s/) | [kiddin9/openwrt-nginx:nanopi-r4s](https://hub.docker.com/r/kiddin9/openwrt-nginx)   |
+| Raspberry Pi 4B (树莓派4B)| [📥](https://op.supes.top/firmware/Rpi-4B/)  | [kiddin9/openwrt-nginx:rpi-4b](https://hub.docker.com/r/kiddin9/openwrt-nginx)   |
 
 
 #### 后台入口 op/ 或 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
