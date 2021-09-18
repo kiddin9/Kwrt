@@ -98,6 +98,7 @@ jobs:
       run: |
         echo "date=$(date +'%m/%d_%Y_%H/%M')" >> $GITHUB_ENV
         echo "date2=$(date +'%m/%d %Y')" >> $GITHUB_ENV
+        VERSION="$(echo "${{github.event.action}}" | grep -Eo " [0-9.]+" | sed -e 's/ //')" || true
         [ "$VERSION" ] && echo "VERSION=$VERSION" >> $GITHUB_ENV || echo "VERSION=$(date +'%m.%d')" >> $GITHUB_ENV
 
     - name: Clone source code
@@ -220,6 +221,7 @@ jobs:
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "x86_64" ]; then
+        echo "DOCKERTAG=${{ secrets.DOCKER_ID }}/openwrt-nginx:latest" >> $GITHUB_ENV
         echo "NOTICE=请分配不少于1G的存储容量" >> $GITHUB_ENV
         fi
 
@@ -307,6 +309,7 @@ jobs:
         push: true
         tags: |
           ${{ secrets.DOCKER_ID }}/openwrt-nginx:${{ matrix.target }}
+          ${{ env.DOCKERTAG }}
     
     - name: WeChat notification
       continue-on-error: true
