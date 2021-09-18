@@ -30,7 +30,7 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 ln -s /sbin/poweroff /sbin/shutdown
 
 sed -i '/S99opkg/d' /etc/crontabs/root
-sec="$(grep -m1 -ao '[0-6][0-9]' /dev/urandom | head -n1)"
+sec="$(grep -m1 -ao '[0-5][0-9]' /dev/urandom | head -n1)"
 echo "$sec 4 * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
 
 [[ "$(echo "$(/sbin/cpuinfo 2>/dev/null)" | grep -i "MHz")" ]] || sed -i "s/_('CPU Info'),cpuinfo.cpufreq,//" /www/luci-static/resources/view/status/include/10_system.js
