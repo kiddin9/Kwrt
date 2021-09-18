@@ -20,7 +20,7 @@ sed -i 's/Os/O2/g' include/target.mk
 sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite/' package/Makefile
 sed -i 's/root:.*/root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::/g' package/base-files/files/etc/shadow
 sed -i -e '$a /etc/sysupgrade.conf' \
-       -e /etc/sysupgrade.conf' \
+       -e '/etc/sysupgrade.conf' \
        -e '$a /etc/bench.log' \
        -e '/\/etc\/profile/d' \
        -e '/\/etc\/shinit/d' \
