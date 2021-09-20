@@ -18,15 +18,14 @@
 
 --- a/package/network/services/dnsmasq/files/dnsmasq.init
 +++ b/package/network/services/dnsmasq/files/dnsmasq.init
-@@ -403,6 +403,21 @@ dhcp_this_host_add() {
+@@ -403,6 +403,20 @@ dhcp_this_host_add() {
  	local routerstub routername ifdashname
  	local lanaddr lanaddr6 lanaddrs6 ulaprefix
  
 +network_get_ipaddr lanaddr "lan"
 +if [ -n $lanaddr ]; then
 +	echo "
-+$lanaddr op
-+$lanaddr dl" >/tmp/hosts/shortcuts
++$lanaddr op" >/tmp/hosts/shortcuts
 +if [ -f /etc/nginx/conf.d/shortcuts.conf ]; then
 +if [[ "$lanaddr" != "`grep "set \$ip" /etc/nginx/conf.d/shortcuts.conf | head -n1 | cut -f 3 -d " " | sed -e 's/;//'`" ]]; then
 +	sed -i "s/set \$ip.*/set \$ip $lanaddr;/" /etc/nginx/conf.d/shortcuts.conf

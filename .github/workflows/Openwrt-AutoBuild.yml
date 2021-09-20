@@ -136,11 +136,11 @@ jobs:
         cd openwrt
         chmod +x devices/common/$DIY_SH
         /bin/bash "devices/common/$DIY_SH"
-        cp -Rf ./diy/* ./
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
+        cp -Rf ./diy/* ./
         cp -f devices/common/default-settings package/*/*/default-settings/files/uci.defaults
         if [ -f "devices/${{matrix.target}}/default-settings" ]; then
           echo >> package/*/*/default-settings/files/uci.defaults
