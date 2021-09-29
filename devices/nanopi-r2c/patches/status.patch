@@ -1,0 +1,8 @@
+--- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
++++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+@@ -61,5 +61,4 @@
+ 			_('Hostname'),         boardinfo.hostname,
+ 			_('Model'),            boardinfo.model + ' ' + cpuinfo.cpumark,
+-			_('Architecture'),     boardinfo.system,
+ 			_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),
+ 			_('Kernel Version'),   boardinfo.kernel,

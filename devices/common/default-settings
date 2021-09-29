@@ -13,6 +13,8 @@ if [ "$(uci -q get dhcp.@dnsmasq[0].port)" != "53" ]; then
 	uci commit dhcp
 fi
 
+uci set dockerd.firewall.extra_iptables_args='--match conntrack ! --ctstate RELATED,ESTABLISHED'
+uci commit dockerd
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
