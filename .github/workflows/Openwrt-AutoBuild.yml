@@ -301,7 +301,7 @@ jobs:
     - name: Build and push docker image
       uses: docker/build-push-action@master
       continue-on-error: true
-      if: env.DOCKER_ID && env.DOCKER_PASSWD
+      if: env.DOCKER_ID && env.DOCKER_PASSWD && ! contains(github.event.action, 'noser')
       with:
         platforms: ${{ env.ARCH }}
         file: Dockerfile
