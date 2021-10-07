@@ -151,9 +151,12 @@
  			_('Buffered'),        (mem.total && mem.buffered) ? mem.buffered : null, mem.total
  		];
  
-@@ -43,7 +42,7 @@ return baseclass.extend({
+@@ -41,9 +40,9 @@ return baseclass.extend({
+ 			fields.push(_('Cached'), mem.cached, mem.total);
+ 
  		if (swap.total > 0)
- 			fields.push(_('Swap free'), swap.free, swap.total);
+-			fields.push(_('Swap free'), swap.free, swap.total);
++			fields.push(_('Swap used'), swap.total - swap.free, swap.total);
  
 -		var table = E('table', { 'class': 'table' });
 +		var table = E('table', { 'class': 'table memory' });
