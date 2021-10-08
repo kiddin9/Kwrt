@@ -8,10 +8,10 @@ rm -rf target/linux/rockchip/!(patches-5.4)
 svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
 rm -rf target/linux/rockchip/{.svn,patches-5.4/.svn}
 svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/patches-5.4 target/linux/rockchip/patches-5.4
-curl -L https://git.io/J0klE -o package/kernel/linux/modules/video.mk
+curl -sfL https://git.io/J0klE -o package/kernel/linux/modules/video.mk
 mkdir -p files/etc/rc.d
-curl -L https://git.io/J0kRv --create-dirs -o files/usr/bin/start-rk3399-pwm-fan.sh
-curl -L https://git.io/J0kRG --create-dirs -o files/etc/init.d/fa-rk3399-pwmfan
+curl -sfL https://git.io/J0kRv --create-dirs -o files/usr/bin/start-rk3399-pwm-fan.sh
+curl -sfL https://git.io/J0kRG --create-dirs -o files/etc/init.d/fa-rk3399-pwmfan
 chmod +x files/usr/bin/start-rk3399-pwm-fan.sh files/etc/init.d/fa-rk3399-pwmfan
 ln -sf /etc/init.d/fa-rk3399-pwmfan files/etc/rc.d/S96fa-rk3399-pwmfan
 
