@@ -11,3 +11,41 @@
 +endef
 +endif
 +
+
+--- a/package/base-files/files/lib/functions.sh
++++ b/package/base-files/files/lib/functions.sh
+@@ -283,7 +283,9 @@ default_postinst() {
+ 			if [ "$PKG_UPGRADE" != "1" ]; then
+ 				"$i" enable
+ 			fi
+-			"$i" start
++			if "$i" enabled; then
++				"$i" start
++			fi
+ 		fi
+ 	done
+ 
+
+--- a/package/feeds/luci/luci-base/root/etc/init.d/ucitrack
++++ b/package/feeds/luci/luci-base/root/etc/init.d/ucitrack
+@@ -8,7 +8,7 @@ register_init() {
+ 	local init="$2"
+ 	shift; shift
+ 
+-	if [ -x "$init" ] && "$init" enabled && ! grep -sqE 'USE_PROCD=.' "$init"; then
++	if [ -x "$init" ] && ! grep -sqE 'USE_PROCD=.' "$init"; then
+ 		logger -t "ucitrack" "Setting up /etc/config/$config reload trigger for non-procd $init"
+ 		procd_add_config_trigger "config.change" "$config" "$init" "$@"
+ 	fi
+
+--- a/feeds/luci/luci-base/root/sbin/luci-reload
++++ b/feeds/luci/luci-base/root/sbin/luci-reload
+@@ -26,7 +26,7 @@ reload_exec() {
+ }
+ 
+ reload_init() {
+-	[ -x /etc/init.d/$2 ] && /etc/init.d/$2 enabled && {
++	[ -x /etc/init.d/$2 ] && {
+ 		echo "Reloading $1... "
+ 		/etc/init.d/$2 reload >/dev/null 2>&1
+ 		[ -n "$3" -a "$?" != "$3" ] && echo '!!! Failed to reload' $1 '!!!'

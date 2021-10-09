@@ -238,17 +238,3 @@
  	return $ret
  }
  
-
---- a/package/base-files/files/lib/functions.sh
-+++ b/package/base-files/files/lib/functions.sh
-@@ -283,7 +283,9 @@ default_postinst() {
- 			if [ "$PKG_UPGRADE" != "1" ]; then
- 				"$i" enable
- 			fi
--			"$i" start
-+			if "$i" enabled; then
-+				"$i" start
-+			fi
- 		fi
- 	done
- 
