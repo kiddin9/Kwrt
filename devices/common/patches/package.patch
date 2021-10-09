@@ -38,8 +38,8 @@
  		procd_add_config_trigger "config.change" "$config" "$init" "$@"
  	fi
 
---- a/feeds/luci/luci-base/root/sbin/luci-reload
-+++ b/feeds/luci/luci-base/root/sbin/luci-reload
+--- a/package/feeds/luci/luci-base/root/sbin/luci-reload
++++ b/package/feeds/luci/luci-base/root/sbin/luci-reload
 @@ -26,7 +26,7 @@ reload_exec() {
  }
  
