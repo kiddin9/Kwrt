@@ -29,8 +29,6 @@ echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
-ln -s /sbin/poweroff /sbin/shutdown
-
 sed -i '/S99opkg/d' /etc/crontabs/root
 hour="$(grep -m1 -ao '[5-7]' /dev/urandom | head -n1)"
 min="$(grep -m1 -ao '[0-5][0-9]' /dev/urandom | head -n1)"
