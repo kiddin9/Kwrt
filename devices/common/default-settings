@@ -29,8 +29,6 @@ echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 
 sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 
-ln -s /sbin/poweroff /sbin/shutdown
-
 sed -i '/S99opkg/d' /etc/crontabs/root
 hour="$(grep -m1 -ao '[5-7]' /dev/urandom | head -n1)"
 min="$(grep -m1 -ao '[0-5][0-9]' /dev/urandom | head -n1)"
@@ -155,6 +153,9 @@ test $version -lt 1 && {
 	uci -q set dhcp.@dnsmasq[0].rebind_protection='0'
 	uci -q set dhcp.@dnsmasq[0].rebind_localhost='1'
 	uci commit dhcp
+	uci -q set system.@system[0].zram_comp_algo='zstd'
+	uci -q set system.@system[0].zram_size_mb="$(expr $memtotal / 1024 / 3)"
+	uci commit system
 	version=1
 }
 
