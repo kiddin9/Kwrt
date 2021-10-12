@@ -11,9 +11,8 @@ svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/
 curl -sfL https://git.io/J0klE -o package/kernel/linux/modules/video.mk
 mkdir -p files/etc/rc.d
 curl -sfL https://git.io/J0kc3 --create-dirs -o files/usr/bin/start-rk3328-pwm-fan.sh
-curl -sfL https://git.io/J0kW8 --create-dirs -o files/etc/init.d/fa-rk3328-pwmfan
-chmod +x files/usr/bin/start-rk3328-pwm-fan.sh files/etc/init.d/fa-rk3328-pwmfan
-ln -sf /etc/init.d/fa-rk3328-pwmfan files/etc/rc.d/S96fa-rk3328-pwmfan
+curl -sfL https://git.io/J0kW8 --create-dirs -o files/etc/init.d/fa-pwmfan
+chmod +x files/usr/bin/start-rk3328-pwm-fan.sh files/etc/init.d/fa-pwmfan
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
 

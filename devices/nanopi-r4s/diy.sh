@@ -11,9 +11,8 @@ svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/
 curl -sfL https://git.io/J0klE -o package/kernel/linux/modules/video.mk
 mkdir -p files/etc/rc.d
 curl -sfL https://git.io/J0kRv --create-dirs -o files/usr/bin/start-rk3399-pwm-fan.sh
-curl -sfL https://git.io/J0kRG --create-dirs -o files/etc/init.d/fa-rk3399-pwmfan
-chmod +x files/usr/bin/start-rk3399-pwm-fan.sh files/etc/init.d/fa-rk3399-pwmfan
-ln -sf /etc/init.d/fa-rk3399-pwmfan files/etc/rc.d/S96fa-rk3399-pwmfan
+curl -sfL https://git.io/J0kRG --create-dirs -o files/etc/init.d/fa-pwmfan
+chmod +x files/usr/bin/start-rk3399-pwm-fan.sh files/etc/init.d/fa-pwmfan
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
 #sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
