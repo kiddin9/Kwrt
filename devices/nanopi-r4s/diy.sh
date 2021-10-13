@@ -4,7 +4,7 @@ shopt -s extglob
 rm -rf package/boot/uboot-rockchip
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
 svn export --force https://github.com/immortalwrt/immortalwrt/branches/master/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
-rm -rf target/linux/rockchip/!(patches-5.4)
+rm -rf target/linux/rockchip/!(Makefile|patches-5.4)
 svn co https://github.com/immortalwrt/immortalwrt/branches/master/target/linux/rockchip target/linux/rockchip
 rm -rf target/linux/rockchip/{.svn,patches-5.4/.svn}
 svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/linux/rockchip/patches-5.4 target/linux/rockchip/patches-5.4
@@ -15,7 +15,7 @@ curl -sfL https://git.io/J0kRG --create-dirs -o files/etc/init.d/fa-pwmfan
 chmod +x files/usr/bin/start-rk3399-pwm-fan.sh files/etc/init.d/fa-pwmfan
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
-#sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
+sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
 
 sed -i '/set_interface_core 20 "eth1"/a\set_interface_core 8 "ff3c0000" "ff3c0000.i2c"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 sed -i '/set_interface_core 20 "eth1"/a\ethtool -C eth0 rx-usecs 1000 rx-frames 25 tx-usecs 100 tx-frames 25' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
