@@ -32,7 +32,7 @@ sed -i "s/git-.*-\(.*\)/git-\1/g" /usr/lib/lua/luci/version.lua
 sed -i '/S99opkg/d' /etc/crontabs/root
 hour="$(grep -m1 -ao '[4-6]' /dev/urandom | head -n1)"
 min="$(grep -m1 -ao '[0-5][0-9]' /dev/urandom | head -n1)"
-echo "$min $hour * * * sh /etc/rc.d/S99opkg >/dev/null 2>&1" >> /etc/crontabs/root
+echo "$min $hour * * * sh /etc/init.d/packages >/dev/null 2>&1" >> /etc/crontabs/root
 
 [[ "$(echo "$(/sbin/cpuinfo 2>/dev/null)" | grep -i "MHz")" ]] || sed -i "s/_('CPU Info'),cpuinfo.cpufreq,//" /www/luci-static/resources/view/status/include/10_system.js
 
