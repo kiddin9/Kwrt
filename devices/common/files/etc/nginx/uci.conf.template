@@ -19,8 +19,8 @@ http {
 	sendfile on;
 
 	client_max_body_size 128M;
-	client_header_buffer_size 2k;
-	large_client_header_buffers 4 4k;
+	client_header_buffer_size 512k;
+	large_client_header_buffers 4 512k;
 
 	gzip on;
 	gzip_vary on;
