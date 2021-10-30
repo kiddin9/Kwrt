@@ -94,7 +94,7 @@ filters:
   id: 1628750871
 whitelist_filters: []
 user_rules:
-- '@@||edge.activity.windows.com^'
+- ""
 dhcp:
   enabled: false
   interface_name: ""
