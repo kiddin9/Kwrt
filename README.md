@@ -61,7 +61,7 @@
 + pve/ 可打开 Proxmox VE虚拟机管理 默认为 10.0.0.10:8006
 + by/ 可打开 Bypass插件页面 即 ip/luci/admin/services/bypass
 + pk/ 可打开 Packages插件管理页面 即 ip/luci/admin/system/opkg
-+ ag/ 可打开 AriaNg 即 ip/ariang
++ ag/ 可打开 Aria2 Web面板 即 ip/ariang
 + ug/ 可打开 固件在线更新页面 即 ip/luci/admin/services/gpsysupgrade
 ##### 可自行在 /etc/nginx/conf.d/shortcuts.conf 中调整和添加更多快捷访问
 
