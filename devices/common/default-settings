@@ -19,7 +19,7 @@ uci commit dockerd
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
 sed -i 's/\(custom.*\)\/custom/\1/' /etc/opkg/distfeeds.conf
-sed -i 's?\(src/gz openwrt_core\)?#\1?' /etc/opkg/distfeeds.conf
+sed -i 's?\(src/gz openwrt_\(core\|telephony\)\)?#\1?' /etc/opkg/distfeeds.conf
 
 echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
