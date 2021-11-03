@@ -150,23 +150,28 @@
  						opkg="$opkg $1"
  						shift
  					;;
-@@ -34,6 +34,15 @@ case "$action" in
+@@ -34,9 +34,19 @@ case "$action" in
  
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
-+				if [[ $@ == luci-app-* && "$(opkg list-installed | grep luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn)"]]; then
++				if [[ $@ == luci-app-* && "$(opkg list | grep luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn)" ]]; then
 +					$opkg $action luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn </dev/null >>/tmp/opkg.out 2>/dev/null
 +				fi
-+				sed -i "/resolve_conffiles/d" /tmp/opkg.err || true
-+				sed -i "/uci: Entry not found/d" /tmp/opkg.err || true
-+				sed -i "/Existing conffile/d" /tmp/opkg.err || true
-+				sed -i "/Couldn't unlink/d" /tmp/opkg.err || true
-+				sed -i "/cannot find dependency kernel/d" /tmp/opkg.err || true
-+				[[ "`cat /tmp/opkg.err`" =~ "^Collected errors:(\nCollected errors:){0,}$" ]] && rm -f /tmp/opkg.err || true
++				sed -i -e "/resolve_conffiles/d" \
++				       -e "/uci: Entry not found/d" \
++				       -e "/Existing conffile/d" \
++				       -e "/Couldn't unlink/d" \
++				       -e "/cannot find dependency kernel/d" \
++				       -e "/^Collected errors:\(\nCollected errors:\)*$/d" /tmp/opkg.err || true
  				code=$?
- 				stdout=$(cat /tmp/opkg.out)
+-				stdout=$(cat /tmp/opkg.out)
  				stderr=$(cat /tmp/opkg.err)
-@@ -47,6 +56,17 @@ case "$action" in
++				[ -n "$stderr" ] || echo "🎉 已完成, 请关闭本窗口~" >>/tmp/opkg.out
++				stdout=$(cat /tmp/opkg.out)
+ 			else
+ 				code=255
+ 				stderr="Failed to acquire lock"
+@@ -47,6 +57,17 @@ case "$action" in
  			[ -n "$stdout" ] && json_add_string stdout "$stdout"
  			[ -n "$stderr" ] && json_add_string stderr "$stderr"
  			json_dump

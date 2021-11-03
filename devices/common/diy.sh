@@ -2,6 +2,9 @@
 #=================================================
 shopt -s extglob
 sed -i '/	refresh_config();/d' scripts/feeds
+[ ! -f feeds.conf ] && {
+sed -i '$a src-git custom https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
+}
 ./scripts/feeds update -a
 git clone --depth 1 https://github.com/kiddin9/my-packages feeds/custom/my-packages && mv -f feeds/custom/my-packages/* feeds/custom && rm -f feeds/custom/my-packages
 ./scripts/feeds install -a -p custom
