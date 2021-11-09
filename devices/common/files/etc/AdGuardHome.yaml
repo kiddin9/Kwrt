@@ -18,7 +18,7 @@ dns:
   statistics_interval: 90
   querylog_enabled: true
   querylog_file_enabled: true
-  querylog_interval: 7
+  querylog_interval: 6h
   querylog_size_memory: 1000
   anonymize_client_ip: false
   protection_enabled: true
