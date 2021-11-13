@@ -1,21 +1,18 @@
 --- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/system.js
 +++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/system.js
-@@ -184,6 +184,20 @@ return view.extend({
+@@ -184,6 +184,17 @@ return view.extend({
  		o.value(8, _('Normal'))
  		o.value(9, _('Warning'))
  
 +		s.tab('firmware', _('Firmware Settings'));
 +
 +		o = s.taboption('firmware', form.Flag, 'autoupgrade_pkg', _('Packages Auto Upgrade'));
-+		o.rmempty = false;
 +		o.default = o.enabled;
 +
 +		o = s.taboption('firmware', form.Flag, 'autoupgrade_fm', _('Firmware Upgrade Notice'));
-+		o.rmempty = false;
 +		o.default = o.enabled;
 +
 +		o = s.taboption('firmware', form.Flag, 'ipv6', _('Enable IPv6'), _('Enable/Disable IPv6'));
-+		o.rmempty = false;
 +		o.default = o.enabled;
 +
  		/*

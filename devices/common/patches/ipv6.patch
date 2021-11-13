@@ -15,7 +15,7 @@
  	# apply timezone to kernel
  	hwclock -u --systz
 +
-+	[[ "$ipv6" == "0" ]] && {
++	if [[ "$ipv6" == "0" ]]; then
 +		uci -q delete dhcp.lan.dhcpv6
 +		uci -q delete dhcp.lan.ra
 +		uci -q set network.lan.delegate='0'
@@ -26,7 +26,7 @@
 +		/etc/init.d/odhcpd disable
 +		/etc/init.d/odhcpd stop
 +		/etc/init.d/network restart
-+	} || {
++	elif [[ "$ipv6" == "1" ]]; then
 +		uci -q set dhcp.lan.ra='hybrid'
 +		uci -q set dhcp.lan.dhcpv6='hybrid'
 +		uci -q del network.lan.delegate
@@ -36,7 +36,7 @@
 +		/etc/init.d/odhcpd enable
 +		/etc/init.d/odhcpd start
 +		/etc/init.d/network restart
-+	}
++	fi
  }
  
  reload_service() {
