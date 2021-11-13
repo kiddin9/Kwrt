@@ -18,7 +18,7 @@ on:
     inputs:
       skip:
         description: 'Skip version check'
-        required: false
+        required: true
         default: 'true'
 
 env:
