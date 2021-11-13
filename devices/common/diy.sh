@@ -25,7 +25,6 @@ sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite/' pack
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
 sed -i '/root:/c\root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::' package/base-files/files/etc/shadow
 sed -i -e '$a /etc/sysupgrade.conf' \
-       -e '/etc/sysupgrade.conf' \
        -e '$a /etc/bench.log' \
        -e '/\/etc\/profile/d' \
        -e '/\/etc\/shinit/d' \
