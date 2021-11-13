@@ -28,7 +28,7 @@
 +$lanaddr op" >/tmp/hosts/shortcuts
 +if [ -f /etc/nginx/conf.d/shortcuts.conf ]; then
 +if [[ "$lanaddr" != "`grep "set \$ip" /etc/nginx/conf.d/shortcuts.conf | head -n1 | cut -f 3 -d " " | sed -e 's/;//'`" ]]; then
-+	sed -i "/set $ip/c\set $ip \$lanaddr;" /etc/nginx/conf.d/shortcuts.conf
++	sed -i "/set \$ip/c\set \$ip $lanaddr;" /etc/nginx/conf.d/shortcuts.conf
 +	/etc/init.d/nginx reload
 +fi
 +cat /etc/nginx/conf.d/shortcuts.conf | tr "\n" "\r" |grep -oE 'server_name [a-z.-]*;[^;]*set \$ip [0-9.]*;' | sed -e 's/server_name \(.*\);.*location.*set $ip \(.*\);/\2 \1/' >>/tmp/hosts/shortcuts
