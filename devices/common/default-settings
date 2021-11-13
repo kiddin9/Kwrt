@@ -55,8 +55,6 @@ test $version -lt 1 && {
 		uci -q del system.ntp.server
 		uci -q add_list system.ntp.server='ntp.aliyun.com'
 		uci -q add_list system.ntp.server='0.openwrt.pool.ntp.org'
-		uci -q set system.@system[0].autoupgrade_pkg='1'
-		uci -q set system.@system[0].autoupgrade_fm='1'
 		uci commit system
 	}
 
