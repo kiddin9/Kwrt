@@ -150,45 +150,36 @@
  						opkg="$opkg $1"
  						shift
  					;;
-@@ -34,9 +34,19 @@ case "$action" in
- 
+@@ -35,8 +35,28 @@ case "$action" in
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
+ 				code=$?
+-				stdout=$(cat /tmp/opkg.out)
 +				if [[ $@ == luci-app-* && "$(opkg list | grep luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn)" ]]; then
 +					$opkg $action luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn </dev/null >>/tmp/opkg.out 2>/dev/null
 +				fi
-+				sed -i -e "/resolve_conffiles/d" \
-+				       -e "/uci: Entry not found/d" \
-+				       -e "/Existing conffile/d" \
-+				       -e "/Couldn't unlink/d" \
-+				       -e "/cannot find dependency kernel/d" \
-+				       -e "/^Collected errors:\(\nCollected errors:\)*$/d" /tmp/opkg.err || true
- 				code=$?
--				stdout=$(cat /tmp/opkg.out)
++				case "$action" in
++					install)
++						[ "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" ] && {
++							rm -f /tmp/opkg.err
++						}
++						[[ "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" && ! "$(cat /etc/backup/user_installed.opkg | grep -w $@)" ]] && {
++							echo $@ >>/etc/backup/user_installed.opkg
++						}
++					;;
++					remove)
++						[ ! "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" ] && {
++							rm -f /tmp/opkg.err
++						}
++						sed -i "/^$@$/d" /etc/backup/user_installed.opkg
++					;;
++				esac
  				stderr=$(cat /tmp/opkg.err)
 +				[ -n "$stderr" ] || echo "🎉 已完成, 请关闭本窗口~" >>/tmp/opkg.out
 +				stdout=$(cat /tmp/opkg.out)
  			else
  				code=255
  				stderr="Failed to acquire lock"
-@@ -47,6 +57,17 @@ case "$action" in
- 			[ -n "$stdout" ] && json_add_string stdout "$stdout"
- 			[ -n "$stderr" ] && json_add_string stderr "$stderr"
- 			json_dump
-+
-+		case "$action" in
-+			install)
-+				[[ "$(opkg list-installed | cut -f 1 -d ' ' | grep $@)" && ! "$(cat /etc/backup/user_installed.opkg | grep ^$@$)" ]] && {
-+				echo $@ >>/etc/backup/user_installed.opkg
-+				}
-+			;;
-+			remove)
-+				sed -i "/^$@$/d" /etc/backup/user_installed.opkg
-+			;;
-+		esac
- 		) 200>/tmp/opkg.lock
- 
- 		rm -f /tmp/opkg.lock /tmp/opkg.err /tmp/opkg.out
 
 --- a/package/feeds/luci/luci-app-opkg/root/usr/share/rpcd/acl.d/luci-app-opkg.json
 +++ b/package/feeds/luci/luci-app-opkg/root/usr/share/rpcd/acl.d/luci-app-opkg.json
