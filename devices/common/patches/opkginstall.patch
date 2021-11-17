@@ -159,7 +159,7 @@
 +					$opkg $action luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn </dev/null >>/tmp/opkg.out 2>/dev/null
 +				fi
 +				case "$action" in
-+					install)
++					install|upgrade)
 +						[ "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" ] && {
 +							rm -f /tmp/opkg.err
 +						}
@@ -234,3 +234,14 @@
  	return $ret
  }
  
+
+--- a/package/base-files/files/sbin/sysupgrade
++++ b/package/base-files/files/sbin/sysupgrade
+@@ -232,6 +232,7 @@ do_save_conffiles() {
+ 
+ 	if [ "$SAVE_INSTALLED_PKGS" -eq 1 ]; then
+ 		echo "${INSTALLED_PACKAGES}" >> "$CONFFILES"
++		echo "${ETCBACKUP_DIR}/user_installed.opkg" >> "$CONFFILES"
+ 		mkdir -p "$ETCBACKUP_DIR"
+ 		# Avoid touching filesystem on each backup
+ 		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"

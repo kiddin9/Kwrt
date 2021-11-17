@@ -106,7 +106,7 @@ test $version -lt 1 && {
 	uci -q set system.@system[0].cronloglevel='8'
 	uci commit system
 	
-	/etc/init.d/fa-pwmfan disable >/dev/null 2>&1
+	/etc/init.d/fa-fancontrol disable >/dev/null 2>&1
 }
 
 # kB
