@@ -245,3 +245,14 @@
  		mkdir -p "$ETCBACKUP_DIR"
  		# Avoid touching filesystem on each backup
  		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"
+
+--- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+@@ -261,6 +261,7 @@ return view.extend({
+ 					body.push(E('p', {}, E('label', { 'class': 'btn' }, [
+ 						opts.backup_pkgs[0], ' ', _('Include in backup a list of current installed packages at /etc/backup/installed_packages.txt')
+ 					])));
++					opts.backup_pkgs[0].checked = true;
+ 				};
+ 
+ 				var cntbtn = E('button', {
