@@ -24,6 +24,8 @@ sed -i 's?\(src/gz openwrt_\(core\|telephony\)\)?#\1?' /etc/opkg/distfeeds.conf
 echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
 
+/etc/init.d/wizard disable
+
 [ -f /usr/bin/wget ] && 	
 	ln -s /usr/bin/wget /usr/bin/wget-ssl
 
