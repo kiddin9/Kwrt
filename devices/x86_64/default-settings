@@ -1,0 +1,4 @@
+test -n "$(uci -q set wizard.default.coremark)" || {
+uci -q set wizard.default.coremark="1"
+uci commit wizard
+}
