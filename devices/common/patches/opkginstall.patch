@@ -155,8 +155,8 @@
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
  				code=$?
 -				stdout=$(cat /tmp/opkg.out)
-+				if [[ $@ == luci-app-* && "$(opkg list | grep luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn)" ]]; then
-+					$opkg $action luci-i18n-"$(echo $@ | cut -d - -f 3-4)"-zh-cn </dev/null >>/tmp/opkg.out 2>/dev/null
++				if [[ $@ == luci-app-* && "$(opkg list | grep luci-i18n-"$(echo $@ | cut -d - -f 3-)"-zh-cn)" ]]; then
++					$opkg $action luci-i18n-"$(echo $@ | cut -d - -f 3-)"-zh-cn </dev/null >>/tmp/opkg.out 2>/dev/null
 +				fi
 +				case "$action" in
 +					install|upgrade)

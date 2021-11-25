@@ -8,7 +8,6 @@ auth_attempts: 5
 block_auth_min: 15
 http_proxy: ""
 language: zh-cn
-rlimit_nofile: 0
 debug_pprof: false
 web_session_ttl: 720
 dns:
@@ -48,6 +47,7 @@ dns:
   cache_size: 4194304
   cache_ttl_min: 0
   cache_ttl_max: 0
+  cache_optimistic: true
   bogus_nxdomain: []
   aaaa_disabled: false
   enable_dnssec: false
@@ -119,4 +119,8 @@ log_max_size: 100
 log_max_age: 3
 log_file: ""
 verbose: false
+os:
+  group: ""
+  user: ""
+  rlimit_nofile: 0
 schema_version: 12
