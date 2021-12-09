@@ -5,7 +5,7 @@
  	[ -n "$macaddr" ] && ucidef_set_interface_macaddr "wan" "$macaddr"
  	;;
 +*)
-+	ucidef_set_interfaces_lan_wan "$(ip address | grep ^[0-9] | awk -F: '{print $2}' | sed "s/ //g" | grep '^[e]' | grep -vE "(@|\.|eth1)" | tr "\n" " " | sed "s/ $//")" "eth1"
++	[ "$(ip address | grep ^[0-9] | awk -F: '{print $2}' | sed "s/ //g" | grep '^[e]' | grep -cvE "(@|\.)")" -gt 2 ] && ucidef_set_interfaces_lan_wan "$(ip address | grep ^[0-9] | awk -F: '{print $2}' | sed "s/ //g" | grep '^[e]' | grep -vE "(@|\.|eth1)" | tr "\n" " " | sed "s/ $//")" "eth1"
 +	;;
  esac
  board_config_flush
