@@ -71,7 +71,6 @@ test $version -lt 1 && {
 		uci -q batch <<-EOT
 			set -q wireless.${radio}.disabled='0'
 			set -q wireless.${radio}.country='CN'
-			set -q wireless.${radio}.channel='auto'
 		EOT
 		
 		if [ "$(uci -q get wireless.${radio}.hwmode)" = "11a" ]; then
