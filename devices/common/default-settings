@@ -70,14 +70,11 @@ test $version -lt 1 && {
 	uci -q get wireless.${radio} >/dev/null 2>&1 && {
 		uci -q batch <<-EOT
 			set -q wireless.${radio}.disabled='0'
-			set -q wireless.${radio}.country='CN'
 		EOT
 		
 		if [ "$(uci -q get wireless.${radio}.hwmode)" = "11a" ]; then
-			uci -q set wireless.${radio}.txpower='23'
 			uci -q set wireless.${radio}.htmode='VHT80'
 		else
-			uci -q set wireless.${radio}.txpower='20'
 			uci -q set wireless.${radio}.htmode='VHT40'
 		fi
 
