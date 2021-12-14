@@ -65,12 +65,49 @@ test $version -lt 1 && {
 	uci -q set uhttpd.main.redirect_https=0
 	uci -q set uhttpd.main.script_timeout='120'
 	uci commit uhttpd
+	
+	wifi_setup_radio(){
+	local radio=$1
+	uci -q get wireless.${radio} >/dev/null 2>&1 && {
+		uci -q batch <<-EOT
+			set -q wireless.${radio}.disabled='0'
+		EOT
+		
+		if [ "$(uci -q get wireless.${radio}.hwmode)" = "11a" ]; then
+			uci -q set wireless.${radio}.htmode='VHT80'
+		else
+			uci -q set wireless.${radio}.htmode='VHT40'
+		fi
 
-	SSID=${DISTRIB_ID}
-	SSID_PASSWD=88888888
+		obj=`uci -q add wireless wifi-iface`
+		test -n "$obj" && {
+			uci -q set wireless.$obj.device="${radio}"
+			uci -q set wireless.$obj.network='lan'
+			uci -q set wireless.$obj.mode='ap'
+			if [ "$(uci -q get wireless.${radio}.hwmode)" == "11a" ]; then
+				uci -q set wireless.$obj.ssid="${SSID}_5G"
+			else
+				uci -q set wireless.$obj.ssid="${SSID}_2.4G"
+			fi
+			if [ "${SSID_PASSWD}" ]; then
+				uci -q set wireless.$obj.encryption='psk2'
+				uci -q set wireless.$obj.key="${SSID_PASSWD}"
+			else
+				uci -q set wireless.$obj.encryption='none'
+			fi
+			}
+		}
+	}
 
-	uci -q set base_config.@status[0].SSID=${SSID}
-	# uci set base_config.@status[0].SSID_PASSWD=${SSID_PASSWD}
+	[ -f /etc/config/wireless ] && {
+		SSID=${DISTRIB_ID}
+		SSID_PASSWD=""
+		while uci delete wireless.@wifi-iface[0] >/dev/null 2>&1; do :; done
+		for radio in radio0 radio1 radio2 radio3 wifi0 wifi1 wifi2 wifi3; do
+			wifi_setup_radio ${radio}
+		done
+		uci commit wireless
+	}
 	
 	uci -q set upnpd.config.enabled='1'
 	uci commit upnpd
