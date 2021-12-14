@@ -18,6 +18,11 @@ svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-21.02/target/
 curl -sfL https://git.io/J0klM --create-dirs -o package/network/config/firewall/patches/fullconenat.patch
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/hack-5.4/601-netfilter-export-udp_get_timeouts-function.patch -o target/linux/generic/hack-5.4/601-netfilter-export-udp_get_timeouts-function.patch
 ) &
+
+REPO_BRANCH="$(curl -s https://api.github.com/repos/openwrt/openwrt/tags | jq -r '.[].name' | grep v21 | head -n 1 | sed -e 's/v//')"
+vermagic="$(curl -sfL https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/x86/64/kmods/ | grep -o 'href="5\..*/"' | cut -d - -f 3 | cut -d / -f 1)"
+sed -i "s/^.*vermagic$/\techo "$vermagic" > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
+
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/custom/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &
 sed -i 's/Os/O2/g' include/target.mk
