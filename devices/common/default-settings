@@ -19,7 +19,9 @@ uci commit dockerd
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
 sed -i 's/\(custom.*\)\/custom/\1/' /etc/opkg/distfeeds.conf
-sed -i 's?\(src/gz openwrt_\(core\|telephony\)\)?#\1?' /etc/opkg/distfeeds.conf
+VERSION="$(cat /etc/os-release | grep "VERSION=" | cut -d \" -f 2)"
+ARCH="$(cat /etc/os-release | grep "OPENWRT_ARCH=" | cut -d \" -f 2)"
+sed -i "s?targets/.*/packages?packages/$ARCH/kmods/$VERSION?" /etc/opkg/distfeeds.conf
 
 echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
