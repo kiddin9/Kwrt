@@ -18,8 +18,12 @@ uci commit dockerd
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
-sed -i 's/\(custom.*\)\/custom/\1/' /etc/opkg/distfeeds.conf
-sed -i 's?\(src/gz openwrt_\(core\|telephony\)\)?#\1?' /etc/opkg/distfeeds.conf
+sed -i '/openwrt_kiddin9/d' /etc/opkg/distfeeds.conf
+VERSION="$(cat /etc/os-release | grep "VERSION=" | cut -d \" -f 2)"
+ARCH="$(cat /etc/os-release | grep "OPENWRT_ARCH=" | cut -d \" -f 2)"
+sed -i "s?\(targets/.*\)/packages?\1/$VERSION?" /etc/opkg/distfeeds.conf
+sed -i "\$a src/gz openwrt_kmods https://op.supes.top/packages/$ARCH/kmods/$VERSION" /etc/opkg/distfeeds.conf
+sed -i "\$a src/gz openwrt_kiddin9 https://op.supes.top/packages/$ARCH" /etc/opkg/distfeeds.conf
 
 echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
@@ -70,14 +74,12 @@ test $version -lt 1 && {
 	uci -q get wireless.${radio} >/dev/null 2>&1 && {
 		uci -q batch <<-EOT
 			set -q wireless.${radio}.disabled='0'
-			set -q wireless.${radio}.country='CN'
-			set -q wireless.${radio}.channel='auto'
 		EOT
 		
 		if [ "$(uci -q get wireless.${radio}.hwmode)" = "11a" ]; then
-			uci -q set wireless.${radio}.txpower='23'
+			uci -q set wireless.${radio}.htmode='VHT80'
 		else
-			uci -q set wireless.${radio}.txpower='20'
+			uci -q set wireless.${radio}.htmode='VHT40'
 		fi
 
 		obj=`uci -q add wireless wifi-iface`
