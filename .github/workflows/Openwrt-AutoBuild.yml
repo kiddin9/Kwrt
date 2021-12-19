@@ -64,8 +64,14 @@ jobs:
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
+            echo "MTARGET=x86_64" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (Rpi-4B|nanopi-r2s|nanopi-r4s) ]]; then
             echo "ARCH=linux/arm64" >> $GITHUB_ENV
+        fi
+        if [ ${{matrix.target}} == "Rpi-4B" ]; then
+            echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
+        elif [ ${{matrix.target}} == "nanopi-r2s" ]; then
+            echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
         fi
 
     - name: Trigger Packages Update
@@ -115,7 +121,7 @@ jobs:
         elif [[ ${{matrix.target}} =~ "Rpi-4B" ]]; then
             curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/bcm27xx/bcm2711/openwrt-sdk-$REPO_BRANCH-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/bcm27xx/bcm2711/openwrt-sdk-21.02-SNAPSHOT-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         fi
-        echo "REPO_BRANCH=v$REPO_BRANCH" >> $GITHUB_ENV
+        echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
         
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
@@ -127,7 +133,6 @@ jobs:
         ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
         ln -sf /mnt/openwrt/build_dir/hostpkg openwrt/build_dir/hostpkg
         
-
     - name: Load custom configuration
       run: |
         cp -rf devices/common/. openwrt/
@@ -210,13 +215,14 @@ jobs:
         mv -f openwrt/bin/targets/*/*/{*combined*,*sysupgrade*} ./firmware/ 2>/dev/null || true
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}_kernel.config
+        mv -f openwrt/bin/targets/*/*/packages ./kmods
         cd firmware
         echo "${{ env.VERSION }}.$(date +'%Y')" > version.txt
         rename -v "s/^openwrt/${{ env.VERSION }}-openwrt/" * || true
         rename -v "s/friendlyarm_//" *gz || true
         md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
         echo $md5 >> version.txt
-        echo $REPO_BRANCH >> version.txt
+        echo v$REPO_BRANCH >> version.txt
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
@@ -225,7 +231,7 @@ jobs:
         echo "NOTICE=请分配不少于1G的存储容量" >> $GITHUB_ENV
         fi
 
-    - name: Deploy files to server
+    - name: Deploy firmware to server
       uses: easingthemes/ssh-deploy@main
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
@@ -235,6 +241,26 @@ jobs:
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/firmware/${{matrix.target}}/"
+
+    - name: remote ssh command
+      uses: appleboy/ssh-action@master
+      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser') && env.MTARGET
+      with:
+        host: op.supes.top
+        username: root
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: mkdir -p /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/${{ env.REPO_BRANCH }}
+
+    - name: Deploy kmods to server
+      uses: easingthemes/ssh-deploy@main
+      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser') && env.MTARGET
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-avzr --delete"
+        SOURCE: kmods/
+        REMOTE_HOST: op.supes.top
+        REMOTE_USER: root
+        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/${{ env.REPO_BRANCH }}/"
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
