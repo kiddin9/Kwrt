@@ -25,7 +25,3 @@ CONFIG_CPU_FREQ_GOV_USERSPACE=y
 CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 ' >> ./target/linux/bcm27xx/bcm2711/config-5.4
-
-REPO_BRANCH="$(curl -s https://api.github.com/repos/openwrt/openwrt/tags | jq -r '.[].name' | grep v21 | head -n 1 | sed -e 's/v//')"
-vermagic="$(curl -sfL https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/bcm27xx/bcm2711/kmods/ | grep -o 'href="5\..*/"' | cut -d - -f 3 | cut -d / -f 1)"
-sed -i "s/^.*vermagic$/\techo "$vermagic" > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk

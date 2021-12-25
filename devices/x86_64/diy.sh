@@ -14,6 +14,3 @@ CONFIG_DRM_I915=y
 
 sed -i "s/enabled '0'/enabled '1'/g" feeds/packages/utils/irqbalance/files/irqbalance.config
 
-REPO_BRANCH="$(curl -s https://api.github.com/repos/openwrt/openwrt/tags | jq -r '.[].name' | grep v21 | head -n 1 | sed -e 's/v//')"
-vermagic="$(curl -sfL https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/x86/64/kmods/ | grep -o 'href="5\..*/"' | cut -d - -f 3 | cut -d / -f 1)"
-sed -i "s/^.*vermagic$/\techo "$vermagic" > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
