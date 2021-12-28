@@ -1,7 +1,6 @@
 --- a/package/feeds/luci/luci-base/luasrc/dispatcher.lua
 +++ b/package/feeds/luci/luci-base/luasrc/dispatcher.lua
-@@ -460,7 +460,12 @@ function httpdispatch(request, prefix)
- 	local r = {}
+@@ -461,5 +461,10 @@
  	context.request = r
  
 -	local pathinfo = http.urldecode(request:getenv("PATH_INFO") or "", true)
@@ -13,9 +12,21 @@
 +	end
  
  	if prefix then
- 		for _, node in ipairs(prefix) do
-@@ -914,8 +919,14 @@ function dispatch(request)
- 	if #required_path_acls > 0 then
+@@ -894,6 +899,11 @@
+ 			end
+ 
+-			http.header("Set-Cookie", 'sysauth=%s; path=%s; SameSite=Strict; HttpOnly%s' %{
+-				sid, build_url(), http.getenv("HTTPS") == "on" and "; secure" or ""
++			local cookie_p = uci:get("wizard", "default", "cookie_p")
++			local timeout = 'Thu, 01 Jan 3000 01:00:00 GMT'
++			if cookie_p == '0' then
++				timeout = ''
++			end
++			http.header("Set-Cookie", 'sysauth=%s; expires=%s; path=%s; SameSite=Strict; HttpOnly%s' %{
++				sid, timeout, build_url(), http.getenv("HTTPS") == "on" and "; secure" or ""
+ 			})
+ 
+@@ -917,6 +927,12 @@
  		local perm = check_acl_depends(required_path_acls, ctx.authacl and ctx.authacl["access-group"])
  		if perm == nil then
 -			http.status(403, "Forbidden")
@@ -30,4 +41,3 @@
 +			luci.http.redirect(build_url())
  		end
  
- 		if page then
