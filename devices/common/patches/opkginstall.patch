@@ -34,7 +34,8 @@
 +					'action': 'install',
  					'click': handleInstall
  				}, _('Install…'));
- 			else if (inst.installed && inst.version != pkg.version)
+-			else if (inst.installed && inst.version != pkg.version)
++			else if (inst.installed && compareVersion(pkg.version, inst.version) > 0)
  				btn = E('div', {
  					'class': 'btn cbi-button-positive',
  					'data-package': name,
