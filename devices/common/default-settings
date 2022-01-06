@@ -121,6 +121,7 @@ test $version -lt 1 && {
 	grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
 		echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
 
+	uci -q set turboacc.config.sw_flow='0'
 	uci -q set turboacc.config.sfe_flow='0'
 	uci commit turboacc
 
