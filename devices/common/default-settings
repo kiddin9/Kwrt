@@ -133,10 +133,11 @@ test $version -lt 1 && {
 	uci commit network
   
 	uci -q set dhcp.@dnsmasq[0].dns_redirect='1'
-	uci -q set dhcp.dnsmasq[0].allservers='1'
-	uci -q set dhcp.lan.force='1'
+	uci -q set dhcp.@dnsmasq[0].allservers='1'
+	uci -q del dhcp.@dnsmasq[0].noresolv
 	uci -q set dhcp.@dnsmasq[0].cachesize='1500'
 	uci -q set dhcp.@dnsmasq[0].min_ttl='3600'
+	uci -q set dhcp.lan.force='1'
 	uci -q set dhcp.lan.ra='hybrid'
 	uci -q set dhcp.lan.ndp='hybrid'
 	uci -q set dhcp.lan.dhcpv6='hybrid'
