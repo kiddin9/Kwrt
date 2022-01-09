@@ -39,7 +39,7 @@ CONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' `find target/linux -path
 sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/files/uhttpd.config
 #rm -rf ./feeds/packages/lang/{golang,node}
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
-sed -i "s/askfirst/respawn/g" `find package target -name inittab`
+sed -i "s/tty1::askfirst/tty1::respawn/g" target/linux/*/base-files/etc/inittab
 date=`date +%m.%d.%Y`
 sed -i "/DISTRIB_DESCRIPTION/c\DISTRIB_DESCRIPTION=\"%D %C by Kiddin'\"" package/base-files/files/etc/openwrt_release
 sed -i "/CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$date\"" devices/common/.config
