@@ -20,6 +20,10 @@ on:
         description: 'Skip version check'
         required: false
         default: 'true'
+      version:
+        description: 'Version'
+        required: false
+        default: ''
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
@@ -55,17 +59,17 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "x86_64 ${{ env.SSH }}", "client_payload": {"target": "x86_64"}}'
+          -d '{"event_type": "x86_64 ${{ github.event.inputs.version }}", "client_payload": {"target": "x86_64"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "nanopi-r2s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r2s"}}'
+          -d '{"event_type": "nanopi-r2s ${{ github.event.inputs.version }}", "client_payload": {"target": "nanopi-r2s"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "nanopi-r4s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r4s"}}'
+          -d '{"event_type": "nanopi-r4s ${{ github.event.inputs.version }}", "client_payload": {"target": "nanopi-r4s"}}'
         else
           [ "$REPO_BRANCH" ] && exit 0;
           REPO_BRANCH_r=$(curl -s https://op.supes.top/firmware/x86_64/version.txt | tr "\r\n" "," | cut -f 3 -d ,)
@@ -77,17 +81,17 @@ jobs:
               -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
               -H "Accept: application/vnd.github.everest-preview+json" \
               -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-              -d '{"event_type": "x86_64 ${{ env.SSH }}", "client_payload": {"target": "x86_64"}}'
+              -d '{"event_type": "x86_64", "client_payload": {"target": "x86_64"}}'
               curl \
               -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
               -H "Accept: application/vnd.github.everest-preview+json" \
               -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-              -d '{"event_type": "nanopi-r2s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r2s"}}'
+              -d '{"event_type": "nanopi-r2s", "client_payload": {"target": "nanopi-r2s"}}'
               curl \
               -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
               -H "Accept: application/vnd.github.everest-preview+json" \
               -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-              -d '{"event_type": "nanopi-r4s ${{ env.SSH }}", "client_payload": {"target": "nanopi-r4s"}}'
+              -d '{"event_type": "nanopi-r4s", "client_payload": {"target": "nanopi-r4s"}}'
             fi
         fi
 

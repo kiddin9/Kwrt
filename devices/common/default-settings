@@ -20,9 +20,9 @@ sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
 sed -i '/openwrt_kiddin9/d' /etc/opkg/distfeeds.conf
 sed -i 's?\(src/gz openwrt_\(core\|telephony\)\)?#\1?' /etc/opkg/distfeeds.conf
-VERSION="$(cat /etc/os-release | grep "VERSION=" | cut -d \" -f 2)"
+KERNEL_V="$(uname -r)"
 ARCH="$(cat /etc/os-release | grep "OPENWRT_ARCH=" | cut -d \" -f 2)"
-sed -i "\$a src/gz openwrt_kmods https://op.supes.top/packages/$ARCH/kmods/$VERSION" /etc/opkg/distfeeds.conf
+sed -i "\$a src/gz openwrt_kmods https://op.supes.top/packages/$ARCH/kmods/$KERNEL_V" /etc/opkg/distfeeds.conf
 sed -i "\$a src/gz openwrt_kiddin9 https://op.supes.top/packages/$ARCH" /etc/opkg/distfeeds.conf
 
 echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
@@ -115,9 +115,8 @@ test $version -lt 1 && {
 	grep -q /etc/dnsmasq.d /etc/dnsmasq.conf ||
 		echo "conf-dir=/etc/dnsmasq.d" >> /etc/dnsmasq.conf
 
-	uci -q set turboacc.config.sw_flow='0'
-	uci -q set turboacc.config.sfe_flow='0'
-	uci commit turboacc
+	uci -q set firewall.@defaults[0].fullcone='1'
+	uci commit firewall
 
 	uci -q set fstab.@global[0].anon_mount=1
 	uci commit fstab
@@ -199,7 +198,6 @@ test $version -lt 1 && {
 SYSCTL_LOCAL=/etc/sysctl.d/50-local.conf
 mkdir -p /etc/sysctl.d
 echo -n >$SYSCTL_LOCAL
-
 echo net.nf_conntrack_max=$nf_conntrack_max >>$SYSCTL_LOCAL
 echo net.ipv4.ip_early_demux=0 >>$SYSCTL_LOCAL
 echo net.bridge.bridge-nf-call-iptables=0 >>$SYSCTL_LOCAL

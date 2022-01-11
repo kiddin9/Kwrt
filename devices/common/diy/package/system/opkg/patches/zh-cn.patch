@@ -48,4 +48,12 @@
 +			 "软件包 %s 需要 %ld\n",
  			 kbs_available, root_dir, pkg->name, pkg_size_kbs);
  		return -1;
-
+@@ -1319,6 +1319,6 @@
+ 		}
+ 		if (err) {
+-			opkg_msg(ERROR, "Failed to download %s. "
+-				 "Perhaps you need to run 'opkg update'?\n",
++			opkg_msg(ERROR, "下载 %s 失败. "
++				 "请更新列表后重试\n",
+ 				 pkg->name);
+ 			return -1;

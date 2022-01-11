@@ -24,4 +24,4 @@ CONFIG_REALTEK_PHY=y
 CONFIG_CPU_FREQ_GOV_USERSPACE=y
 CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
-' >> ./target/linux/bcm27xx/bcm2711/config-5.4
+' >> ./target/linux/bcm27xx/bcm2711/config-5.10

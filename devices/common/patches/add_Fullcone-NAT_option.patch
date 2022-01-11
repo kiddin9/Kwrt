@@ -1,0 +1,11 @@
+--- a/package/feeds/luci/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
++++ b/package/feeds/luci/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
+@@ -69,6 +69,8 @@ return view.extend({
+ 			p[i].value('ACCEPT', _('accept'));
+ 		}
+ 
++		o = s.option(form.Flag, 'fullcone', _('FullCone NAT'), _('Using FullCone NAT can improve gaming performance effectively'));
++		
+ 		/* Netfilter flow offload support */
+ 
+ 		if (L.hasSystemFeature('offloading')) {
