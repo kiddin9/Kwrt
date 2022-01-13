@@ -151,7 +151,7 @@
  						opkg="$opkg $1"
  						shift
  					;;
-@@ -35,8 +35,36 @@ case "$action" in
+@@ -35,8 +35,41 @@ case "$action" in
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
  				code=$?
@@ -165,7 +165,8 @@
 +							rm -f /tmp/opkg.err
 +						}
 +						[[ "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" && ! "$(cat /etc/backup/user_installed.opkg | grep -w $@)" ]] && {
-+							echo $@ >>/etc/backup/user_installed.opkg
++							touch /etc/backup/user_installed.opkg
++							sed  -i "1i $@" /etc/backup/user_installed.opkg
 +						}
 +					;;
 +					upgrade)
@@ -180,6 +181,10 @@
 +						sed -i "/^$@$/d" /etc/backup/user_installed.opkg
 +					;;
 +				esac
++				grep -q "wget returned 8" /tmp/opkg.err && {
++						opkg update </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
++						$opkg $action "$@" </dev/null >>/tmp/opkg.out 2>>/tmp/opkg.err
++					}
  				stderr=$(cat /tmp/opkg.err)
 +				[ -n "$stderr" ] || {
 +					echo "🎉 已完成, 请关闭本窗口~" >>/tmp/opkg.out
