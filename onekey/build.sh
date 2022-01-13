@@ -83,7 +83,7 @@ esac
 done
 
 REPO_BRANCH="$(curl -s https://api.github.com/repos/openwrt/openwrt/tags | jq -r '.[].name' | grep v21 | head -n 1 | sed -e 's/v//')"
-git clone -b v$REPO_BRANCH --depth 1 https://github.com/openwrt/openwrt
+git clone -b v$REPO_BRANCH https://github.com/openwrt/openwrt
 svn export https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/trunk/devices openwrt/devices
 
 cd openwrt

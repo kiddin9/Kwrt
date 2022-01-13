@@ -1,6 +1,16 @@
 --- a/package/feeds/kiddin9/luci-app-turboacc/Makefile
 +++ b/package/feeds/kiddin9/luci-app-turboacc/Makefile
-@@ -32,7 +32,6 @@ LUCI_DEPENDS:=+pdnsd-alt \
+@@ -20,8 +20,7 @@ PKG_CONFIG_DEPENDS:= \
+ 	
+ LUCI_TITLE:=LuCI support for Flow Offload / Shortcut-FE
+ LUCI_PKGARCH:=all
+-LUCI_DEPENDS:=+pdnsd-alt \
+-	+PACKAGE_$(PKG_NAME)_INCLUDE_BBR_CCA:kmod-tcp-bbr \
++LUCI_DEPENDS:=+PACKAGE_$(PKG_NAME)_INCLUDE_BBR_CCA:kmod-tcp-bbr \
+ 	+PACKAGE_$(PKG_NAME)_INCLUDE_DNSFORWARDER:dnsforwarder \
+ 	+PACKAGE_$(PKG_NAME)_INCLUDE_DNSPROXY:dnsproxy \
+ 	+PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING:kmod-ipt-offload \
+@@ -31,7 +30,6 @@ LUCI_DEPENDS:=+pdnsd-alt \
  define Package/$(PKG_NAME)/config
  config PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING
  	bool "Include Flow Offload"
