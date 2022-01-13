@@ -1,5 +1,5 @@
---- /libopkg/opkg_download.c
-+++ /libopkg/opkg_download.c
+--- a/libopkg/opkg_download.c
++++ b/libopkg/opkg_download.c
 @@ -154,4 +154,5 @@
  		argv[i++] = "wget";
  		argv[i++] = "-q";
