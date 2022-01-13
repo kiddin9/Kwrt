@@ -1,6 +1,6 @@
 --- a/include/package.mk
 +++ b/include/package.mk
-@@ -354,3 +354,10 @@ dist:
+@@ -354,3 +354,11 @@ dist:
  
  distcheck:
  	$(Build/DistCheck)
@@ -8,6 +8,7 @@
 +ifndef Package/$(PKG_NAME)/conffiles
 +define Package/$(PKG_NAME)/conffiles
 +/etc/config/
++/etc/$(PKG_NAME)/
 +endef
 +endif
 +
