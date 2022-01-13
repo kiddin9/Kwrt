@@ -1,13 +1,11 @@
 --- a/package/base-files/files/etc/profile
 +++ b/package/base-files/files/etc/profile
-@@ -22,7 +23,9 @@ esac
+@@ -22,7 +23,7 @@ esac
  
  [ -n "$FAILSAFE" ] || {
  	for FILE in /etc/profile.d/*.sh; do
 -		[ -e "$FILE" ] && . "$FILE"
-+		[ -e "$FILE" ] && [ -f "/bin/bash" ] && env -i bash "$FILE" || {
-+			[ "$FILE" != "/etc/profile.d/sysinfo.sh" ] && . "$FILE"
-+		}
++		[ -e "$FILE" ] && [ "$FILE" == "/etc/profile.d/sysinfo.sh" ] && env -i bash "$FILE" || . "$FILE"
  	done
  	unset FILE
  }
