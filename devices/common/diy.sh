@@ -40,8 +40,7 @@ sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite/' pack
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
 sed -i '/root:/c\root:$1$tTPCBw1t$ldzfp37h5lSpO9VXk4uUE\/:18336:0:99999:7:::' package/base-files/files/etc/shadow
 sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
-sed -i -e '$a /etc/sysupgrade.conf' \
-       -e '$a /etc/bench.log' \
+sed -i -e '$a /etc/bench.log' \
        -e '/\/etc\/profile/d' \
        -e '/\/etc\/shinit/d' \
        package/base-files/files/lib/upgrade/keep.d/base-files-essential
