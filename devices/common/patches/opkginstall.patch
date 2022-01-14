@@ -151,7 +151,7 @@
  						opkg="$opkg $1"
  						shift
  					;;
-@@ -35,8 +35,41 @@ case "$action" in
+@@ -35,8 +35,31 @@ case "$action" in
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
  				code=$?
@@ -160,16 +160,7 @@
 +					$opkg $action luci-i18n-"$(echo $@ | cut -d - -f 3-)"-zh-cn </dev/null >>/tmp/opkg.out 2>/dev/null
 +				fi
 +				case "$action" in
-+					install)
-+						[ "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" ] && {
-+							rm -f /tmp/opkg.err
-+						}
-+						[[ "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" && ! "$(cat /etc/backup/user_installed.opkg | grep -w $@)" ]] && {
-+							touch /etc/backup/user_installed.opkg
-+							sed  -i "1i $@" /etc/backup/user_installed.opkg
-+						}
-+					;;
-+					upgrade)
++					install|upgrade)
 +						[ "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" ] && {
 +							rm -f /tmp/opkg.err
 +						}
@@ -178,7 +169,6 @@
 +						[ ! "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" ] && {
 +							rm -f /tmp/opkg.err
 +						}
-+						sed -i "/^$@$/d" /etc/backup/user_installed.opkg
 +					;;
 +				esac
 +				grep -q "wget returned 8" /tmp/opkg.err && {
@@ -212,10 +202,19 @@
  
  	if [ "$SAVE_INSTALLED_PKGS" -eq 1 ]; then
  		echo "${INSTALLED_PACKAGES}" >> "$CONFFILES"
-+		echo "${ETCBACKUP_DIR}/user_installed.opkg" >> "$CONFFILES"
++		. /etc/profile.d/opkg.sh; opkg save
  		mkdir -p "$ETCBACKUP_DIR"
  		# Avoid touching filesystem on each backup
  		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"
+@@ -249,6 +250,8 @@ do_save_conffiles() {
+ 			\( -exec test -f /overlay/upper/{} \; -exec echo {} overlay \; \) -o \
+ 			\( -exec echo {} unknown \; \) \
+ 			\) | sed -e 's,.*/,,;s/\.control /\t/' > ${INSTALLED_PACKAGES}
++	else
++		uci -q del opkg.auto; uci commit opkg
+ 	fi
+ 
+ 	v "Saving config files..."
 
 --- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
 +++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
