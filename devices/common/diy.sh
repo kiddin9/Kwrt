@@ -1,10 +1,12 @@
 #!/bin/bash
 #=================================================
 shopt -s extglob
-kernel_version="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include/kernel-version.mk | grep -o 'href=".*>kernel: bump 5.10' | head -1 | cut -d / -f 5 | cut -d "#" -f 1)"
+commitid="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | grep -o 'href=".*>kernel: bump 5.10' | head -1 | cut -d / -f 5 | cut -d "#" -f 1)"
 version="$(git rev-parse HEAD)"
-git checkout $kernel_version
+git checkout $commitid
 git checkout HEAD^
+kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
+[ "$kernel_v" ] && sed -i "/^KERNEL_V=/c\KERNEL_V=$kernel_v" devices/common/default-settings
 mv -f target/linux package/kernel include/kernel-version.mk include/kernel-defaults.mk .github/
 git checkout $version
 rm -rf target/linux package/kernel include/kernel-version.mk include/kernel-defaults.mk
