@@ -2,6 +2,7 @@
 #=================================================
 shopt -s extglob
 kernel_version="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include/kernel-version.mk | grep -o 'href=".*>kernel: bump 5.10' | head -1 | cut -d / -f 5 | cut -d "#" -f 1)"
+sed -i "/^KERNEL_V=/c\KERNEL_V=$kernel_version" devices/common/default-settings 
 version="$(git rev-parse HEAD)"
 git checkout $kernel_version
 git checkout HEAD^
