@@ -44,7 +44,10 @@ test $version -lt 1 && {
 	uci -q set luci.main.lang='auto'
 	uci -q set luci.main.mediaurlbase=/luci-static/edge
 	uci commit luci
-
+	
+	uci -q set dropbear.@dropbear[0].Interface='lan'
+	uci commit dropbear
+	
 	uci -q get system.@system[0] >/dev/null 2>&1 && {
 		uci -q set system.@system[0].hostname="${DISTRIB_ID}"
 		uci -q set system.@system[0].zonename='Asia/Shanghai'
