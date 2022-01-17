@@ -7,12 +7,12 @@ git checkout $commitid
 git checkout HEAD^
 kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
 [ "$kernel_v" ] && sed -i "/^KERNEL_V=/c\KERNEL_V=$kernel_v" devices/common/default-settings
-mv -f target/linux package/kernel include/kernel-version.mk include/kernel-defaults.mk .github/
+mv -f target/linux package/kernel include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk .github/
 git checkout $version
-rm -rf target/linux package/kernel include/kernel-version.mk include/kernel-defaults.mk
+rm -rf target/linux package/kernel include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk
 mv -f .github/linux target/
 mv -f .github/kernel package/
-mv -f .github/kernel-version.mk .github/kernel-defaults.mk include/
+mv -f  .github/kernel-version.mk .github/kernel-5.10 .github/kernel-defaults.mk include/
 sed -i 's/ libelf//' tools/Makefile
 
 sed -i '/	refresh_config();/d' scripts/feeds
