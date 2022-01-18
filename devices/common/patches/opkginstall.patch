@@ -151,7 +151,7 @@
  						opkg="$opkg $1"
  						shift
  					;;
-@@ -35,8 +35,31 @@ case "$action" in
+@@ -35,8 +35,32 @@ case "$action" in
  			if flock -x 200; then
  				$opkg $action "$@" </dev/null >/tmp/opkg.out 2>/tmp/opkg.err
  				code=$?
@@ -166,6 +166,7 @@
 +						}
 +					;;
 +					remove)
++						. /etc/profile.d/opkg.sh; opkg save
 +						[ ! "$(opkg list-installed | cut -f 1 -d ' ' | grep -w $@)" ] && {
 +							rm -f /tmp/opkg.err
 +						}
@@ -206,13 +207,6 @@
  		mkdir -p "$ETCBACKUP_DIR"
  		# Avoid touching filesystem on each backup
  		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"
-@@ -249,6 +250,8 @@ do_save_conffiles() {
- 			\( -exec test -f /overlay/upper/{} \; -exec echo {} overlay \; \) -o \
- 			\( -exec echo {} unknown \; \) \
- 			\) | sed -e 's,.*/,,;s/\.control /\t/' > ${INSTALLED_PACKAGES}
-+	else
-+		uci -q del opkg.auto; uci commit opkg
- 	fi
  
  	v "Saving config files..."
 

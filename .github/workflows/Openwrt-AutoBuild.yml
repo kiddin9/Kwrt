@@ -185,9 +185,9 @@ jobs:
 
     - name: Cache
       uses: klever1988/cachewrtbuild@main
-      if: contains(github.event.action, 'nocache') == false
       with:
         ccache: 'true'
+        clean: ${{ contains(github.event.action, 'nocache') }}
         prefix: ${{ github.workspace }}/openwrt
 
     - name: Compile the firmware
@@ -200,13 +200,6 @@ jobs:
    
     - name: Check space usage
       run: df -hT
-   
-    - name: Upload bin directory
-      uses: actions/upload-artifact@main
-      if: env.UPLOAD_BIN_DIR_FOR_ARTIFACT == 'true'
-      with:
-        name: OpenWrt_bin_${{matrix.target}}
-        path: openwrt/bin
 
     - name: Organize files
       id: organize
@@ -215,7 +208,7 @@ jobs:
         mv -f openwrt/bin/targets/*/*/{*combined*,*sysupgrade*} ./firmware/ 2>/dev/null || true
         cp openwrt/.config  ./firmware/${{matrix.target}}.config
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}_kernel.config
-        kernel_v="$(cat openwrt/include/kernel-version.mk | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
+        kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
         mv -f openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
         cd firmware
         echo "${{ env.VERSION }}.$(date +'%Y')" > version.txt
@@ -253,6 +246,17 @@ jobs:
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/"
+
+    - name: Deploy imagebuilder to server
+      uses: easingthemes/ssh-deploy@main
+      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser') && env.MTARGET
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-avzr"
+        SOURCE: openwrt/bin/
+        REMOTE_HOST: op.supes.top
+        REMOTE_USER: root
+        TARGET: "/www/wwwroot/op.supes.top/releases/${{ env.REPO_BRANCH }}/"
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main

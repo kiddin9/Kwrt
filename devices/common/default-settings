@@ -18,13 +18,6 @@ uci commit dockerd
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
 
-sed -i '/openwrt_kiddin9/d' /etc/opkg/distfeeds.conf
-sed -i 's?\(src/gz openwrt_\(core\|telephony\)\)?#\1?' /etc/opkg/distfeeds.conf
-KERNEL_V="$(uname -r)"
-ARCH="$(cat /etc/os-release | grep "OPENWRT_ARCH=" | cut -d \" -f 2)"
-sed -i "\$a src/gz openwrt_kmods https://op.supes.top/packages/$ARCH/kmods/$KERNEL_V" /etc/opkg/distfeeds.conf
-sed -i "\$a src/gz openwrt_kiddin9 https://op.supes.top/packages/$ARCH" /etc/opkg/distfeeds.conf
-
 echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
 
@@ -47,7 +40,10 @@ test $version -lt 1 && {
 	uci -q set luci.main.lang='auto'
 	uci -q set luci.main.mediaurlbase=/luci-static/edge
 	uci commit luci
-
+	
+	uci -q set dropbear.@dropbear[0].Interface='lan'
+	uci commit dropbear
+	
 	uci -q get system.@system[0] >/dev/null 2>&1 && {
 		uci -q set system.@system[0].hostname="${DISTRIB_ID}"
 		uci -q set system.@system[0].zonename='Asia/Shanghai'
