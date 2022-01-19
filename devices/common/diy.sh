@@ -5,8 +5,8 @@ commitid="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include 
 version="$(git rev-parse HEAD)"
 git checkout $commitid
 git checkout HEAD^
-kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
-[ "$kernel_v" ] && sed -i "/^KERNEL_V=/c\KERNEL_V=$kernel_v" devices/common/default-settings
+kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
+sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 mv -f target/linux package/kernel include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk .github/
 git checkout $version
 rm -rf target/linux package/kernel include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk
