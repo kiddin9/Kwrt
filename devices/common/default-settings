@@ -13,14 +13,14 @@ if [ "$(uci -q get dhcp.@dnsmasq[0].port)" != "53" ]; then
 	uci commit dhcp
 fi
 
+uci -q set attendedsysupgrade.server.url='https://op.supes.top'
+uci -q set attendedsysupgrade.client.advanced_mode='1'
+uci commit attendedsysupgrade
+
 uci set dockerd.firewall.extra_iptables_args='--match conntrack ! --ctstate RELATED,ESTABLISHED'
 uci commit dockerd
 
 sed -i '/profile.d/d' /lib/upgrade/keep.d/base-files
-
-KERNEL_V="$(uname -r)"
-ARCH="$(cat /etc/os-release | grep "OPENWRT_ARCH=" | cut -d \" -f 2)"
-sed -i "s?/targets/.*?/packages/$ARCH/kmods/$KERNEL_V?" /etc/opkg/distfeeds.conf
 
 echo $(uci -q get uhttpd.main.index_page) | grep -q "cgi-bin/luci" ||
 	uci -q add_list uhttpd.main.index_page='cgi-bin/luci' && uci commit uhttpd
