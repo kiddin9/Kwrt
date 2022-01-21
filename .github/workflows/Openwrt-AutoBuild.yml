@@ -212,6 +212,7 @@ jobs:
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}_kernel.config
         kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
         mv -f openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
+        cp -rf ./kmods/$kernel_v/Packages* openwrt/bin/targets/*/*/packages/
         cd firmware
         echo "${{ env.VERSION }}.$(date +'%Y')" > version.txt
         rename -v "s/^openwrt/${{ env.VERSION }}-openwrt/" * || true
