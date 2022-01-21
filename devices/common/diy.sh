@@ -20,6 +20,7 @@ luci-app-wizard luci-app-nginx-manager luci-app-attendedsysupgrade luci-theme-ed
 luci-lib-ipkg luci-lib-fs coremark my-default-settings wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-ipt-offload kmod-tcp-bbr bash \
 wpad-basic-wolfssl kmod-usb2 kmod-usb3 automount /" include/target.mk
 sed -i "/dnsmasq \\\/d" include/target.mk
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq kmod-hwmon-pwmfan/' target/linux/rockchip/Makefile
 
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {

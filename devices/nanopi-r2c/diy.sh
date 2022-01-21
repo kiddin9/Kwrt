@@ -23,7 +23,6 @@ sed -i "s,'eth1' 'eth0','eth0' 'eth1',g" target/linux/rockchip/armv8/base-files/
 sed -i '/;;/i\ethtool -K eth1 rx off tx off && logger -t disable-offloading "disabed rk3328 ethernet tcp/udp offloading tx/rx"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 
 sed -i 's,kmod-usb-net-rtl8152$,usb-net-rtl8152-vendor,g' -e target/linux/rockchip/image/armv8.mk
-sed -i -e 's/ autocore-arm/ my-autocore-arm/' -e 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq kmod-hwmon-pwmfan/' target/linux/rockchip/Makefile
 
 echo '
 CONFIG_ARM64_CRYPTO=y
