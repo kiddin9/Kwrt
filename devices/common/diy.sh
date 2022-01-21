@@ -15,6 +15,13 @@ mv -f .github/kernel package/
 mv -f  .github/kernel-version.mk .github/kernel-5.10 .github/kernel-defaults.mk include/
 sed -i 's/ libelf//' tools/Makefile
 
+sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-bypass luci-app-upnp luci-app-autoreboot \
+luci-app-wizard luci-app-nginx-manager luci-app-attendedsysupgrade luci-theme-edge luci-theme-bootstrap dnsmasq-full luci-ssl-nginx luci-base luci-compat luci-mod-rpc \
+luci-lib-ipkg luci-lib-fs coremark my-default-settings wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-ipt-offload kmod-tcp-bbr bash \
+wpad-basic-wolfssl kmod-usb2 kmod-usb3 automount /" include/target.mk
+sed -i "/dnsmasq \\\/d" include/target.mk
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq kmod-hwmon-pwmfan/' target/linux/rockchip/Makefile
+
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
@@ -57,8 +64,8 @@ sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/file
 sed -i 's?admin/status/channel_analysis??' package/feeds/luci/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
 sed -i "s/tty1::askfirst/tty1::respawn/g" target/linux/*/base-files/etc/inittab
 date=`date +%m.%d.%Y`
+sed -i -e "/# REVISION:=/c\REVISION:=$date" -e '/VERSION_CODE:=/c\VERSION_CODE:=$(REVISION)' include/version.mk
 sed -i "/DISTRIB_DESCRIPTION/c\DISTRIB_DESCRIPTION=\"%D %C by Kiddin'\"" package/base-files/files/etc/openwrt_release
-sed -i "/CONFIG_VERSION_CODE=/c\CONFIG_VERSION_CODE=\"$date\"" devices/common/.config
 sed -i '$a cgi-timeout = 300' package/feeds/packages/uwsgi/files-luci-support/luci-*.ini
 sed -i '/limit-as/c\limit-as = 5000' package/feeds/packages/uwsgi/files-luci-support/luci-webui.ini
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
