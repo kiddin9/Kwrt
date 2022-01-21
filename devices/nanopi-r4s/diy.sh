@@ -18,7 +18,7 @@ chmod +x files/usr/bin/fa-*.sh files/etc/init.d/fa-fancontrol
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
 sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
-sed -i -e '/autocore-arm/d' -e 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq my-autocore-arm kmod-hwmon-pwmfan/' target/linux/rockchip/Makefile
+sed -i -e 's/ autocore-arm/ my-autocore-arm/' -e 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq kmod-hwmon-pwmfan/' target/linux/rockchip/Makefile
 
 echo '
 CONFIG_ARM64_CRYPTO=y
