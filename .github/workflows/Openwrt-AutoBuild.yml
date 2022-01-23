@@ -199,15 +199,18 @@ jobs:
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
         echo "::set-output name=status::success"
+        mv -f .config ${{matrix.target}}.config
         if [ "${{matrix.target}}" == "nanopi-r2s" ]; then
-            echo "开始编译R4S"
-            echo "CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r4s=y" >>.config
-            make defconfig
-            make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R4S编译失败" && exit 0;)
             echo "开始编译R2C"
-            echo "CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2c=y" >>.config
+            cat devices/nanopi-r2c/$CONFIG_FILE >> .config
             make defconfig
             make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R2C编译失败" && exit 0;)
+            mv -f .config nanopi-r2c.config
+            echo "开始编译R4S"
+            cat devices/nanopi-r4s/$CONFIG_FILE >> .config
+            make defconfig
+            make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R4S编译失败" && exit 0;)
+            mv -f .config nanopi-r4s.config
             rm -rf bin/targets/*/*/packages/*.ipk
         fi
    
@@ -229,7 +232,9 @@ jobs:
       id: organize
       run: |
         mkdir -p firmware/${{matrix.target}} firmware/nanopi-r4s firmware/nanopi-r2c kmods
-        cp openwrt/.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config
+        cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config
+        cp openwrt/nanopi-r2c.config firmware/nanopi-r2c/nanopi-r2c.config
+        cp openwrt/nanopi-r4s.config firmware/nanopi-r4s/nanopi-r4s.config
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
         kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
         cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
