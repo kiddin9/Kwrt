@@ -232,9 +232,9 @@ jobs:
       id: organize
       run: |
         mkdir -p firmware/${{matrix.target}} firmware/nanopi-r4s firmware/nanopi-r2c kmods
-        cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config
-        cp openwrt/nanopi-r2c.config firmware/nanopi-r2c/nanopi-r2c.config
-        cp openwrt/nanopi-r4s.config firmware/nanopi-r4s/nanopi-r4s.config
+        cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
+        cp openwrt/nanopi-r2c.config firmware/nanopi-r2c/nanopi-r2c.config || true
+        cp openwrt/nanopi-r4s.config firmware/nanopi-r4s/nanopi-r4s.config || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
         kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
         cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
