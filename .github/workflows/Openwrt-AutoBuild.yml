@@ -242,7 +242,6 @@ jobs:
         cp -rf openwrt/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
-        cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         for i in $(ls -d firmware/*/); do
           echo "${{ env.VERSION }}.$(date +'%Y')" > $i/version.txt
           md5=$((md5sum $i/*squashfs-sysupgrade* || md5sum $i/*squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
