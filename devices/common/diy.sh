@@ -5,6 +5,7 @@ commitid="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include 
 version="$(git rev-parse HEAD)"
 git checkout $commitid
 git checkout HEAD^
+[ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.10")" ] && git checkout $commitid
 kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
 sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 mv -f target/linux package/kernel include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk .github/
@@ -16,8 +17,8 @@ mv -f  .github/kernel-version.mk .github/kernel-5.10 .github/kernel-defaults.mk 
 sed -i 's/ libelf//' tools/Makefile
 
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-bypass luci-app-upnp luci-app-autoreboot \
-luci-app-wizard luci-app-nginx-manager luci-app-attendedsysupgrade luci-theme-edge luci-theme-bootstrap dnsmasq-full luci-ssl-nginx luci-base luci-compat luci-mod-rpc \
-luci-lib-ipkg luci-lib-fs coremark my-default-settings wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-ipt-offload kmod-tcp-bbr bash \
+luci-app-wizard luci-app-nginx-manager luci-app-attendedsysupgrade luci-theme-edge luci-theme-bootstrap dnsmasq-full luci-ssl-nginx luci-base luci-compat \
+coremark my-default-settings wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-ipt-offload kmod-tcp-bbr bash \
 wpad-basic-wolfssl kmod-usb2 kmod-usb3 automount /" include/target.mk
 sed -i "/dnsmasq \\\/d" include/target.mk
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq kmod-hwmon-pwmfan/' target/linux/rockchip/Makefile

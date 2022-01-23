@@ -199,27 +199,52 @@ jobs:
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
         echo "::set-output name=status::success"
+        if [ "${{matrix.target}}" == "nanopi-r2s" ]; then
+            echo "开始编译R4S"
+            echo "CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r4s=y" >>.config
+            make defconfig
+            make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R4S编译失败" && exit 0;)
+            echo "开始编译R2C"
+            echo "CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2c=y" >>.config
+            make defconfig
+            make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R2C编译失败" && exit 0;)
+            rm -rf bin/targets/*/*/packages/*.ipk
+        fi
    
     - name: Check space usage
       run: df -hT
 
+    - name: Deploy imagebuilder to server
+      uses: easingthemes/ssh-deploy@main
+      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser') && env.MTARGET
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-avzr"
+        SOURCE: openwrt/bin/targets
+        REMOTE_HOST: op.supes.top
+        REMOTE_USER: root
+        TARGET: "/www/wwwroot/op.supes.top/releases/${{ env.REPO_BRANCH }}/"
+
     - name: Organize files
       id: organize
       run: |
-        mkdir firmware kmods
-        mv -f openwrt/bin/targets/*/*/{*combined*,*sysupgrade*} ./firmware/ 2>/dev/null || true
-        cp openwrt/.config  ./firmware/${{matrix.target}}.config
-        cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}_kernel.config
+        mkdir -p firmware/${{matrix.target}} firmware/nanopi-r4s firmware/nanopi-r2c kmods
+        cp openwrt/.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config
+        cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
         kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
-        mv -f openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
-        cd firmware
-        echo "${{ env.VERSION }}.$(date +'%Y')" > version.txt
-        rename -v "s/^openwrt/${{ env.VERSION }}-openwrt/" * || true
-        rename -v "s/friendlyarm_//" *gz || true
-        md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
-        echo $md5 >> version.txt
-        echo v$REPO_BRANCH >> version.txt
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
+        cp -rf openwrt/bin/targets/*/*/*r4s*sysupgrade* ./firmware/nanopi-r4s/ || true
+        cp -rf openwrt/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
+        rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
+        rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
+        cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
+        for i in $(ls -d firmware/*/); do
+          echo "${{ env.VERSION }}.$(date +'%Y')" > $i/version.txt
+          md5=$((md5sum $i/*squashfs-sysupgrade* || md5sum $i/*squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
+          echo $md5 >> $i/version.txt
+          echo v$REPO_BRANCH >> $i/version.txt
+        done
+        [ "${{matrix.target}}" == "nanopi-r2s" ] && rm -rf openwrt/bin/targets/*/*/*{r2c,r4s}*
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "x86_64" ]; then
@@ -236,7 +261,7 @@ jobs:
         SOURCE: firmware/
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/firmware/${{matrix.target}}/"
+        TARGET: "/www/wwwroot/op.supes.top/firmware/"
 
     - name: Deploy kmods to server
       uses: easingthemes/ssh-deploy@main
@@ -249,24 +274,13 @@ jobs:
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/"
 
-    - name: Deploy imagebuilder to server
-      uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser') && env.MTARGET
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
-        SOURCE: openwrt/bin/
-        REMOTE_HOST: op.supes.top
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/releases/${{ env.REPO_BRANCH }}/"
-
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }} ${{matrix.target}}
-        path: ${{ env.FIRMWARE }}
+        path: ./firmware/
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
