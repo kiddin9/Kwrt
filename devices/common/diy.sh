@@ -10,6 +10,7 @@ kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d
 sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 mv -f target/linux package/kernel include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk .github/
 git checkout $version
+echo "$(date +"%s")" >version.date
 rm -rf target/linux package/kernel include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk
 mv -f .github/linux target/
 mv -f .github/kernel package/
