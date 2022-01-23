@@ -240,6 +240,7 @@ jobs:
         cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
         cp -rf openwrt/bin/targets/*/*/*r4s*sysupgrade* ./firmware/nanopi-r4s/ || true
         cp -rf openwrt/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
+        cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         for i in $(ls -d firmware/*/); do
