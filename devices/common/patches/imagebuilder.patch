@@ -42,12 +42,3 @@
  
  prepare_rootfs: FORCE
  	@echo
-
---- a/scripts/gen_image_generic.sh
-+++ b/scripts/gen_image_generic.sh
-@@ -37,4 +37,4 @@ else
-     make_ext4fs -J -L kernel -l "$KERNELSIZE" "$OUTPUT.kernel" "$KERNELDIR"
- fi
- dd if="$OUTPUT.kernel" of="$OUTPUT" bs=512 seek="$KERNELOFFSET" conv=notrunc
--rm -f "$OUTPUT.kernel"
-+rm -rf "$OUTPUT*"
