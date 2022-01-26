@@ -204,12 +204,18 @@ jobs:
             echo "开始编译R2C"
             cat devices/nanopi-r2c/$CONFIG_FILE >> .config
             make defconfig
-            make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R2C编译失败" && exit 0;)
+            make -j$(($(nproc)+1)) || make -j1 V=s || {
+            echo "R2C编译失败";
+            exit 1;
+            }
             mv -f .config nanopi-r2c.config
             echo "开始编译R4S"
             cat devices/nanopi-r4s/$CONFIG_FILE >> .config
             make defconfig
-            make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R4S编译失败" && exit 0;)
+            make -j$(($(nproc)+1)) || make -j1 V=s || {
+            echo "R4S编译失败";
+            exit 1;
+            }
             mv -f .config nanopi-r4s.config
         fi
         rm -rf bin/targets/*/*/packages/
@@ -285,7 +291,9 @@ jobs:
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }} ${{matrix.target}}
-        path: ./firmware/
+        path: |
+          ./firmware/
+          openwrt/bin/targets/*/
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
