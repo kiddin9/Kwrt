@@ -18,8 +18,6 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
---- a/target/imagebuilder/files/Makefile
-+++ b/target/imagebuilder/files/Makefile
 @@ -124,6 +124,7 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
