@@ -15,3 +15,30 @@
  
  ifeq ($(CONFIG_BUILDBOT),)
  	$(INSTALL_DIR) $(PKG_BUILD_DIR)/packages
+
+--- a/target/imagebuilder/files/Makefile
++++ b/target/imagebuilder/files/Makefile
+@@ -124,6 +124,7 @@ _call_image: staging_dir/host/.prereq-build
+ 	$(MAKE) -s build_image
+ 	$(MAKE) -s json_overview_image_info
+ 	$(MAKE) -s checksum
++	rm -rf $(KERNEL_BUILD_DIR)/tmp/*$(EXTRA_IMAGE_NAME)*
+ 
+ _call_manifest: FORCE
+ 	rm -rf $(TARGET_DIR)
+
+@@ -164,7 +165,13 @@ package_install: FORCE
+ 	@echo Installing packages...
+ 	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
+ 	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
+-	$(OPKG) install $(BUILD_PACKAGES)
++	packages="$(BUILD_PACKAGES) luci-i18n-base-zh-cn"; \
++	for p in $(BUILD_PACKAGES); do \
++		if [[ $$p == luci-app-* && "`$(OPKG) list | grep luci-i18n-\`echo $$p | cut -d - -f 3-\`-zh-cn`" ]]; then \
++			packages="$$packages luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn"; \
++		fi \
++	done; \
++	$(OPKG) install --force-overwrite --force-checksum --force-depends $$packages
+ 
+ prepare_rootfs: FORCE
+ 	@echo

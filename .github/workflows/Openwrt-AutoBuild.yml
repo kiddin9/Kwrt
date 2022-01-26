@@ -211,8 +211,8 @@ jobs:
             make defconfig
             make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R4S编译失败" && exit 0;)
             mv -f .config nanopi-r4s.config
-            rm -rf bin/targets/*/*/packages/*.ipk
         fi
+        rm -rf bin/targets/*/*/packages/
    
     - name: Check space usage
       run: df -hT
@@ -238,7 +238,6 @@ jobs:
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
         kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
         cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
-        rm -rf openwrt/bin/targets/*/*/packages/*.ipk
         cp -rf openwrt/bin/targets/*/*/*r4s*sysupgrade* ./firmware/nanopi-r4s/ || true
         cp -rf openwrt/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
