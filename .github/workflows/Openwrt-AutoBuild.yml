@@ -285,7 +285,9 @@ jobs:
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }} ${{matrix.target}}
-        path: ./firmware/
+        path: |
+          ./firmware/
+          openwrt/bin/targets/*/
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
