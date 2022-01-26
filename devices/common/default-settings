@@ -13,6 +13,13 @@ if [ "$(uci -q get dhcp.@dnsmasq[0].port)" != "53" ]; then
 	uci commit dhcp
 fi
 
+uci -q batch <<EOF
+set attendedsysupgrade.server.url='https://op.supes.top'
+set attendedsysupgrade.client.auto_search='1'
+set attendedsysupgrade.client.advanced_mode='1'
+commit attendedsysupgrade
+EOF
+
 uci set dockerd.firewall.extra_iptables_args='--match conntrack ! --ctstate RELATED,ESTABLISHED'
 uci commit dockerd
 

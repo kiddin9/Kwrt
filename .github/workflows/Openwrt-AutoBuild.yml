@@ -211,8 +211,8 @@ jobs:
             make defconfig
             make -j$(($(nproc)+1)) || make -j1 V=s || (echo "R4S编译失败" && exit 0;)
             mv -f .config nanopi-r4s.config
-            rm -rf bin/targets/*/*/packages/*.ipk
         fi
+        rm -rf bin/targets/*/*/packages/
    
     - name: Check space usage
       run: df -hT
