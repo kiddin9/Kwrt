@@ -1,9 +1,0 @@
---- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
-+++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
-@@ -4376,4 +4376,6 @@ WifiNetwork = baseclass.extend(/** @lends LuCI.network.WifiNetwork.prototype */
- 	}
- });
- 
-+setTimeout("document.getElementsByClassName('cbi-button-apply')[0].children[3].children[0].value='1'",1000)
-+
- return Network;
