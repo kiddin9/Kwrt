@@ -20,8 +20,8 @@ sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.m
 
 sed -i '/;;/i\ethtool -K eth1 rx off tx off && logger -t disable-offloading "disabed rk3328 ethernet tcp/udp offloading tx/rx"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 
-sed -i 's,kmod-usb-net-rtl8152$,kmod-usb-net-rtl8152-vendor,g' target/linux/rockchip/image/armv8.mk
-sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
+sed -i -e 's,kmod-usb-net-rtl8152$,kmod-usb-net-rtl8152-vendor,g' \
+-e 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
 
 echo '
 CONFIG_ARM64_CRYPTO=y
