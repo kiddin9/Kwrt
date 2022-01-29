@@ -13,7 +13,8 @@ git checkout $version
 echo "$(date +"%s")" >version.date
 rm -rf target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk
 mv -f .github/linux target/
-mv -f .github/kernel .github/firmware/linux-firmware package/firmware/
+mv -f .github/kernel package/
+mv -f .github/linux-firmware package/firmware/
 mv -f  .github/kernel-version.mk .github/kernel-5.10 .github/kernel-defaults.mk include/
 sed -i 's/ libelf//' tools/Makefile
 
