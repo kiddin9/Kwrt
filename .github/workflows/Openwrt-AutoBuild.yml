@@ -147,7 +147,7 @@ jobs:
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
-        cp -Rf ./diy/* ./
+        # cp -Rf ./diy/* ./
         cp -f devices/common/default-settings package/*/*/my-default-settings/files/uci.defaults
         if [ -f "devices/${{matrix.target}}/default-settings" ]; then
           echo >> package/*/*/my-default-settings/files/uci.defaults
