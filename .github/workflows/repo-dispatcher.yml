@@ -18,7 +18,7 @@ on:
     inputs:
       skip:
         description: 'Skip version check'
-        required: true
+        required: false
         default: 'true'
       version:
         description: 'Version'
