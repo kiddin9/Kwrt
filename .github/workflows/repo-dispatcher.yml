@@ -69,7 +69,7 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "nanopi-r4s ${{ github.event.inputs.version }}", "client_payload": {"target": "nanopi-r4s"}}'
+          -d '{"event_type": "Rpi-4B ${{ github.event.inputs.version }}", "client_payload": {"target": "Rpi-4B"}}'
         else
           [ "$REPO_BRANCH" ] && exit 0;
           REPO_BRANCH_r=$(curl -s https://op.supes.top/firmware/x86_64/version.txt | tr "\r\n" "," | cut -f 3 -d ,)
@@ -91,7 +91,7 @@ jobs:
               -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
               -H "Accept: application/vnd.github.everest-preview+json" \
               -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-              -d '{"event_type": "nanopi-r4s", "client_payload": {"target": "nanopi-r4s"}}'
+              -d '{"event_type": "Rpi-4B", "client_payload": {"target": "Rpi-4B"}}'
             fi
         fi
 
