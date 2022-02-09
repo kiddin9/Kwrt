@@ -22,6 +22,8 @@ sed -i '/;;/i\ethtool -K eth1 rx off tx off && logger -t disable-offloading "dis
 
 sed -i -e 's,kmod-r8169,kmod-r8168,g' target/linux/rockchip/image/armv8.mk
 
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq kmod-hwmon-pwmfan/' target/linux/rockchip/Makefile
+
 echo '
 CONFIG_ARM64_CRYPTO=y
 CONFIG_CRYPTO_AES_ARM64=y
