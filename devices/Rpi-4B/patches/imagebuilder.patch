@@ -1,5 +1,5 @@
---- a/target/imagebuilder/files/Makefile
-+++ b/target/imagebuilder/files/Makefile
+--- a/target/imagebuilder/Makefile
++++ b/target/imagebuilder/Makefile
 @@ -31,6 +31,7 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
  	-cp $(TOPDIR)/.config $(PKG_BUILD_DIR)/.config
  	$(SED) 's/^CONFIG_BINARY_FOLDER=.*/# CONFIG_BINARY_FOLDER is not set/' $(PKG_BUILD_DIR)/.config

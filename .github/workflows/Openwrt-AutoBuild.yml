@@ -182,6 +182,10 @@ jobs:
       run: |
         cd openwrt
         make defconfig
+        for i in $(make --file=preset_pkg.mk presetpkg); do
+          sed -i "\$a CONFIG_PACKAGE_$i=y" .config
+        done
+        make defconfig
         make download -j$(($(nproc)+1)) &
 
     - name: Cache
@@ -228,16 +232,27 @@ jobs:
     - name: Organize files
       id: organize
       run: |
-        mkdir -p firmware/${{matrix.target}} firmware/nanopi-r4s firmware/nanopi-r2c kmods
+        shopt -s extglob
+        mkdir -p firmware/${{matrix.target}} kmods
+        if [[ ${{matrix.target}} == "nanopi-r4s" || ${{matrix.target}} == "nanopi-r2c" ]]; then
+          rm -rf openwrt/bin/targets/*/*/!(*.gz)
+        fi
+        if [ -f openwrt/bin/targets/*/*/*r2s*sysupgrade* ]; then
+          mkdir firmware/nanopi-r4s
+          mv -f  openwrt/nanopi-r4s.config firmware/nanopi-r4s/ || true
+          cp -rf openwrt/bin/targets/*/*/*r4s*sysupgrade* ./firmware/nanopi-r4s/ || true
+          mkdir firmware/nanopi-r2c
+          mv -f  openwrt/nanopi-r2c.config firmware/nanopi-r2c/ || true
+          cp -rf openwrt/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
+          cp -rf openwrt/bin/targets/*/*/*{combined,r2s*sysupgrade,rpi-4*sysupgrade}* ./firmware/${{matrix.target}}/ || true
+        else
+          cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
+        fi
         cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
-        mv -f openwrt/nanopi-r2c.config firmware/nanopi-r2c/ || true
-        mv -f  openwrt/nanopi-r4s.config firmware/nanopi-r4s/ || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
         kernel_v="$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
-        cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v
+        cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v || true
         rm -rf openwrt/bin/targets/*/*/packages/*.ipk
-        cp -rf openwrt/bin/targets/*/*/*r4s*sysupgrade* ./firmware/nanopi-r4s/ || true
-        cp -rf openwrt/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
         cp -rf openwrt/bin/targets/*/*/*{combined,r2s*sysupgrade,rpi-4*sysupgrade}* ./firmware/${{matrix.target}}/ || true
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
@@ -256,7 +271,7 @@ jobs:
 
     - name: Deploy firmware to server
       uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
+      if: env.SSH_PRIVATE_KEY && contains(github.event.action, 'ser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avzr --exclude="
@@ -278,7 +293,7 @@ jobs:
 
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser') && env.MTARGET
+      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avzr"

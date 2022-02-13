@@ -126,6 +126,10 @@ fi
 cp devices/common/.config .config
 echo >> .config
 cat devices/$firmware/.config >> .config
+make defconfig
+for i in $(make --file=preset_pkg.mk presetpkg); do
+	sed -i "\$a CONFIG_PACKAGE_$i=y" .config
+done
 make menuconfig
 echo
 echo

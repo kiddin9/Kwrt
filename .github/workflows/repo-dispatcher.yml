@@ -12,14 +12,10 @@ on:
   # push: 
   #   branches:
   #     - master
-  schedule:
-    - cron: 30 18 * * *
+  #schedule:
+  #  - cron: 30 18 * * *
   workflow_dispatch:
     inputs:
-      skip:
-        description: 'Skip version check'
-        required: false
-        default: 'true'
       version:
         description: 'Version'
         required: false
@@ -54,7 +50,6 @@ jobs:
     - name: Trigger Compile
       run: |
         sudo timedatectl set-timezone "$TZ"
-        if [[ "${{ github.event.inputs.skip }}" == 'true' ]]; then
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
@@ -70,28 +65,4 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "Rpi-4B ${{ github.event.inputs.version }}", "client_payload": {"target": "Rpi-4B"}}'
-        else
-          [ "$REPO_BRANCH" ] && exit 0;
-          REPO_BRANCH_r=$(curl -s https://op.supes.top/firmware/x86_64/version.txt | tr "\r\n" "," | cut -f 3 -d ,)
-          REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
-             -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
-             -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v21 | tail -n 1)"
-            if [ $REPO_BRANCH_r != $REPO_BRANCH ]; then
-              curl \
-              -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-              -H "Accept: application/vnd.github.everest-preview+json" \
-              -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-              -d '{"event_type": "x86_64", "client_payload": {"target": "x86_64"}}'
-              curl \
-              -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-              -H "Accept: application/vnd.github.everest-preview+json" \
-              -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-              -d '{"event_type": "nanopi-r2s", "client_payload": {"target": "nanopi-r2s"}}'
-              curl \
-              -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-              -H "Accept: application/vnd.github.everest-preview+json" \
-              -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-              -d '{"event_type": "Rpi-4B", "client_payload": {"target": "Rpi-4B"}}'
-            fi
-        fi
 
