@@ -38,7 +38,7 @@
 +		push @mirrors, "https://pd.zwc365.com/seturl/https://github.com/$1";
 +		push @mirrors, "https://github.com.cnpmjs.org/$1";
 +		push @mirrors, "https://ghproxy.com/https://github.com/$1";
-+		push @mirrors, "https://hub.fastgit.org/$1";
++		push @mirrors, "https://hub.fastgit.xyz/$1";
 +		push @mirrors, "https://github.com/$1";
  	} elsif ($mirror =~ /^\@GNU\/(.+)$/) {
 +		push @mirrors, "https://mirrors.tencent.com/gnu/$1";
