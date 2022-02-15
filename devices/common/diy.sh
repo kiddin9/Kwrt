@@ -22,7 +22,7 @@ sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' pac
 
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-bypass luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-app-attendedsysupgrade dnsmasq-full luci-base luci-compat luci-lib-ipkg \
-coremark my-default-settings wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-tcp-bbr bash \
+coremark wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-tcp-bbr bash \
 wpad-basic-wolfssl kmod-usb2 kmod-usb3 automount /" include/target.mk
 sed -i "/dnsmasq \\\/d" include/target.mk
 
@@ -44,8 +44,6 @@ svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/uc
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
 rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
-
-chmod +x files/usr/bin/* files/etc/init.d/*
 
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/kiddin9/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &

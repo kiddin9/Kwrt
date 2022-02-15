@@ -149,8 +149,8 @@ jobs:
         fi
         cp -Rf ./diy/* ./ || true
         if [ -f "devices/${{matrix.target}}/default-settings" ]; then
-          echo >> package/*/*/my-default-settings/files/uci.defaults
-          cat devices/${{matrix.target}}/default-settings >> package/*/*/my-default-settings/files/uci.defaults
+          echo >> package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
+          cat devices/${{matrix.target}}/default-settings >> package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
         fi
         cp -f devices/common/$CONFIG_FILE .config
         if [ -f "devices/${{matrix.target}}/$CONFIG_FILE" ]; then
@@ -169,9 +169,9 @@ jobs:
     - name: Default PPPOE Setting
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
       run: |
-        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/my-default-settings/files/uci.defaults
-        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/my-default-settings/files/uci.defaults
-        sed -i '$i uci commit network' openwrt/package/*/*/my-default-settings/files/uci.defaults
+        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
+        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
+        sed -i '$i uci commit network' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
               
     - name: SSH connection to Actions
       uses: kiddin9/debugger-action@master
@@ -262,6 +262,8 @@ jobs:
           echo $md5 >> $i/version.txt
           echo v$REPO_BRANCH >> $i/version.txt
         done
+        mkdir ${{ env.REPO_BRANCH }}
+        cp -rf openwrt/bin/targets ${{ env.REPO_BRANCH }}/
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "x86_64" ]; then
@@ -296,11 +298,11 @@ jobs:
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
-        SOURCE: openwrt/bin/targets
+        ARGS: "-avzr --delete"
+        SOURCE: openwrt/${{ env.REPO_BRANCH }}/targets
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/releases/${{ env.REPO_BRANCH }}/"
+        TARGET: "/www/wwwroot/op.supes.top/releases/"
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
