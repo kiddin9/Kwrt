@@ -262,6 +262,7 @@ jobs:
           echo $md5 >> $i/version.txt
           echo v$REPO_BRANCH >> $i/version.txt
         done
+        rm -rf openwrt/bin/targets/*/*/*.img.gz
         mkdir ${{ env.REPO_BRANCH }}
         cp -rf openwrt/bin/targets ${{ env.REPO_BRANCH }}/
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
