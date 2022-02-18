@@ -1,10 +1,7 @@
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
-@@ -38,13 +38,12 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
- 		./files/repositories.conf \
- 		$(TMP_DIR)/.targetinfo \
+@@ -40,11 +40,9 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
  		$(TMP_DIR)/.packageinfo \
-+		$(TOPDIR)/files \
  		$(PKG_BUILD_DIR)/
  
 -ifeq ($(CONFIG_IB_STANDALONE),)
@@ -13,8 +10,8 @@
  	$(VERSION_SED_SCRIPT) $(PKG_BUILD_DIR)/repositories.conf
 -endif
  
- ifeq ($(CONFIG_BUILDBOT),)
  	$(INSTALL_DIR) $(PKG_BUILD_DIR)/packages
+ 	# create an empty package index so `opkg` doesn't report an error
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
@@ -37,7 +34,7 @@
 +			packages="$$packages luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn"; \
 +		fi \
 +	done; \
-+	$(OPKG) install --force-overwrite --force-checksum --force-depends $$packages
++	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer $$packages
  
  prepare_rootfs: FORCE
  	@echo
