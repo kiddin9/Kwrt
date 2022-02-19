@@ -300,7 +300,7 @@ jobs:
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avzr --delete"
-        SOURCE: openwrt/${{ env.REPO_BRANCH }}/targets
+        SOURCE: ${{ env.REPO_BRANCH }}/targets
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/releases/"
