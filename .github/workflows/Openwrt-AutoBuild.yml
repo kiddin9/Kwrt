@@ -299,8 +299,8 @@ jobs:
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr --delete"
-        SOURCE: openwrt/${{ env.REPO_BRANCH }}/targets
+        ARGS: "-avzr"
+        SOURCE: ${{ env.REPO_BRANCH }}
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/releases/"
@@ -310,7 +310,7 @@ jobs:
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
-        name: ${{ env.VERSION }} ${{matrix.target}}
+        name: ${{ env.VERSION }}_${{matrix.target}}
         path: |
           ./firmware/
           openwrt/bin/targets/*/

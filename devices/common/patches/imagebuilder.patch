@@ -23,7 +23,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -164,7 +165,13 @@ package_install: FORCE
+@@ -164,7 +165,14 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
@@ -35,6 +35,7 @@
 +		fi \
 +	done; \
 +	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer $$packages
++	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
  	@echo

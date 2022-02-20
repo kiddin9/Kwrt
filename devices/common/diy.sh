@@ -20,7 +20,7 @@ sed -i 's/ libelf//' tools/Makefile
 
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 
-sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-bypass luci-app-upnp luci-app-autoreboot \
+sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-app-attendedsysupgrade dnsmasq-full luci-base luci-compat luci-lib-ipkg \
 coremark wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-tcp-bbr bash \
 wpad-basic-wolfssl kmod-usb2 kmod-usb3 automount /" include/target.mk
