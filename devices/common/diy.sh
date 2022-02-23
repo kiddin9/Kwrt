@@ -1,6 +1,7 @@
 #!/bin/bash
 #=================================================
 shopt -s extglob
+
 commitid="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | grep -o 'href=".*>kernel: bump 5.10' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
 version="$(git rev-parse HEAD)"
 git checkout $commitid
@@ -10,7 +11,6 @@ kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d
 sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 mv -f target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk .github/
 git checkout $version
-echo "$(date +"%s")" >version.date
 rm -rf target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk
 mv -f .github/linux target/
 mv -f .github/kernel package/
@@ -18,8 +18,8 @@ mv -f .github/linux-firmware package/firmware/
 mv -f  .github/kernel-version.mk .github/kernel-5.10 .github/kernel-defaults.mk include/
 sed -i 's/ libelf//' tools/Makefile
 
+echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
-
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-app-attendedsysupgrade dnsmasq-full luci-base luci-compat luci-lib-ipkg \
 coremark wget-ssl curl htop nano iptables-mod-fullconenat zram-swap kmod-lib-zstd kmod-tcp-bbr bash \

@@ -28,7 +28,7 @@
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
-+	packages="$(BUILD_PACKAGES) luci-i18n-base-zh-cn"; \
++	packages="$(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en"; \
 +	for p in $(BUILD_PACKAGES); do \
 +		if [[ $$p == luci-app-* && "`$(OPKG) list | grep luci-i18n-\`echo $$p | cut -d - -f 3-\`-zh-cn`" ]]; then \
 +			packages="$$packages luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn"; \
