@@ -273,7 +273,7 @@ jobs:
 
     - name: Deploy firmware to server
       uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && contains(github.event.action, 'ser')
+      if: env.SSH_PRIVATE_KEY && contains(github.event.action, 'toser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avzr --exclude="

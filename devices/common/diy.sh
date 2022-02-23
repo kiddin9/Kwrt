@@ -7,8 +7,6 @@ version="$(git rev-parse HEAD)"
 git checkout $commitid
 git checkout HEAD^
 [ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.10")" ] && git checkout $commitid
-kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
-sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 mv -f target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk .github/
 git checkout $version
 rm -rf target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk
@@ -18,6 +16,8 @@ mv -f .github/linux-firmware package/firmware/
 mv -f  .github/kernel-version.mk .github/kernel-5.10 .github/kernel-defaults.mk include/
 sed -i 's/ libelf//' tools/Makefile
 
+kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
+sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
