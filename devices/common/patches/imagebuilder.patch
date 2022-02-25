@@ -1,30 +1,15 @@
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
-@@ -40,11 +40,9 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
- 		$(TMP_DIR)/.packageinfo \
- 		$(PKG_BUILD_DIR)/
- 
--ifeq ($(CONFIG_IB_STANDALONE),)
- 	echo '## Remote package repositories' >> $(PKG_BUILD_DIR)/repositories.conf
- 	$(call FeedSourcesAppend,$(PKG_BUILD_DIR)/repositories.conf)
- 	$(VERSION_SED_SCRIPT) $(PKG_BUILD_DIR)/repositories.conf
--endif
- 
- 	$(INSTALL_DIR) $(PKG_BUILD_DIR)/packages
- 	# create an empty package index so `opkg` doesn't report an error
-
---- a/target/imagebuilder/files/Makefile
-+++ b/target/imagebuilder/files/Makefile
 @@ -113,6 +113,16 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
-+	DATE="`date +'%m.%d.%Y'`"; \
++	[ "$(DATE)" ] && DATE="$(DATE).`date +'%Y'`" || DATE="`date +'%m.%d.%Y'`"; \
 +	VERSION="`echo "$$DATE" | cut -f 1-2 -d .`"; \
 +	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
 +	echo -e " \
 +	sed -i \"s/DISTRIB_REVISION=.*/DISTRIB_REVISION='$$DATE'/\" /etc/openwrt_release \n \
-+	sed -i \"s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION=\"OpenWrt 定制版 $$DATE by Kiddin'\"/\" /etc/openwrt_release \n \
++	sed -i \"s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION=\"OpenWrt $$DATE by Kiddin'\"/\" /etc/openwrt_release \n \
 +	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(PARTSIZE)'/\" /etc/openwrt_release \n \
 +	echo \"$$DATE\" >/etc/openwrt_version \n \
 +	sed -i \"s/OpenWrt .*/OpenWrt $$VERSION by Kiddin'/\" /etc/banner \n \
@@ -56,14 +41,12 @@
  
  prepare_rootfs: FORCE
  	@echo
-@@ -183,7 +201,10 @@ build_image: FORCE
+@@ -183,7 +201,8 @@ build_image: FORCE
  	@echo
  	@echo Building images...
  	rm -rf $(BUILD_DIR)/json_info_files/
 -	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" \
-+	if [ "$(PARTSIZE)" -ge 100 2>/dev/null ] ; then \
-+			ROOT_PARTSIZE="$(PARTSIZE)"; \
-+	fi; \
++	[ "$(PARTSIZE)" -ge 100 2>/dev/null ] && ROOT_PARTSIZE="$(PARTSIZE)"; \
 +	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" PARTSIZE="$$ROOT_PARTSIZE" \
  		$(if $(USER_PROFILE),PROFILE="$(USER_PROFILE)")
  
