@@ -15,7 +15,24 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -124,6 +124,7 @@ _call_image: staging_dir/host/.prereq-build
+@@ -113,6 +113,16 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
+ PACKAGES:=
+ 
+ _call_image: staging_dir/host/.prereq-build
++	DATE="`date +'%m.%d.%Y'`"; \
++	VERSION="`echo "$$DATE" | cut -f 1-2 -d .`"; \
++	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
++	echo -e " \
++	sed -i \"s/DISTRIB_REVISION=.*/DISTRIB_REVISION='$$DATE'/\" /etc/openwrt_release \n \
++	sed -i \"s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION=\"OpenWrt 定制版 $$DATE by Kiddin'\"/\" /etc/openwrt_release \n \
++	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(PARTSIZE)'/\" /etc/openwrt_release \n \
++	echo \"$$DATE\" >/etc/openwrt_version \n \
++	sed -i \"s/OpenWrt .*/OpenWrt $$VERSION by Kiddin'/\" /etc/banner \n \
++	"> $(USER_FILES)/etc/uci-defaults/99-version; \
+ 	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
+ 	echo 'Packages: $(BUILD_PACKAGES)'
+ 	echo
+@@ -124,6 +134,7 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
  	$(MAKE) -s checksum
@@ -23,7 +40,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -164,7 +165,14 @@ package_install: FORCE
+@@ -164,7 +175,14 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
@@ -39,3 +56,15 @@
  
  prepare_rootfs: FORCE
  	@echo
+@@ -183,7 +201,10 @@ build_image: FORCE
+ 	@echo
+ 	@echo Building images...
+ 	rm -rf $(BUILD_DIR)/json_info_files/
+-	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" \
++	if [ "$(PARTSIZE)" -ge 100 2>/dev/null ] ; then \
++			ROOT_PARTSIZE="$(PARTSIZE)"; \
++	fi; \
++	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" PARTSIZE="$$ROOT_PARTSIZE" \
+ 		$(if $(USER_PROFILE),PROFILE="$(USER_PROFILE)")
+ 
+ $(BIN_DIR)/profiles.json: FORCE
