@@ -1,5 +1,20 @@
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
+@@ -40,11 +40,9 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
+ 		$(TMP_DIR)/.packageinfo \
+ 		$(PKG_BUILD_DIR)/
+ 
+-ifeq ($(CONFIG_IB_STANDALONE),)
+ 	echo '## Remote package repositories' >> $(PKG_BUILD_DIR)/repositories.conf
+ 	$(call FeedSourcesAppend,$(PKG_BUILD_DIR)/repositories.conf)
+ 	$(VERSION_SED_SCRIPT) $(PKG_BUILD_DIR)/repositories.conf
+-endif
+ 
+ 	$(INSTALL_DIR) $(PKG_BUILD_DIR)/packages
+ 	# create an empty package index so `opkg` doesn't report an error
+
+--- a/target/imagebuilder/files/Makefile
++++ b/target/imagebuilder/files/Makefile
 @@ -113,6 +113,16 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
  PACKAGES:=
  
