@@ -15,7 +15,7 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@@ -113,6 +113,16 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
+@@ -113,6 +113,16 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
@@ -32,7 +32,7 @@
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
-@@ -164,7 +175,14 @@ package_install: FORCE
+@@ -164,7 +174,14 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
@@ -48,39 +48,44 @@
  
  prepare_rootfs: FORCE
  	@echo
-@@ -183,7 +201,8 @@ build_image: FORCE
+@@ -183,7 +200,8 @@ build_image: FORCE
  	@echo
  	@echo Building images...
  	rm -rf $(BUILD_DIR)/json_info_files/
 -	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" \
-+	[ "$(PARTSIZE)" -ge 100 2>/dev/null ] && [ "$(PARTSIZE)" -le 2048 2>/dev/null ] && ROOT_PARTSIZE="$(PARTSIZE)"; \
-+	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" PARTSIZE="$$ROOT_PARTSIZE" \
++	[ "$(PARTSIZE)" -ge 100 2>/dev/null ] && [ "$(PARTSIZE)" -le 3072 2>/dev/null ] && ROOT_PARTSIZE="$(PARTSIZE)"; \
++	nice $(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" PARTSIZE="$$ROOT_PARTSIZE" FILESYSTEMS="$(FILESYSTEMS)" \
  		$(if $(USER_PROFILE),PROFILE="$(USER_PROFILE)")
  
  $(BIN_DIR)/profiles.json: FORCE
 
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -33,6 +33,9 @@ KDIR=$(KERNEL_BUILD_DIR)
+@@ -33,6 +33,13 @@ KDIR=$(KERNEL_BUILD_DIR)
  KDIR_TMP=$(KDIR)/tmp
  DTS_DIR:=$(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts
  
 +ifneq ($(PARTSIZE),)
 +  CONFIG_TARGET_ROOTFS_PARTSIZE:=$(PARTSIZE)
 +endif
++ifeq ($(FILESYSTEMS),ext4)
++  CONFIG_TARGET_ROOTFS_EXT4FS := y
++  CONFIG_TARGET_ROOTFS_SQUASHFS := n
++endif
  IMG_PREFIX_EXTRA:=$(if $(EXTRA_IMAGE_NAME),$(call sanitize,$(EXTRA_IMAGE_NAME))-)
  IMG_PREFIX_VERNUM:=$(if $(CONFIG_VERSION_FILENAMES),$(call sanitize,$(VERSION_NUMBER))-)
  IMG_PREFIX_VERCODE:=$(if $(CONFIG_VERSION_CODE_FILENAMES),$(call sanitize,$(VERSION_CODE))-)
-@@ -225,10 +228,11 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
+@@ -225,10 +232,11 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
  $(eval $(foreach S,$(NAND_BLOCKSIZE),$(call Image/mkfs/jffs2-nand/template,$(S))))
  
  define Image/mkfs/squashfs-common
+-	$(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
 +	echo -998 > /proc/$$$$/oom_score_adj || true
- 	$(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
++	nice $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
  		-nopad -noappend -root-owned \
  		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
 -		-processors 1
-+		-processors `nproc` -mem `expr $$(grep MemAvailable /proc/meminfo | awk '{print $$2}') / 1250`M
++		-processors 1 -mem `expr $$(grep MemAvailable /proc/meminfo | awk '{print $$2}') / 1250`M
  endef
  
  ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
