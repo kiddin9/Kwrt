@@ -15,18 +15,17 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -113,6 +113,16 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
+@@ -113,6 +113,15 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
 +	rm -rf $(KERNEL_BUILD_DIR)/tmp
 +	[ "$(DATE)" ] && DATE="$(DATE).`date +'%Y'`" || DATE="`date +'%m.%d.%Y'`"; \
-+	VERSION="`echo "$$DATE" | cut -f 1-2 -d .`"; \
 +	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
 +	echo -e " \
 +	sed -i \"s/[0-9]\+.[0-9]\+.[0-9]\{4\}/$$DATE/\" /etc/openwrt_release \n \
 +	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(PARTSIZE)'/\" /etc/openwrt_release \n \
-+	sed -i \"s/OpenWrt .* by/OpenWrt $$VERSION by/\" /etc/banner \n \
++	sed -i \"s/OpenWrt .* by/OpenWrt $$DATE by/\" /etc/banner \n \
 +	echo \"$$DATE\" >/etc/openwrt_version \n \
 +	"> $(USER_FILES)/etc/uci-defaults/99-version; \
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
