@@ -65,7 +65,7 @@
  DTS_DIR:=$(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts
  
 +ifneq ($(PARTSIZE),)
-+  CONFIG_TARGET_ROOTFS_PARTSIZE:=$(PARTSIZE)
++  CONFIG_TARGET_ROOTFS_PARTSIZE := $(PARTSIZE)
 +endif
 +ifeq ($(FILESYSTEMS),ext4)
 +  CONFIG_TARGET_ROOTFS_EXT4FS := y
@@ -74,7 +74,7 @@
  IMG_PREFIX_EXTRA:=$(if $(EXTRA_IMAGE_NAME),$(call sanitize,$(EXTRA_IMAGE_NAME))-)
  IMG_PREFIX_VERNUM:=$(if $(CONFIG_VERSION_FILENAMES),$(call sanitize,$(VERSION_NUMBER))-)
  IMG_PREFIX_VERCODE:=$(if $(CONFIG_VERSION_CODE_FILENAMES),$(call sanitize,$(VERSION_CODE))-)
-@@ -225,10 +232,11 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
+@@ -225,7 +232,8 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
  $(eval $(foreach S,$(NAND_BLOCKSIZE),$(call Image/mkfs/jffs2-nand/template,$(S))))
  
  define Image/mkfs/squashfs-common
@@ -83,8 +83,4 @@
 +	nice $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
  		-nopad -noappend -root-owned \
  		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
--		-processors 1
-+		-processors 1 -mem `expr $$(grep MemAvailable /proc/meminfo | awk '{print $$2}') / 1250`M
- endef
- 
- ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
+ 		-processors 1
