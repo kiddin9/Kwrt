@@ -96,3 +96,21 @@
    define Image/Build/targz
  	$(TAR) -cp --numeric-owner --owner=0 --group=0 --mode=a-s --sort=name \
  		$(if $(SOURCE_DATE_EPOCH),--mtime="@$(SOURCE_DATE_EPOCH)") \
+
+--- a/target/linux/x86/image/Makefile
++++ b/target/linux/x86/image/Makefile
+@@ -11,6 +11,14 @@ GRUB_SERIAL_CONFIG =
+ GRUB_TERMINAL_CONFIG =
+ GRUB_CONSOLE_CMDLINE =
+ 
++ifeq ($(VMDK),1)
++  CONFIG_VMDK_IMAGES := y
++endif
++
++ifeq ($(EFI),0)
++  CONFIG_GRUB_EFI_IMAGES := n
++endif
++
+ ifneq ($(CONFIG_GRUB_CONSOLE),)
+   GRUB_CONSOLE_CMDLINE += console=tty0
+   GRUB_TERMINALS += console
