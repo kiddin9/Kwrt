@@ -53,28 +53,31 @@
  	rm -rf $(BUILD_DIR)/json_info_files/
 -	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" \
 +	[ "$(PARTSIZE)" -ge 100 2>/dev/null ] && [ "$(PARTSIZE)" -le 3072 2>/dev/null ] && ROOT_PARTSIZE="$(PARTSIZE)"; \
-+	nice $(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" PARTSIZE="$$ROOT_PARTSIZE" FILESYSTEMS="$(FILESYSTEMS)" \
++	nice $(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" PARTSIZE="$$ROOT_PARTSIZE" FILESYSTEMS="$(FILESYSTEMS)" ROOTFS="$(ROOTFS)" VMDK="$(VMDK)" EFI="$(EFI)" \
  		$(if $(USER_PROFILE),PROFILE="$(USER_PROFILE)")
  
  $(BIN_DIR)/profiles.json: FORCE
 
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -33,6 +33,13 @@ KDIR=$(KERNEL_BUILD_DIR)
+@@ -33,6 +33,16 @@ KDIR=$(KERNEL_BUILD_DIR)
  KDIR_TMP=$(KDIR)/tmp
  DTS_DIR:=$(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts
  
 +ifneq ($(PARTSIZE),)
-+  CONFIG_TARGET_ROOTFS_PARTSIZE := $(PARTSIZE)
++  CONFIG_TARGET_ROOTFS_PARTSIZE:=$(PARTSIZE)
 +endif
 +ifeq ($(FILESYSTEMS),ext4)
 +  CONFIG_TARGET_ROOTFS_EXT4FS := y
 +  CONFIG_TARGET_ROOTFS_SQUASHFS := n
 +endif
++ifeq ($(ROOTFS),0)
++  CONFIG_TARGET_ROOTFS_TARGZ := n
++endif
  IMG_PREFIX_EXTRA:=$(if $(EXTRA_IMAGE_NAME),$(call sanitize,$(EXTRA_IMAGE_NAME))-)
  IMG_PREFIX_VERNUM:=$(if $(CONFIG_VERSION_FILENAMES),$(call sanitize,$(VERSION_NUMBER))-)
  IMG_PREFIX_VERCODE:=$(if $(CONFIG_VERSION_CODE_FILENAMES),$(call sanitize,$(VERSION_CODE))-)
-@@ -225,7 +232,8 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
+@@ -225,7 +235,8 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
  $(eval $(foreach S,$(NAND_BLOCKSIZE),$(call Image/mkfs/jffs2-nand/template,$(S))))
  
  define Image/mkfs/squashfs-common
@@ -84,3 +87,30 @@
  		-nopad -noappend -root-owned \
  		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
  		-processors 1
+@@ -291,7 +302,7 @@ define Image/gzip-ext4-padded-squashfs
+ 
+ endef
+ 
+-ifdef CONFIG_TARGET_ROOTFS_TARGZ
++ifeq ($(CONFIG_TARGET_ROOTFS_TARGZ),y)
+   define Image/Build/targz
+ 	$(TAR) -cp --numeric-owner --owner=0 --group=0 --mode=a-s --sort=name \
+ 		$(if $(SOURCE_DATE_EPOCH),--mtime="@$(SOURCE_DATE_EPOCH)") \
+
+--- a/target/linux/x86/image/Makefile
++++ b/target/linux/x86/image/Makefile
+@@ -11,6 +11,14 @@ GRUB_SERIAL_CONFIG =
+ GRUB_TERMINAL_CONFIG =
+ GRUB_CONSOLE_CMDLINE =
+ 
++ifeq ($(VMDK),1)
++  CONFIG_VMDK_IMAGES := y
++endif
++
++ifeq ($(EFI),0)
++  CONFIG_GRUB_EFI_IMAGES := n
++endif
++
+ ifneq ($(CONFIG_GRUB_CONSOLE),)
+   GRUB_CONSOLE_CMDLINE += console=tty0
+   GRUB_TERMINALS += console

@@ -2,7 +2,7 @@
 #=================================================
 shopt -s extglob
 
-commitid="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | grep -o 'href=".*>kernel: bump 5.10' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
+commitid="$(curl -sfL https://github.com/openwrt/openwrt/commits/openwrt-22.03/include | grep -o 'href=".*>kernel: bump 5.10' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
 version="$(git rev-parse HEAD)"
 git checkout $commitid
 git checkout HEAD^
