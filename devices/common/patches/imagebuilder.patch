@@ -42,8 +42,8 @@
 +			packages="luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn $$packages"; \
 +		fi \
 +	done; \
-+	$(OPKG) install --force-overwrite --force-checksum --force-depends $$packages
-+	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-reinstall $(BUILD_PACKAGES)
++	$(OPKG) install --force-overwrite --force-checksum --force-depends $(BUILD_PACKAGES); \
++	$(OPKG) install $$packages || true
 +	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
