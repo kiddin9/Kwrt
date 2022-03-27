@@ -31,18 +31,19 @@
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
-@@ -164,7 +174,14 @@ package_install: FORCE
+@@ -164,7 +173,15 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
-+	packages="$(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en"; \
++	packages="luci-i18n-base-zh-cn luci-i18n-base-en"; \
 +	for p in $(BUILD_PACKAGES); do \
 +		if [[ $$p == luci-app-* && "`$(OPKG) list | grep luci-i18n-\`echo $$p | cut -d - -f 3-\`-zh-cn`" ]]; then \
-+			packages="$$packages luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn"; \
++			packages="luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn $$packages"; \
 +		fi \
 +	done; \
-+	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer $$packages
++	$(OPKG) install --force-overwrite --force-checksum --force-depends $(BUILD_PACKAGES); \
++	$(OPKG) install $$packages || true
 +	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
