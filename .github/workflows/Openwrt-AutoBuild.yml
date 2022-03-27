@@ -78,7 +78,7 @@ jobs:
       run: |
         gitdate=$(curl -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
         gitdate=$(date -d "$gitdate" +%s)
-        now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
+        now=$(date -d "$(date)" +%s)
         if [[ $(expr $gitdate + 300) < $now ]]; then
           curl -X POST https://api.github.com/repos/kiddin9/openwrt-packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
