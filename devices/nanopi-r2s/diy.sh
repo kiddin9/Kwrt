@@ -10,9 +10,9 @@ sed -i '/;;/i\ethtool -K eth1 rx off tx off && logger -t disable-offloading "dis
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq/' target/linux/rockchip/Makefile
 
+sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/c27993f039452f14182282d0ac40c5e9810c0803.patch | patch -d '/' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/6c391373850335f7f3a0a3fc6dc39bfebdfb70d1.patch | patch -d '/' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/53c85f2afe9e497599f56bf1bbecca1f734595dc.patch | patch -d '/' -p1 --forward"
-sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/9ba39aa45f06e5c935a9816e771682c5533b1e24.patch | patch -d '/' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/9ba39aa45f06e5c935a9816e771682c5533b1e24.patch | patch -d '/' -p1 --forward"
 sh -c "curl -sfL https://github.com/immortalwrt/immortalwrt/commit/082501bff9f4781636aa43aa81a7a9f5a9757849.patch | patch -d '/' -p1 --forward"
 
