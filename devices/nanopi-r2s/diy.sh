@@ -1,11 +1,7 @@
 #!/bin/bash
 
 shopt -s extglob
-rm -rf package/boot/uboot-rockchip target/linux/rockchip/patches-5.10/.svn
-svn export --force https://github.com/friendlyarm/friendlywrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
-svn export --force https://github.com/friendlyarm/friendlywrt/branches/master/target/linux/rockchip/armv8/base-files target/linux/rockchip/armv8/base-files
-curl -sfLo target/linux/rockchip/image/armv8.mk https://raw.githubusercontent.com/friendlyarm/friendlywrt/master/target/linux/rockchip/image/armv8.mk
-svn co https://github.com/friendlyarm/friendlywrt/branches/master/target/linux/rockchip/patches-5.10 target/linux/rockchip/patches-5.10
+svn export --force https://github.com/friendlyarm/friendlywrt/trunk/target/linux/rockchip/armv8/base-files target/linux/rockchip/armv8/base-files
 rm -rf target/linux/rockchip/armv8/base-files/{etc/{uci-defaults/vendor.defaults,inittab,banner},root}
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
@@ -13,6 +9,12 @@ sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.m
 sed -i '/;;/i\ethtool -K eth1 rx off tx off && logger -t disable-offloading "disabed rk3328 ethernet tcp/udp offloading tx/rx"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq/' target/linux/rockchip/Makefile
+
+sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/6c391373850335f7f3a0a3fc6dc39bfebdfb70d1.patch | patch -d '/' -p1 --forward"
+sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/53c85f2afe9e497599f56bf1bbecca1f734595dc.patch | patch -d '/' -p1 --forward"
+sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/9ba39aa45f06e5c935a9816e771682c5533b1e24.patch | patch -d '/' -p1 --forward"
+sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/9ba39aa45f06e5c935a9816e771682c5533b1e24.patch | patch -d '/' -p1 --forward"
+sh -c "curl -sfL https://github.com/immortalwrt/immortalwrt/commit/082501bff9f4781636aa43aa81a7a9f5a9757849.patch | patch -d '/' -p1 --forward"
 
 echo '
 CONFIG_ARM64_CRYPTO=y
