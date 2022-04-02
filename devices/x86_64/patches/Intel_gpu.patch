@@ -108,9 +108,7 @@ index 923701c703d..7f60014ea6c 100644
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_huc_7.9.3.bin $(1)/lib/firmware/i915/
 +endef
 +$(eval $(call BuildPackage,i915-firmware))
-diff --git a/package/firmware/linux-firmware/intelgpu.mk b/package/firmware/linux-firmware/intelgpu.mk
-deleted file mode 100644
-index e0363a0eae1..00000000000
+
 --- a/package/firmware/linux-firmware/intelgpu.mk
 +++ /dev/null
 @@ -1,9 +0,0 @@
