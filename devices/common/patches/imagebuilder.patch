@@ -53,20 +53,30 @@
  	@echo Building images...
  	rm -rf $(BUILD_DIR)/json_info_files/
 -	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" \
-+	nice $(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" \
++	nice $(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" VIP=$(VIP) \
  		$(if $(USER_PROFILE),PROFILE="$(USER_PROFILE)")
  
  $(BIN_DIR)/profiles.json: FORCE
 
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -225,7 +225,8 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
+@@ -225,10 +225,17 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
  $(eval $(foreach S,$(NAND_BLOCKSIZE),$(call Image/mkfs/jffs2-nand/template,$(S))))
  
  define Image/mkfs/squashfs-common
 -	$(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
 +	echo -998 > /proc/$$$$/oom_score_adj || true
++	if [ $(VIP) == True ] ; then \
++	nice $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
++		-nopad -noappend -root-owned \
++		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT); \
++	else \
 +	nice $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
  		-nopad -noappend -root-owned \
  		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
- 		-processors 1
+-		-processors 1
++		-processors 1; \
++	fi
+ endef
+ 
+ ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
