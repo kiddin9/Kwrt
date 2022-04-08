@@ -26,6 +26,7 @@ kmod-usb2 kmod-usb3 automount /" include/target.mk
 sed -i "/dnsmasq \\\/d" include/target.mk
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+sed -i "s/+PACKAGE_kmod-backlight.*//" package/kernel/linux/modules/video.mk
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/af9ddeb7c95186854733262554c944d29513a58a.patch | patch -d './' -p1 --forward"
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/b4a6d7f974f7b17052ade15a3cf63086bd52736d.patch | patch -d './' -p1 --forward"
@@ -42,6 +43,10 @@ rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,netw
 ./scripts/feeds install -a -p kiddin9
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
+
+rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
+rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/packages/master/libs/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch -o package/feeds/packages/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch
 
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx

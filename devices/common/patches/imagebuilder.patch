@@ -1,7 +1,10 @@
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
-@@ -40,11 +40,9 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
+@@ -38,13 +38,12 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
+ 		./files/repositories.conf \
+ 		$(TMP_DIR)/.targetinfo \
  		$(TMP_DIR)/.packageinfo \
++		$(TOPDIR)/files \
  		$(PKG_BUILD_DIR)/
  
 -ifeq ($(CONFIG_IB_STANDALONE),)
@@ -60,23 +63,37 @@
 
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -225,10 +225,17 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
+@@ -225,10 +225,10 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
  $(eval $(foreach S,$(NAND_BLOCKSIZE),$(call Image/mkfs/jffs2-nand/template,$(S))))
  
  define Image/mkfs/squashfs-common
 -	$(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
 +	echo -998 > /proc/$$$$/oom_score_adj || true
-+	if [ $(VIP) == True ] ; then \
-+	nice $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
-+		-nopad -noappend -root-owned \
-+		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT); \
-+	else \
 +	nice $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
  		-nopad -noappend -root-owned \
- 		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
+-		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
 -		-processors 1
-+		-processors 1; \
-+	fi
++		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT)
  endef
  
  ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
+
+--- a/scripts/json_overview_image_info.py
++++ b/scripts/json_overview_image_info.py
+@@ -47,7 +47,7 @@ def get_initial_output(image_info):
+ 
+ 
+ if output:
+-    default_packages, output["arch_packages"] = run(
++    default_packages, output["arch_packages"], output["kernel_version"] = run(
+         [
+             "make",
+             "--no-print-directory",
+@@ -55,6 +55,7 @@ def get_initial_output(image_info):
+             "target/linux/",
+             "val.DEFAULT_PACKAGES",
+             "val.ARCH_PACKAGES",
++            "val.LINUX_VERSION",
+         ],
+         stdout=PIPE,
+         stderr=PIPE,
