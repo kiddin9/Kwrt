@@ -2,21 +2,20 @@
 #=================================================
 shopt -s extglob
 
-commitid="$(curl -sfL https://github.com/openwrt/openwrt/commits/openwrt-22.03/include | grep -o 'href=".*>kernel: bump 5.10' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
+commitid="$(curl -sfL https://github.com/openwrt/openwrt/tree/master/include | grep -o 'href=".*>kernel: 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
 version="$(git rev-parse HEAD)"
-git checkout $commitid
-git checkout HEAD^
-[ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.10")" ] && git checkout $commitid
-mv -f target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk .github/
+git checkout master
+[ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $commitid
+mv -f target/linux package/kernel package/firmware/linux-firmware include/{kernel-*,netfilter.mk} .github/
 git checkout $version
-rm -rf target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.10 include/kernel-defaults.mk
+rm -rf target/linux package/kernel package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.15 include/kernel-defaults.mk
 mv -f .github/linux target/
 mv -f .github/kernel package/
 mv -f .github/linux-firmware package/firmware/
-mv -f  .github/kernel-version.mk .github/kernel-5.10 .github/kernel-defaults.mk include/
+mv -f  .github/{kernel-*,netfilter.mk} include/
 sed -i 's/ libelf//' tools/Makefile
 
-kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')"
+kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
@@ -25,6 +24,13 @@ luci-app-wizard luci-app-attendedsysupgrade dnsmasq-full luci-base luci-compat l
 coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash \
 kmod-usb2 kmod-usb3 automount /" include/target.mk
 sed -i "/dnsmasq \\\/d" include/target.mk
+
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+sed -i "s/+PACKAGE_kmod-backlight.*//" package/kernel/linux/modules/video.mk
+
+sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/af9ddeb7c95186854733262554c944d29513a58a.patch | patch -d './' -p1 --forward"
+sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/b4a6d7f974f7b17052ade15a3cf63086bd52736d.patch | patch -d './' -p1 --forward"
+sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {
@@ -38,11 +44,15 @@ rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,netw
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
 
+rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
+rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/packages/master/libs/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch -o package/feeds/packages/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch
+
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
-rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
+rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
 
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile

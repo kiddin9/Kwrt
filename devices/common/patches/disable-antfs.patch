@@ -1,0 +1,24 @@
+--- a/package/feeds/packages/antfs/Makefile
++++ b/package/feeds/packages/antfs/Makefile
+@@ -20,7 +20,7 @@ define KernelPackage/fs-antfs
+ 	TITLE:=AVM NTFS Read/Write Driver
+ 	FILES:=$(PKG_BUILD_DIR)/antfs.ko
+ 	AUTOLOAD:=$(call AutoLoad,30,antfs,1)
+-	DEPENDS:=+kmod-nls-base
++	DEPENDS:=@!LINUX_5_15 +kmod-nls-base
+ endef
+ 
+ define KernelPackage/fs-antfs/description
+diff --git a/utils/antfs-mount/Makefile b/utils/antfs-mount/Makefile
+index 48ffc6f1cc..a9ee67dd2c 100644
+--- a/package/feeds/packages/antfs-mount/Makefile
++++ b/package/feeds/packages/antfs-mount/Makefile
+@@ -11,7 +11,7 @@ define Package/antfs-mount
+ 	SUBMENU:=Filesystem
+ 	TITLE:=NTFS mount script for AVM NTFS driver
+ 	PKGARCH:=all
+-	DEPENDS:=+kmod-fs-antfs
++	DEPENDS:=@!LINUX_5_15 +kmod-fs-antfs
+ endef
+ 
+ define Build/Configure

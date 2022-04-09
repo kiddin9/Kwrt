@@ -1,7 +1,10 @@
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
-@@ -40,11 +40,9 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
+@@ -38,13 +38,12 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
+ 		./files/repositories.conf \
+ 		$(TMP_DIR)/.targetinfo \
  		$(TMP_DIR)/.packageinfo \
++		$(TOPDIR)/files \
  		$(PKG_BUILD_DIR)/
  
 -ifeq ($(CONFIG_IB_STANDALONE),)
@@ -48,70 +51,49 @@
  
  prepare_rootfs: FORCE
  	@echo
-@@ -183,7 +200,8 @@ build_image: FORCE
+@@ -183,7 +200,7 @@ build_image: FORCE
  	@echo
  	@echo Building images...
  	rm -rf $(BUILD_DIR)/json_info_files/
 -	$(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" \
-+	[ "$(PARTSIZE)" -ge 100 2>/dev/null ] && [ "$(PARTSIZE)" -le 3072 2>/dev/null ] && ROOT_PARTSIZE="$(PARTSIZE)"; \
-+	nice $(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" PARTSIZE="$$ROOT_PARTSIZE" FILESYSTEMS="$(FILESYSTEMS)" ROOTFS="$(ROOTFS)" VMDK="$(VMDK)" EFI="$(EFI)" \
++	nice $(NO_TRACE_MAKE) -C target/linux/$(BOARD)/image install TARGET_BUILD=1 IB=1 EXTRA_IMAGE_NAME="$(EXTRA_IMAGE_NAME)" VIP=$(VIP) \
  		$(if $(USER_PROFILE),PROFILE="$(USER_PROFILE)")
  
  $(BIN_DIR)/profiles.json: FORCE
 
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -33,6 +33,16 @@ KDIR=$(KERNEL_BUILD_DIR)
- KDIR_TMP=$(KDIR)/tmp
- DTS_DIR:=$(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts
- 
-+ifneq ($(PARTSIZE),)
-+  CONFIG_TARGET_ROOTFS_PARTSIZE:=$(PARTSIZE)
-+endif
-+ifeq ($(FILESYSTEMS),ext4)
-+  CONFIG_TARGET_ROOTFS_EXT4FS := y
-+  CONFIG_TARGET_ROOTFS_SQUASHFS := n
-+endif
-+ifeq ($(ROOTFS),0)
-+  CONFIG_TARGET_ROOTFS_TARGZ := n
-+endif
- IMG_PREFIX_EXTRA:=$(if $(EXTRA_IMAGE_NAME),$(call sanitize,$(EXTRA_IMAGE_NAME))-)
- IMG_PREFIX_VERNUM:=$(if $(CONFIG_VERSION_FILENAMES),$(call sanitize,$(VERSION_NUMBER))-)
- IMG_PREFIX_VERCODE:=$(if $(CONFIG_VERSION_CODE_FILENAMES),$(call sanitize,$(VERSION_CODE))-)
-@@ -225,7 +235,8 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
+@@ -225,10 +225,10 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
  $(eval $(foreach S,$(NAND_BLOCKSIZE),$(call Image/mkfs/jffs2-nand/template,$(S))))
  
  define Image/mkfs/squashfs-common
 -	$(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
 +	echo -998 > /proc/$$$$/oom_score_adj || true
-+	nice $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
++	nice -n 19 $(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
  		-nopad -noappend -root-owned \
- 		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
- 		-processors 1
-@@ -291,7 +302,7 @@ define Image/gzip-ext4-padded-squashfs
- 
+-		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
+-		-processors 1
++		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT)
  endef
  
--ifdef CONFIG_TARGET_ROOTFS_TARGZ
-+ifeq ($(CONFIG_TARGET_ROOTFS_TARGZ),y)
-   define Image/Build/targz
- 	$(TAR) -cp --numeric-owner --owner=0 --group=0 --mode=a-s --sort=name \
- 		$(if $(SOURCE_DATE_EPOCH),--mtime="@$(SOURCE_DATE_EPOCH)") \
+ ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
 
---- a/target/linux/x86/image/Makefile
-+++ b/target/linux/x86/image/Makefile
-@@ -11,6 +11,14 @@ GRUB_SERIAL_CONFIG =
- GRUB_TERMINAL_CONFIG =
- GRUB_CONSOLE_CMDLINE =
+--- a/scripts/json_overview_image_info.py
++++ b/scripts/json_overview_image_info.py
+@@ -47,7 +47,7 @@ def get_initial_output(image_info):
  
-+ifeq ($(VMDK),1)
-+  CONFIG_VMDK_IMAGES := y
-+endif
-+
-+ifeq ($(EFI),0)
-+  CONFIG_GRUB_EFI_IMAGES := n
-+endif
-+
- ifneq ($(CONFIG_GRUB_CONSOLE),)
-   GRUB_CONSOLE_CMDLINE += console=tty0
-   GRUB_TERMINALS += console
+ 
+ if output:
+-    default_packages, output["arch_packages"] = run(
++    default_packages, output["arch_packages"], output["kernel_version"] = run(
+         [
+             "make",
+             "--no-print-directory",
+@@ -55,6 +55,7 @@ def get_initial_output(image_info):
+             "target/linux/",
+             "val.DEFAULT_PACKAGES",
+             "val.ARCH_PACKAGES",
++            "val.LINUX_VERSION",
+         ],
+         stdout=PIPE,
+         stderr=PIPE,
