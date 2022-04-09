@@ -28,7 +28,7 @@
 
 + 自建插件仓库囊括了市面上几乎所有开源插件,插件库日更,系统自动更新所有已安装插件.
 
-+ 在线一键定制固件,可在[bf.supes.top](https://bf.supes.top)也可在后台系统定制升级菜单中一键定制, 同时支持github云编译和本地一键编译.
++ 在线一键定制固件,可在[supes.top](https://supes.top)也可在后台系统定制升级菜单中一键定制, 同时支持github云编译和本地一键编译.
 
 + 后台一键OTA更新固件,省去了每次固件升级都需要找固件,下载固件,上传固件等繁琐操作.
 
@@ -45,18 +45,13 @@
 + 自定制清爽Material风格新主题Edge
 
 
-| 设备           | 固件下载                                             | 🐳 Docker |说明                                 |
-|----------------|-----------------------------------------------------|--|--------------------------------------|
-| X86_64         | [📥](https://op.supes.top/firmware/x86_64/)  | [kiddin9/openwrt-nginx:x86_64](https://hub.docker.com/r/kiddin9/openwrt-nginx)      | 请分配不少于1G的存储空间           |
-| NanoPi-R2S    | [📥](https://op.supes.top/firmware/nanopi-r2s/) | [kiddin9/openwrt-nginx:nanopi-r2s](https://hub.docker.com/r/kiddin9/openwrt-nginx)   | 默认交换了网口,靠近电源口的是WAN口   |
-| NanoPi-R4S    | [📥](https://op.supes.top/firmware/nanopi-r4s/) | [kiddin9/openwrt-nginx:nanopi-r4s](https://hub.docker.com/r/kiddin9/openwrt-nginx)   |
-| Raspberry Pi 4B (树莓派4B)| [📥](https://op.supes.top/firmware/Rpi-4B/)  | [kiddin9/openwrt-nginx:rpi-4b](https://hub.docker.com/r/kiddin9/openwrt-nginx)   |
-
-####  固件下载与定制: [https://bf.supes.top](https://bf.supes.top)
+####  固件下载与定制: [https://supes.top](https://supes.top)
 
 #### 后台入口 op/ 或 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
 
 #### 默认密码 root
+
+####  Docker镜像: [kiddin9/openwrt-nginx](https://hub.docker.com/r/kiddin9/openwrt-nginx)
 
 #### 固件内置的快捷访问入口(部分服务需要先自行在软件包中安装并启用):
 
