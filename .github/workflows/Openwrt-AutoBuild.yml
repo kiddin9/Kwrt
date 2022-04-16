@@ -326,7 +326,7 @@ jobs:
         name: ${{ env.VERSION }}_${{matrix.target}}
         path: |
           ./firmware/
-          /www/wwwroot/op.supes.top/releases/
+          ${{ env.REPO_BRANCH }}
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
