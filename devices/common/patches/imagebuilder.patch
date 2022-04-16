@@ -64,7 +64,15 @@
 
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -225,10 +225,10 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
+@@ -7,6 +7,7 @@ include $(INCLUDE_DIR)/prereq.mk
+ include $(INCLUDE_DIR)/kernel.mk
+ include $(INCLUDE_DIR)/version.mk
+ include $(INCLUDE_DIR)/image-commands.mk
++-include $(TOPDIR)/.profiles.mk
+ 
+ ifndef IB
+   ifdef CONFIG_TARGET_PER_DEVICE_ROOTFS
+@@ -225,10 +226,10 @@ $(eval $(foreach S,$(JFFS2_BLOCKSIZE),$(call Image/mkfs/jffs2/template,$(S))))
  $(eval $(foreach S,$(NAND_BLOCKSIZE),$(call Image/mkfs/jffs2-nand/template,$(S))))
  
  define Image/mkfs/squashfs-common
@@ -77,6 +85,42 @@
  endef
  
  ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
+@@ -291,11 +292,34 @@ define Image/gzip-ext4-padded-squashfs
+ 
+ endef
+ 
++ROOTFSTZ = $(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))-rootfs.tar.gz
+ ifdef CONFIG_TARGET_ROOTFS_TARGZ
+   define Image/Build/targz
+ 	$(TAR) -cp --numeric-owner --owner=0 --group=0 --mode=a-s --sort=name \
+ 		$(if $(SOURCE_DATE_EPOCH),--mtime="@$(SOURCE_DATE_EPOCH)") \
+-		-C $(TARGET_DIR)/ . | gzip -9n > $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))-rootfs.tar.gz
++		-C $(TARGET_DIR)/ . | gzip -9n > $(BIN_DIR)/$(ROOTFSTZ)
++
++	mkdir $(BUILD_DIR)/json_info_files
++	touch $(BUILD_DIR)/json_info_files/$(ROOTFSTZ).json
++	@mkdir -p $$(shell dirname $$@)
++	DEVICE_ID="$(PROFILE_SANITIZED)" \
++	BIN_DIR="$(BIN_DIR)" \
++	SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH) \
++	IMAGE_NAME="$(ROOTFSTZ)" \
++	IMAGE_TYPE="rootfs" \
++	IMAGE_FILESYSTEM="rootfs" \
++	IMAGE_PREFIX="$(IMG_PREFIX)" \
++	DEVICE_VENDOR="$$(DEVICE_VENDOR)" \
++	DEVICE_MODEL="$($(PROFILE)_NAME)" \
++	DEVICE_VARIANT="$$(DEVICE_VARIANT)" \
++	DEVICE_TITLE="$($(PROFILE)_NAME)" \
++	DEVICE_PACKAGES="$($(PROFILE)_PACKAGES)" \
++	TARGET="$(BOARD)" \
++	SUBTARGET="$(if $(SUBTARGET),$(SUBTARGET),generic)" \
++	VERSION_NUMBER="$(VERSION_NUMBER)" \
++	VERSION_CODE="$(VERSION_CODE)" \
++	SUPPORTED_DEVICES="$($(PROFILE)_SUPPORTED_DEVICES)" \
++	$(TOPDIR)/scripts/json_add_image_info.py $(BUILD_DIR)/json_info_files/$(ROOTFSTZ).json
+   endef
+ endif
+ 
 
 --- a/scripts/json_overview_image_info.py
 +++ b/scripts/json_overview_image_info.py
