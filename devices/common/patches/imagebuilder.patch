@@ -24,7 +24,7 @@
  
  _call_image: staging_dir/host/.prereq-build
 +	rm -rf $(KERNEL_BUILD_DIR)/tmp
-+	[ "$(DATE)" ] && DATE="$(DATE).`date +'%Y'`" || DATE="`date +'%m.%d.%Y'`"; \
++	[ "$(DATE)" ] && DATE="$(DATE)" || DATE="`date +'%m.%d.%Y'`"; \
 +	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
 +	echo -e " \
 +	sed -i \"s/[0-9]\+.[0-9]\+.[0-9]\{4\}/$$DATE/\" /etc/openwrt_release \n \
