@@ -72,6 +72,8 @@ jobs:
             echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
         elif [ ${{matrix.target}} == "nanopi-r2s" ]; then
             echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
+        elif [ ${{matrix.target}} == "phicomm-N1" ]; then
+            echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         fi
 
     - name: Trigger Packages Update
@@ -121,6 +123,8 @@ jobs:
             curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/rockchip/armv8/openwrt-sdk-$REPO_BRANCH-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         elif [[ ${{matrix.target}} =~ "Rpi-4B" ]]; then
             curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/bcm27xx/bcm2711/openwrt-sdk-$REPO_BRANCH-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/bcm27xx/bcm2711/openwrt-sdk-21.02-SNAPSHOT-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+        elif [[ ${{matrix.target}} =~ "phicomm-N1" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/armvirt/64/openwrt-sdk-$REPO_BRANCH-armvirt-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/armvirt/64/openwrt-sdk-21.02-SNAPSHOT-armvirt-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         fi
         fi
         echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
@@ -251,6 +255,7 @@ jobs:
         cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
         kernel_v="$(cat openwrt/include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
+        echo "KERNEL=${kernel_v}" >> $GITHUB_ENV
         cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v || true
         cp -rf openwrt/bin/packages/*/base/*-firmware* ./kmods/$kernel_v || true
         rm -rf openwrt/bin/targets/*/*/packages/*.ipk
@@ -314,7 +319,7 @@ jobs:
         username: root
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/$(cat openwrt/include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')
+          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/${{ env.KERNEL }}
           opkg &
 
     - name: Upload firmware for artifact
@@ -325,7 +330,7 @@ jobs:
         name: ${{ env.VERSION }}_${{matrix.target}}
         path: |
           ./firmware/
-          /www/wwwroot/op.supes.top/releases/
+          ${{ env.REPO_BRANCH }}
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'

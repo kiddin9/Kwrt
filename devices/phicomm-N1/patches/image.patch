@@ -1,0 +1,31 @@
+--- a/include/image.mk
++++ b/include/image.mk
+@@ -293,18 +293,17 @@
+ endef
+ 
+-ROOTFSTZ = $(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))-rootfs.tar.gz
+ ifdef CONFIG_TARGET_ROOTFS_TARGZ
+   define Image/Build/targz
+ 	$(TAR) -cp --numeric-owner --owner=0 --group=0 --mode=a-s --sort=name \
+ 		$(if $(SOURCE_DATE_EPOCH),--mtime="@$(SOURCE_DATE_EPOCH)") \
+-		-C $(TARGET_DIR)/ . | gzip -9n > $(BIN_DIR)/$(ROOTFSTZ)
++		-C $(TARGET_DIR)/ . | gzip -9n > $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).tar.gz
+ 
+ 	mkdir $(BUILD_DIR)/json_info_files
+-	touch $(BUILD_DIR)/json_info_files/$(ROOTFSTZ).json
++	touch $(BUILD_DIR)/json_info_files/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).tar.gz.json
+ 	@mkdir -p $$(shell dirname $$@)
+ 	DEVICE_ID="$(PROFILE_SANITIZED)" \
+ 	BIN_DIR="$(BIN_DIR)" \
+ 	SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH) \
+-	IMAGE_NAME="$(ROOTFSTZ)" \
++	IMAGE_NAME="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).tar.gz" \
+ 	IMAGE_TYPE="rootfs" \
+ 	IMAGE_FILESYSTEM="rootfs" \
+@@ -320,5 +319,5 @@
+ 	VERSION_CODE="$(VERSION_CODE)" \
+ 	SUPPORTED_DEVICES="$($(PROFILE)_SUPPORTED_DEVICES)" \
+-	$(TOPDIR)/scripts/json_add_image_info.py $(BUILD_DIR)/json_info_files/$(ROOTFSTZ).json
++	$(TOPDIR)/scripts/json_add_image_info.py $(BUILD_DIR)/json_info_files/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).tar.gz.json
+   endef
+ endif
