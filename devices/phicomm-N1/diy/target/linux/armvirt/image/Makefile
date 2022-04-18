@@ -56,20 +56,20 @@ endef
 TARGET_DEVICES += mxqpro
 
 define Device/x96max
-  DEVICE_VENDOR := x96 
+  DEVICE_VENDOR := x96
   DEVICE_MODEL := Max
   SOC := s905x2
   DEVICE_PACKAGES := 
 endef
 TARGET_DEVICES += x96max
 
-define Device/multi
-  DEVICE_VENDOR := multi
-  DEVICE_MODEL := multi
+define Device/hk1
+  DEVICE_VENDOR := HK1
+  DEVICE_MODEL := Box
   SOC := s905x3
   DEVICE_PACKAGES := 
 endef
-TARGET_DEVICES += multi
+TARGET_DEVICES += hk1
 
 define Device/zyxq
   DEVICE_VENDOR := 章鱼星球
@@ -118,6 +118,8 @@ define Image/Build
 		./mk_s922x_odroid-n2.sh; \
 	elif [ $(PROFILE_SANITIZED) == "vplus" ]; then \
 		./mk_h6_vplus.sh; \
+	elif [ $(PROFILE_SANITIZED) == "hk1" ]; then \
+		./mk_s905x3_multi.sh; \
 	fi; \
 	gzip -f9n $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).img || true; \
 	rm -f $(BIN_DIR)/*.tar.gz
