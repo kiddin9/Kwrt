@@ -19,11 +19,10 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -113,6 +113,15 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
+@@ -113,6 +113,14 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
-+	rm -rf $(KERNEL_BUILD_DIR)/tmp
 +	[ "$(DATE)" ] && DATE="$(DATE)" || DATE="`date +'%m.%d.%Y'`"; \
 +	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
 +	echo -e " \
@@ -35,7 +34,16 @@
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
-@@ -164,7 +173,15 @@ package_install: FORCE
+@@ -124,6 +132,8 @@ _call_image: staging_dir/host/.prereq-build
+ 	$(MAKE) -s build_image
+ 	$(MAKE) -s json_overview_image_info
+ 	$(MAKE) -s checksum
++	rm -rf $(KERNEL_BUILD_DIR)/tmp
++	rm -rf $(KERNEL_BUILD_DIR)/root.*
+ 
+ _call_manifest: FORCE
+ 	rm -rf $(TARGET_DIR)
+@@ -164,7 +174,15 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
@@ -52,7 +60,7 @@
  
  prepare_rootfs: FORCE
  	@echo
-@@ -183,7 +200,7 @@ build_image: FORCE
+@@ -183,7 +201,7 @@ build_image: FORCE
  	@echo
  	@echo Building images...
  	rm -rf $(BUILD_DIR)/json_info_files/
