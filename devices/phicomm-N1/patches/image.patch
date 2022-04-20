@@ -1,6 +1,6 @@
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -293,18 +293,17 @@
+@@ -293,20 +293,19 @@
  endef
  
 -ROOTFSTZ = $(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))-rootfs.tar.gz
@@ -19,9 +19,13 @@
  	BIN_DIR="$(BIN_DIR)" \
  	SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH) \
 -	IMAGE_NAME="$(ROOTFSTZ)" \
+-	IMAGE_TYPE="rootfs" \
+-	IMAGE_FILESYSTEM="rootfs" \
 +	IMAGE_NAME="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).tar.gz" \
- 	IMAGE_TYPE="rootfs" \
- 	IMAGE_FILESYSTEM="rootfs" \
++	IMAGE_TYPE="sysupgrade" \
++	IMAGE_FILESYSTEM="ext4" \
+ 	IMAGE_PREFIX="$(IMG_PREFIX)" \
+ 	DEVICE_VENDOR="$$(DEVICE_VENDOR)" \
 @@ -320,5 +319,5 @@
  	VERSION_CODE="$(VERSION_CODE)" \
  	SUPPORTED_DEVICES="$($(PROFILE)_SUPPORTED_DEVICES)" \
