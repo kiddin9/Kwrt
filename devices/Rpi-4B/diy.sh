@@ -5,6 +5,8 @@ sed -i 's,TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256,TLS_CHACHA20_POLY1
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8152/' target/linux/bcm27xx/Makefile
 
+sed -i 's/factory.img.gz //' target/linux/bcm27xx/image/Makefile
+
 echo '
 CONFIG_ARM64_CRYPTO=y
 CONFIG_CRYPTO_AES_ARM64=y

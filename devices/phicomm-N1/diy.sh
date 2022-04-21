@@ -1,4 +1,4 @@
-sed -i 's/\(DEFAULT_PACKAGES +=.*\)/\1 perl btrfs-progs my-autocore-arm luci-app-amlogic kmod-brcmfmac wpad-basic-wolfssl iw -luci-app-attendedsysupgrade -luci-app-gpsysupgrade/' target/linux/armvirt/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += perl btrfs-progs my-autocore-arm luci-app-amlogic kmod-brcmfmac wpad-basic-wolfssl iw -luci-app-attendedsysupgrade -luci-app-gpsysupgrade/' target/linux/armvirt/Makefile
 
 echo '
 CONFIG_ARM64_CRYPTO=y
