@@ -5,7 +5,7 @@ shopt -s extglob
 latest="$(curl -sfL https://github.com/openwrt/openwrt/tree/master/include | grep -o 'href=".*>kernel: bump 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
 current="$(git rev-parse HEAD)"
 git checkout $latest
-git checkout HEAD^
+#git checkout HEAD^
 [ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $latest
 mv -f target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} .github/
 git checkout $current
