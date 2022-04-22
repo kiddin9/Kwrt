@@ -5,6 +5,7 @@ svn export --force https://github.com/friendlyarm/friendlywrt/trunk/target/linux
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
 
+sh -c "curl -sfL https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/9626.patch | patch -d './' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a686b71d0143a59a5c8932468dd2a425dccf536b.patch | patch -d './' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/c27993f039452f14182282d0ac40c5e9810c0803.patch | patch -d './' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/6c391373850335f7f3a0a3fc6dc39bfebdfb70d1.patch | patch -d './' -p1 --forward"
@@ -29,6 +30,7 @@ CONFIG_CRYPTO_AES_ARM64_BS=y
 CONFIG_CRYPTO_AES_ARM64_CE=y
 CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
 CONFIG_CRYPTO_AES_ARM64_CE_CCM=y
+CONFIG_CRYPTO_CRCT10DIF_ARM64_CE=y
 CONFIG_CRYPTO_AES_ARM64_NEON_BLK=y
 CONFIG_CRYPTO_CRYPTD=y
 CONFIG_CRYPTO_GF128MUL=y
@@ -45,4 +47,4 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 CONFIG_MOTORCOMM_PHY=y
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-5.10
+' >> ./target/linux/rockchip/armv8/config-5.15
