@@ -5,6 +5,7 @@ svn export --force https://github.com/friendlyarm/friendlywrt/trunk/target/linux
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
 
+sh -c "curl -sfL https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/9626.patch | patch -d './' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a686b71d0143a59a5c8932468dd2a425dccf536b.patch | patch -d './' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/c27993f039452f14182282d0ac40c5e9810c0803.patch | patch -d './' -p1 --forward"
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/6c391373850335f7f3a0a3fc6dc39bfebdfb70d1.patch | patch -d './' -p1 --forward"
