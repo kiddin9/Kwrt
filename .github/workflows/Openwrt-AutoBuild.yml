@@ -110,7 +110,7 @@ jobs:
 
     - name: Clone source code
       run: |
-        [ "$REPO_BRANCH" ] ||
+        [ "${{ env.REPO_BRANCH }}" ] ||
             REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
                -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
                -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v21 | tail -n 1 | sed -e 's/v//')"
@@ -128,6 +128,7 @@ jobs:
         fi
         fi
         echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
+        echo "$REPO_BRANCH"
         
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
