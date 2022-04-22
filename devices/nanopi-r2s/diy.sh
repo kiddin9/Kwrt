@@ -11,7 +11,7 @@ rm -rf target/linux/rockchip/!(Makefile|patches-5.15)
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
 rm -rf target/linux/rockchip/{.svn,patches-5.15/.svn}
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip/patches-5.15 target/linux/rockchip/patches-5.15
-#curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
 sed -i "s/KERNEL_PATCHVER=5.10/KERNEL_PATCHVER=5.15/" target/linux/rockchip/Makefile
 
