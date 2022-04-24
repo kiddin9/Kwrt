@@ -38,7 +38,7 @@ index 258414df4509..3056d1d4d947 100644
    TITLE:=Direct Rendering Manager (DRM) support
    HIDDEN:=1
 -  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +PACKAGE_kmod-backlight:kmod-backlight \
-+  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit +PACKAGE_kmod-backlight:kmod-backlight \
++  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit +!TARGET_x86&PACKAGE_kmod-backlight:kmod-backlight \
  	+(LINUX_5_15):kmod-fb
 -  KCONFIG:=CONFIG_DRM
 +  KCONFIG:=	\
