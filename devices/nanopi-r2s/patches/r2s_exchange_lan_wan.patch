@@ -1,16 +1,19 @@
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -8,10 +8,12 @@ rockchip_setup_interfaces()
- 
- 	case "$board" in
+@@ -11,13 +11,15 @@ rockchip_setup_interfaces()
+ 	embedfire,doornet1|\
+ 	embedfire,doornet2|\
  	friendlyarm,nanopi-r2c|\
 -	friendlyarm,nanopi-r2s|\
- 	friendlyarm,nanopi-r4s)
+ 	friendlyarm,nanopi-r4s|\
+ 	sharevdi,guangmiao-g4c|\
+ 	xunlong,orangepi-r1-plus|\
+ 	xunlong,orangepi-r1-plus-lts)
  		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
  		;;
 +	friendlyarm,nanopi-r2s)
 +		ucidef_set_interfaces_lan_wan 'eth0' 'eth1'
 + 		;;
- 	friendlyelec,nanopi-r2 | \
- 	friendlyelec,nanopi-r4s)
- 		ucidef_set_interface_wan 'eth0'
+ 	*)
+ 		ucidef_set_interface_lan 'eth0'
+ 		;;

@@ -3,6 +3,8 @@
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.15 target/linux/x86/patches-5.15
 rm -rf target/linux/x86/patches-5.15/.svn
 
+sed -i "s/ +PACKAGE_kmod-backlight:kmod-backlight//" package/kernel/linux/modules/video.mk
+
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-x86 lm-sensors-detect kmod-r8125 kmod-vmxnet3 kmod-igc kmod-drm-i915 kmod-mlx4-core/' target/linux/x86/Makefile
 
 sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/64.mk
