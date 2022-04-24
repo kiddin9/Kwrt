@@ -2,7 +2,7 @@
 
 kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-sed -i "s?packages/%A/kmods/.*?packages/%A/kmods/$kernel_v?" include/feeds.mk
+sed -i "s?packages/%A/kmods/.*'?packages/%A/kmods/$kernel_v'?" include/feeds.mk
 
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
 rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
