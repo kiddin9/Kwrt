@@ -99,6 +99,7 @@ TARGET_DEVICES += odroid-n2
 define Image/Build
 	export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 	export BIN_DIR=$(BIN_DIR); \
+	export PARTSIZE=$(CONFIG_TARGET_ROOTFS_PARTSIZE); \
 	cd $(TOPDIR)/../openwrt_packit; \
 	if [ $(PROFILE_SANITIZED) == "n1" ]; then \
 		./mk_s905d_n1.sh; \
