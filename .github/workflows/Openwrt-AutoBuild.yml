@@ -65,15 +65,15 @@ jobs:
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
             echo "MTARGET=x86_64" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (Rpi-4B|nanopi-r2s|nanopi-r2c|nanopi-r4s) ]]; then
-            echo "ARCH=linux/arm64" >> $GITHUB_ENV
-        fi
-        if [ ${{matrix.target}} == "Rpi-4B" ]; then
-            echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
-        elif [ ${{matrix.target}} == "nanopi-r2s" ]; then
-            echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
         elif [ ${{matrix.target}} == "phicomm-N1" ]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
+        else
+          echo "ARCH=linux/arm64" >> $GITHUB_ENV
+          if [[ ${{matrix.target}} == "Rpi-4B" ]]; then
+            echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
+          else
+            echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
+          fi
         fi
 
     - name: Trigger Packages Update
@@ -166,9 +166,9 @@ jobs:
     - name: Apply patches
       run: |
         cd openwrt
-        find "devices/common/patches" -type f ! -path 'devices/common/patches/china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
+        find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
-          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' ! -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
+          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         fi
         
     - name: Default PPPOE Setting
@@ -177,7 +177,13 @@ jobs:
         sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
         sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
         sed -i '$i uci commit network' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
-              
+
+    - name: Defconfig
+      run: |
+        cd openwrt
+        make defconfig
+        cat .config
+
     - name: SSH connection to Actions
       uses: kiddin9/debugger-action@master
       if: contains(github.event.action, 'ssh')
@@ -186,11 +192,6 @@ jobs:
       id: package
       run: |
         cd openwrt
-        make defconfig
-        for i in $(make --file=preset_pkg.mk presetpkg); do
-          sed -i "\$a CONFIG_PACKAGE_$i=y" .config
-        done
-        make defconfig
         make download -j$(($(nproc)+1)) &
 
     - name: Cache
@@ -221,12 +222,10 @@ jobs:
         cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
         cp -rf openwrt/bin/targets/*/*/packages ./kmods/${{ env.KERNEL }} || true
-        cp -rf openwrt/bin/packages/*/base/*-firmware* ./kmods/${{ env.KERNEL }} || true
         rm -rf openwrt/bin/targets/*/*/packages/*.ipk
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
-        echo "${{ env.VERSION }}.$(date +'%Y')" > firmware/*/version.txt
         rm -rf openwrt/bin/targets/*/*/!(*.tar.*|*buildinfo|packages)
         mkdir ${{ env.REPO_BRANCH }}
         cp -rf openwrt/bin/targets ${{ env.REPO_BRANCH }}/
@@ -268,7 +267,18 @@ jobs:
         SOURCE: ${{ env.REPO_BRANCH }}
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/releases/"
+        TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
+        
+    - name: Deploy some packages to server
+      uses: easingthemes/ssh-deploy@main
+      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-avzr"
+        SOURCE: openwrt/bin/packages/*/base/*-firmware*
+        REMOTE_HOST: op.supes.top
+        REMOTE_USER: root
+        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/"
 
     - name: remote ssh command
       uses: appleboy/ssh-action@master
@@ -278,7 +288,7 @@ jobs:
         username: root
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/${{ env.KERNEL }}
+          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/
           opkg &
 
     - name: Upload firmware for artifact
@@ -290,6 +300,7 @@ jobs:
         path: |
           ./firmware/
           ${{ env.REPO_BRANCH }}
+          openwrt/bin/packages/*/base/*-firmware*
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'

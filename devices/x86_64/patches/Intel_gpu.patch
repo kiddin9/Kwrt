@@ -1,13 +1,3 @@
---- a/include/kernel-defaults.mk
-+++ b/include/kernel-defaults.mk
-@@ -127,6 +127,7 @@ endef
- 
- define Kernel/CompileModules/Default
- 	rm -f $(LINUX_DIR)/vmlinux $(LINUX_DIR)/System.map
-+	+$(KERNEL_MAKE) olddefconfig
- 	+$(KERNEL_MAKE) $(if $(KERNELNAME),$(KERNELNAME),all) modules
- endef
- 
 diff --git a/package/firmware/linux-firmware/intel.mk b/package/firmware/linux-firmware/intel.mk
 index 923701c703d..7f60014ea6c 100644
 --- a/package/firmware/linux-firmware/intel.mk
