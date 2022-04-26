@@ -65,15 +65,15 @@ jobs:
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
             echo "MTARGET=x86_64" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (Rpi-4B|nanopi-r2s|nanopi-r2c|nanopi-r4s) ]]; then
-            echo "ARCH=linux/arm64" >> $GITHUB_ENV
-        fi
-        if [ ${{matrix.target}} == "Rpi-4B" ]; then
-            echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
-        elif [ ${{matrix.target}} == "nanopi-r2s" ]; then
-            echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
         elif [ ${{matrix.target}} == "phicomm-N1" ]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
+        else
+          echo "ARCH=linux/arm64" >> $GITHUB_ENV
+          if [[ ${{matrix.target}} == "Rpi-4B" ]]; then
+            echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
+          else
+            echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
+          fi
         fi
 
     - name: Trigger Packages Update
@@ -110,7 +110,7 @@ jobs:
 
     - name: Clone source code
       run: |
-        [ "$REPO_BRANCH" ] ||
+        [ "${{ env.REPO_BRANCH }}" ] ||
             REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
                -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
                -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v21 | tail -n 1 | sed -e 's/v//')"
@@ -128,6 +128,7 @@ jobs:
         fi
         fi
         echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
+        echo "$REPO_BRANCH"
         
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
@@ -165,9 +166,9 @@ jobs:
     - name: Apply patches
       run: |
         cd openwrt
-        find "devices/common/patches" -type f ! -path 'devices/common/patches/china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
+        find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
-          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' ! -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
+          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         fi
         
     - name: Default PPPOE Setting
@@ -176,7 +177,13 @@ jobs:
         sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
         sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
         sed -i '$i uci commit network' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
-              
+
+    - name: Defconfig
+      run: |
+        cd openwrt
+        make defconfig
+        cat .config
+
     - name: SSH connection to Actions
       uses: kiddin9/debugger-action@master
       if: contains(github.event.action, 'ssh')
@@ -185,11 +192,6 @@ jobs:
       id: package
       run: |
         cd openwrt
-        make defconfig
-        for i in $(make --file=preset_pkg.mk presetpkg); do
-          sed -i "\$a CONFIG_PACKAGE_$i=y" .config
-        done
-        make defconfig
         make download -j$(($(nproc)+1)) &
 
     - name: Cache
@@ -207,28 +209,6 @@ jobs:
         make -j$(($(nproc)+1)) || make -j1 V=s
         echo "::set-output name=status::success"
         mv -f .config ${{matrix.target}}.config
-        if [ "${{matrix.target}}" == "nanopi-r2s" ]; then
-            echo "开始编译R2C"
-            cp -f devices/common/$CONFIG_FILE .config
-            echo >> .config
-            cat devices/nanopi-r2c/$CONFIG_FILE >> .config
-            make defconfig
-            make -j$(($(nproc)+1)) || make -j1 V=s || {
-            echo "R2C编译失败";
-            exit 1;
-            }
-            mv -f .config nanopi-r2c.config
-            echo "开始编译R4S"
-            cp -f devices/common/$CONFIG_FILE .config
-            echo >> .config
-            cat devices/nanopi-r4s/$CONFIG_FILE >> .config
-            make defconfig
-            make -j$(($(nproc)+1)) || make -j1 V=s || {
-            echo "R4S编译失败";
-            exit 1;
-            }
-            mv -f .config nanopi-r4s.config
-        fi
    
     - name: Check space usage
       run: df -hT
@@ -238,37 +218,14 @@ jobs:
       run: |
         shopt -s extglob
         mkdir -p firmware/${{matrix.target}} kmods
-        if [[ ${{matrix.target}} == "nanopi-r4s" || ${{matrix.target}} == "nanopi-r2c" ]]; then
-          rm -rf openwrt/bin/targets/*/*/!(*.gz)
-        fi
-        if [ -f openwrt/bin/targets/*/*/*r2s*sysupgrade* ]; then
-          mkdir firmware/nanopi-r4s
-          mv -f  openwrt/nanopi-r4s.config firmware/nanopi-r4s/ || true
-          cp -rf openwrt/bin/targets/*/*/*r4s*sysupgrade* ./firmware/nanopi-r4s/ || true
-          mkdir firmware/nanopi-r2c
-          mv -f  openwrt/nanopi-r2c.config firmware/nanopi-r2c/ || true
-          cp -rf openwrt/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
-          cp -rf openwrt/bin/targets/*/*/*{combined,r2s*sysupgrade,rpi-4*sysupgrade}* ./firmware/${{matrix.target}}/ || true
-        else
-          cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
-        fi
+        cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
-        kernel_v="$(cat openwrt/include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
-        echo "KERNEL=${kernel_v}" >> $GITHUB_ENV
-        cp -rf openwrt/bin/targets/*/*/packages ./kmods/$kernel_v || true
-        cp -rf openwrt/bin/packages/*/base/*-firmware* ./kmods/$kernel_v || true
+        cp -rf openwrt/bin/targets/*/*/packages ./kmods/${{ env.KERNEL }} || true
         rm -rf openwrt/bin/targets/*/*/packages/*.ipk
-        cp -rf openwrt/bin/targets/*/*/*{combined,r2s*sysupgrade,rpi-4*sysupgrade}* ./firmware/${{matrix.target}}/ || true
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
-        for i in $(ls -d firmware/*/); do
-          echo "${{ env.VERSION }}.$(date +'%Y')" > $i/version.txt
-          md5=$((md5sum $i/*squashfs-sysupgrade* || md5sum $i/*squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
-          echo $md5 >> $i/version.txt
-          echo v$REPO_BRANCH >> $i/version.txt
-        done
-        rm -rf openwrt/bin/targets/*/*/!(*.tar.*|*buildinfo|packages)
+        rename -v "s/embedfire_//" ./firmware/*/*gz || true
         mkdir ${{ env.REPO_BRANCH }}
         cp -rf openwrt/bin/targets ${{ env.REPO_BRANCH }}/
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
@@ -309,7 +266,18 @@ jobs:
         SOURCE: ${{ env.REPO_BRANCH }}
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/releases/"
+        TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
+        
+    - name: Deploy some packages to server
+      uses: easingthemes/ssh-deploy@main
+      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-avzr"
+        SOURCE: openwrt/bin/packages/*/base/*-firmware*
+        REMOTE_HOST: op.supes.top
+        REMOTE_USER: root
+        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/"
 
     - name: remote ssh command
       uses: appleboy/ssh-action@master
@@ -319,7 +287,7 @@ jobs:
         username: root
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/${{ env.KERNEL }}
+          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/
           opkg &
 
     - name: Upload firmware for artifact
@@ -331,6 +299,7 @@ jobs:
         path: |
           ./firmware/
           ${{ env.REPO_BRANCH }}
+          openwrt/bin/packages/*/base/*-firmware*
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
@@ -409,7 +378,7 @@ jobs:
       if: env.TELEGRAM_TOKEN && ! contains(github.event.action, 'notg')
       continue-on-error: true
       run: |
-        [ steps.compile.outputs.status == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译成功 😋  https://op.supes.top/firmware/${{matrix.target}}/  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
+        [ steps.compile.outputs.status == 'success' ] && curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译成功 😋  https://op.supes.top/firmware/${{matrix.target}}/  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage"
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main

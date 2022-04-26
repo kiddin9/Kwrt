@@ -1,15 +1,22 @@
 #!/bin/bash
 
 shopt -s extglob
-svn export --force https://github.com/friendlyarm/friendlywrt/trunk/target/linux/rockchip/armv8/base-files/usr target/linux/rockchip/armv8/base-files/usr
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
 
-sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a686b71d0143a59a5c8932468dd2a425dccf536b.patch | patch -d './' -p1 --forward"
-sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/c27993f039452f14182282d0ac40c5e9810c0803.patch | patch -d './' -p1 --forward"
-sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/6c391373850335f7f3a0a3fc6dc39bfebdfb70d1.patch | patch -d './' -p1 --forward"
-sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/53c85f2afe9e497599f56bf1bbecca1f734595dc.patch | patch -d './' -p1 --forward"
-# sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/9ba39aa45f06e5c935a9816e771682c5533b1e24.patch | patch -d './' -p1 --forward"
+rm -rf package/boot/uboot-rockchip
+svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/uboot-rockchip package/boot/uboot-rockchip
+svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
+rm -rf target/linux/rockchip/!(Makefile|patches-5.15)
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
+rm -rf target/linux/rockchip/{.svn,patches-5.15/.svn}
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip/patches-5.15 target/linux/rockchip/patches-5.15
+
+sed -i "s/KERNEL_PATCHVER=5.10/KERNEL_PATCHVER=5.15/" target/linux/rockchip/Makefile
+
+sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
+
+sed -i "s/BUILD_DEVICES:=/BUILD_DEVICES:=friendlyarm_nanopi-r2s/" package/boot/uboot-rockchip/Makefile
 
 sed -i '/;;/i\ethtool -K eth1 rx off tx off && logger -t disable-offloading "disabed rk3328 ethernet tcp/udp offloading tx/rx"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 
@@ -22,6 +29,7 @@ CONFIG_CRYPTO_AES_ARM64_BS=y
 CONFIG_CRYPTO_AES_ARM64_CE=y
 CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
 CONFIG_CRYPTO_AES_ARM64_CE_CCM=y
+CONFIG_CRYPTO_CRCT10DIF_ARM64_CE=y
 CONFIG_CRYPTO_AES_ARM64_NEON_BLK=y
 CONFIG_CRYPTO_CRYPTD=y
 CONFIG_CRYPTO_GF128MUL=y
@@ -38,4 +46,4 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 CONFIG_MOTORCOMM_PHY=y
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-5.10
+' >> ./target/linux/rockchip/armv8/config-5.15
