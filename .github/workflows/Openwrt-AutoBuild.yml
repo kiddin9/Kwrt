@@ -226,6 +226,8 @@ jobs:
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
+        rename -v "s/xiaomi_redmi-router/redmi/" *bin || true
+        rename -v "s/xiaoyu_)//" *bin || true
         mkdir ${{ env.REPO_BRANCH }}
         cp -rf openwrt/bin/targets ${{ env.REPO_BRANCH }}/
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
