@@ -1,21 +1,15 @@
 #!/bin/bash
 #=================================================
 shopt -s extglob
-
+rm -rf target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} tools/firmware-utils
 #latest="$(curl -sfL https://github.com/openwrt/openwrt/tree/master/include | grep -o 'href=".*>kernel: bump 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
-latest="master"
-current="$(git rev-parse HEAD)"
-[ "$latest" ] && git checkout $latest || git checkout master
-#git checkout HEAD^
+mkdir new; cp -rf .git new/.git
+cd new
+[ "$latest" ] && git reset --hard $latest || git checkout master && git reset --hard HEAD
+#git reset --hard HEAD^
 [ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $latest
-mv -f target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} .github/
-git checkout $current
-rm -rf target/linux package/kernel package/boot package/firmware/linux-firmware include/kernel-version.mk include/kernel-5.15 include/kernel-defaults.mk
-mv -f .github/linux target/
-mv -f .github/kernel package/
-mv -f .github/boot package/
-mv -f .github/linux-firmware package/firmware/
-mv -f  .github/{kernel-*,netfilter.mk} include/
+cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} tools/firmware-utils ../
+cd -
 sed -i 's/ libelf//' tools/Makefile
 
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
@@ -25,8 +19,7 @@ echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-app-attendedsysupgrade dnsmasq-full luci-base luci-compat luci-lib-ipkg fdisk \
-coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash \
-kmod-usb2 kmod-usb3 automount /" include/target.mk
+coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash /" include/target.mk
 sed -i "/dnsmasq \\\/d" include/target.mk
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"

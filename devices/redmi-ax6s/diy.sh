@@ -2,12 +2,9 @@
 
 shopt -s extglob
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq luci-app-natflow-users natflow-boot/' target/linux/mediatek/Makefile
+curl -sfL https://raw.githubusercontent.com/x-wrt/x-wrt/master/target/linux/mediatek/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch -o target/linux/mediatek/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch
 
-rm -rf target/linux/mediatek/!(patches-5.15)
-svn co https://github.com/x-wrt/x-wrt/trunk/target/linux/mediatek target/linux/mediatek
-rm -rf target/linux/mediatek/{.svn,patches-5.15/.svn}
-svn co https://github.com/x-wrt/x-wrt/trunk/target/linux/mediatek/patches-5.15 target/linux/mediatek/patches-5.15
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq luci-app-natflow-users natflow-boot/' target/linux/mediatek/Makefile
 
 echo '
 CONFIG_ARM64_CRYPTO=y
@@ -33,4 +30,4 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 CONFIG_MOTORCOMM_PHY=y
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-5.15
+' >> ./target/linux/mediatek/mt7622/config-5.15
