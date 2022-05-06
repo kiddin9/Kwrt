@@ -1,0 +1,21 @@
+From f7845d71cf40a8bb6c586e6bb1427d8dbc0980c3 Mon Sep 17 00:00:00 2001
+From: kiddin9 <48883331+kiddin9@users.noreply.github.com>
+Date: Fri, 6 May 2022 12:04:28 +0800
+Subject: [PATCH] Update usb.mk
+
+---
+ package/kernel/linux/modules/usb.mk | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/package/kernel/linux/modules/usb.mk b/package/kernel/linux/modules/usb.mk
+index c9c1dfd75f92..ce858e9e5319 100644
+--- a/package/kernel/linux/modules/usb.mk
++++ b/package/kernel/linux/modules/usb.mk
+@@ -1708,6 +1708,7 @@ XHCI_AUTOLOAD := $(patsubst $(LINUX_DIR)/drivers/usb/host/%.ko,%,$(XHCI_FILES))
+ define KernelPackage/usb3
+   TITLE:=Support for USB3 controllers
+   DEPENDS:= \
++	+automount \
+ 	+kmod-usb-xhci-hcd \
+ 	+TARGET_bcm53xx:kmod-usb-bcma \
+ 	+TARGET_bcm53xx:kmod-phy-bcm-ns-usb3 \

@@ -1,4 +1,4 @@
-# OpenWrt with NGINX for x86_64 NanoPi-R2S R4S Raspberry-Pi-4B
+# OpenWrt with NGINX for x86_64 NanoPi-R2S R4S R2C Raspberry-Pi-4B N1
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
@@ -8,7 +8,7 @@
 [7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
 [8]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
-[11]: https://t.me/opwrts
+[11]: https://t.me/opwrt
 [12]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/actions/workflows/Openwrt-AutoBuild.yml/badge.svg
 [13]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/actions
 
@@ -20,9 +20,9 @@
 [![AutoBuild][12]][13]
 
 <a href="https://t.me/opwrts" target="_blank">Telegram</a>
-### 特色:
+## 1. **特色**
 
-+ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.10, 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.15, 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能, 后台在线选装插件,系统升级不丢失插件和配置.
 
@@ -44,85 +44,117 @@
 
 + 自定制清爽Material风格新主题Edge
 
+## 2. **固件**
 
-####  固件下载与定制: [https://supes.top](https://supes.top)
+固件生成有3种方式：在线定制化生成、GitHub编译、本地化编译。
 
-#### 后台入口 op/ 或 10.0.0.1 &nbsp;(若后台无法打开,请插拔交换wan,lan网线顺序.)
+可根据需要选择任意一种进行固件生成。
 
-#### 默认密码 root
+### 2.1 **在线生成**
 
-####  Docker镜像: [kiddin9/openwrt-nginx](https://hub.docker.com/r/kiddin9/openwrt-nginx)
+通过浏览器访问[https://supes.top](https://supes.top)进行固件定制，等待固件生成结束之后直接下载使用即可。
 
-#### 固件内置的快捷访问入口(部分服务需要先自行在软件包中安装并启用):
+### 2.2 **GitHub编译**
 
-+ op/ 可打开 OpenWRT后台 即 lan ip
-+ ql/ 可打开 青龙后台 即 lan ip:5700
-+ adg/ 可打开 AdGuardHome管理后台 即 lan ip:3000
-+ pve/ 可打开 Proxmox VE虚拟机管理 默认为 10.0.0.10:8006
-+ by/ 可打开 Bypass插件页面 即 ip/luci/admin/services/bypass
-+ pk/ 可打开 Packages插件管理页面 即 ip/luci/admin/system/opkg
-+ ag/ 可打开 Aria2 Web面板 即 ip/ariang
-+ ug/ 可打开 固件在线更新页面 即 ip/luci/admin/services/gpsysupgrade
-##### 可自行在 /etc/nginx/conf.d/shortcuts.conf 中调整和添加更多快捷访问
++ 将仓库进行fork
 
-第一次使用请采用全新安装,避免出现升级失败以及其他一些可能的Bug.
++ 按需添加相关环境参数REPO_TOKEN、SCKEY、TELEGRAM_CHAT_ID
 
-云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法触发编译
++ Actions页面选择 Repo Dispatcher 点击 Run workflow
+### 2.3 **GitHub结合浏览器插件编译**
+请在支持油猴的浏览器中安装 [脚本](https://greasyfork.org/scripts/407616-github-actions-trigger/code/Github%20Actions%20Trigger.user.js) ,仓库右上角会出现 x86_64 Actions,K2P Actions等按钮,点击对应按钮即可.更多玩法 [repo-dispatcher](https://github.com/tete1030/github-repo-dispatcher)
 
-在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.有 [安全隐患](https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/issues/23)
-
-Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com) 推送编译结果到微信
-
-Secrets中添加 TELEGRAM_CHAT_ID, TELEGRAM_TOKEN 可推送编译结果到Telegram Bot. [教程](https://longnight.github.io/2018/12/12/Telegram-Bot-notifications)
-
-编译触发方式: 
-   + 方式1: Actions页面选择 Repo Dispatcher 点击 Run workflow
-   + 方式2: 请在支持油猴的浏览器中安装 [脚本](https://greasyfork.org/scripts/407616-github-actions-trigger/code/Github%20Actions%20Trigger.user.js) ,仓库右上角会出现 x86_64 Actions,K2P Actions等按钮,点击对应按钮即可.更多玩法 [repo-dispatcher](https://github.com/tete1030/github-repo-dispatcher)
-diy云编译教程: [Read the details in my blog (in Chinese) | 中文教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
-
-### 默认插件包含:
-
-+ Opkg 软件包管理
-+ Bypass 智能过墙
-+ Samba4 文件共享(x86)
-+ UPNP 自动端口转发
-+ Turbo ACC 网络加速
-
-其他插件请自行在 后台->软件包 中安装,系统升级不会丢失插件.每次系统升级完成连接网络后,会自动安装所有已自选安装的插件.
-
-
-### 如何在本地使用此项目编译自己需要的 OpenWrt 固件
+### 2.4 **本地化编译**
 
 #### 注意：
 
 1. **不**要用 **root** 用户 git 和编译！！！
+
 2. 国内用户编译前请准备好梯子,使用大陆白名单或全局模式
+
 3. 请使用Ubuntu 64bit，推荐  Ubuntu 18 或 Ubuntu 20
 
-#### 一键脚本:
+#### 首次编译:
 
- 首次编译:
 ```
 screen -S openwrt
 bash -c "$(curl -fsSL https://git.io/opbuild.sh)"
 ```
 
- 二次编译:
+#### 二次编译:
+
 ```
 screen -S openwrt
 bash -c "$(curl -fsSL https://git.io/rebuild.sh)"
 ```
 
+
+## 3. **使用**
+
+### 3.1 **后台**
+
++ 登录地址 op/ 或 10.0.0.1 (若后台无法打开，请尝试插拔交换wan、lan网线顺序。)
+
++ 默认用户 root
+
++ 默认密码 root
+
+### 3.2 **快捷访问**
+部分服务需要先自行在软件包中安装并启用，可自行在 /etc/nginx/conf.d/shortcuts.conf 中调整和添加更多快捷访问。
+
++ op/ 可打开 OpenWRT后台 即 lan ip
+
++ ql/ 可打开 青龙后台 即 lan ip:5700
+
++ adg/ 可打开 AdGuardHome管理后台 即 lan ip:3000
+
++ pve/ 可打开 Proxmox VE虚拟机管理 默认为 10.0.0.10:8006
+
++ by/ 可打开 Bypass插件页面 即 ip/luci/admin/services/bypass
+
++ pk/ 可打开 Packages插件管理页面 即 ip/luci/admin/system/opkg
+
++ ag/ 可打开 Aria2 Web面板 即 ip/ariang
+
++ ug/ 可打开 固件在线更新页面 即 ip/luci/admin/services/gpsysupgrade
+
+## 4. **注意事项**
+
++ 第一次使用请采用全新安装,避免出现升级失败以及其他一些可能的Bug.
+
++ 云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法触发编译。
+
++ 在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.有 [安全隐患](https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/issues/23)。
+
++ 在仓库Settings->Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com) 推送编译结果到微信。
+
++ 在仓库Settings->Secrets中添加 TELEGRAM_CHAT_ID, TELEGRAM_TOKEN 可推送编译结果到Telegram Bot. [教程](https://longnight.github.io/2018/12/12/Telegram-Bot-notifications)
+
++ DIY云编译教程参考: [Read the details in my blog (in Chinese) | 中文教程](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
+
+
++ 默认插件包含: Opkg 软件包管理、Bypass 智能过墙、Samba4 文件共享(x86)、UPNP 自动端口转发、Turbo ACC 网络加速。
+其他插件请自行在 后台->软件包 中安装,系统升级不会丢失插件.每次系统升级完成连接网络后,会自动安装所有已自选安装的插件。
+
+## 5. **系统截图展示**
+![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/1.png)
+![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/3.png)
+![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/8.png)
+
+
+------
+For English
+
 Build OpenWrt using GitHub Actions
 
-### Usage
+## Usage
 
 - Sign up for [GitHub Actions](https://github.com/features/actions/signup)
 - Fork [this GitHub repository](https://github.com/kiddin9/OpenWrt)
 - click the `Star` button, and the build will starts automatically.Progress can be viewed on the Actions page.
 - When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
 
-### Acknowledgments
+## Acknowledgments
 - [OpenWrt](https://github.com/openwrt/openwrt)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
 - [P3TERX](https://github.com/P3TERX/OpenWrt_x86-r2s-r4s/blob/master/LICENSE)
@@ -130,13 +162,4 @@ Build OpenWrt using GitHub Actions
 - [GitHub](https://github.com)
 - [GitHub Actions](https://github.com/features/actions)
 
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/1.png)
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/2.png)
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/3.png)
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/8.png)
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/4.png)
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/5.png)
-<br/>
-<br />
-<img src="https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/6.png" width="550" />
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/7.png)
+

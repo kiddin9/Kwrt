@@ -65,8 +65,10 @@ jobs:
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
             echo "MTARGET=x86_64" >> $GITHUB_ENV
-        elif [ ${{matrix.target}} == "phicomm-N1" ]; then
+        elif [[ ${{matrix.target}} =~ "(phicomm-N1|redmi-ax6s|redmi-ax6s)" ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "cr660x" ]]; then
+            echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
         else
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "Rpi-4B" ]]; then
@@ -99,6 +101,8 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean ) &
         sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
     
     - name: Get current date
       id: date
@@ -109,6 +113,7 @@ jobs:
         [ "$VERSION" ] && echo "VERSION=$VERSION" >> $GITHUB_ENV || echo "VERSION=$(date +'%m.%d')" >> $GITHUB_ENV
 
     - name: Clone source code
+      working-directory: /workdir
       run: |
         [ "${{ env.REPO_BRANCH }}" ] ||
             REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
@@ -127,18 +132,9 @@ jobs:
             curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/armvirt/64/openwrt-sdk-$REPO_BRANCH-armvirt-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/armvirt/64/openwrt-sdk-21.02-SNAPSHOT-armvirt-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
         fi
         fi
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
         echo "$REPO_BRANCH"
-        
-    - name: Free up disk space
-      if: env.FREE_UP_DISK == 'true'
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo mkdir -p -m 777 /mnt/openwrt/dl /mnt/openwrt/staging_dir /mnt/openwrt/build_dir/hostpkg openwrt/build_dir
-        ln -sf /mnt/openwrt/dl openwrt/dl
-        ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
-        ln -sf /mnt/openwrt/build_dir/hostpkg openwrt/build_dir/hostpkg
         
     - name: Load custom configuration
       run: |
@@ -226,7 +222,7 @@ jobs:
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
-        rm -rf openwrt/bin/targets/*/*/!(*.tar.*|*buildinfo|packages)
+        rename -v "s/xiaomi_redmi-router/redmi/" ./firmware/*/*bin || true
         mkdir ${{ env.REPO_BRANCH }}
         cp -rf openwrt/bin/targets ${{ env.REPO_BRANCH }}/
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
