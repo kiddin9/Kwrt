@@ -16,8 +16,6 @@ sed -i "s/KERNEL_PATCHVER=5.10/KERNEL_PATCHVER=5.15/" target/linux/rockchip/Make
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 
-sed -i "s/BUILD_DEVICES:=/BUILD_DEVICES:=friendlyarm_nanopi-r2s/" package/boot/uboot-rockchip/Makefile
-
 sed -i '/;;/i\ethtool -K eth1 rx off tx off && logger -t disable-offloading "disabed rk3328 ethernet tcp/udp offloading tx/rx"' target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq/' target/linux/rockchip/Makefile

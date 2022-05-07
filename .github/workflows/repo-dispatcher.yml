@@ -59,15 +59,30 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "nanopi-r2s ${{ github.event.inputs.version }}", "client_payload": {"target": "nanopi-r2s"}}'
+          -d '{"event_type": "rockchip ${{ github.event.inputs.version }}", "client_payload": {"target": "rockchip"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Rpi-4B ${{ github.event.inputs.version }}", "client_payload": {"target": "Rpi-4B"}}'
+          -d '{"event_type": "bcm27xx_bcm2711 ${{ github.event.inputs.version }}", "client_payload": {"target": "bcm27xx_bcm2711"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "phicomm-N1 ${{ github.event.inputs.version }}", "client_payload": {"target": "phicomm-N1"}}'
+          -d '{"event_type": "armvirt_64 ${{ github.event.inputs.version }}", "client_payload": {"target": "armvirt_64"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "mediatek_mt7622 ${{ github.event.inputs.version }}", "client_payload": {"target": "mediatek_mt7622"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "ramips_mt7621 ${{ github.event.inputs.version }}", "client_payload": {"target": "ramips_mt7621"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "ipq807x ${{ github.event.inputs.version }}", "client_payload": {"target": "ipq807x"}}'
 

@@ -116,8 +116,8 @@
 +	IMAGE_TYPE="rootfs" \
 +	IMAGE_FILESYSTEM="rootfs" \
 +	IMAGE_PREFIX="$(IMG_PREFIX)" \
-+	DEVICE_VENDOR="$$(DEVICE_VENDOR)" \
-+	DEVICE_MODEL="$($(PROFILE)_NAME)" \
++	DEVICE_VENDOR="$(shell echo $($(PROFILE)_NAME) | cut -d " " -f1)" \
++	DEVICE_MODEL="$(shell echo $($(PROFILE)_NAME) | cut -d " " -f2-)" \
 +	DEVICE_VARIANT="$$(DEVICE_VARIANT)" \
 +	DEVICE_TITLE="$($(PROFILE)_NAME)" \
 +	DEVICE_PACKAGES="$($(PROFILE)_PACKAGES)" \
