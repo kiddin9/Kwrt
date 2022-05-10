@@ -120,7 +120,7 @@ jobs:
                -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
                -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v21 | tail -n 1 | sed -e 's/v//')"
         git clone $REPO_URL -b v$REPO_BRANCH openwrt
-        if [[ "${{ contains(github.event.action, 'nosdk') }}" != "true" ]]; then
+        if [[ "${{ contains(github.event.action, 'sdk') }}" == "true" ]]; then
         cd openwrt
         if [[ ${{matrix.target}} == "x86_64" ]]; then
             curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/$REPO_BRANCH/targets/x86/64/openwrt-sdk-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz || true
@@ -197,12 +197,12 @@ jobs:
         make download -j$(($(nproc)+1)) &
         sleep 5
 
-    #- name: Cache
-    #  uses: klever1988/cachewrtbuild@main
-    #  with:
-    #    ccache: 'true'
-    #    clean: ${{ contains(github.event.action, 'nocache') }}
-    #    prefix: ${{ github.workspace }}/openwrt
+    - name: Cache
+      uses: klever1988/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        clean: ${{ contains(github.event.action, 'nocache') }}
+        prefix: ${{ github.workspace }}/openwrt
 
     - name: Compile the firmware
       id: compile
@@ -220,12 +220,10 @@ jobs:
       id: organize
       run: |
         shopt -s extglob
-        mkdir -p firmware/${{matrix.target}} kmods
+        mkdir -p firmware/${{matrix.target}}
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
-        cp -rf openwrt/bin/targets/*/*/packages ./kmods/${{ env.KERNEL }} || true
-        rm -rf openwrt/bin/targets/*/*/packages/*.ipk
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
@@ -249,17 +247,6 @@ jobs:
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/firmware/"
-
-    - name: Deploy kmods to server
-      uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
-        SOURCE: kmods/
-        REMOTE_HOST: op.supes.top
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/"
 
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
@@ -294,16 +281,16 @@ jobs:
           cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/
           opkg &
 
+    - run: rm -rf ${{ env.REPO_BRANCH }}/targets/*/*/{packages,openwrt-sdk*}
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }}_${{matrix.target}}
+        run: |
         path: |
-          ./firmware/
           ${{ env.REPO_BRANCH }}
-          openwrt/bin/packages/*/base/*-firmware*
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
@@ -362,7 +349,7 @@ jobs:
     - name: Build and push docker image
       uses: docker/build-push-action@master
       continue-on-error: true
-      if: env.DOCKER_ID && env.DOCKER_PASSWD && ! contains(github.event.action, 'noser') && ${{matrix.target}} == "x86_64"
+      if: env.DOCKER_ID && env.DOCKER_PASSWD && ! contains(github.event.action, 'noser') && github.event.client_payload.target == 'x86_64'
       with:
         platforms: ${{ env.ARCH }}
         file: Dockerfile

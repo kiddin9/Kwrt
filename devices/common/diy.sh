@@ -14,7 +14,7 @@ sed -i 's/ libelf//' tools/Makefile
 
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
+# sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
