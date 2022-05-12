@@ -157,8 +157,9 @@ Build OpenWrt using GitHub Actions
 ## Acknowledgments
 - [OpenWrt](https://github.com/openwrt/openwrt)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
-- [P3TERX](https://github.com/P3TERX/OpenWrt_x86-r2s-r4s/blob/master/LICENSE)
+- [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 - [aparcar](https://github.com/openwrt/asu)
+- [unifreq](https://github.com/unifreq/openwrt_packit)
 - [GitHub](https://github.com)
 - [GitHub Actions](https://github.com/features/actions)
 

@@ -2,12 +2,8 @@
 
 shopt -s extglob
 
-svn export --force https://github.com/x-wrt/x-wrt/trunk/package/boot/uboot-envtools package/boot/uboot-envtools
+curl -sfL https://raw.githubusercontent.com/x-wrt/x-wrt/master/target/linux/mediatek/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch -o target/linux/ramips/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch
 
-svn export --force https://github.com/x-wrt/x-wrt/trunk/package/kernel/mt76 package/kernel/mt76
-rm -rf target/linux/ramips/!(patches-5.15)
-svn co https://github.com/x-wrt/x-wrt/trunk/target/linux/ramips target/linux/ramips
-rm -rf target/linux/ramips/{.svn,patches-5.15/.svn}
-svn co https://github.com/x-wrt/x-wrt/trunk/target/linux/ramips/patches-5.15 target/linux/ramips/patches-5.15
+svn export --force https://github.com/x-wrt/x-wrt/trunk/target/linux/ramips/files/drivers/net/ethernet/ralink target/linux/ramips/files/drivers/net/ethernet/ralink
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-natflow-users natflow-boot/' target/linux/ramips/Makefile

@@ -1,0 +1,113 @@
+--- a/target/linux/ramips/image/mt7621.mk
++++ b/target/linux/ramips/image/mt7621.mk
+@@ -1831,7 +1831,7 @@ define Device/xiaomi_nand_separate
+   PAGESIZE := 2048
+   KERNEL_SIZE := 4096k
+   UBINIZE_OPTS := -E 5
+-  IMAGES += kernel1.bin rootfs0.bin
++  IMAGES += kernel1.bin
+   IMAGE/kernel1.bin := append-kernel
+   IMAGE/rootfs0.bin := append-ubi | check-size
+   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+@@ -1915,30 +1915,14 @@ define Device/xiaomi_mi-router-cr660x
+   KERNEL_SIZE := 4096k
+   UBINIZE_OPTS := -E 5
+   IMAGE_SIZE := 128512k
+-  IMAGES += firmware.bin
++  IMAGES += factory.bin
+   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+-  IMAGE/firmware.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
++  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
+ 	check-size
+   DEVICE_PACKAGES += kmod-mt7915e uboot-envtools
++  DEVICE_MODEL := Mi Router CR6606 / CR6608 / CR6609
+ endef
+-
+-define Device/xiaomi_mi-router-cr6606
+-  $(Device/xiaomi_mi-router-cr660x)
+-  DEVICE_MODEL := Mi Router CR6606
+-endef
+-TARGET_DEVICES += xiaomi_mi-router-cr6606
+-
+-define Device/xiaomi_mi-router-cr6608
+-  $(Device/xiaomi_mi-router-cr660x)
+-  DEVICE_MODEL := Mi Router CR6608
+-endef
+-TARGET_DEVICES += xiaomi_mi-router-cr6608
+-
+-define Device/xiaomi_mi-router-cr6609
+-  $(Device/xiaomi_mi-router-cr660x)
+-  DEVICE_MODEL := Mi Router CR6609
+-endef
+-TARGET_DEVICES += xiaomi_mi-router-cr6609
++TARGET_DEVICES += xiaomi_mi-router-cr660x
+ 
+ define Device/xiaomi_redmi-router-ac2100
+   $(Device/xiaomi_nand_separate)
+
+--- /dev/null
++++ b/target/linux/ramips/dts/mt7621_xiaomi_mi-router-cr660x.dts
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++#include "mt7621_xiaomi_mi-router-cr660x.dtsi"
++
++/ {
++	compatible = "xiaomi,mi-router-cr660x", "mediatek,mt7621-soc";
++	model = "Xiaomi Mi Router CR6606 / CR6608 / CR6609";
++};
+
+--- a/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
++++ b/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
+@@ -131,9 +131,7 @@ tplink,tl-wpa8631p-v3)
+ xiaomi,mi-router-ac2100)
+ 	ucidef_set_led_netdev "wan-blue" "WAN (blue)" "blue:wan" "wan"
+ 	;;
+-xiaomi,mi-router-cr6606|\
+-xiaomi,mi-router-cr6608|\
+-xiaomi,mi-router-cr6609)
++xiaomi,mi-router-cr660x)
+ 	ucidef_set_led_netdev "internet" "Internet" "blue:net" "wan"
+ 	;;
+ xiaomi,redmi-router-ac2100)
+
+--- a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
++++ b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+@@ -27,9 +27,7 @@ ramips_setup_interfaces()
+ 	hiwifi,hc5962|\
+ 	xiaomi,mi-router-3-pro|\
+ 	xiaomi,mi-router-ac2100|\
+-	xiaomi,mi-router-cr6606|\
+-	xiaomi,mi-router-cr6608|\
+-	xiaomi,mi-router-cr6609|\
++	xiaomi,mi-router-cr660x|\
+ 	xiaomi,redmi-router-ac2100)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
+
+--- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
++++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
+@@ -88,9 +88,7 @@ platform_do_upgrade() {
+ 	xiaomi,mi-router-3-pro|\
+ 	xiaomi,mi-router-4|\
+ 	xiaomi,mi-router-ac2100|\
+-	xiaomi,mi-router-cr6606|\
+-	xiaomi,mi-router-cr6608|\
+-	xiaomi,mi-router-cr6609|\
++	xiaomi,mi-router-cr660x|\
+ 	xiaomi,redmi-router-ac2100)
+ 		nand_do_upgrade "$1"
+ 		;;
+
+--- a/package/boot/uboot-envtools/files/ramips
++++ b/package/boot/uboot-envtools/files/ramips
+@@ -73,9 +73,7 @@ zyxel,nr7101)
+ 		ubootenv_add_uci_config "/dev/mtd$idx" "0x0" "0x1000" "0x80000"
+ 	;;
+ bolt,arion|\
+-xiaomi,mi-router-cr6606|\
+-xiaomi,mi-router-cr6608|\
+-xiaomi,mi-router-cr6609)
++xiaomi,mi-router-cr660x)
+ 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x10000" "0x20000"
+ 	;;
+ esac
