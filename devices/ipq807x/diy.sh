@@ -2,10 +2,14 @@
 
 shopt -s extglob
 
-rm -rf package/boot/uboot-envtools package/firmware/ipq-wifi package/qca
+rm -rf package/boot/uboot-envtools package/firmware/ipq-wifi package/firmware/ath11k* package/qca package/qat package/kernel/mac80211
 svn export https://github.com/Boos4721/openwrt/trunk/package/boot/uboot-envtools package/boot/uboot-envtools
 svn export https://github.com/Boos4721/openwrt/trunk/package/firmware/ipq-wifi package/firmware/ipq-wifi
+svn export https://github.com/Boos4721/openwrt/trunk/package/firmware/ath11k-board package/firmware/ath11k-board
+svn export https://github.com/Boos4721/openwrt/trunk/package/firmware/ath11k-firmware package/firmware/ath11k-firmware
 svn export https://github.com/Boos4721/openwrt/trunk/package/qca package/qca
+svn export https://github.com/Boos4721/openwrt/trunk/package/qat package/qat
+svn export https://github.com/Boos4721/openwrt/trunk/package/kernel/mac80211 package/kernel/mac80211
 
 rm -rf target/linux/ipq807x/!(patches-5.15)
 svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/linux/ipq807x

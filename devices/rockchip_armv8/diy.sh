@@ -14,7 +14,7 @@ sed -i "s/KERNEL_PATCHVER=5.10/KERNEL_PATCHVER=5.15/" target/linux/rockchip/Make
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq/' target/linux/rockchip/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm fdisk luci-app-cpufreq kmod-drm-rockchip kmod-gpu-lima kmod-usb2 kmod-usb3/' target/linux/rockchip/Makefile
 
 echo '
 CONFIG_ARM64_CRYPTO=y

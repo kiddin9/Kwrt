@@ -1,16 +1,12 @@
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -1831,7 +1831,7 @@ define Device/xiaomi_nand_separate
-   PAGESIZE := 2048
+@@ -1832,5 +1832,4 @@
    KERNEL_SIZE := 4096k
    UBINIZE_OPTS := -E 5
 -  IMAGES += kernel1.bin rootfs0.bin
-+  IMAGES += kernel1.bin
    IMAGE/kernel1.bin := append-kernel
    IMAGE/rootfs0.bin := append-ubi | check-size
-   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-@@ -1915,30 +1915,14 @@ define Device/xiaomi_mi-router-cr660x
-   KERNEL_SIZE := 4096k
+@@ -1916,28 +1915,12 @@
    UBINIZE_OPTS := -E 5
    IMAGE_SIZE := 128512k
 -  IMAGES += firmware.bin
@@ -20,13 +16,13 @@
 +  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
  	check-size
    DEVICE_PACKAGES += kmod-mt7915e uboot-envtools
-+  DEVICE_MODEL := Mi Router CR6606 / CR6608 / CR6609
- endef
+-endef
 -
 -define Device/xiaomi_mi-router-cr6606
 -  $(Device/xiaomi_mi-router-cr660x)
 -  DEVICE_MODEL := Mi Router CR6606
--endef
++  DEVICE_MODEL := Mi Router CR6606 / CR6608 / CR6609
+ endef
 -TARGET_DEVICES += xiaomi_mi-router-cr6606
 -
 -define Device/xiaomi_mi-router-cr6608
@@ -43,7 +39,6 @@
 +TARGET_DEVICES += xiaomi_mi-router-cr660x
  
  define Device/xiaomi_redmi-router-ac2100
-   $(Device/xiaomi_nand_separate)
 
 --- /dev/null
 +++ b/target/linux/ramips/dts/mt7621_xiaomi_mi-router-cr660x.dts
