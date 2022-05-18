@@ -10,7 +10,7 @@
 -	kmod-nft-offload \
 +	dnsmasq-full \
 +	firewall \
-+	nftables iptables-legacy ip6tables-legacy \
++	nftables iptables-legacy ip6tables-legacy ipset \
 +	kmod-ipt-offload \
  	odhcp6c \
  	odhcpd-ipv6only \

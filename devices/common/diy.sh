@@ -28,7 +28,7 @@ sed -i '/	refresh_config();/d' scripts/feeds
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
 }
 
-rm -rf package/{base-files,network/config/firewall,network/config/firewall4,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
+rm -rf package/{base-files,network/config/firewall,network/config/firewall4,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls,firmware/wireless-regdb}
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a -p kiddin9
@@ -74,9 +74,19 @@ sed -i \
 	package/feeds/kiddin9/*/Makefile
 
 (
-if [ -f cache.tar.gz ]; then
-	tar -zxf cache.tar.gz
-	rm -f cache.tar.gz
-	find build_dir/{host*,toolchain-*} -name .built* -exec touch {} \;; touch staging_dir/{host*,toolchain-*}/stamp/.*
+if [ -f sdk.tar.xz ]; then
+	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/kiddin9/*/Makefile
+	mkdir sdk
+	tar -xJf sdk.tar.xz -C sdk
+	cp -rf sdk/*/staging_dir/* ./staging_dir/
+	rm -rf sdk.tar.xz sdk
+	rm -rf `find "staging_dir/host/" -maxdepth 2 -name 'libelf*'` || true
+	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
+	if [ -f /usr/bin/python ]; then
+		ln -sf /usr/bin/python staging_dir/host/bin/python
+	else
+		ln -sf /usr/bin/python3 staging_dir/host/bin/python
+	fi
+	ln -sf /usr/bin/python3 staging_dir/host/bin/python3
 fi
 ) &
