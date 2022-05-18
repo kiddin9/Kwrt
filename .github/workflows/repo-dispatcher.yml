@@ -9,9 +9,9 @@
 name: Repo Dispatcher
 
 on: 
-  # push: 
-  #   branches:
-  #     - master
+   push: 
+     branches:
+       - master
   #schedule:
   #  - cron: 30 18 * * *
   workflow_dispatch:
@@ -22,7 +22,7 @@ on:
         default: ''
 
 env:
-  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+  REPO_TOKEN:${{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 }}
   TZ: Asia/Shanghai
 
 jobs:
