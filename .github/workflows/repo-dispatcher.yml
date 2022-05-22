@@ -29,12 +29,6 @@ jobs:
   build:
     runs-on: Ubuntu-20.04
     steps:
-    - name: cancel running workflows
-      uses: styfle/cancel-workflow-action@main
-      with:
-        workflow_id: Openwrt-AutoBuild.yml,repo-dispatcher.yml
-        access_token: ${{ github.token }}
-
     - name: Checkout
       uses: actions/checkout@main
 

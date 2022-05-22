@@ -120,6 +120,24 @@ jobs:
                -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
                -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1 | sed -e 's/v//')"
         git clone $REPO_URL -b v$REPO_BRANCH openwrt
+        if [[ "${{ contains(github.event.action, 'nosdk') }}" != "true" ]]; then
+        cd openwrt
+        if [[ ${{matrix.target}} == "x86_64" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/targets/x86/64/openwrt-sdk-x86-64_gcc-11.2.0_musl.Linux-x86_64.tar.xz || true
+        elif [[ ${{matrix.target}} == "rockchip_armv8" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-11.2.0_musl.Linux-x86_64.tar.xz || true
+        elif [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/targets/bcm27xx/bcm2711/openwrt-sdk-bcm27xx-bcm2711_gcc-11.2.0_musl.Linux-x86_64.tar.xz || true
+        elif [[ ${{matrix.target}} == "armvirt_64" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/targets/armvirt/64/openwrt-sdk-armvirt-64_gcc-11.2.0_musl.Linux-x86_64.tar.xz || true
+        elif [[ ${{matrix.target}} == "ramips_mt7621" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/targets/ramips/mt7621/openwrt-sdk-ramips-mt7621_gcc-11.2.0_musl.Linux-x86_64.tar.xz || true
+        elif [[ ${{matrix.target}} == "mediatek_mt7622" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/targets/mediatek/mt7622/openwrt-sdk-mediatek-mt7622_gcc-11.2.0_musl.Linux-x86_64.tar.xz || true
+        elif [[ ${{matrix.target}} == "ipq807x" ]]; then
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/targets/ipq807x/generic/openwrt-sdk-ipq807x-generic_gcc-11.2.0_musl.Linux-x86_64.tar.xz || true
+        fi
+        fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
         echo "$REPO_BRANCH"
@@ -179,24 +197,23 @@ jobs:
         make download -j$(($(nproc)+1)) &
         sleep 5
 
-    - name: Cache
-      if: contains(github.event.action, 'nocache') != 'true'
-      run: |
-        curl -fL -m 60 -o openwrt/cache.tar.gz https://op.supes.top/releases/targets/cache.tar.gz || true
-
     - name: Compile the firmware
       id: compile
       run: |
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || (curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage" ; make -j1 V=s)
-        echo "::set-output name=status::success"
+        sed -i "s/# CONFIG_IB is not set/CONFIG_IB=y/" .config
+        make defconfig
+        make target/imagebuilder/compile -j$(($(nproc)+1))
+        make checksum V=s
    
     - name: Check space usage
       run: df -hT
 
     - name: Organize files
       id: organize
+      continue-on-error: true
       run: |
         shopt -s extglob
         mkdir -p firmware/${{matrix.target}}
@@ -208,7 +225,6 @@ jobs:
         mkdir packages
         cp -rf ${{ env.KERNEL }}/Packages* packages/
         cd -
-        tar -zcf openwrt/bin/targets/cache.tar.gz build_dir/host* build_dir/tool* staging_dir/host* staging_dir/tool*
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
@@ -272,7 +288,7 @@ jobs:
       with:
         name: ${{ env.VERSION }}_${{matrix.target}}
         path: |
-          openwrt/bin/targets
+          openwrt/bin/targets/
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
