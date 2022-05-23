@@ -1,9 +1,5 @@
 #!/bin/bash
 
-kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
-echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
-
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm fdisk luci-app-cpufreq kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8152 kmod-usb2 kmod-usb3/' target/linux/bcm27xx/Makefile
 
 sed -i 's/factory.img.gz //' target/linux/bcm27xx/image/Makefile

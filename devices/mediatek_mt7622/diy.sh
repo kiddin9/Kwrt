@@ -2,11 +2,7 @@
 
 shopt -s extglob
 
-kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
-echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
-
-curl -sfL https://raw.githubusercontent.com/x-wrt/x-wrt/master/target/linux/mediatek/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch -o target/linux/mediatek/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch
+curl -sfL https://raw.githubusercontent.com/x-wrt/x-wrt/master/target/linux/mediatek/patches-5.10/995-0001-hwnat-add-natflow-flow-offload-support.patch -o target/linux/mediatek/patches-5.10/995-0001-hwnat-add-natflow-flow-offload-support.patch
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq luci-app-natflow-users natflow-boot/' target/linux/mediatek/Makefile
 
@@ -34,4 +30,4 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 CONFIG_MOTORCOMM_PHY=y
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/mediatek/mt7622/config-5.15
+' >> ./target/linux/mediatek/mt7622/config-5.10
