@@ -1,50 +1,38 @@
 #!/bin/bash
 #=================================================
 shopt -s extglob
-rm -rf target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} tools/firmware-utils
-#latest="$(curl -sfL https://github.com/openwrt/openwrt/tree/master/include | grep -o 'href=".*>kernel: bump 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
-mkdir new; cp -rf .git new/.git
-cd new
-[ "$latest" ] && git reset --hard $latest || git checkout master && git reset --hard HEAD
-#git reset --hard HEAD^
-[ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $latest
-cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} tools/firmware-utils ../
-cd -
-sed -i 's/ libelf//' tools/Makefile
-
-kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
+kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
+sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
+
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-opkg luci-app-upnp luci-app-autoreboot \
-luci-app-wizard dnsmasq-full luci-base luci-compat luci-lib-ipkg fdisk \
+luci-app-wizard luci-base luci-compat luci-lib-ipkg \
 coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash /" include/target.mk
-sed -i "/dnsmasq \\\/d" include/target.mk
-
-sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
+sed -i "s/procd-ujail//" include/target.mk
 
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
 }
 
-rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
+rm -rf package/{base-files,network/config/firewall,network/config/firewall4,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls,firmware/wireless-regdb}
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a -p kiddin9
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
 
-rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
-rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/packages/master/libs/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch -o package/feeds/packages/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch
+mv -f feeds/kiddin9/r81* tmp/
+
+sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
 
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
-rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
+rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
 
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
@@ -64,9 +52,6 @@ sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/
 date=`date +%m.%d.%Y`
 sed -i -e "/\(# \)\?REVISION:=/c\REVISION:=$date" -e '/VERSION_CODE:=/c\VERSION_CODE:=$(REVISION)' include/version.mk
 
-sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
-sed -i 's/ +kmod-thermal//' package/kernel/mt76/Makefile
-
 sed -i \
 	-e "s/+\(luci\|luci-ssl\|uhttpd\)\( \|$\)/\2/" \
 	-e "s/+nginx\( \|$\)/+nginx-ssl\1/" \
@@ -81,7 +66,6 @@ if [ -f sdk.tar.xz ]; then
 	tar -xJf sdk.tar.xz -C sdk
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
 	rm -rf sdk.tar.xz sdk
-	rm -rf `find "staging_dir/host/" -maxdepth 2 -name 'libelf*'` || true
 	sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
 	if [ -f /usr/bin/python ]; then
 		ln -sf /usr/bin/python staging_dir/host/bin/python

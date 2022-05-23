@@ -1,6 +1,6 @@
-From 03a1613c1e95b042dd99a6f69c45b61d786e41d4 Mon Sep 17 00:00:00 2001
+From d990f23c514708418a2222cfd20dcc3478f9a522 Mon Sep 17 00:00:00 2001
 From: kiddin9 <48883331+kiddin9@users.noreply.github.com>
-Date: Sat, 23 Apr 2022 18:52:48 +0800
+Date: Mon, 23 May 2022 14:55:01 +0800
 Subject: [PATCH] Update video.mk
 
 ---
@@ -8,10 +8,10 @@ Subject: [PATCH] Update video.mk
  1 file changed, 59 insertions(+), 4 deletions(-)
 
 diff --git a/package/kernel/linux/modules/video.mk b/package/kernel/linux/modules/video.mk
-index 258414df4509..3056d1d4d947 100644
+index 2a306b5f4289..0a759dd0ebcd 100644
 --- a/package/kernel/linux/modules/video.mk
 +++ b/package/kernel/linux/modules/video.mk
-@@ -220,14 +220,36 @@ endef
+@@ -220,13 +220,35 @@ endef
  
  $(eval $(call KernelPackage,fb-tft-ili9486))
  
@@ -37,10 +37,9 @@ index 258414df4509..3056d1d4d947 100644
    SUBMENU:=$(VIDEO_MENU)
    TITLE:=Direct Rendering Manager (DRM) support
    HIDDEN:=1
--  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +PACKAGE_kmod-backlight:kmod-backlight \
-+  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit +!TARGET_x86&&PACKAGE_kmod-backlight:kmod-backlight \
- 	+(LINUX_5_15):kmod-fb
+-  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +PACKAGE_kmod-backlight:kmod-backlight
 -  KCONFIG:=CONFIG_DRM
++ DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit +PACKAGE_kmod-backlight:kmod-backlight
 +  KCONFIG:=	\
 +	CONFIG_DRM	\
 +	CONFIG_DRM_PANEL_ORIENTATION_QUIRKS=y	\
@@ -50,7 +49,7 @@ index 258414df4509..3056d1d4d947 100644
    FILES:= \
  	$(LINUX_DIR)/drivers/gpu/drm/drm.ko \
  	$(LINUX_DIR)/drivers/gpu/drm/drm_panel_orientation_quirks.ko
-@@ -301,8 +323,6 @@ define KernelPackage/drm-imx
+@@ -300,8 +322,6 @@ define KernelPackage/drm-imx
    TITLE:=Freescale i.MX DRM support
    DEPENDS:=@TARGET_imx +kmod-drm-kms-helper
    KCONFIG:=CONFIG_DRM_IMX \
@@ -59,7 +58,7 @@ index 258414df4509..3056d1d4d947 100644
  	CONFIG_IMX_IPUV3_CORE \
  	CONFIG_RESET_CONTROLLER=y \
  	CONFIG_DRM_IMX_IPUV3 \
-@@ -1030,3 +1050,38 @@ define KernelPackage/video-gspca-konica/description
+@@ -1028,3 +1048,38 @@ define KernelPackage/video-gspca-konica/description
  endef
  
  $(eval $(call KernelPackage,video-gspca-konica))

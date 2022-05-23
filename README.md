@@ -22,7 +22,7 @@
 <a href="https://t.me/opwrts" target="_blank">Telegram</a>
 ## 1. **特色**
 
-+ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.15, 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.10, 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能, 后台在线选装插件,系统升级不丢失插件和配置.
 
@@ -157,8 +157,9 @@ Build OpenWrt using GitHub Actions
 ## Acknowledgments
 - [OpenWrt](https://github.com/openwrt/openwrt)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
-- [P3TERX](https://github.com/P3TERX/OpenWrt_x86-r2s-r4s/blob/master/LICENSE)
+- [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 - [aparcar](https://github.com/openwrt/asu)
+- [unifreq](https://github.com/unifreq/openwrt_packit)
 - [GitHub](https://github.com)
 - [GitHub Actions](https://github.com/features/actions)
 
