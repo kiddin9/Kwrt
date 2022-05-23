@@ -48,6 +48,7 @@ jobs:
 
     - name: Load Settings.ini
       run: |
+        echo ${{matrix.target}}
         source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
         if [ -f "devices/${{matrix.target}}/settings.ini" ]; then
           source "${GITHUB_WORKSPACE}/devices/${{matrix.target}}/settings.ini"
