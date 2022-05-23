@@ -3,6 +3,10 @@
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.15 target/linux/x86/patches-5.15
 rm -rf target/linux/x86/patches-5.15/.svn
 
+kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
+echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
+sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
+
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-x86 lm-sensors-detect kmod-r8125 kmod-vmxnet3 kmod-igc kmod-drm-i915 kmod-mlx4-core kmod-usb2 kmod-usb3 fdisk/' target/linux/x86/Makefile
 
 mv -f tmp/r81* feeds/kiddin9/

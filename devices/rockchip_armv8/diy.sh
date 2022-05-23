@@ -2,15 +2,17 @@
 
 shopt -s extglob
 
+kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
+echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
+sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
+
 rm -rf package/boot/uboot-rockchip
 svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/uboot-rockchip package/boot/uboot-rockchip
 svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
-rm -rf target/linux/rockchip/!(Makefile|patches-5.15)
+rm -rf target/linux/rockchip/!(Makefile|patches-5.10)
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
-rm -rf target/linux/rockchip/{.svn,patches-5.15/.svn}
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip/patches-5.15 target/linux/rockchip/patches-5.15
-
-sed -i "s/KERNEL_PATCHVER=5.10/KERNEL_PATCHVER=5.15/" target/linux/rockchip/Makefile
+rm -rf target/linux/rockchip/{.svn,patches-5.10/.svn}
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip/patches-5.15 target/linux/rockchip/patches-5.10
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 
@@ -40,4 +42,4 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 CONFIG_MOTORCOMM_PHY=y
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-5.15
+' >> ./target/linux/rockchip/armv8/config-5.10
