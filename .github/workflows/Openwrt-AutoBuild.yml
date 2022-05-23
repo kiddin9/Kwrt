@@ -119,7 +119,7 @@ jobs:
             REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
                -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
                -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1 | sed -e 's/v//')"
-        git clone $REPO_URL -b v$REPO_BRANCH openwrt
+        git clone $REPO_URL -b v$REPO_BRANCH --depth 1 openwrt
         if [[ "${{ contains(github.event.action, 'nosdk') }}" != "true" ]]; then
         cd openwrt
         if [[ ${{matrix.target}} == "x86_64" ]]; then
