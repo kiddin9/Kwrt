@@ -1,5 +1,16 @@
 #!/bin/bash
 
+rm -rf target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} tools/firmware-utils
+latest="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | grep -o 'href=".*>kernel: bump 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
+mkdir new; cp -rf .git new/.git
+cd new
+[ "$latest" ] && git reset --hard $latest || (git checkout master && git reset --hard HEAD)
+git checkout HEAD^
+[ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $latest
+cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} tools/firmware-utils package/utils/ucode ../
+cd -
+svn export --force https://github.com/openwrt/packages/trunk/kernel feeds/packages/kernel
+rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.15 target/linux/x86/patches-5.15
 rm -rf target/linux/x86/patches-5.15/.svn
 
