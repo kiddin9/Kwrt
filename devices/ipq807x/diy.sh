@@ -11,6 +11,8 @@ svn export --force https://github.com/Boos4721/openwrt/trunk/package/qca package
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/qat package/qat
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel package/kernel
 
+curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+
 
 rm -rf target/linux/generic target/linux/ipq807x/!(patches-5.10)
 svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux/generic target/linux/generic
