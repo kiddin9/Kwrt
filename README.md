@@ -1,4 +1,4 @@
-# OpenWrt with NGINX for x86_64 NanoPi-R2S R4S R2C Raspberry-Pi-4B N1
+#### OpenWrt with NGINX for X86/64, NanoPi R2S, NanoPi R4S, NanoPi R2C, Phicomm N1, NanoPi NEO3, 树莓派 4B, DoorNet1, DoorNet2, 香橙派 Orange Pi R1 Plus, 香橙派 Orange Pi R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 小米CR6606/TR606(联通版), CR6608/TR608(移动版), CR6609/TR609(电信版), 小米4, 小米 R3G, 小米R3P, 小娱C5, newifi-d2, H1 Box, 贝壳云 P1 , 我家云 lL Pro, x96 Max, 微加云 V-Plus, 章鱼星球 ZYXQ, GT-King, Odroid N2, MXQ Pro+
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
@@ -22,7 +22,7 @@
 <a href="https://t.me/opwrts" target="_blank">Telegram</a>
 ## 1. **特色**
 
-+ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.10, 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-22.03分支版本, Kernel 5.15, 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能, 后台在线选装插件,系统升级不丢失插件和配置.
 
@@ -160,6 +160,7 @@ Build OpenWrt using GitHub Actions
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 - [aparcar](https://github.com/openwrt/asu)
 - [unifreq](https://github.com/unifreq/openwrt_packit)
+- [Boos4721](https://github.com/Boos4721/openwrt)
 - [GitHub](https://github.com)
 - [GitHub Actions](https://github.com/features/actions)
 
