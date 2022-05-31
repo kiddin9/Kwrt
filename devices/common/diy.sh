@@ -17,11 +17,8 @@ sed -i '/	refresh_config();/d' scripts/feeds
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
 }
 
-rm -rf package/{base-files,network/config/firewall,network/config/firewall4,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls,firmware/wireless-regdb}
-
 ./scripts/feeds update -a
-./scripts/feeds install -a -p kiddin9
-./scripts/feeds install -a
+./scripts/feeds install -a -p kiddin9 -f
 cd feeds/kiddin9; git pull; cd -
 
 mv -f feeds/kiddin9/r81* tmp/
@@ -33,7 +30,6 @@ svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/up
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
 rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
-curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 ) &
 
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile

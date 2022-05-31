@@ -120,12 +120,11 @@ jobs:
            -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
         git clone $REPO_URL -b $REPO_BRANCH openwrt
-        [ "${{ env.REPO_BRANCH }}" ] &&
+        if [ "${{ env.REPO_BRANCH }}" ]; then
           cd openwrt
           git checkout ${{ env.REPO_BRANCH }}
+        fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
-        echo "$REPO_BRANCH"
         
     - name: Load custom configuration
       run: |
