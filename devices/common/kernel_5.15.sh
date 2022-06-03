@@ -12,7 +12,7 @@ cd -
 
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
+sed -i "s?packages/%A/kmods/.*'?packages/%A/kmods/$kernel_v'?" include/feeds.mk
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 svn export --force https://github.com/openwrt/packages/trunk/kernel feeds/packages/kernel
