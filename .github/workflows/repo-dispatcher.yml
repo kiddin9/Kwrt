@@ -79,4 +79,9 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ipq807x ${{ github.event.inputs.version }}", "client_payload": {"target": "ipq807x"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "ipq40xx_generic ${{ github.event.inputs.version }}", "client_payload": {"target": "ipq40xx_generic"}}'
 
