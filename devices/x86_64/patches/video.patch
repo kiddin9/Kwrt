@@ -39,7 +39,7 @@ index 2a306b5f4289..0a759dd0ebcd 100644
    HIDDEN:=1
 -  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +PACKAGE_kmod-backlight:kmod-backlight
 -  KCONFIG:=CONFIG_DRM
-+ DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit +PACKAGE_kmod-backlight:kmod-backlight
++ DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit
 +  KCONFIG:=	\
 +	CONFIG_DRM	\
 +	CONFIG_DRM_PANEL_ORIENTATION_QUIRKS=y	\
