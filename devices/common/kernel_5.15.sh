@@ -14,6 +14,8 @@ kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - |
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
 sed -i "s?packages/%A/kmods/.*'?packages/%A/kmods/$kernel_v'?" include/feeds.mk
 
+rm -rf target/linux/generic/pending-5.15/444-mtd-nand-rawnand-add-support-for-Toshiba-TC58NVG0S3H.patch
+
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 svn export --force https://github.com/openwrt/packages/trunk/kernel feeds/packages/kernel
 svn export --force  https://github.com/openwrt/packages/trunk/net/xtables-addons packages/net/xtables-addons
