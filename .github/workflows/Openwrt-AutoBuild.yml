@@ -367,7 +367,7 @@ jobs:
       uses: GitRML/delete-workflow-runs@main
       continue-on-error: true
       with:
-        retain_days: 30
+        retain_days: 100
         keep_minimum_runs: 0
 
     - name: Remove old Releases
