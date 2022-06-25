@@ -16,7 +16,7 @@ mv -f tmp/r8125 feeds/kiddin9/
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm fdisk lsblk luci-app-cpufreq kmod-drm-rockchip kmod-gpu-lima kmod-usb2 kmod-usb3/' target/linux/rockchip/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += autocore-arm fdisk lsblk luci-app-cpufreq kmod-drm-rockchip kmod-gpu-lima kmod-usb2 kmod-usb3/' target/linux/rockchip/Makefile
 
 echo '
 CONFIG_ARM64_CRYPTO=y

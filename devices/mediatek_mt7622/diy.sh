@@ -7,7 +7,7 @@ bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
 curl -sfL https://raw.githubusercontent.com/x-wrt/x-wrt/master/target/linux/mediatek/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch -o target/linux/mediatek/patches-5.15/995-0001-hwnat-add-natflow-flow-offload-support.patch
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-arm luci-app-cpufreq luci-app-natflow-users natflow-boot/' target/linux/mediatek/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += autocore-arm luci-app-cpufreq luci-app-natflow-users natflow-boot/' target/linux/mediatek/Makefile
 
 echo '
 CONFIG_ARM64_CRYPTO=y

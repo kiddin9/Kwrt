@@ -4,8 +4,9 @@
  		./files/repositories.conf \
  		$(TMP_DIR)/.targetinfo \
  		$(TMP_DIR)/.packageinfo \
+-		$(PKG_BUILD_DIR)/
 +		$(TOPDIR)/files \
- 		$(PKG_BUILD_DIR)/
++		$(PKG_BUILD_DIR)/ || true
  
 -ifeq ($(CONFIG_IB_STANDALONE),)
  	echo '## Remote package repositories' >> $(PKG_BUILD_DIR)/repositories.conf

@@ -1,4 +1,6 @@
-#### OpenWrt with NGINX for X86/64, NanoPi R2S, NanoPi R4S, NanoPi R5S, NanoPi R2C, Phicomm N1, NanoPi NEO3, 树莓派 4B, DoorNet1, DoorNet2, 香橙派 Orange Pi R1 Plus, 香橙派 Orange Pi R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 小米CR6606/TR606(联通版), CR6608/TR608(移动版), CR6609/TR609(电信版), 小米4, 小米 R3G, 小米R3P, 小娱C5, newifi-d2, H1 Box, 贝壳云 P1 , 我家云 lL Pro, x96 Max, 微加云 V-Plus, 章鱼星球 ZYXQ, GT-King, Odroid N2, MXQ Pro+
+##### 在线定制专属固件: [supes.top](https://supes.top)
+#### 支持设备:
+##### X86/64, 友善 NanoPi R2S R4S R5S R2C NEO3, 斐讯 N1, 树莓派 4B 3B/3B+ 2B, DoorNet1, DoorNet2, 香橙派 Orange Pi R1 Plus, R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 斐讯K3,  HIWIFI HC5962(极路由4、B70), 小米4, 小米 R3G, 小米 R3P, newifi-d2 (新路由3), 小娱C5, 竞斗云2.0(P&W R619AC), GL.iNet MT1300, 小米CR6606/TR606, CR6608/TR608, CR6609/TR609, 华硕 RT-ACRH17, RT-AC58u/RT-ACRH13,  RT-AC68U, RT-AC87U, RT-AC88U, RT-AC56U, 网件 NETGEAR R6250 R7000 R7900 R8000, H1 Box, 贝壳云 P1, 我家云 lL Pro, x96 Max, 微加云 V-Plus, 章鱼星球 ZYXQ, GT-King, Odroid N2, MXQ Pro+ 等
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
@@ -28,7 +30,7 @@
 
 + 自建插件仓库囊括了市面上几乎所有开源插件,插件库日更,系统自动更新所有已安装插件.
 
-+ 在线一键定制固件,可在[supes.top](https://supes.top)也可在后台系统定制升级菜单中一键定制, 同时支持github云编译和本地一键编译.
++ 在线一键定制固件,可在[supes.top](https://supes.top)在线定制专属定制, 同时支持github云编译和本地一键编译.
 
 + 后台一键OTA更新固件,省去了每次固件升级都需要找固件,下载固件,上传固件等繁琐操作.
 

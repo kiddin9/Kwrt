@@ -18,11 +18,13 @@ rm -rf target/linux/generic/pending-5.15/444-mtd-nand-rawnand-add-support-for-To
 
 sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 svn export --force https://github.com/openwrt/packages/trunk/kernel feeds/packages/kernel
-svn export --force  https://github.com/openwrt/packages/trunk/net/xtables-addons packages/net/xtables-addons
+svn export --force  https://github.com/openwrt/packages/trunk/net/xtables-addons feeds/packages/net/xtables-addons
 
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
 rm -rf target/linux/generic/hack-5.15/{220-gc_sections*,781-dsa-register*,780-drivers-net*}
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+
+sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
 
 echo "
 CONFIG_TESTING_KERNEL=y
