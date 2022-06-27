@@ -1,4 +1,6 @@
-# OpenWrt with NGINX for x86_64 NanoPi-R2S R4S R2C Raspberry-Pi-4B N1
+##### 在线定制专属固件: [supes.top](https://supes.top)
+#### 支持设备:
+##### X86/64, 友善 NanoPi R2S R4S R5S R2C NEO3, 斐讯 N1, 树莓派 4B 3B/3B+ 2B, DoorNet1, DoorNet2, 香橙派 Orange Pi R1 Plus, R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 斐讯K3,  HIWIFI HC5962(极路由4、B70), 小米4, 小米 R3G, 小米 R3P, newifi-d2 (新路由3), 小娱C5, 竞斗云2.0(P&W R619AC), GL.iNet MT1300, 小米CR6606/TR606, CR6608/TR608, CR6609/TR609, 华硕 RT-ACRH17, RT-AC58u/RT-ACRH13,  RT-AC68U, RT-AC87U, RT-AC88U, RT-AC56U, 网件 NETGEAR R6250 R7000 R7900 R8000, H1 Box, 贝壳云 P1, 我家云 lL Pro, x96 Max, 微加云 V-Plus, 章鱼星球 ZYXQ, GT-King, Odroid N2, MXQ Pro+ 等
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
@@ -19,16 +21,16 @@
 [![Issue Welcome][5]][6]
 [![AutoBuild][12]][13]
 
-<a href="https://t.me/opwrts" target="_blank">Telegram</a>
+<a href="https://t.me/opwrt" target="_blank">TG通知频道</a>
 ## 1. **特色**
 
-+ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.10, 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-22.03分支版本, Kernel 5.15, 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能, 后台在线选装插件,系统升级不丢失插件和配置.
 
 + 自建插件仓库囊括了市面上几乎所有开源插件,插件库日更,系统自动更新所有已安装插件.
 
-+ 在线一键定制固件,可在[supes.top](https://supes.top)也可在后台系统定制升级菜单中一键定制, 同时支持github云编译和本地一键编译.
++ 在线一键定制固件,可在[supes.top](https://supes.top)在线定制专属定制, 同时支持github云编译和本地一键编译.
 
 + 后台一键OTA更新固件,省去了每次固件升级都需要找固件,下载固件,上传固件等繁琐操作.
 
@@ -160,6 +162,7 @@ Build OpenWrt using GitHub Actions
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
 - [aparcar](https://github.com/openwrt/asu)
 - [unifreq](https://github.com/unifreq/openwrt_packit)
+- [Boos4721](https://github.com/Boos4721/openwrt)
 - [GitHub](https://github.com)
 - [GitHub Actions](https://github.com/features/actions)
 
