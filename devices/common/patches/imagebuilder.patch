@@ -22,7 +22,7 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -113,6 +113,14 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
+@@ -115,17 +115,32 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
@@ -37,7 +37,16 @@
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
-@@ -124,6 +132,8 @@ _call_image: staging_dir/host/.prereq-build
+ 	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
+ 	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
++	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-3g-v2) ]]; then \
++		echo "src/gz openwrt_smflash https://op.supes.top/packages/mipsel_24kc/small_flash" >>$(TOPDIR)/repositories.conf; \
++	else \
++		sed -i "/smflash/d" $(TOPDIR)/repositories.conf; \
++	fi
+ 	$(MAKE) package_reload
+ 	$(MAKE) package_install
+ 	$(MAKE) -s prepare_rootfs
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
  	$(MAKE) -s checksum
@@ -46,7 +55,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -164,7 +174,15 @@ package_install: FORCE
+@@ -166,7 +181,15 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
@@ -63,7 +72,15 @@
  
  prepare_rootfs: FORCE
  	@echo
-@@ -183,7 +201,7 @@ build_image: FORCE
+@@ -180,12 +203,15 @@ prepare_rootfs: FORCE
+ 		) \
+ 	)
+ 	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
++	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-3g-v2) ]]; then \
++		echo "src/gz openwrt_smflash https://op.supes.top/packages/mipsel_24kc/small_flash" >>$(BUILD_DIR)/root-ramips/etc/opkg/distfeeds.conf; \
++	fi
+ 
+ build_image: FORCE
  	@echo
  	@echo Building images...
  	rm -rf $(BUILD_DIR)/json_info_files/
