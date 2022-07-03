@@ -68,7 +68,7 @@ jobs:
             echo "MTARGET=x86_64" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|bcm27xx_bcm2710) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} == "ramips_mt7621" ]]; then
+        elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
@@ -195,12 +195,15 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
-        df -hT
+        shopt -s extglob
         cd openwrt
+        rm -rf staging_dir/!(*${{ env.MTARGET }}*|host)
+        df -hT
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || (curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage" ; make -j1 V=s)
         sed -i "s/# CONFIG_IB is not set/CONFIG_IB=y/" .config
         rm -rf staging_dir/toolchain-*/bin/*openwrt-linux-musl-lto-dump
+        rm -rf staging_dir/toolchain-*/initial
    
     - name: Check space usage
       run: df -hT
