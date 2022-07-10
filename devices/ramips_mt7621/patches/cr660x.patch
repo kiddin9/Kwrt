@@ -30,7 +30,24 @@ index bdaeac2cb16e..72fbd3930a80 100644
  endef
  TARGET_DEVICES += jcg_y2
  
-@@ -1369,7 +1369,7 @@ define Device/netgear_wndr3700-v5
+@@ -1000,6 +1000,16 @@ define Device/lenovo_newifi-d1
+ endef
+ TARGET_DEVICES += lenovo_newifi-d1
+ 
++define Device/jdcloud_re-sp-01b
++  $(Device/dsa-migration)
++  $(Device/uimage-lzma-loader)
++  IMAGE_SIZE := 32448k
++  DEVICE_VENDOR := JDCloud
++  DEVICE_MODEL := RE-SP-01B
++  DEVICE_PACKAGES := kmod-fs-ext4 kmod-mt7603 kmod-mt7615e kmod-mt7615-firmware kmod-sdhci-mt7620 kmod-usb3
++ endef
++  TARGET_DEVICES += jdcloud_re-sp-01b
++
+ define Device/linksys_e5600
+   $(Device/dsa-migration)
+   $(Device/uimage-lzma-loader)
+@@ -1369,7 +1379,7 @@ define Device/netgear_wndr3700-v5
    SERCOMM_SWVER := 0x1054
    SERCOMM_PAD := 320k
    DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
@@ -39,7 +56,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
    SUPPORTED_DEVICES += wndr3700v5
  endef
  TARGET_DEVICES += netgear_wndr3700-v5
-@@ -1400,7 +1400,7 @@ define Device/oraybox_x3a
+@@ -1400,7 +1410,7 @@ define Device/oraybox_x3a
    IMAGE_SIZE := 15360k
    DEVICE_VENDOR := OrayBox
    DEVICE_MODEL := X3A
@@ -48,7 +65,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
  endef
  TARGET_DEVICES += oraybox_x3a
  
-@@ -1412,7 +1412,7 @@ define Device/phicomm_k2p
+@@ -1412,7 +1422,7 @@ define Device/phicomm_k2p
    DEVICE_ALT0_VENDOR := Phicomm
    DEVICE_ALT0_MODEL := KE 2P
    SUPPORTED_DEVICES += k2p
@@ -57,7 +74,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
  endef
  TARGET_DEVICES += phicomm_k2p
  
-@@ -1533,7 +1533,7 @@ define Device/thunder_timecloud
+@@ -1533,7 +1543,7 @@ define Device/thunder_timecloud
    IMAGE_SIZE := 16064k
    DEVICE_VENDOR := Thunder
    DEVICE_MODEL := Timecloud
@@ -66,7 +83,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
    SUPPORTED_DEVICES += timecloud
  endef
  TARGET_DEVICES += thunder_timecloud
-@@ -1843,7 +1843,6 @@ define Device/xiaomi_nand_separate
+@@ -1843,7 +1853,6 @@ define Device/xiaomi_nand_separate
    PAGESIZE := 2048
    KERNEL_SIZE := 4096k
    UBINIZE_OPTS := -E 5
@@ -74,7 +91,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
    IMAGE/kernel1.bin := append-kernel
    IMAGE/rootfs0.bin := append-ubi | check-size
    IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-@@ -1866,7 +1865,7 @@ define Device/xiaomi_mi-router-3g-v2
+@@ -1866,7 +1875,7 @@ define Device/xiaomi_mi-router-3g-v2
    DEVICE_VENDOR := Xiaomi
    DEVICE_MODEL := Mi Router 3G
    DEVICE_VARIANT := v2
@@ -83,7 +100,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
    SUPPORTED_DEVICES += xiaomi,mir3g-v2
  endef
  TARGET_DEVICES += xiaomi_mi-router-3g-v2
-@@ -1881,7 +1880,6 @@ define Device/xiaomi_mi-router-3-pro
+@@ -1881,7 +1890,6 @@ define Device/xiaomi_mi-router-3-pro
    IMAGE_SIZE := 255488k
    DEVICE_VENDOR := Xiaomi
    DEVICE_MODEL := Mi Router 3 Pro
@@ -91,7 +108,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
    IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
    IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
  	check-size
-@@ -1906,7 +1904,7 @@ define Device/xiaomi_mi-router-4a-gigabit
+@@ -1906,7 +1914,7 @@ define Device/xiaomi_mi-router-4a-gigabit
    DEVICE_VENDOR := Xiaomi
    DEVICE_MODEL := Mi Router 4A
    DEVICE_VARIANT := Gigabit Edition
@@ -100,7 +117,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
  endef
  TARGET_DEVICES += xiaomi_mi-router-4a-gigabit
  
-@@ -1927,30 +1925,14 @@ define Device/xiaomi_mi-router-cr660x
+@@ -1927,30 +1935,14 @@ define Device/xiaomi_mi-router-cr660x
    KERNEL_SIZE := 4096k
    UBINIZE_OPTS := -E 5
    IMAGE_SIZE := 128512k
@@ -135,7 +152,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
  
  define Device/xiaomi_redmi-router-ac2100
    $(Device/xiaomi_nand_separate)
-@@ -1985,7 +1967,7 @@ define Device/youhua_wr1200js
+@@ -1985,7 +1977,7 @@ define Device/youhua_wr1200js
    DEVICE_VENDOR := YouHua
    DEVICE_MODEL := WR1200JS
    DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
@@ -144,7 +161,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
  endef
  TARGET_DEVICES += youhua_wr1200js
  
-@@ -1995,7 +1977,7 @@ define Device/youku_yk-l2
+@@ -1995,7 +1987,7 @@ define Device/youku_yk-l2
    DEVICE_VENDOR := Youku
    DEVICE_MODEL := YK-L2
    DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
@@ -182,7 +199,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
 
 --- a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
 +++ b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
-@@ -27,9 +27,7 @@ ramips_setup_interfaces()
+@@ -28,9 +28,7 @@ ramips_setup_interfaces()
  	hiwifi,hc5962|\
  	xiaomi,mi-router-3-pro|\
  	xiaomi,mi-router-ac2100|\
@@ -192,6 +209,15 @@ index bdaeac2cb16e..72fbd3930a80 100644
 +	xiaomi,mi-router-cr660x|\
  	xiaomi,redmi-router-ac2100)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
+ 		;;
+@@ -45,6 +43,7 @@ ramips_setup_interfaces()
+ 	iptime,a3002mesh|\
+ 	jcg,q20|\
+ 	lenovo,newifi-d1|\
++	jdcloud,re-sp-01b|\
+ 	mikrotik,routerboard-m33g|\
+ 	oraybox,x3a|\
+ 	renkforce,ws-wn530hp3-a|\
 
 --- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
@@ -220,3 +246,157 @@ index bdaeac2cb16e..72fbd3930a80 100644
  	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x10000" "0x20000"
  	;;
  esac
+
+--- /dev/null
++++ b/target/linux/ramips/dts/mt7621_jdcloud_re-sp-01b.dts
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++#include "mt7621.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	compatible = "jdcloud,re-sp-01b", "mediatek,mt7621-soc";
++	model = "JDCloud RE-SP-01B";
++
++	aliases {
++		led-boot = &led_red;
++		led-failsafe = &led_red;
++		led-running = &led_green;
++		led-upgrade = &led_blue;
++		label-mac-device = &gmac0;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			label = "reset";
++			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_RESTART>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_red: red {
++			label = "red:sys";
++			gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
++			panic-indicator;
++		};
++
++		led_green: green {
++			label = "green:sys";
++			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
++		};
++
++		led_blue: blue {
++			label = "blue:sys";
++			gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&sdhci {
++	status = "okay";
++};
++
++&spi0 {
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "u-boot";
++				reg = <0x0 0x30000>;
++				read-only;
++			};
++
++			config: partition@30000 {
++				label = "config";
++				reg = <0x30000 0x10000>;
++				read-only;
++			};
++
++			factory: partition@40000 {
++				label = "factory";
++				reg = <0x40000 0x10000>;
++				read-only;
++			};
++
++			partition@50000 {
++				compatible = "denx,uimage";
++				label = "firmware";
++				reg = <0x50000 0x1fb0000>;
++			};
++		};
++	};
++};
++
++&gmac0 {
++	mtd-mac-address-ascii = <&config 0x4429>;
++};
++
++&switch0 {
++	ports {
++		port@0 {
++			status = "okay";
++			label = "wan";
++		};
++
++		port@1 {
++			status = "okay";
++			label = "lan1";
++		};
++
++		port@2 {
++			status = "okay";
++			label = "lan2";
++		};
++	};
++};
++
++&pcie {
++	status = "okay";
++};
++
++&pcie0 {
++	wifi@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		mtd-mac-address-ascii = <&config 0x4429>;
++		mediatek,mtd-eeprom = <&factory 0x0>;
++	};
++};
++
++&pcie1 {
++	wifi@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		mtd-mac-address-ascii = <&config 0x4429>;
++		mtd-mac-address-increment = <0x80>;
++		mtd-mac-address-increment-byte = <3>;
++		mediatek,mtd-eeprom = <&factory 0x8000>;
++		ieee80211-freq-limit = <5000000 6000000>;
++	};
++};
++
++&state_default {
++	gpio {
++		groups = "uart2", "uart3", "wdt";
++		function = "gpio";
++	};
++};
