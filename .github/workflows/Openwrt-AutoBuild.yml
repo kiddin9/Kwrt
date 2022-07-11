@@ -74,6 +74,8 @@ jobs:
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "bcm53xx" ]]; then
             echo "MTARGET=arm_cortex-a9" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "mvebu_cortexa9" ]]; then
+            echo "MTARGET=arm_cortex-a9_vfpv3-d16" >> $GITHUB_ENV
         else
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
