@@ -20,7 +20,6 @@ svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/lin
 rm -rf target/linux/ipq807x/{.svn,patches-5.15/.svn}
 svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x/patches-5.15 target/linux/ipq807x/patches-5.15
 
-sed -i 's/autocore-arm /autocore-arm /' target/linux/ipq807x/Makefile
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-turboacc/' target/linux/ipq807x/Makefile
 
 echo '
