@@ -121,7 +121,7 @@
 +	FILE_DIR="$(BIN_DIR)" \
 +	FILE_TYPE="rootfs" \
 +	FILE_FILESYSTEM="rootfs" \
-+	DEVICE_IMG_PREFIX="$(DEVICE_IMG_PREFIX)" \
++	DEVICE_IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))" \
 +	DEVICE_VENDOR="$(shell echo $($(PROFILE)_NAME) | cut -d " " -f1)" \
 +	DEVICE_MODEL="$(shell echo $($(PROFILE)_NAME) | cut -d " " -f2-)" \
 +	DEVICE_VARIANT="$(DEVICE_VARIANT)" \
