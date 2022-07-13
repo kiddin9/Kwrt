@@ -1,0 +1,10 @@
+--- a/include/rootfs.mk
++++ b/include/rootfs.mk
+@@ -73,7 +73,6 @@ define prepare_rootfs
+ 			ret=$$?; \
+ 			if [ $$ret -ne 0 ]; then \
+ 				echo "postinst script $$script has failed with exit code $$ret" >&2; \
+-				exit 1; \
+ 			fi; \
+ 		done; \
+ 		for script in ./etc/init.d/*; do \
