@@ -39,7 +39,7 @@
  	echo
  	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
  	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
-+	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_asus_rt-ac1200|DEVICE_asus_rt-ac1200-v2|DEVICE_glinet_gl-mt300n-v2|DEVICE_glinet_microuter-n300|DEVICE_hiwifi_hc5661a|DEVICE_hiwifi_hc5761a|DEVICE_hiwifi_hc5861b|DEVICE_netgear_r6120|DEVICE_xiaomi_miwifi-nano|DEVICE_jcg_y2) ]]; then \
++	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_asus_rt-ac1200|DEVICE_asus_rt-ac1200-v2|DEVICE_glinet_gl-mt300n-v2|DEVICE_glinet_microuter-n300|DEVICE_hiwifi_hc5661a|DEVICE_hiwifi_hc5761a|DEVICE_hiwifi_hc5861b|DEVICE_netgear_r6120|DEVICE_xiaomi_miwifi-nano|DEVICE_jcg_y2|DEVICE_glinet_gl-mt300a|DEVICE_glinet_gl-mt750|DEVICE_hiwifi_hc5661|DEVICE_hiwifi_hc5761|DEVICE_hiwifi_hc5861|DEVICE_lenovo_newifi-y1|DEVICE_lenovo_newifi-y1s|DEVICE_xiaomi_miwifi-mini|DEVICE_youku_yk-l1c) ]]; then \
 +		echo "src/gz openwrt_smflash https://op.supes.top/packages/mipsel_24kc/small_flash" >>$(TOPDIR)/repositories.conf; \
 +	else \
 +		sed -i "/smflash/d" $(TOPDIR)/repositories.conf; \
@@ -76,7 +76,7 @@
  		) \
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
-+	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_asus_rt-ac1200|DEVICE_asus_rt-ac1200-v2|DEVICE_glinet_gl-mt300n-v2|DEVICE_glinet_microuter-n300|DEVICE_hiwifi_hc5661a|DEVICE_hiwifi_hc5761a|DEVICE_hiwifi_hc5861b|DEVICE_netgear_r6120|DEVICE_xiaomi_miwifi-nano|DEVICE_jcg_y2) ]]; then \
++	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_asus_rt-ac1200|DEVICE_asus_rt-ac1200-v2|DEVICE_glinet_gl-mt300n-v2|DEVICE_glinet_microuter-n300|DEVICE_hiwifi_hc5661a|DEVICE_hiwifi_hc5761a|DEVICE_hiwifi_hc5861b|DEVICE_netgear_r6120|DEVICE_xiaomi_miwifi-nano|DEVICE_jcg_y2|DEVICE_glinet_gl-mt300a|DEVICE_glinet_gl-mt750|DEVICE_hiwifi_hc5661|DEVICE_hiwifi_hc5761|DEVICE_hiwifi_hc5861|DEVICE_lenovo_newifi-y1|DEVICE_lenovo_newifi-y1s|DEVICE_xiaomi_miwifi-mini|DEVICE_youku_yk-l1c) ]]; then \
 +		echo "src/gz openwrt_smflash https://op.supes.top/packages/mipsel_24kc/small_flash" >>$(BUILD_DIR)/root-ramips/etc/opkg/distfeeds.conf; \
 +	fi
  
