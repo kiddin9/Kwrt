@@ -68,7 +68,7 @@ jobs:
             echo "MTARGET=x86_64" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|bcm27xx_bcm2710) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt76x8) ]]; then
+        elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
