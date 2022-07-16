@@ -193,7 +193,7 @@ jobs:
 
     - name: Cache
       uses: klever1988/cachewrtbuild@main
-      if: github.event.client_payload.target != "ipq60xx_generic"
+      if: github.event.client_payload.target != 'ipq60xx_generic'
       with:
         ccache: 'true'
         clean: ${{ contains(github.event.action, 'nocache') }}
