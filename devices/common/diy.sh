@@ -18,6 +18,7 @@ sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;maste
 }
 
 ./scripts/feeds update -a
+rm -rf feeds/packages/net/gnunet*
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
