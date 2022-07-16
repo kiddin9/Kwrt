@@ -7,7 +7,7 @@ rm -rf devices/common/patches/{targets.patch,usb.patch}
 echo "KERNEL=4.4.60" >> $GITHUB_ENV || true
 
 svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/libs package/libs
-svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/utils/px5g-wolfssl package/utils
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/utils package/utils
 
 rm -rf feeds/packages/net/gnunet*
 ./scripts/feeds update -a
