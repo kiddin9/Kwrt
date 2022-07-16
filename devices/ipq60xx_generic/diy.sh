@@ -6,6 +6,16 @@ svn export --force https://github.com/openwrt/openwrt/branches/openwrt-22.03/tar
 rm -rf devices/common/patches/{targets.patch,usb.patch}
 echo "KERNEL=4.4.60" >> $GITHUB_ENV || true
 
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/libs/pcre package/libs/pcre
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/libs/libcap package/libs/libcap
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/libs/jansson package/libs/jansson
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/utils/px5g-wolfssl package/utils/px5g-wolfssl
+
+rm -rf feeds/packages/net/gnunet*
+./scripts/feeds install -a -p kiddin9 -f
+./scripts/feeds install -a
+
+
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq automount/' target/linux/ipq60xx/Makefile
 
 
