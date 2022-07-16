@@ -4,6 +4,7 @@ shopt -s extglob
 svn export --force https://github.com/openwrt/openwrt/branches/openwrt-22.03/target/imagebuilder target/imagebuilder
 
 rm -rf devices/common/patches/{targets.patch,usb.patch}
+echo "KERNEL=4.4.60" >> $GITHUB_ENV || true
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq automount/' target/linux/ipq60xx/Makefile
 
