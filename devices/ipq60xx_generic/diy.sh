@@ -1,7 +1,7 @@
 #!/bin/bash
 shopt -s extglob
 
-svn export --force https://github.com/openwrt/openwrt/branches/openwrt-22.03/target/imagebuilder
+svn export --force https://github.com/openwrt/openwrt/branches/openwrt-22.03/target/imagebuilder target/imagebuilder
 
 rm -rf devices/common/patches/{targets.patch,usb.patch}
 
