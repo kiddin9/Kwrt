@@ -1,0 +1,9 @@
+--- a/scripts/dtc/dtc-parser.tab.c
++++ b/scripts/dtc/dtc-parser.tab.c
+@@ -1197,5 +1197,5 @@
+ YYSTYPE yylval;
+ /* Location data for the lookahead symbol.  */
+-YYLTYPE yylloc
++extern YYLTYPE yylloc
+ # if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+   = { 1, 1, 1, 1 }
