@@ -1,8 +1,11 @@
 #!/bin/bash
 shopt -s extglob
 
+svn export --force https://github.com/openwrt/openwrt/branches/openwrt-22.03/target/imagebuilder
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq -firewall4 firewall/' target/linux/ipq60xx/Makefile
+rm -rf devices/common/patches/{targets.patch,usb.patch}
+
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq automount/' target/linux/ipq60xx/Makefile
 
 
 echo '
