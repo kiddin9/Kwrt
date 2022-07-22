@@ -93,3 +93,25 @@
  __config_name_list = $(1)/config-$(KERNEL_PATCHVER) $(1)/config-default
  __config_list = $(firstword $(wildcard $(call __config_name_list,$(1))))
 
+--- a/package/kernel/mac80211/ath.mk
++++ b/package/kernel/mac80211/ath.mk
+@@ -282,7 +282,7 @@ define KernelPackage/ath11k
+   TITLE:=Atheros 802.11ax wireless cards support
+   URL:=https://wireless.wiki.kernel.org/en/users/drivers/ath11k
+   DEPENDS+= @TARGET_ipq60xx +kmod-ath +@DRIVER_11N_SUPPORT +@DRIVER_11AC_SUPPORT \
+-	+@DRIVER_11AX_SUPPORT +@DRIVER_11W_SUPPORT +kmod-qca-nss-drv
++	+@DRIVER_11AX_SUPPORT +@DRIVER_11W_SUPPORT +kmod-qca-nss-drv +kmod-hwmon-core
+   FILES:= \
+ 	$(PKG_BUILD_DIR)/drivers/net/wireless/ath/ath11k/ath11k.ko
+ endef
+
+--- a/target/linux/ipq60xx/Makefile
++++ b/target/linux/ipq60xx/Makefile
+@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/target.mk
+ DEFAULT_PACKAGES += \
+ 	kmod-leds-gpio kmod-gpio-button-hotplug swconfig \
+ 	kmod-qca-nss-dp kmod-qca-nss-drv kmod-qca-ssdk \
+-	kmod-ath11k-ahb qca-ssdk-shell wpad-openssl \
++	kmod-ath11k-ahb qca-ssdk-shell wpad-basic-wolfssl \
+ 	ath11k-firmware-ipq6018 nss-firmware-ipq6018 \
+ 	kmod-qca-nss-drv-pppoe kmod-qca-nss-ecm uboot-envtools

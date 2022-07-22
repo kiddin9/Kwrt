@@ -20,9 +20,10 @@ curl -sfL https://raw.githubusercontent.com/tsingui/openwrt-ax1800/master/includ
 curl -sfL https://raw.githubusercontent.com/tsingui/openwrt-ax1800/master/include/quilt.mk -o include/quilt.mk
 curl -sfL https://raw.githubusercontent.com/tsingui/openwrt-ax1800/master/include/target.mk -o include/target.mk
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq automount procd/' target/linux/ipq60xx/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq automount/' target/linux/ipq60xx/Makefile
 
-rm -f devices/common/patches/usb.patch feeds/kiddin9/shortcut-fe
+rm -f devices/common/patches/usb.patch
+rm -rf feeds/packages/net/openvswitch feeds/packages/net/xtables-addons package/kernel/mt76
 
 echo '
 CONFIG_ARM64_CRYPTO=y
