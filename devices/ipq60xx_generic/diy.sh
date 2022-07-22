@@ -11,7 +11,7 @@ svn co https://github.com/kiddin9/openwrt-ax1800/trunk/target/linux/ipq60xx targ
 svn co https://github.com/kiddin9/openwrt-ax1800/trunk/dl dl
 svn co https://github.com/kiddin9/openwrt-ax1800/trunk/package/kernel package/kernel
 svn co https://github.com/kiddin9/openwrt-ax1800/trunk/package/network/utils/fullconenat feeds/kiddin9/fullconenat
-svn co https://github.com/tsingui/openwrt-ax1800/trunk/package/network/config/netifd
+svn co https://github.com/tsingui/openwrt-ax1800/trunk/package/network/config/netifd package/network/config/netifd
 svn co https://github.com/openwrt/openwrt/branches/openwrt-21.02/toolchain toolchain
 rm -rf target/linux/generic/files
 rm -rf package/network/config/netifd/patches
@@ -22,7 +22,7 @@ curl -sfL https://raw.githubusercontent.com/tsingui/openwrt-ax1800/master/includ
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq automount procd/' target/linux/ipq60xx/Makefile
 
-rm -f devices/common/patches/usb.patch
+rm -f devices/common/patches/usb.patch feeds/kiddin9/shortcut-fe
 
 echo '
 CONFIG_ARM64_CRYPTO=y
