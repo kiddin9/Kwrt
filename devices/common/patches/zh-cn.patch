@@ -1,0 +1,11 @@
+--- a/feeds/luci/luci.mk
++++ b/feeds/luci/luci.mk
+@@ -206,9 +206,14 @@ define Package/$(PKG_NAME)/install
+ 	  $(call Build/Install/Default) \
+ 	  $(CP) $(PKG_INSTALL_DIR)/* $(1)/; \
+ 	else true; fi
++	$(INSTALL_DIR) $(1)$(LUCI_LIBRARYDIR)/i18n
++	$(foreach po,$(wildcard ${CURDIR}/po/zh_Hans/*.po), \
++		po2lmo $(po) \
++		$(1)$(LUCI_LIBRARYDIR)/i18n/$(basename $(notdir $(po))).zh-cn.lmo;)
+ endef
