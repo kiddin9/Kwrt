@@ -1,5 +1,5 @@
---- a/scripts/dtc/dtc-parser.tab.c
-+++ b/scripts/dtc/dtc-parser.tab.c
+--- a/scripts/dtc/dtc-parser.tab.c_shipped
++++ b/scripts/dtc/dtc-parser.tab.c_shipped
 @@ -1197,5 +1197,5 @@
  YYSTYPE yylval;
  /* Location data for the lookahead symbol.  */
