@@ -8,7 +8,7 @@ sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
-luci-app-wizard luci-app-attendedsysupgrade luci-base luci-compat luci-lib-ipkg luci-lib-fs \
+luci-app-wizard luci-base luci-compat luci-lib-ipkg luci-lib-fs \
 coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash openssh-sftp-server /" include/target.mk
 sed -i "s/procd-ujail//" include/target.mk
 
@@ -17,12 +17,14 @@ sed -i '/	refresh_config();/d' scripts/feeds
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
 }
 
+sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
+
 ./scripts/feeds update -a
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
 
-mv -f feeds/kiddin9/r81* tmp/
+mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 
 sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
 
@@ -36,7 +38,7 @@ rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-dr
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/kiddin9/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &
 sed -i 's/Os/O2/g' include/target.mk
-sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite --force-maintainer --force-depends/' package/Makefile
+sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite --force-depends/' package/Makefile
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
 sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
 

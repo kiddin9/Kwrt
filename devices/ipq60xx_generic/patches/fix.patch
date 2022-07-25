@@ -1,0 +1,117 @@
+--- a/rules.mk
++++ b/rules.mk
+@@ -137,7 +137,11 @@ else
+ endif
+ 
+ ifeq ($(or $(CONFIG_EXTERNAL_TOOLCHAIN),$(CONFIG_TARGET_uml)),)
+-  iremap = -f$(if $(CONFIG_REPRODUCIBLE_DEBUG_INFO),file,macro)-prefix-map=$(1)=$(2)
++  ifeq ($(CONFIG_GCC_USE_IREMAP),y)
++    iremap = -iremap$(1):$(2)
++  else
++    iremap = -f$(if $(CONFIG_REPRODUCIBLE_DEBUG_INFO),file,macro)-prefix-map=$(1)=$(2)
++  endif
+ endif
+ 
+ PACKAGE_DIR:=$(BIN_DIR)/packages
+
+--- a/include/image.mk
++++ b/include/image.mk
+@@ -152,21 +152,6 @@ ifdef CONFIG_TARGET_IMAGES_GZIP
+   endef
+ endif
+ 
+-
+-# Disable noisy checks by default as in upstream
+-DTC_FLAGS += \
+-  -Wno-unit_address_vs_reg \
+-  -Wno-simple_bus_reg \
+-  -Wno-unit_address_format \
+-  -Wno-pci_bridge \
+-  -Wno-pci_device_bus_num \
+-  -Wno-pci_device_reg \
+-  -Wno-avoid_unnecessary_addr_size \
+-  -Wno-alias_paths \
+-  -Wno-graph_child_address \
+-  -Wno-graph_port \
+-  -Wno-unique_unit_address
+-
+ define Image/pad-to
+ 	dd if=$(1) of=$(1).new bs=$(2) conv=sync
+ 	mv $(1).new $(1)
+
+--- a/package/network/utils/iptables/Makefile
++++ b/package/network/utils/iptables/Makefile
+@@ -784,7 +784,6 @@ $(eval $(call BuildPlugin,iptables-mod-ulog,$(IPT_ULOG-m)))
+ $(eval $(call BuildPlugin,iptables-mod-hashlimit,$(IPT_HASHLIMIT-m)))
+ $(eval $(call BuildPlugin,iptables-mod-rpfilter,$(IPT_RPFILTER-m)))
+ $(eval $(call BuildPlugin,iptables-mod-led,$(IPT_LED-m)))
+-$(eval $(call BuildPlugin,iptables-mod-socket,$(IPT_SOCKET-m)))
+ $(eval $(call BuildPlugin,iptables-mod-tproxy,$(IPT_TPROXY-m)))
+ $(eval $(call BuildPlugin,iptables-mod-tee,$(IPT_TEE-m)))
+ $(eval $(call BuildPlugin,iptables-mod-u32,$(IPT_U32-m)))
+
+--- a/feeds/kiddin9/firewall/Makefile
++++ b/feeds/kiddin9/firewall/Makefile
+@@ -28,7 +28,7 @@ define Package/firewall
+   SECTION:=net
+   CATEGORY:=Base system
+   TITLE:=OpenWrt C Firewall
+-  DEPENDS:=+libubox +libubus +libuci +libip4tc +IPV6:libip6tc +libiptext +IPV6:libiptext6 +libxtables +kmod-ipt-core +kmod-ipt-conntrack +IPV6:kmod-nf-conntrack6 +iptables-mod-fullconenat +ip6tables-mod-fullconenat +iptables +ip6tables +kmod-ipt-offload
++  DEPENDS:=+libubox +libubus +libuci +libip4tc +IPV6:libip6tc +libiptext +IPV6:libiptext6 +libxtables +kmod-ipt-core +kmod-ipt-conntrack +IPV6:kmod-nf-conntrack6 +iptables-mod-fullconenat +iptables +ip6tables +kmod-ipt-offload
+   PROVIDES:=uci-firewall
+ endef
+
+--- a/feeds/kiddin9/automount/Makefile
++++ b/feeds/kiddin9/automount/Makefile
+@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
+ define Package/automount
+   TITLE:=Mount autoconfig hotplug script.
+   MAINTAINER:=Lean
+-  DEPENDS:=+block-mount +kmod-fs-exfat +kmod-fs-ext4 +kmod-fs-vfat +libblkid \
++  DEPENDS:=+block-mount +kmod-fs-ext4 +kmod-fs-vfat +libblkid \
+ 	+kmod-usb-storage +kmod-usb-storage-extras +!TARGET_ramips:kmod-usb-storage-uas +ntfs3-mount
+ endef
+
+--- a/include/target.mk
++++ b/include/target.mk
+@@ -147,10 +147,17 @@ ifneq ($(TARGET_BUILD)$(if $(DUMP),,1),)
+ endif
+ 
+ GENERIC_PLATFORM_DIR := $(TOPDIR)/target/linux/generic
++ifeq ($(CONFIG_TARGET_ipq60xx),y)
++GENERIC_BACKPORT_DIR :=
++GENERIC_PATCH_DIR :=
++GENERIC_HACK_DIR :=
++GENERIC_FILES_DIR :=
++else
+ GENERIC_BACKPORT_DIR := $(GENERIC_PLATFORM_DIR)/backport$(if $(wildcard $(GENERIC_PLATFORM_DIR)/backport-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
+ GENERIC_PATCH_DIR := $(GENERIC_PLATFORM_DIR)/pending$(if $(wildcard $(GENERIC_PLATFORM_DIR)/pending-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
+ GENERIC_HACK_DIR := $(GENERIC_PLATFORM_DIR)/hack$(if $(wildcard $(GENERIC_PLATFORM_DIR)/hack-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
+ GENERIC_FILES_DIR := $(foreach dir,$(wildcard $(GENERIC_PLATFORM_DIR)/files $(GENERIC_PLATFORM_DIR)/files-$(KERNEL_PATCHVER)),"$(dir)")
++endif
+ 
+ __config_name_list = $(1)/config-$(KERNEL_PATCHVER) $(1)/config-default
+ __config_list = $(firstword $(wildcard $(call __config_name_list,$(1))))
+
+--- a/package/kernel/mac80211/ath.mk
++++ b/package/kernel/mac80211/ath.mk
+@@ -282,7 +282,7 @@ define KernelPackage/ath11k
+   TITLE:=Atheros 802.11ax wireless cards support
+   URL:=https://wireless.wiki.kernel.org/en/users/drivers/ath11k
+   DEPENDS+= @TARGET_ipq60xx +kmod-ath +@DRIVER_11N_SUPPORT +@DRIVER_11AC_SUPPORT \
+-	+@DRIVER_11AX_SUPPORT +@DRIVER_11W_SUPPORT +kmod-qca-nss-drv
++	+@DRIVER_11AX_SUPPORT +@DRIVER_11W_SUPPORT +kmod-qca-nss-drv +kmod-hwmon-core
+   FILES:= \
+ 	$(PKG_BUILD_DIR)/drivers/net/wireless/ath/ath11k/ath11k.ko
+ endef
+
+--- a/target/linux/ipq60xx/Makefile
++++ b/target/linux/ipq60xx/Makefile
+@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/target.mk
+ DEFAULT_PACKAGES += \
+ 	kmod-leds-gpio kmod-gpio-button-hotplug swconfig \
+ 	kmod-qca-nss-dp kmod-qca-nss-drv kmod-qca-ssdk \
+-	kmod-ath11k-ahb qca-ssdk-shell wpad-openssl \
++	kmod-ath11k-ahb qca-ssdk-shell wpad-basic-wolfssl \
+ 	ath11k-firmware-ipq6018 nss-firmware-ipq6018 \
+ 	kmod-qca-nss-drv-pppoe kmod-qca-nss-ecm uboot-envtools

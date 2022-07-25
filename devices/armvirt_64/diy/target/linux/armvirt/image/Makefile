@@ -56,8 +56,8 @@ endef
 TARGET_DEVICES += mxqpro
 
 define Device/x96max
-  DEVICE_VENDOR := x96
-  DEVICE_MODEL := Max
+  DEVICE_VENDOR := x96 Max
+  DEVICE_MODEL := s905x2
   SOC := s905x2
   DEVICE_PACKAGES := 
 endef

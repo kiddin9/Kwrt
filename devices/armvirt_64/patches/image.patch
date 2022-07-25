@@ -14,5 +14,5 @@
 -	FILE_FILESYSTEM="rootfs" \
 +	FILE_TYPE="sysupgrade" \
 +	FILE_FILESYSTEM="ext4" \
- 	DEVICE_IMG_PREFIX="$(DEVICE_IMG_PREFIX)" \
+ 	DEVICE_IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))" \
  	DEVICE_VENDOR="$(shell echo $($(PROFILE)_NAME) | cut -d " " -f1)" \
