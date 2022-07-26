@@ -13,7 +13,6 @@ svn export --force https://github.com/Boos4721/openwrt/trunk/package/qca package
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/qat package/qat
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel/mac80211 package/kernel/mac80211
 
-svn co https://github.com/Boos4721/openwrt/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
 svn co https://github.com/Boos4721/openwrt/trunk/target/linux/generic/pending-5.15 target/linux/generic/pending-5.15
 rm -rf target/linux/ipq807x/!(patches-5.15)
 svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/linux/ipq807x
