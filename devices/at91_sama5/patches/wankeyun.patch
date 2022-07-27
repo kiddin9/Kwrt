@@ -1,0 +1,19 @@
+--- a/target/linux/at91/image/sama5.mk
++++ b/target/linux/at91/image/sama5.mk
+@@ -120,6 +120,16 @@ define Device/microchip_sama5d3-xplained
+ endef
+ TARGET_DEVICES += microchip_sama5d3-xplained
+ 
++define Device/wankeyun
++  $(Device/evaluation-dtb)
++  DEVICE_VENDOR := 玩客云
++  DEVICE_MODEL := WanKeYun
++  DEVICE_DTS := at91-sama5d3_xplained
++  KERNEL_SIZE := 6144k
++  $(Device/evaluation-sdimage)
++endef
++TARGET_DEVICES += wankeyun
++
+ ifeq ($(strip $(CONFIG_EXTERNAL_KERNEL_TREE)),"")
+  ifeq ($(strip $(CONFIG_KERNEL_GIT_CLONE_URI)),"")
+   define Device/laird_wb50n

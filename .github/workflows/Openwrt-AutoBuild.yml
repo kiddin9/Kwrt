@@ -264,28 +264,6 @@ jobs:
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
-        
-    - name: Deploy some packages to server
-      uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
-        SOURCE: openwrt/bin/packages/*/base/*-firmware*
-        REMOTE_HOST: op.supes.top
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/"
-
-    - name: remote ssh command
-      uses: appleboy/ssh-action@master
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
-      with:
-        host: op.supes.top
-        username: root
-        key: ${{ env.SSH_PRIVATE_KEY }}
-        script: |
-          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/
-          opkg &
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
