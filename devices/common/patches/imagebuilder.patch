@@ -55,24 +55,23 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -166,7 +181,15 @@ package_install: FORCE
+@@ -166,7 +181,14 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
-+	packages="luci-i18n-base-zh-cn luci-i18n-base-en"; \
 +	for p in $(BUILD_PACKAGES); do \
 +		if [[ $$p == luci-app-* && "`$(OPKG) list | grep luci-i18n-\`echo $$p | cut -d - -f 3-\`-zh-cn`" ]]; then \
-+			packages="luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn $$packages"; \
++			packages+="luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn "; \
 +		fi \
 +	done; \
-+	$(OPKG) install --force-overwrite --force-checksum --force-depends $(BUILD_PACKAGES); \
++	$(OPKG) install --force-overwrite --force-checksum --force-depends $(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en; \
 +	$(OPKG) install $$packages || true
 +	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
  	@echo
-@@ -180,12 +203,15 @@ prepare_rootfs: FORCE
+@@ -180,12 +202,15 @@ prepare_rootfs: FORCE
  		) \
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))

@@ -73,7 +73,7 @@
 
 --- a/target/linux/rockchip/image/Makefile
 +++ b/target/linux/rockchip/image/Makefile
-@@ -75,4 +75,16 @@ endef
+@@ -75,4 +75,17 @@ endef
  
  include $(SUBTARGET).mk
  
@@ -81,11 +81,12 @@
 +	if [ $(PROFILE_SANITIZED) == "friendlyarm_nanopi-r5s" ]; then \
 +		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 +		export BIN_DIR=$(BIN_DIR); \
-+		export PARTSIZE=$(CONFIG_TARGET_ROOTFS_PARTSIZE); \
-+		cd $(TOPDIR)/../openwrt_packit; \
++		export TOPDIR=$(TOPDIR); \
++		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/openwrt_packit; \
++		. ../modify_packit.sh; \
 +		./build.sh sd-img; \
-+		./build.sh emmc-img; \
-+		rm -rf $(BIN_DIR)/*r5s-squashfs-sysupgrade.img.gz; \
++		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
++		rm -rf $(BIN_DIR)/*r5s-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
 +	fi
 +endef
 +
