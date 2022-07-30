@@ -66,7 +66,7 @@ jobs:
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
             echo "MTARGET=x86_64" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|bcm27xx_bcm2710|ipq60xx_generic) ]]; then
+        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|bcm27xx_bcm2710|ipq60xx_generic|ipq60xx_generic|bcm4908_generic) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
@@ -78,6 +78,8 @@ jobs:
             echo "MTARGET=arm_cortex-a9" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "mvebu_cortexa9" ]]; then
             echo "MTARGET=arm_cortex-a9_vfpv3-d16" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "ipq806x_generic" ]]; then
+            echo "MTARGET=arm_cortex-a15_neon-vfpv4" >> $GITHUB_ENV
         else
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
@@ -264,28 +266,6 @@ jobs:
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
-        
-    - name: Deploy some packages to server
-      uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
-        SOURCE: openwrt/bin/packages/*/base/*-firmware*
-        REMOTE_HOST: op.supes.top
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/"
-
-    - name: remote ssh command
-      uses: appleboy/ssh-action@master
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
-      with:
-        host: op.supes.top
-        username: root
-        key: ${{ env.SSH_PRIVATE_KEY }}
-        script: |
-          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/
-          opkg &
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main

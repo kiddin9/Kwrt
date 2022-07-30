@@ -11,19 +11,18 @@ svn co https://github.com/kiddin9/openwrt-ax1800/trunk/target/linux/ipq60xx targ
 svn co https://github.com/kiddin9/openwrt-ax1800/trunk/dl dl
 svn co https://github.com/kiddin9/openwrt-ax1800/trunk/package/kernel package/kernel
 svn co https://github.com/kiddin9/openwrt-ax1800/trunk/package/network/utils/fullconenat feeds/kiddin9/fullconenat
-svn co https://github.com/tsingui/openwrt-ax1800/trunk/package/network/config/netifd package/network/config/netifd
-svn co https://github.com/openwrt/openwrt/branches/openwrt-21.02/toolchain toolchain
+svn co https://github.com/kiddin9/openwrt-ax1800/trunk/package/network/config/netifd package/network/config/netifd
+svn co https://github.com/kiddin9/openwrt-ax1800/trunk/toolchain toolchain
 rm -rf target/linux/generic/files
 rm -rf package/network/config/netifd/patches
 
-curl -sfL https://raw.githubusercontent.com/tsingui/openwrt-ax1800/master/include/netfilter.mk -o include/netfilter.mk
-curl -sfL https://raw.githubusercontent.com/tsingui/openwrt-ax1800/master/include/quilt.mk -o include/quilt.mk
-curl -sfL https://raw.githubusercontent.com/tsingui/openwrt-ax1800/master/include/target.mk -o include/target.mk
+curl -sfL https://raw.githubusercontent.com/kiddin9/openwrt-ax1800/master/include/netfilter.mk -o include/netfilter.mk
+curl -sfL https://raw.githubusercontent.com/kiddin9/openwrt-ax1800/master/include/quilt.mk -o include/quilt.mk
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-cpufreq automount/' target/linux/ipq60xx/Makefile
 
 rm -f devices/common/patches/usb.patch
-rm -rf feeds/packages/net/openvswitch feeds/packages/net/xtables-addons package/kernel/mt76
+rm -rf feeds/packages/net/openvswitch feeds/kiddin9/shortcut-fe feeds/packages/net/xtables-addons package/kernel/mt76
 
 echo '
 CONFIG_ARM64_CRYPTO=y
