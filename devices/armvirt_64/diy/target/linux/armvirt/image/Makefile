@@ -95,12 +95,20 @@ define Device/odroid-n2
 endef
 TARGET_DEVICES += odroid-n2
 
+define Device/fastrhino_r68s
+  DEVICE_VENDOR := 电犀牛
+  DEVICE_MODEL := R68S
+  SOC := rk3568
+  DEVICE_PACKAGES := 
+endef
+TARGET_DEVICES += fastrhino_r68s
+
 
 define Image/Build
 	export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 	export BIN_DIR=$(BIN_DIR); \
 	export PARTSIZE=$(CONFIG_TARGET_ROOTFS_PARTSIZE); \
-	cd $(TOPDIR)/../openwrt_packit; \
+	cd /www/wwwroot/op.supes.top/bcache/armvirt/64/openwrt_packit; \
 	if [ $(PROFILE_SANITIZED) == "n1" ]; then \
 		./mk_s905d_n1.sh; \
 	elif [ $(PROFILE_SANITIZED) == "beikeyun" ]; then \
@@ -119,6 +127,8 @@ define Image/Build
 		./mk_s922x_odroid-n2.sh; \
 	elif [ $(PROFILE_SANITIZED) == "vplus" ]; then \
 		./mk_h6_vplus.sh; \
+	elif [ $(PROFILE_SANITIZED) == "fastrhino_r68s" ]; then \
+		./mk_rk3568_r68s.sh; \
 	elif [ $(PROFILE_SANITIZED) == "hk1" ]; then \
 		./mk_s905x3_multi.sh; \
 	fi; \

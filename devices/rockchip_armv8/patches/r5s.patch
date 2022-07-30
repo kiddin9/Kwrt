@@ -82,7 +82,7 @@
 +		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 +		export BIN_DIR=$(BIN_DIR); \
 +		export TOPDIR=$(TOPDIR); \
-+		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/openwrt_packit; \
++		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/r5s_packit; \
 +		. ../modify_packit.sh; \
 +		./build.sh sd-img; \
 +		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
