@@ -165,7 +165,7 @@ jobs:
 
     - name: Apply patches
       run: |
-        if [[ ${{matrix.target}} == "ramips_mt7621"]]; then
+        if [ ${{matrix.target}} == "ramips_mt7621"]; then
           cp -r devices/ramips_mt7621/patches/102-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.4
         fi
         cd openwrt
