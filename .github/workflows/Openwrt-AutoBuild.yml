@@ -13,6 +13,7 @@ on:
 
 env:
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+  REPO_BRANCH: ${{ secrets.REPO_BRANCH
   PPPOE_USERNAME: ${{ secrets.PPPOE_USERNAME }}
   PPPOE_PASSWD: ${{ secrets.PPPOE_PASSWD }}
   SCKEY: ${{ secrets.SCKEY }}
