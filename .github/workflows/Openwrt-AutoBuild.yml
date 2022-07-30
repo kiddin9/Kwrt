@@ -165,6 +165,8 @@ jobs:
 
     - name: Apply patches
       run: |
+        if [[ ${{matrix.target}} == "ramips_mt7621"]]; then
+          cp -r devices/ramips_mt7621/patches/102-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.4
         cd openwrt
         find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
