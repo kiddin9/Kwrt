@@ -101,7 +101,7 @@ define Device/fastrhino_r68s
   SOC := rk3568
   DEVICE_PACKAGES := 
 endef
-TARGET_DEVICES += fastrhino_r68s
+#TARGET_DEVICES += fastrhino_r68s
 
 
 define Image/Build

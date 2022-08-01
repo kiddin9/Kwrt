@@ -2,7 +2,7 @@
 
 rm -rf target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk}
 latest="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | grep -o 'href=".*>kernel: bump 5.15' | head -1 | cut -d / -f 5 | cut -d '"' -f 1)"
-latest=""
+# latest=""
 mkdir new; cp -rf .git new/.git
 cd new
 [ "$latest" ] && git reset --hard $latest || git reset --hard origin/master

@@ -14,8 +14,12 @@ sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/64.mk
 sed -i 's/256/1024/g' target/linux/x86/image/Makefile
 
 echo '
-CONFIG_CRYPTO_CHACHA20_X86_64=y
-CONFIG_CRYPTO_POLY1305_X86_64=y
+CONFIG_ACPI=y
+CONFIG_X86_ACPI_CPUFREQ=y
+CONFIG_NR_CPUS=512
+CONFIG_CPU_FREQ_GOV_USERSPACE=y
+CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 ' >> ./target/linux/x86/config-5.15
 
 sed -i "s/enabled '0'/enabled '1'/g" feeds/packages/utils/irqbalance/files/irqbalance.config
