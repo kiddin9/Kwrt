@@ -21,6 +21,7 @@ env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   DOCKER_ID: ${{ secrets.DOCKER_ID }}
   DOCKER_PASSWD: ${{ secrets.DOCKER_PASSWD }}
+  UPLOAD_FIRMWARE_FOR_RELEASE: true
   TZ: Asia/Shanghai
 
 jobs:
