@@ -167,7 +167,7 @@ jobs:
     - name: Apply patches
       run: |
         if [ ${{matrix.target}} == "ramips_mt7621"]; then
-          if [ ${{env.REPO_BRANCH}} == "V21.02.3"]; then
+          if [ ${{env.REPO_BRANCH}} == "v21.02.3"]; then
             cp -r devices/102-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.4
           else
             cp -r devices/322-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.10
