@@ -189,6 +189,7 @@ jobs:
     - name: Defconfig
       run: |
         cd openwrt
+        make distclean
         make defconfig
         cat .config
 
