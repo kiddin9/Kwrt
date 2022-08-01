@@ -174,7 +174,9 @@ jobs:
             cp -r devices/102-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.4
             git clone https://github.com/MeIsReallyBa/Openwrt-sfe-flowoffload-linux-5.4.git shortcut-fe
             rm -rf openwrt/feeds/kiddin9/shortcut-fe
-            mv -rf shortcut-fe openwrt/feeds/kiddin9/shortcut-fe
+            cp -rf shortcut-fe openwrt/feeds/kiddin9/shortcut-fe
+            git apply openwrt/feeds/kiddin9/shortcut-fe/952-net-conntrack-events-support-multiple-registrant.patch
+            git apply openwrt/feeds/kiddin9/shortcut-fe/999-shortcut-fe-support.patch
           else
             cp -r devices/322-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.10
           fi
