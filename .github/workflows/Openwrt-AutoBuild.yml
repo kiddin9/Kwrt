@@ -167,7 +167,11 @@ jobs:
     - name: Apply patches
       run: |
         if [ ${{matrix.target}} == "ramips_mt7621"]; then
-          cp -r devices/322-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.10
+          if [ ${{env.REPO_BRANCH}} == "V21.02.3"]; then
+            cp -r devices/102-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.4
+          else
+            cp -r devices/322-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.10
+          fi
         fi
         cd openwrt
         find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
