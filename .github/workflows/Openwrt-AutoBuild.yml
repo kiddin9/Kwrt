@@ -168,7 +168,7 @@ jobs:
     - name: Apply patches
       run: |
         if [ ${{matrix.target}} == "ramips_mt7621"]; then
-          if [ ${{env.REPO_BRANCH}} == "v21.02.3"]; then
+          if [ ${{env.REPO_BRANCH}} == "21.02"]; then
             cp -rf devices/102-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.4
             git format-patch -1 6a5b4228e30244b44a49f523dea66caf3fbe3307
             git apply 0001-build-fix-ldconfig-executable-error-in-python.patch
