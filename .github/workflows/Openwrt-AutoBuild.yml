@@ -154,7 +154,7 @@ jobs:
           chmod +x devices/${{matrix.target}}/$DIY_SH
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
-        #cp -Rf ./diy/* ./ || true
+        cp -Rf ./diy/* ./ || true
         if [ -f "devices/${{matrix.target}}/default-settings" ]; then
           echo >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
           cat devices/${{matrix.target}}/default-settings >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
@@ -170,6 +170,8 @@ jobs:
         if [ ${{matrix.target}} == "ramips_mt7621"]; then
           if [ ${{env.REPO_BRANCH}} == "21.02"]; then
             cp -rf devices/102-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.4
+            git format-patch -1 6a5b4228e30244b44a49f523dea66caf3fbe3307
+            git apply 0001-build-fix-ldconfig-executable-error-in-python.patch
           else
             cp -rf devices/322-mt7621-fix-cpu-clk-add-clkdev.patch openwrt/target/linux/ramips/patches-5.10
           fi
