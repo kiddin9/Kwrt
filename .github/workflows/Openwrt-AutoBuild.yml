@@ -177,6 +177,8 @@ jobs:
           fi
         fi
         cd openwrt
+        git format-patch -1 6a5b4228e30244b44a49f523dea66caf3fbe3307
+        git apply 0001-build-fix-ldconfig-executable-error-in-python.patch
         find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
           find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
