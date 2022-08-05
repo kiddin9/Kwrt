@@ -29,6 +29,8 @@ mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 #sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "s/-Werror//g" package/feeds/kiddin9/nft-fullcone/src/Makefile
 rm -rf package/feeds/kiddin9/rtl88x2bu
+rm -rf package/feeds/kiddin9/firewall
+rm -rf package/feeds/kiddin9/luci-app-firewall
 
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
