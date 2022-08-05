@@ -130,3 +130,15 @@
  PKG_SOURCE_VERSION:=50381d0a2998f6c0fc4823f0c2aa4206063d549e
  PKG_MIRROR_HASH:=2718df3d3538c93ac77accf55716fb341741df3d231aac59e04dd1f80f558889
  PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
+
+--- a/target/linux/ipq60xx/image/Makefile
++++ b/target/linux/ipq60xx/image/Makefile
+@@ -102,7 +102,7 @@ define Device/qihoo_v6
+ 	PAGESIZE := 2048
+ 	DEVICE_DTS := qcom-ipq6018-qihoo-v6
+ 	DEVICE_DTS_CONFIG := config@cp03-c1
+-	DEVICE_TITLE := Qihoo V6
++	DEVICE_TITLE := Qihoo 360 V6
+ 	DEVICE_PACKAGES := kmod-usb3 kmod-usb-phy-msm
+ endef
+ TARGET_DEVICES += qihoo_v6

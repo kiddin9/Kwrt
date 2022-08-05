@@ -7,7 +7,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.15 
 rm -rf target/linux/x86/patches-5.15/.svn
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += autocore-x86 lm-sensors-detect kmod-alx kmod-r8125 kmod-vmxnet3 kmod-igbvf kmod-iavf kmod-bnx2x kmod-pcnet32 kmod-tulip kmod-8139cp kmod-8139too kmod-i40e kmod-drm-i915 kmod-mlx4-core kmod-mlx5-core kmod-usb2 kmod-usb3 fdisk lsblk/' target/linux/x86/Makefile
-sed -i 's/kmod-igb /kmod-igb kmod-igb-intel/' target/linux/x86/image/64.mk
+sed -i 's/kmod-igb /kmod-igb-intel /' target/linux/x86/image/64.mk
 
 mv -f tmp/{r81*,igb-intel} feeds/kiddin9/
 sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/64.mk
