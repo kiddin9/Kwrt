@@ -80,6 +80,8 @@ jobs:
             echo "MTARGET=arm_cortex-a9_vfpv3-d16" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "ipq806x_generic" ]]; then
             echo "MTARGET=arm_cortex-a15_neon-vfpv4" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "bcm27xx_bcm2708" ]]; then
+            echo "MTARGET=arm_arm1176jzf-s_vfp" >> $GITHUB_ENV
         else
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
