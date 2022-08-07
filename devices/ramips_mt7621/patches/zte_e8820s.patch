@@ -237,7 +237,7 @@ index f563ebd28899..6a48655b0054 100644
 +  DEVICE_VENDOR := ZTE
 +  DEVICE_MODEL := E8820S
 +  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
-+	kmod-usb-ledtrig-usbport luci-app-mtwifi
++	kmod-usb-ledtrig-usbport
 +endef
 +TARGET_DEVICES += zte_e8820s
 diff --git a/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds b/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
