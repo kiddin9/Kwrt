@@ -18,3 +18,18 @@
 +endef
 +
 +$(eval $(call KernelPackage,qcom-qmi-helpers))
+
+--- target/linux/ipq807x/base-files/etc/init.d/bootcount
++++ target/linux/ipq807x/base-files/etc/init.d/bootcount
+@@ -19,5 +19,4 @@
+ 		wifi
+ 		;;	
+-	esac
+ 	qnap,301w)
+ 		ssdk_sh debug phy set 0 0x4004c441 0x8 1> /dev/kmsg 2>&1
+@@ -26,3 +25,4 @@
+ 		ssdk_sh debug phy set 8 0x40070000 0x3200 1> /dev/kmsg 2>&1
+ 		;;
++	esac
+ }
+
