@@ -19,8 +19,8 @@
 +
 +$(eval $(call KernelPackage,qcom-qmi-helpers))
 
---- target/linux/ipq807x/base-files/etc/init.d/bootcount
-+++ target/linux/ipq807x/base-files/etc/init.d/bootcount
+--- a/target/linux/ipq807x/base-files/etc/init.d/bootcount
++++ b/target/linux/ipq807x/base-files/etc/init.d/bootcount
 @@ -19,5 +19,4 @@
  		wifi
  		;;	
