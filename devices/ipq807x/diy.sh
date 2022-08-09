@@ -25,7 +25,7 @@ function git_sparse_clone() (
           git sparse-checkout set $@
           )
 
-git_sparse_clone 0890af20fadfd30b9e201fc7c279cdcabf2120f1 "https://github.com/Boos4721/openwrt" "boos" target/linux/ipq807x target/linux/generic include package/kernel/mac80211
+git_sparse_clone 96ec919218ddf881b8378f78ce457c65696e012a "https://github.com/Boos4721/openwrt" "boos" target/linux/ipq807x target/linux/generic include package/kernel/mac80211
 cp -rf boos/target/linux/ipq807x target/linux/
 cp -rf boos/target/linux/generic target/linux/
 cp -rf boos/package/kernel/mac80211 package/kernel/
