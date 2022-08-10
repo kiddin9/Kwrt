@@ -132,8 +132,7 @@ define Image/Build
 	elif [ $(PROFILE_SANITIZED) == "hk1" ]; then \
 		./mk_s905x3_multi.sh; \
 	fi; \
-	gzip -f9n $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).img || true; \
-	rm -f $(BIN_DIR)/*.tar.gz
+	gzip -f9n $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).img || true
 endef
 
 $(eval $(call BuildImage))
