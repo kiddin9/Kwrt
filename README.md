@@ -1,6 +1,7 @@
-##### 一分钟在线编译定制专属固件: [supes.top](https://supes.top)
-#### 支持设备:
-##### X86/64, 友善 NanoPi、R2S、R4S、R5S、R2C、NEO3, 斐讯 N1、K2P、K3, 树莓派 4B、3B/3B+、2B, DoorNet1, DoorNet2, 香橙派 R1 Plus、R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 斐讯K3,  极路由 HIWIFI HC5962(极路由4、B70)、HC5661A、HC5761A、HC5861B, 小米4, 小米 R3G, 小米 R3P, newifi-d2 (新路由3), 小娱XY-C5, 竞斗云2.0(P&W R619AC), GL.iNet MT1300、microuter-N300、MT300N V2, 小米CR660X(CR6606/CR6608/CR6609), 小米4A千兆版, 小米R3G-v2, 小米青春版Nano, 迅雷下载宝timecloud, 优酷 yk-l2, 有华 wr1200js, 向日葵 X3A, 华硕 ASUS RT-ACRH17、RT-AC58u/RT-ACRH13、RT-ac85p、RT-n56u-b1、RT-AC88U、RT-AC1200、RT-AC1200 V2, 网件 NETGEAR R6220、R6260、R6120、R6700-v2、R6800、R6850、R6900-v2、R7450、wndr3700-v5, JCG Q20, JCG Y2, 歌华链GHL-R-001, H1 Box, 贝壳云P1, 我家云lL Pro, x96 Max, 微加云V-Plus, 章鱼星球ZYXQ, GT-King, Odroid N2, MXQ Pro+ 等
+#### 一分钟在线编译定制专属固件: [supes.top](https://supes.top)
+#### 支持150+设备:
+X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、NEO3, 斐讯 N1、K2P、K3, 树莓派 4B、3B/3B+、2B, DoorNet1, DoorNet2, 香橙派 R1 Plus、R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 斐讯K3,  360V6, 玩客云, 极路由 HIWIFI HC5962(极路由4、B70)、HC5661A、HC5761A、HC5861B, 小米4, 小米 R3G, 小米 R3P, newifi-d2 (新路由3), 小娱XY-C5, 竞斗云2.0(P&W R619AC), GL.iNet MT1300、AX1800、microuter-N300、MT300N V2, 小米CR660X(CR6606/CR6608/CR6609), 小米4A千兆版, 小米 R3G-v2, 小米青春版Nano, 迅雷下载宝 timecloud, 优酷 yk-l2, 有华 wr1200js, 向日葵 X3A, 华硕 ASUS RT-ACRH17、RT-AC58u/RT-ACRH13、RT-ac85p、RT-n56u-b1、RT-AC88U、RT-AC1200、RT-AC1200 V2, 网件 NETGEAR R6220、R6260、R6120、R6700-v2、R6800、R6850、R6900-v2、R7450、wndr3700-v5, H1 Box, 贝壳云P1, 我家云lL Pro, x96 Max, 微加云V-Plus, 章鱼星球ZYXQ, GT-King, Odroid N2, MXQ Pro+, 京东无线宝JDCloud RE-SP-01B, Linksys WRT1200AC、WRT1900AC v1、WRT1900AC v2、WRT3200ACM、WRT1900ACS v1、WRT1900ACS v2、WRT32X 等
+
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
@@ -156,7 +157,13 @@ Build OpenWrt using GitHub Actions
 - click the `Star` button, and the build will starts automatically.Progress can be viewed on the Actions page.
 - When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
 
+
 ## Acknowledgments
+
+#### Rockchip的Kernel等部分源码来源 https://github.com/coolsnowwolf/lede
+#### ipq807x的Kernel等部分源码来源 https://github.com/Boos4721/openwrt
+#### ipq60xx的Kernel等部分源码来源 https://github.com/coolsnowwolf/openwrt-gl-ax1800
+
 - [OpenWrt](https://github.com/openwrt/openwrt)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)

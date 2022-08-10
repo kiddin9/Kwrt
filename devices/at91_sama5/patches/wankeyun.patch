@@ -23,7 +23,7 @@
 +		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 +		export BIN_DIR=$(BIN_DIR); \
 +		export TARGET_ROOTFS_DIR=$(TARGET_DIR); \
-+		cd $(TOPDIR)/../packit; \
++		cd /www/wwwroot/op.supes.top/bcache/at91/sama5/packit; \
 +		./build.sh; \
 +		gzip -f9n $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).img || true; \
 +	fi

@@ -80,6 +80,11 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "bcm27xx_bcm2708", "client_payload": {"target": "bcm27xx_bcm2708"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "armvirt_64", "client_payload": {"target": "armvirt_64"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
@@ -111,10 +116,12 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ipq40xx_generic", "client_payload": {"target": "ipq40xx_generic"}}'
+          curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "bcm4908_generic", "client_payload": {"target": "bcm4908_generic"}}'
+          curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
@@ -149,4 +156,14 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "bcm53xx", "client_payload": {"target": "bcm53xx"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "sunxi_cortexa53", "client_payload": {"target": "sunxi_cortexa53"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "sunxi_cortexa7", "client_payload": {"target": "sunxi_cortexa7"}}'
 
