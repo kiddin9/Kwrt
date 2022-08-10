@@ -129,7 +129,7 @@ jobs:
       working-directory: /workdir
       run: |
         if [[ ${{matrix.target}} == "ipq807x" ]];then
-            git clone https://github.com/robimarko/openwrt -b ipq807x-5.15-pr --depth 1
+            git clone https://github.com/robimarko/openwrt -b ipq807x-5.15 --depth 1
         else
         REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
            -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
