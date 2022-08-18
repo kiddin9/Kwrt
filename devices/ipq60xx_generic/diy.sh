@@ -19,16 +19,12 @@ rm -rf package/network/config/netifd/patches
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/openwrt-gl-ax1800/master/include/netfilter.mk -o include/netfilter.mk
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/openwrt-gl-ax1800/master/include/quilt.mk -o include/quilt.mk
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += autocore-arm luci-app-cpufreq automount/' target/linux/ipq60xx/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += automount/' target/linux/ipq60xx/Makefile
 
 rm -f devices/common/patches/usb.patch
 rm -rf feeds/packages/net/openvswitch feeds/kiddin9/shortcut-fe feeds/packages/net/xtables-addons package/kernel/mt76
 
 echo '
-CONFIG_CPU_FREQ_GOV_USERSPACE=y
-CONFIG_CPU_FREQ_GOV_ONDEMAND=y
-CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
-CONFIG_ACPI=n
 CONFIG_PNP_DEBUG_MESSAGES=y
 CONFIG_PINCTRL_BAYTRAIL=n
 CONFIG_PINCTRL_CHERRYVIEW=n

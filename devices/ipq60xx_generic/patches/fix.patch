@@ -63,17 +63,6 @@
    PROVIDES:=uci-firewall
  endef
 
---- a/feeds/kiddin9/automount/Makefile
-+++ b/feeds/kiddin9/automount/Makefile
-@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
- define Package/automount
-   TITLE:=Mount autoconfig hotplug script.
-   MAINTAINER:=Lean
--  DEPENDS:=+block-mount +kmod-fs-exfat +kmod-fs-ext4 +kmod-fs-vfat +libblkid \
-+  DEPENDS:=+block-mount +kmod-fs-ext4 +kmod-fs-vfat +libblkid \
- 	+kmod-usb-storage +kmod-usb-storage-extras +!TARGET_ramips:kmod-usb-storage-uas +ntfs3-mount
- endef
-
 --- a/include/target.mk
 +++ b/include/target.mk
 @@ -147,10 +147,17 @@ ifneq ($(TARGET_BUILD)$(if $(DUMP),,1),)
