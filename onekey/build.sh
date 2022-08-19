@@ -1,7 +1,7 @@
 #/bin/bash
 echo
 echo
-echo "本脚本仅适用于在Ubuntu环境下编译 https://github.com/kiddin9/OpenWrt_x86-r2s-r4s"
+echo "This script is only suitable for compiling in Ubuntu environment https://github.com/kiddin9/OpenWrt_x86-r2s-r4s"
 echo
 echo
 sleep 2s
@@ -16,13 +16,13 @@ clear
 echo
 echo 
 echo 
-echo "|*******************************************|"
-echo "|                                           |"
-echo "|                                           |"
-echo "|           基本环境部署完成......          |"
-echo "|                                           |"
-echo "|                                           |"
-echo "|*******************************************|"
+echo "|*************************************************|"
+echo "|                                                 |"
+echo "|                                                 |"
+echo "| The basic environment deployment is complete... |"
+echo "|                                                 |"
+echo "|                                                 |"
+echo "|*************************************************|"
 echo
 echo
 
@@ -30,7 +30,7 @@ echo
 if [ "$USER" == "root" ]; then
 	echo
 	echo
-	echo "请勿使用root用户编译，换一个普通用户吧~~"
+	echo "Do not use the root user to compile, change to a normal user~~"
 	sleep 3s
 	exit 0
 fi
@@ -57,7 +57,7 @@ echo "
 
 while :; do
 
-read -p "你想要编译哪个固件？ " CHOOSE
+read -p "Which firmware do you want to compile? " CHOOSE
 
 case $CHOOSE in
 	1)
@@ -73,10 +73,14 @@ case $CHOOSE in
 	break
 	;;
 	4)
+	        firmware="nanopi-r2c"
+	breaK
+	;;
+	5)
 		firmware="Rpi-4B"
 	break
 	;;
-	5)	exit 0
+	6)	exit 0
 	;;
 
 esac
@@ -96,9 +100,9 @@ elif [[ $firmware == "Rpi-4B" ]]; then
 fi
 
 
-read -p "请输入后台地址 [回车默认10.0.0.1]: " ip
+read -p "Please enter the background address [Enter default 10.0.0.1]: " ip
 ip=${ip:-"10.0.0.1"}
-echo "您的后台地址为: $ip"
+echo "The device IP address is: $ip"
 cp -rf devices/common/* ./
 cp -rf devices/$firmware/* ./
 if [ -f "devices/common/diy.sh" ]; then
@@ -149,11 +153,55 @@ make -j$(($(nproc)+1)) || make -j1 V=s
 
 if [ "$?" == "0" ]; then
 echo "
+	sed -i "s/10.0.0.1/$ip/" devices/$firmware/default-settings
+	cat devices/$firmware/default-settings >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
+fi
+if [ -n "$(ls -A "devices/common/patches" 2>/dev/null)" ]; then
+          find "devices/common/patches" -type f -name '*.patch' ! -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+fi
+if [ -n "$(ls -A "devices/$firmware/patches" 2>/dev/null)" ]; then
+          find "devices/$firmware/patches" -type f -name '*.patch' ! -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward"
+fi
+cp devices/common/.config .config
+echo >> .config
+cat devices/$firmware/.config >> .config
+make defconfig
+for i in $(make --file=preset_pkg.mk presetpkg); do
+	sed -i "\$a CONFIG_PACKAGE_$i=y" .config
+done
+make menuconfig
+echo
+echo
+echo
+echo "                      *****Start compiling after 5 seconds*****
 
-编译完成~~~
+1. You can stop compiling at any time by pressing Ctrl+C
 
-初始后台地址: $ip
-初始用户名密码: root  root
+3. For mainland users, please prepare the ladder before compiling, and use the mainland whitelist or global mode"
+echo
+echo
+echo
+sleep 3s
+
+make -j$(($(nproc)+1)) download -j$(($(nproc)+1)) &
+make -j$(($(nproc)+1)) || make -j1 V=s
+
+if [ "$?" == "0" ]; then
+echo "
+
+Compilation complete~~~
+
+Initial backend address: $ip
+Initial username and password: root  root
+
+"
+fi
+
+
+Compilation complete~~~
+
+Initial backend address: $ip
+Initial username and password: root  root
 
 "
 fi
