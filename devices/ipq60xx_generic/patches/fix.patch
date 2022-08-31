@@ -58,10 +58,21 @@
    SECTION:=net
    CATEGORY:=Base system
    TITLE:=OpenWrt C Firewall
--  DEPENDS:=+libubox +libubus +libuci +libip4tc +IPV6:libip6tc +libiptext +IPV6:libiptext6 +libxtables +kmod-ipt-core +kmod-ipt-conntrack +IPV6:kmod-nf-conntrack6 +iptables-mod-fullconenat +ip6tables-mod-fullconenat +iptables +ip6tables +kmod-ipt-offload
-+  DEPENDS:=+libubox +libubus +libuci +libip4tc +IPV6:libip6tc +libiptext +IPV6:libiptext6 +libxtables +kmod-ipt-core +kmod-ipt-conntrack +IPV6:kmod-nf-conntrack6 +iptables-mod-fullconenat +iptables +ip6tables +kmod-ipt-offload
+-  DEPENDS:=+libubox +libubus +libuci +libip4tc +IPV6:libip6tc +libiptext +IPV6:libiptext6 +libxtables +kmod-ipt-core +kmod-ipt-conntrack +IPV6:kmod-nf-conntrack6 +kmod-ipt-nat +kmod-ipt-nat6 +iptables-mod-fullconenat +ip6tables-mod-fullconenat +iptables +ip6tables +kmod-ipt-offload
++  DEPENDS:=+libubox +libubus +libuci +libip4tc +IPV6:libip6tc +libiptext +IPV6:libiptext6 +libxtables +kmod-ipt-core +kmod-ipt-conntrack +IPV6:kmod-nf-conntrack6 +kmod-ipt-nat +kmod-ipt-nat6 +iptables-mod-fullconenat +iptables +ip6tables +kmod-ipt-offload
    PROVIDES:=uci-firewall
  endef
+
+--- a/feeds/kiddin9/automount/Makefile
++++ b/feeds/kiddin9/automount/Makefile
+@@ -28,7 +28,6 @@ define Package/automount
+     +kmod-usb-storage-extras \
+     +!TARGET_ramips:kmod-usb-storage-uas \
+     +kmod-fs-ext4 \
+-    +!LINUX_5_4:kmod-fs-exfat \
+     +LINUX_5_4:kmod-fs-exfat0 \
+     +kmod-fs-vfat
+     +!LINUX_5_15:ntfs-3g
 
 --- a/include/target.mk
 +++ b/include/target.mk
@@ -122,7 +133,7 @@
 
 --- a/target/linux/ipq60xx/image/Makefile
 +++ b/target/linux/ipq60xx/image/Makefile
-@@ -102,7 +102,7 @@ define Device/qihoo_v6
+@@ -103,7 +103,7 @@ define Device/qihoo_v6
  	PAGESIZE := 2048
  	DEVICE_DTS := qcom-ipq6018-qihoo-v6
  	DEVICE_DTS_CONFIG := config@cp03-c1
@@ -131,3 +142,11 @@
  	DEVICE_PACKAGES := kmod-usb3 kmod-usb-phy-msm
  endef
  TARGET_DEVICES += qihoo_v6
+@@ -114,6 +114,7 @@ define Device/xiaomi_redmi-ax5-jdcloud
+ 	BLOCKSIZE := 64k
+ 	KERNEL_SIZE := 6144k
+ 	DEVICE_TITLE := Xiaomi Redmi Router AX5 JDCloud
++	DEVICE_DTS := qcom-ipq6018-redmi-ax5-jdcloud
+ 	DEVICE_DTS_CONFIG := config@cp03-c1
+ 	IMAGES += factory.bin
+ 	IMAGE/factory.bin := append-kernel | pad-to 6144k |	append-rootfs | append-metadata
