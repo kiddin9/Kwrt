@@ -1,6 +1,6 @@
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -53,15 +53,31 @@ DEFAULT_PACKAGES.nas:=\
+@@ -53,10 +53,10 @@ DEFAULT_PACKAGES.nas:=\
  	mdadm
  # For router targets
  DEFAULT_PACKAGES.router:=\
@@ -15,17 +15,19 @@
  	odhcp6c \
  	odhcpd-ipv6only \
  	ppp \
- 	ppp-mod-pppoe
+@@ -93,6 +93,22 @@ else
+   endif
+ endif
  
 +ifneq ($(CONFIG_SMALL_FLASH),)
 +DEFAULT_PACKAGES+=-coremark -htop -bash -openssh-sftp-server
 +endif
 +
-+ifeq ($(CONFIG_ARCH),arm)
++ifeq ($(ARCH),arm)
 +DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
 +endif
 +
-+ifeq ($(CONFIG_ARCH),aarch64)
++ifeq ($(ARCH),aarch64)
 +DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
 +endif
 +
@@ -33,35 +35,6 @@
 +DEFAULT_PACKAGES+=automount
 +endif
 +
- ifneq ($(DUMP),)
-   all: dumpinfo
- endif
-
---- a/target/Config.in
-+++ b/target/Config.in
-@@ -37,6 +37,7 @@ config PWM_SUPPORT
+ # Add device specific packages (here below to allow device type set from subtarget)
+ DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.$(DEVICE_TYPE))
  
- config USB_SUPPORT
- 	select AUDIO_SUPPORT
-+	select PACKAGE_automount
- 	bool
- 
- config USB_GADGET_SUPPORT
-@@ -123,6 +124,8 @@ config USES_BOOT_PART
- 
- config aarch64
- 	select ARCH_64BIT
-+	select PACKAGE_autocore-arm
-+	select PACKAGE_luci-app-cpufreq
- 	bool
- 
- config aarch64_be
-@@ -138,6 +141,8 @@ config arceb
- 	bool
- 
- config arm
-+	select PACKAGE_autocore-arm
-+	select PACKAGE_luci-app-cpufreq
- 	bool
- 
- config armeb
