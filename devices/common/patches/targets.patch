@@ -11,7 +11,7 @@
 +	dnsmasq-full \
 +	firewall \
 +	kmod-ipt-nat \
-+	kmod-ipt-na6 \
++	kmod-ipt-nat6 \
  	odhcp6c \
  	odhcpd-ipv6only \
  	ppp \

@@ -1,0 +1,58 @@
+--- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
++++ b/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
+@@ -17,7 +17,6 @@ xunlong,orangepi-r1-plus-lts)
+ 	ucidef_set_led_netdev "lan" "LAN" "$boardname:green:lan" "eth1"
+ 	;;
+ friendlyarm,nanopi-r4s|\
+-friendlyarm,nanopi-r4se|\
+ sharevdi,guangmiao-g4c)
+ 	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth0"
+ 	ucidef_set_led_netdev "lan" "LAN" "green:lan" "eth1"
+@@ -25,10 +24,14 @@ sharevdi,guangmiao-g4c)
+ firefly,rk3568-roc-pc)
+ 	ucidef_set_led_timer "health" "health" "firefly:yellow:user" "200" "800"
+ 	;;
++friendlyarm,nanopi-r4se)
++	ucidef_set_led_netdev "wan" "WAN" "wan_led" "eth0"
++	ucidef_set_led_netdev "lan" "LAN" "lan_led" "eth1"
++	;;
+ friendlyarm,nanopi-r5s)
+-	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth0"
+-	ucidef_set_led_netdev "lan1" "LAN1" "green:lan1" "eth1"
+-	ucidef_set_led_netdev "lan2" "LAN2" "green:lan2" "eth2"
++	ucidef_set_led_netdev "wan" "WAN" "wan_led" "eth0" "link"
++	ucidef_set_led_netdev "lan1" "LAN1" "lan1_led" "eth1" "link"
++	ucidef_set_led_netdev "lan2" "LAN2" "lan2_led" "eth2" "link"
+ 	;;
+ hinlink,opc-h68k)
+ 	ucidef_set_led_netdev "wan" "WAN" "blue:net" "eth0"
+
+--- a/target/linux/rockchip/image/Makefile
++++ b/target/linux/rockchip/image/Makefile
+@@ -75,4 +75,26 @@ endef
+ 
+ include $(SUBTARGET).mk
+ 
++define Image/Build
++	if [ $(PROFILE_SANITIZED) == "friendlyarm_nanopi-r5s" ]; then \
++		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
++		export BIN_DIR=$(BIN_DIR); \
++		export TOPDIR=$(TOPDIR); \
++		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/r5s_packit; \
++		. ../modify_packit.sh; \
++		./build.sh sd-img; \
++		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
++		rm -rf $(BIN_DIR)/*r5s-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
++	elif [ $(PROFILE_SANITIZED) == "friendlyarm_nanopi-r4se" ]; then \
++		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
++		export BIN_DIR=$(BIN_DIR); \
++		export TOPDIR=$(TOPDIR); \
++		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/r4se_packit; \
++		. ../modify_packit.sh; \
++		./build.sh sd-img; \
++		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
++		rm -rf $(BIN_DIR)/*r4se-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
++	fi
++endef
++
+ $(eval $(call BuildImage))
