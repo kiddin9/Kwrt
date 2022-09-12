@@ -100,6 +100,7 @@ define Image/Build
 	export BIN_DIR=$(BIN_DIR); \
 	export PARTSIZE=$(CONFIG_TARGET_ROOTFS_PARTSIZE); \
 	cd /www/wwwroot/op.supes.top/bcache/armvirt/64/openwrt_packit; \
+	. ../modify_packit.sh; \
 	if [ $(PROFILE_SANITIZED) == "n1" ]; then \
 		./mk_s905d_n1.sh; \
 	elif [ $(PROFILE_SANITIZED) == "beikeyun" ]; then \
