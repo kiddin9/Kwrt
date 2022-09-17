@@ -95,6 +95,11 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "mediatek_filogic", "client_payload": {"target": "mediatek_filogic"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ramips_mt7621", "client_payload": {"target": "ramips_mt7621"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
