@@ -87,6 +87,8 @@ jobs:
             echo "MTARGET=arm_cortex-a15_neon-vfpv4" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "bcm27xx_bcm2708" ]]; then
             echo "MTARGET=arm_arm1176jzf-s_vfp" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "kirkwood_generic" ]]; then
+            echo "MTARGET=arm_xscale" >> $GITHUB_ENV
         else
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
@@ -134,9 +136,6 @@ jobs:
     - name: Clone source code
       working-directory: /workdir
       run: |
-        if [[ ${{matrix.target}} == "ipq807x" ]];then
-            git clone https://github.com/robimarko/openwrt -b ipq807x-5.15-pr --depth 1
-        else
         REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
            -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
@@ -144,7 +143,6 @@ jobs:
         if [ "${{ env.REPO_BRANCH }}" ]; then
           cd openwrt
           git checkout ${{ env.REPO_BRANCH }}
-        fi
         fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 

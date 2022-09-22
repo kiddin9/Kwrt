@@ -130,6 +130,11 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "kirkwood_generic", "client_payload": {"target": "kirkwood_generic"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ipq806x_generic", "client_payload": {"target": "ipq806x_generic"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
