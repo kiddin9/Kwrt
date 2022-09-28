@@ -135,16 +135,6 @@
    endef
  endif
  
-@@ -567,7 +591,7 @@ define Device/Build/kernel
- endef
- 
- define Device/Build/image
--  GZ_SUFFIX := $(if $(filter %dtb %gz,$(2)),,$(if $(and $(findstring ext4,$(1)),$(CONFIG_TARGET_IMAGES_GZIP)),.gz))
-+  GZ_SUFFIX := $(if $(filter %dtb %gz,$(2)),,$(if $($(CONFIG_TARGET_IMAGES_GZIP)),.gz))
-   $$(_TARGET): $(if $(CONFIG_JSON_OVERVIEW_IMAGE_INFO), \
- 	  $(BUILD_DIR)/json_info_files/$(call DEVICE_IMG_NAME,$(1),$(2)).json, \
- 	  $(BIN_DIR)/$(call DEVICE_IMG_NAME,$(1),$(2))$$(GZ_SUFFIX))
-
 --- a/scripts/json_overview_image_info.py
 +++ b/scripts/json_overview_image_info.py
 @@ -47,7 +47,7 @@ def get_initial_output(image_info):
