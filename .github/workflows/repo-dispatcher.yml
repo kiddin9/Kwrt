@@ -48,6 +48,18 @@ jobs:
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
 
+    - name: Trigger Packages Update
+      run: |
+        gitdate=$(curl -H "Authorization: token ${{ secrets.REPO_TOKEN }}" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
+        gitdate=$(date -d "$gitdate" +%s)
+        now=$(date -d "$(date)" +%s)
+        if [[ $(expr $gitdate + 120) < $now ]]; then
+        curl -X POST https://api.github.com/repos/kiddin9/openwrt-packages/dispatches \
+        -H "Accept: application/vnd.github.everest-preview+json" \
+        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+        --data '{"event_type": "update"}'
+        fi
+
     - name: Trigger Compile
       run: |
         sudo timedatectl set-timezone "$TZ"
