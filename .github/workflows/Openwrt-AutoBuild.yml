@@ -43,13 +43,6 @@ jobs:
       # run: |
         # echo ${{ secrets.TELEGRAM_CHAT_ID }} | sed 's/./& /g'
         # echo ${{ secrets.TELEGRAM_TOKEN }} | sed 's/./& /g'
-    
-    - name: cancel running workflows
-      uses: styfle/cancel-workflow-action@main
-      if: contains(github.event.action, 'cw')
-      with:
-        workflow_id: 4439867
-        access_token: ${{ github.token }}
 
     - name: Load Settings.ini
       run: |

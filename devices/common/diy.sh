@@ -19,7 +19,10 @@ sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;maste
 
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
+rm -rf 
+
 ./scripts/feeds update -a
+rm -rf feeds/kiddin9/.diy
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
@@ -35,6 +38,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10
 rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*,996-fs-ntfs3*}
 ) &
 
+sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/kiddin9/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &
 sed -i 's/Os/O2/g' include/target.mk

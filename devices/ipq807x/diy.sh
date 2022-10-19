@@ -21,6 +21,10 @@ svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/target/linu
 
 git clone https://github.com/robimarko/nss-packages --depth 1 package/nss-packages
 
+rm -rf package/network
+
+svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/network package/network
+
 curl -sfL https://raw.githubusercontent.com/robimarko/openwrt/ipq807x-5.15-pr/include/kernel-5.15 -o include/kernel-5.15
 kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true

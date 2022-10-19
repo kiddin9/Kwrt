@@ -221,7 +221,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
 
 --- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
-@@ -88,9 +88,7 @@ platform_do_upgrade() {
+@@ -92,9 +92,7 @@ platform_do_upgrade() {
  	xiaomi,mi-router-3-pro|\
  	xiaomi,mi-router-4|\
  	xiaomi,mi-router-ac2100|\
@@ -229,9 +229,9 @@ index bdaeac2cb16e..72fbd3930a80 100644
 -	xiaomi,mi-router-cr6608|\
 -	xiaomi,mi-router-cr6609|\
 +	xiaomi,mi-router-cr660x|\
- 	xiaomi,redmi-router-ac2100)
- 		nand_do_upgrade "$1"
- 		;;
+ 	xiaomi,redmi-router-ac2100|\
+ 	zyxel,nwa50ax|\
+ 	zyxel,nwa55axe)
 
 --- a/package/boot/uboot-envtools/files/ramips
 +++ b/package/boot/uboot-envtools/files/ramips

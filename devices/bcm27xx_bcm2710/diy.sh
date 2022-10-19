@@ -5,4 +5,4 @@ sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-usb-net-asix-
 sed -i 's/factory.img.gz //' target/linux/bcm27xx/image/Makefile
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
-bash $SHELL_FOLDER/../common/kernel_5.15.sh
+#bash $SHELL_FOLDER/../common/kernel_5.15.sh
