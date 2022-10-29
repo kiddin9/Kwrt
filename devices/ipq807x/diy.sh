@@ -5,13 +5,14 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
-rm -rf package/boot/uboot-envtools package/firmware/ipq-wifi package/firmware/ath11k* package/kernel/mac80211 target/linux/generic
+rm -rf package/boot/uboot-envtools package/firmware/ipq-wifi package/firmware/ath11k* package/kernel/mac80211 target/linux/generic package/kernel/ath10k-ct
 svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/boot/uboot-envtools package/boot/uboot-envtools
 svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/firmware/ipq-wifi package/firmware/ipq-wifi
 svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/firmware/ath11k-firmware package/firmware/ath11k-firmware
 svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/kernel/mac80211 package/kernel/mac80211
 svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/kernel/qca-nss-dp package/kernel/qca-nss-dp
 svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/kernel/qca-ssdk package/kernel/qca-ssdk
+svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/kernel/ath10k-ct package/kernel/ath10k-ct
 
 svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/target/linux/generic target/linux/generic
 rm -rf target/linux/generic/.svn
@@ -21,7 +22,7 @@ svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/target/linu
 
 git clone https://github.com/robimarko/nss-packages --depth 1 package/nss-packages
 
-rm -rf package/network
+rm -rf package/network feeds/kiddin9/{rtl8821cu,rtl88x2bu}
 
 svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/network package/network
 

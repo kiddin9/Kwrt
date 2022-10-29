@@ -1,0 +1,20 @@
+--- a/include/image-commands.mk
++++ b/include/image-commands.mk
+@@ -419,6 +419,17 @@ endef
+ 
+ # Convert a raw image into a $1 type image.
+ # E.g. | qemu-image vdi <optional extra arguments to qemu-img binary>
++define Build/qemu-exsi
++	if command -v qemu-img; then \
++		name="$(subst .vmdk.zip,,$@)"; \
++		qemu-img convert -f raw -O $1 $@ $$name.vmdk; \
++		rm -f $@; \
++		zip -jm $@ $$name*.vmdk; \
++	else \
++		echo "WARNING: Install qemu-img to create VDI/VMDK images" >&2; exit 1; \
++	fi
++endef
++
+ define Build/qemu-image
+ 	if command -v qemu-img; then \
+ 		qemu-img convert -f raw -O $1 $@ $@.new; \
