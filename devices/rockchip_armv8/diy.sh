@@ -12,7 +12,6 @@ svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/l
 rm -rf target/linux/rockchip/{.svn,patches-5.15/.svn}
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip/patches-5.15 target/linux/rockchip/patches-5.15
 rm -rf target/linux/rockchip/patches-5.15/{002-net-usb*,003-dt-bindings*,006-rockchip-rk3399*}
-svn export --force https://github.com/friendlyarm/friendlywrt/trunk/target/linux/rockchip/armv8/base-files/etc/modules.d target/linux/rockchip/armv8/base-files/etc/modules.d
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 

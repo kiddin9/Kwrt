@@ -1,5 +1,5 @@
 #### 一分钟在线编译定制专属固件: [supes.top](https://supes.top)
-#### 支持150+设备:
+#### 支持200+设备:
 X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、NEO3, 斐讯 N1、K2P、K3, 树莓派 4B、3B/3B+、2B, 电犀牛r68s、r66s, 香橙派 R1 Plus、R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 斐讯K3,  360V6, 玩客云, 极路由 HIWIFI HC5962(极路由4、B70)、HC5661A、HC5761A、HC5861B, 小米4, 小米 R3G, 小米 R3P, newifi-d2 (新路由3), 小娱XY-C5, 竞斗云2.0(P&W R619AC), GL.iNet GL-MT1300、GL-AX1800、GL-AXT1800、GL-microuter-N300、GL-MT300N V2, 小米CR660X(CR6606/CR6608/CR6609), 小米4A千兆版, 小米 R3G-v2, 小米青春版Nano, 迅雷下载宝 timecloud, 优酷 yk-l2, 有华 wr1200js, 向日葵 X3A, 华硕 ASUS RT-ACRH17、RT-AC58u/RT-ACRH13、RT-ac85p、RT-n56u-b1、RT-AC88U、RT-AC1200、RT-AC1200 V2, 网件 NETGEAR R6220、R6260、R6120、R6700-v2、R6800、R6850、R6900-v2、R7450、wndr3700-v5, H1 Box, 贝壳云P1, 我家云lL Pro, x96 Max, 微加云V-Plus, 章鱼星球ZYXQ, GT-King, Odroid N2, MXQ Pro+, 京东无线宝JDCloud RE-SP-01B, Linksys WRT1200AC、WRT1900AC v1、WRT1900AC v2、WRT3200ACM、WRT1900ACS v1、WRT1900ACS v2、WRT32X、EA7500 v2 等
 
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
