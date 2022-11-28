@@ -1,0 +1,108 @@
+--- a/target/linux/rockchip/image/armv8.mk
++++ b/target/linux/rockchip/image/armv8.mk
+@@ -52,4 +52,13 @@
+ TARGET_DEVICES += friendlyarm_nanopi-r2s
+ 
++define Device/friendlyarm_nanopi-r6s
++  DEVICE_VENDOR := FriendlyARM
++  DEVICE_MODEL := NanoPi R6S
++  SOC := rk3328
++  DEVICE_PACKAGES := -luci-app-gpsysupgrade
++  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
++endef
++TARGET_DEVICES += friendlyarm_nanopi-r6s
++
+ define Device/friendlyarm_nanopi-r4s
+   DEVICE_VENDOR := FriendlyARM
+
+--- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
++++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
+@@ -32,6 +32,9 @@ rockchip_setup_interfaces()
+ 	friendlyarm,nanopi-r5s)
+ 		ucidef_set_interfaces_lan_wan "eth1 eth2" "eth0"
+ 		;;
++	friendlyarm,nanopi-r6s)
++		ucidef_set_interfaces_lan_wan "eth1 eth0" "eth2"
++		;;
+ 	*)
+ 		ucidef_set_interface_lan 'eth0'
+ 		;;
+@@ -45,7 +48,7 @@ generate_mac_from_mmc_cid()
+ 	echo "$(macaddr_unsetbit_mc "$(macaddr_setbit_la "${mac_base}")")"
+ }
+ 
+-nanopi_r4s_get_mac()
++nanopi_get_mac()
+ {
+ 	local interface=$1
+ 	local eeprom_path="/sys/bus/i2c/devices/2-0051/eeprom"
+@@ -88,8 +91,12 @@ rockchip_setup_macs()
+ 		;;
+ 	friendlyarm,nanopi-r4s|\
+ 	friendlyarm,nanopi-r4se)
+-		wan_mac=$(nanopi_r4s_get_mac wan)
+-		lan_mac=$(nanopi_r4s_get_mac lan)
++		wan_mac=$(nanopi_get_mac wan 2-0051)
++		lan_mac=$(nanopi_get_mac lan 2-0051)
++		;;
++	friendlyarm,nanopi-r6s)
++		wan_mac=$(nanopi_get_mac wan 6-0053)
++		lan_mac=$(nanopi_get_mac lan 6-0053)
+ 		;;
+ 	xunlong,orangepi-r1-plus|\
+ 	xunlong,orangepi-r1-plus-lts)
+
+--- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
++++ a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
+@@ -24,4 +24,9 @@
+ 	ucidef_set_led_netdev "lan" "LAN" "green:lan" "eth1"
+ 	;;
++friendlyarm,nanopi-r6s)
++	ucidef_set_led_netdev "wan" "WAN" "wan_led" "eth2" "link"
++	ucidef_set_led_netdev "lan1" "LAN1" "lan1_led" "eth1" "link"
++	ucidef_set_led_netdev "lan2" "LAN2" "lan2_led" "eth0" "link"
++	;;
+ esac
+ 
+
+--- a/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
++++ a/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
+@@ -43,4 +43,16 @@
+ 	set_interface_core 20 "eth1"
+ 	;;
++friendlyarm,nanopi-r6s)
++	set_interface_core 2 "eth0"
++	echo 3e > /sys/class/net/eth0/queues/rx-0/rps_cpus
++	set_interface_core 10 "eth1-0"
++	set_interface_core 20 "eth1-16"
++	set_interface_core 20 "eth1-18"
++	echo fe > /sys/class/net/eth1/queues/rx-0/rps_cpus
++	set_interface_core 40 "eth2-0"
++	set_interface_core 80 "eth2-16"
++	set_interface_core 80 "eth2-18"
++	echo fe > /sys/class/net/eth2/queues/rx-0/rps_cpus
++	;;
+ esac
+
+--- a/target/linux/rockchip/image/Makefile
++++ b/target/linux/rockchip/image/Makefile
+@@ -75,4 +75,17 @@ endef
+ 
+ include $(SUBTARGET).mk
+ 
++define Image/Build
++	if [ $(PROFILE_SANITIZED) == "friendlyarm_nanopi-r6s" ]; then \
++		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
++		export BIN_DIR=$(BIN_DIR); \
++		export TOPDIR=$(TOPDIR); \
++		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/friendlywrt22-rk3588; \
++		. ../modify_packit.sh; \
++		./build.sh sd-img; \
++		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
++		rm -rf $(BIN_DIR)/*r6s-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
++	fi
++endef
++
+ $(eval $(call BuildImage))
+ 
+

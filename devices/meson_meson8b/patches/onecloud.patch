@@ -1,11 +1,12 @@
 --- a/target/linux/meson/image/Makefile
 +++ b/target/linux/meson/image/Makefile
-@@ -112,7 +112,7 @@ endif
+@@ -112,7 +112,8 @@ endif
  
  define Device/thunder-onecloud
    DEVICE_DTS := meson8b-onecloud
 -  DEVICE_TITLE := Thunder OneCloud
 +  DEVICE_TITLE := OneCloud 玩客云
++  DEVICE_PACKAGES += kmod-usb-net-rtl8152
    KERNEL_LOADADDR := 0x00208000
  endef
  ifeq ($(SUBTARGET),meson8b)

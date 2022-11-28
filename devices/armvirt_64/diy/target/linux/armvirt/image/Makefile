@@ -95,6 +95,22 @@ define Device/odroid-n2
 endef
 TARGET_DEVICES += odroid-n2
 
+define Device/rock5b
+  DEVICE_VENDOR := Radxa
+  DEVICE_MODEL := ROCK 5B
+  SOC := RK3588
+  DEVICE_PACKAGES := 
+endef
+TARGET_DEVICES += rock5b
+
+define Device/h88k
+  DEVICE_VENDOR := HinLink
+  DEVICE_MODEL := H88K
+  SOC := RK3588
+  DEVICE_PACKAGES := 
+endef
+TARGET_DEVICES += h88k
+
 define Image/Build
 	export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 	export BIN_DIR=$(BIN_DIR); \
@@ -123,6 +139,10 @@ define Image/Build
 		./mk_rk3568_r68s.sh; \
 	elif [ $(PROFILE_SANITIZED) == "hk1" ]; then \
 		./mk_s905x3_multi.sh; \
+	elif [ $(PROFILE_SANITIZED) == "rock5b" ]; then \
+		./mk_rk3588_rock5b.sh; \
+	elif [ $(PROFILE_SANITIZED) == "h88k" ]; then \
+		./mk_rk3588_h88k.sh; \
 	fi; \
 	gzip -f9n $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).img || true
 endef

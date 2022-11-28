@@ -1,0 +1,10 @@
+--- a/target/linux/mediatek/image/mt7981.mk
++++ b/target/linux/mediatek/image/mt7981.mk
+@@ -177,6 +177,7 @@ define Device/mt7981-360-t7
+   DEVICE_MODEL := 360 T7
+   DEVICE_DTS := mt7981-360-t7
+   DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
++  DEVICE_PACKAGES := luci-app-mtk mii_mgr wifi-profile switch regs kmod-warp kmod-mt_wifi kmod-mediatek_hnat kmod-conninfra
+   SUPPORTED_DEVICES := 360,t7
+   UBINIZE_OPTS := -E 5
+   BLOCKSIZE := 128k
