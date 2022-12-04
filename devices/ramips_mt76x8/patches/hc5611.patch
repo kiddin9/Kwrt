@@ -1,9 +1,8 @@
-From 1a9e3658471433376dc3896b549aade18bd6a373 Mon Sep 17 00:00:00 2001
-From: Senis <thank243@gmail.com>
+From a8f3c97ce83dc97cd7acb040a715ecd75d824161 Mon Sep 17 00:00:00 2001
+From: Senis John <thank243@gmail.com>
 Date: Sat, 19 Nov 2022 11:30:54 +0800
 Subject: [PATCH] ramips: add support for HiWiFi HC5611
 
-### Hardware:
 CPU: MediaTek MT7628AN @ 575 MHz
 Flash: 16 MB
 RAM: 128 MB
@@ -13,37 +12,34 @@ USB: USB 2.0 x 1
 LED: red/green x 1
 Button: reset x 1
 
-### Installation
-
 1. Open https://www.hiwifi.wtf/, Get Cloud token and unlock ssh
 2. Upload the openwrt firmware to the router via SCP
 3. Login the router via SSH
 4. Run `mtd -r write path_to_firmware.bin firmware`
 
-### Others
 I have tested on my device.
-```
 - The LED will display RED on power-on, After system start completed, trun GREEN
 - Reset button working now. Long press after 5s will reset factory. Short press less 1s will reboot the device
 - USB can working under official u-boot
-```
 
-Signed-off-by: Senis Y <thank243@gmail.com>
+Signed-off-by: Senis John <thank243@gmail.com>
 ---
- .../ramips/dts/mt7628an_hiwifi_hc5611.dts     | 29 +++++++++++++++++++
+ .../ramips/dts/mt7628an_hiwifi_hc5611.dts     | 30 +++++++++++++++++++
  target/linux/ramips/image/mt76x8.mk           |  8 +++++
  .../mt76x8/base-files/etc/board.d/01_leds     |  3 ++
  .../mt76x8/base-files/etc/board.d/02_network  |  2 ++
  .../etc/hotplug.d/ieee80211/10_fix_wifi_mac   |  1 +
- 5 files changed, 43 insertions(+)
+ 5 files changed, 44 insertions(+)
  create mode 100644 target/linux/ramips/dts/mt7628an_hiwifi_hc5611.dts
 
 diff --git a/target/linux/ramips/dts/mt7628an_hiwifi_hc5611.dts b/target/linux/ramips/dts/mt7628an_hiwifi_hc5611.dts
 new file mode 100644
-index 0000000000000..10b12f16a89f6
+index 0000000000000..17de299b3cbc4
 --- /dev/null
 +++ b/target/linux/ramips/dts/mt7628an_hiwifi_hc5611.dts
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
 +#include "mt7628an_hiwifi_hc5x61a.dtsi"
 +
 +/ {
@@ -64,12 +60,11 @@ index 0000000000000..10b12f16a89f6
 +			gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
 +		};
 +	};
-+
 +};
 +
 +&state_default {
 +	gpio {
-+		groups = "i2c", "refclk", "wdt", "wled_an";
++		groups = "gpio", "spi cs1", "wdt";
 +		function = "gpio";
 +	};
 +};
@@ -122,18 +117,6 @@ index 38ff38bac5fea..d85cdf3db7fac 100644
  	zyxel,keenetic-extra-ii)
  		wan_mac=$(macaddr_add "$(mtd_get_mac_binary factory 0x4)" 1)
  		;;
-+	hiwifi,hc5611|\
- 	hiwifi,hc5661a|\
- 	hiwifi,hc5761a|\
- 	hiwifi,hc5861b)
-diff --git a/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac b/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
-index b8f8faee9ca28..c9e205a0fc143 100644
---- a/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
-+++ b/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
-@@ -10,6 +10,7 @@ PHYNBR=${DEVPATH##*/phy}
- board=$(board_name)
- 
- case "$board" in
 +	hiwifi,hc5611|\
  	hiwifi,hc5661a|\
  	hiwifi,hc5761a|\

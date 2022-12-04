@@ -19,12 +19,18 @@ mv -f tmp/r81* feeds/kiddin9/
 sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/*.mk
 sed -i 's/256/1024/g' target/linux/x86/image/Makefile
 
-sed -i "s/and \$(findstring ext4,\$(1)),//" include/image.mk
-
 echo '
 CONFIG_ACPI=y
 CONFIG_X86_ACPI_CPUFREQ=y
 CONFIG_NR_CPUS=512
+CONFIG_MMC=y
+CONFIG_MMC_BLOCK=y
+CONFIG_SDIO_UART=y
+CONFIG_MMC_TEST=y
+CONFIG_MMC_DEBUG=y
+CONFIG_MMC_SDHCI=y
+CONFIG_MMC_SDHCI_ACPI=y
+CONFIG_MMC_SDHCI_PCI=y
 ' >> ./target/linux/x86/config-5.15
 
 sed -i "s/DEVICE_MODEL := x86/DEVICE_MODEL := x86\/32/" target/linux/x86/image/generic.mk
