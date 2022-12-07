@@ -5,7 +5,7 @@
  DEFAULT_PACKAGES.router:=\
  	dnsmasq-full \
 +	kmod-ipt-nat \
-++	kmod-ipt-nat6 \
++	kmod-ipt-nat6 \
  	firewall \
 +	ip6tables \
  	iptables \
