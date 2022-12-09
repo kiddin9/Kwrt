@@ -1,6 +1,11 @@
 --- a/target/linux/mediatek/image/mt7981.mk
 +++ b/target/linux/mediatek/image/mt7981.mk
-@@ -194,6 +194,7 @@ define Device/mt7981-360-t7-108M
+@@ -190,10 +190,11 @@ endef
+ TARGET_DEVICES += mt7981-360-t7
+ 
+ define Device/mt7981-360-t7-108M
+-  DEVICE_VENDOR := MediaTek
++  DEVICE_VENDOR := Qihoo
    DEVICE_MODEL := 360 T7 (with 108M ubi)
    DEVICE_DTS := mt7981-360-t7-108M
    DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
