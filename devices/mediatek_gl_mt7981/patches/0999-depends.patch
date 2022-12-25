@@ -1,0 +1,10 @@
+--- a/target/linux/mediatek_gl/image/mt7981.mk
++++ b/target/linux/mediatek_gl/image/mt7981.mk
+@@ -219,6 +219,6 @@
+   SUPPORTED_DEVICES := glinet,mt2500-emmc
+   DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+-  DEVICE_PACKAGES := mkf2fs kmod-mmc kmod-fs-f2fs gdisk
++  DEVICE_PACKAGES := mkf2fs kmod-mmc kmod-fs-f2fs gdisk wpad-basic-wolfssl mii_mgr losetup e2fsprogs blockdev blkid kmod-nls-cp437 regs switch mtk_factory_rw ethtool kmod-mediatek_hnat mtkhnat_util mmc-utils
+   IMAGE/sysupgrade.bin := sysupgrade-tar | append-gl-metadata
+ endef
+ TARGET_DEVICES += glinet_gl-mt2500

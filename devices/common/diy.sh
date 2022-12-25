@@ -1,21 +1,28 @@
 #!/bin/bash
 #=================================================
 shopt -s extglob
+
+[ ! -f feeds.conf ] && {
+sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
+}
+
+sed -i '/	refresh_config();/d' scripts/feeds
+
+./scripts/feeds update -a
+./scripts/feeds install -a -p kiddin9 -f
+./scripts/feeds install -a
+
 kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
 sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
 
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
+sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite --force-depends/' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-base luci-compat luci-lib-ipkg luci-lib-fs \
 coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash openssh-sftp-server block-mount resolveip ds-lite swconfig /" include/target.mk
 sed -i "s/procd-ujail//" include/target.mk
-
-sed -i '/	refresh_config();/d' scripts/feeds
-[ ! -f feeds.conf ] && {
-sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
-}
 
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
@@ -25,27 +32,18 @@ while [ "$status" == "in_progress" ];do
 	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 done
 
-./scripts/feeds update -a
-rm -rf feeds/kiddin9/.diy
-./scripts/feeds install -a -p kiddin9 -f
-./scripts/feeds install -a
-
 mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 
 sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
 
 (
-svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.10
 rm -rf target/linux/generic/hack-5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*,996-fs-ntfs3*}
 ) &
 
 sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
-sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/kiddin9/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &
 sed -i 's/Os/O2/g' include/target.mk
-sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite --force-depends/' package/Makefile
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
 sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
 
@@ -54,9 +52,6 @@ sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/file
 #rm -rf ./feeds/packages/lang/{golang,node}
 sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
 
-sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\nCONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\n \
-CONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' `find target/linux -path "target/linux/*/config-*"`
-
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/2e6d19ee32399e37c7545aefc57d41541a406d55.patch | patch -d './' -p1 --forward" || true
 
 sed -i '$a  \
@@ -64,6 +59,9 @@ CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
 CONFIG_CPU_FREQ_GOV_USERSPACE=y \
 CONFIG_CPU_FREQ_GOV_ONDEMAND=y \
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y \
+CONFIG_CRYPTO_CHACHA20_NEON=y \
+CONFIG_CRYPTO_CHACHA20POLY1305=y \
+CONFIG_FAT_DEFAULT_IOCHARSET="utf8" \
 ' `find target/linux -path "target/linux/*/config-*"`
 
 date=`date +%m.%d.%Y`

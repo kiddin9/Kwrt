@@ -8,6 +8,6 @@ kernel_v="$(cat include/kernel-version.mk | grep LINUX_KERNEL_HASH-5.* | cut -f 
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
 sed -i "s?targets/%S/.*'?targets/%S/$kernel_v'?" include/feeds.mk
 
-rm -rf devices/common/patches/{imagebuilder.patch,iptables.patch,kernel-defaults.patch,targets.patch}
+rm -rf devices/common/patches/{glinet,imagebuilder.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 
 

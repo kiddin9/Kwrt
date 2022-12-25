@@ -25,7 +25,7 @@ rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip kmod-gpu-lima/' target/linux/rockchip/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/' target/linux/rockchip/Makefile
 
 echo '
 CONFIG_SENSORS_PWM_FAN=y

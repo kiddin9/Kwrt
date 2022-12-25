@@ -62,13 +62,14 @@ jobs:
         echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
         sed -i "1a REPO_TOKEN=${{ secrets.REPO_TOKEN }}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
+        sed -i "1a TARGET=${{matrix.target}}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
             echo "MTARGET=x86_64" >> $GITHUB_ENV
         elif [ ${{matrix.target}} == "x86_generic" ]; then
             echo "ARCH=linux/amd32" >> $GITHUB_ENV
             echo "MTARGET=x86_generic" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|ipq60xx_generic|bcm4908_generic|sunxi_cortexa53) ]]; then
+        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|mediatek_mt7981|mediatek_gl_mt7981|mediatek_filogic|bcm27xx_bcm2710|ipq60xx_generic|ipq807x_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
@@ -122,8 +123,8 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean ) &
         sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
     
     - name: Get current date
       id: date
@@ -137,9 +138,20 @@ jobs:
         fi
 
     - name: Clone source code
-      working-directory: /workdir
       run: |
-        if [ ! "${{ env.REPO_BRANCH }}" ]; then
+        if [ "${{matrix.target}}" == "ipq807x_ipq60xx" ]; then
+            git clone https://github.com/gl-inet/gl-infra-builder.git
+            cd gl-infra-builder
+            python3 setup.py -c configs/config-wlan-ap-5.4.yml
+            ln -sf gl-infra-builder/wlan-ap/openwrt ../openwrt
+            cd -
+        elif [ "${{matrix.target}}" == "mediatek_gl_mt7981" ]; then
+            git clone https://github.com/gl-inet/gl-infra-builder.git
+            cd gl-infra-builder
+            python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
+            ln -sf gl-infra-builder/mt7981 ../openwrt
+            cd -
+        elif [ ! "${{ env.REPO_BRANCH }}" ]; then
           REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
            -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
@@ -147,8 +159,7 @@ jobs:
         else
             git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt
         fi
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-
+    
     - name: Free up disk space
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -168,6 +179,7 @@ jobs:
         /bin/bash "devices/common/$DIY_SH"
         if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
           chmod +x devices/${{matrix.target}}/$DIY_SH
+          echo "/bin/bash devices/${{matrix.target}}/$DIY_SH"
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
         cp -Rf ./diy/* ./ || true
@@ -185,8 +197,10 @@ jobs:
       run: |
         cd openwrt
         find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' --no-backup-if-mismatch --merge -p1 -E --forward"
+        #git apply devices/common/patches/*.patch
         if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
-          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' --no-backup-if-mismatch --merge -p1 -E --forward"
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' --no-backup-if-mismatch --merge -p1 -E --forward"
+          #git apply devices/${{matrix.target}}/patches/*.patch
         fi
         
     - name: Default PPPOE Setting
@@ -263,25 +277,16 @@ jobs:
         echo "NOTICE=请分配不少于1G的存储容量" >> $GITHUB_ENV
         fi
 
-    - name: Deploy firmware to server
-      uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && contains(github.event.action, 'toser')
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr --exclude="
-        SOURCE: firmware/
-        REMOTE_HOST: op.supes.top
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/firmware/"
-
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
+      continue-on-error: true
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avzr"
         SOURCE: openwrt/bin/targets
         REMOTE_HOST: op.supes.top
+        REMOTE_PORT: '223'
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
 

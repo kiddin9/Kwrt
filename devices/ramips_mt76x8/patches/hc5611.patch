@@ -121,3 +121,15 @@ index 38ff38bac5fea..d85cdf3db7fac 100644
  	hiwifi,hc5661a|\
  	hiwifi,hc5761a|\
  	hiwifi,hc5861b)
+diff --git a/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac b/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
+index b8f8faee9ca28..c9e205a0fc143 100644
+--- a/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
++++ b/target/linux/ramips/mt76x8/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
+@@ -10,6 +10,7 @@ PHYNBR=${DEVPATH##*/phy}
+ board=$(board_name)
+ 
+ case "$board" in
++	hiwifi,hc5611|\
+ 	hiwifi,hc5661a|\
+ 	hiwifi,hc5761a|\
+ 	hiwifi,hc5861b)

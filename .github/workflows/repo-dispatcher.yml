@@ -117,6 +117,16 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "mediatek_mt7981 ${{ github.event.inputs.param }}", "client_payload": {"target": "mediatek_mt7981"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "mediatek_gl_mt7981 ${{ github.event.inputs.param }}", "client_payload": {"target": "mediatek_gl_mt7981"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ramips_mt7621 ${{ github.event.inputs.param }}", "client_payload": {"target": "ramips_mt7621"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
@@ -153,6 +163,11 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ipq806x_generic ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq806x_generic"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+          -d '{"event_type": "ipq807x_ipq60xx ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq807x_ipq60xx"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
