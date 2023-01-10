@@ -126,23 +126,9 @@
 
 --- a/target/linux/rockchip/image/Makefile
 +++ b/target/linux/rockchip/image/Makefile
-@@ -75,4 +75,17 @@ endef
- 
+@@ -80,3 +80,25 @@
  include $(SUBTARGET).mk
  
-+define Image/Build
-+	if [ $(PROFILE_SANITIZED) == "friendlyarm_nanopi-r5c" ]; then \
-+		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
-+		export BIN_DIR=$(BIN_DIR); \
-+		export TOPDIR=$(TOPDIR); \
-+		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/friendlywrt22-rk3568; \
-+		. ../modify_packit.sh; \
-+		./build.sh sd-img; \
-+		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
-+		rm -rf $(BIN_DIR)/*r5c-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
-+	fi
-+endef
-+
 +define Image/Build
 +	if [ $(PROFILE_SANITIZED) == "friendlyarm_nanopi-r6s" ]; then \
 +		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
@@ -153,8 +139,16 @@
 +		./build.sh sd-img; \
 +		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
 +		rm -rf $(BIN_DIR)/*r6s-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
++	elif [ $(PROFILE_SANITIZED) == "friendlyarm_nanopi-r5c" ]; then \
++		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
++		export BIN_DIR=$(BIN_DIR); \
++		export TOPDIR=$(TOPDIR); \
++		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/friendlywrt22-rk3568; \
++		. ../modify_packit.sh; \
++		./build.sh sd-img; \
++		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
++		rm -rf $(BIN_DIR)/*r6s-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
 +	fi
 +endef
 +
  $(eval $(call BuildImage))
- 

@@ -34,7 +34,7 @@ jobs:
 
     - name: cancel running workflows
       uses: styfle/cancel-workflow-action@main
-      if: contains(${{ github.event.inputs.param }}, 'cw')
+      if: contains(github.event.inputs.param, ' cw')
       with:
         workflow_id: all
         access_token: ${{ github.token }}

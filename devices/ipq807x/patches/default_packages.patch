@@ -12,7 +12,7 @@
 
 --- a/target/linux/ipq807x/image/generic.mk
 +++ b/target/linux/ipq807x/image/generic.mk
-@@ -74,7 +74,7 @@ define Device/qnap_301w
+@@ -84,7 +84,7 @@ define Device/qnap_301w
  	IMAGES += factory.bin sysupgrade.bin
  	IMAGE/factory.bin := append-rootfs | pad-rootfs | pad-to 64k
  	IMAGE/sysupgrade.bin/squashfs := append-rootfs | pad-to 64k | sysupgrade-tar rootfs=$$$$@ | append-metadata
@@ -21,11 +21,12 @@
  endef
  TARGET_DEVICES += qnap_301w
  
-@@ -109,6 +109,6 @@ define Device/xiaomi_ax9000
- 	DEVICE_DTS_CONFIG := config@hk14
+@@ -127,7 +127,7 @@ define Device/xiaomi_ax9000
  	SOC := ipq8072
+ 	KERNEL_SIZE := 57344k
  	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax9000 kmod-ath11k-pci ath11k-firmware-qcn9074 \
 -	kmod-ath10k-ct ath10k-firmware-qca9887-ct
 +	kmod-ath10k-ct ath10k-firmware-qca9887-ct kmod-usb3 kmod-usb-dwc3 kmod-usb-dwc3-qcom
- endef
- TARGET_DEVICES += xiaomi_ax9000
+ ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+ 	ARTIFACTS := initramfs-factory.ubi
+ 	ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-uImage.itb | ubinize-kernel

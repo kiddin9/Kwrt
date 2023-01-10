@@ -167,8 +167,8 @@ index bdaeac2cb16e..72fbd3930a80 100644
    DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
 -	kmod-usb-ledtrig-usbport
 +	kmod-usb-ledtrig-usbport wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
- endef
- TARGET_DEVICES += youku_yk-l2
+   UIMAGE_MAGIC := 0x12291000
+   UIMAGE_NAME := 400000000000000000003000
  
 
 --- /dev/null

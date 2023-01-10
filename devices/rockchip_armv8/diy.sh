@@ -15,8 +15,6 @@ rm -rf target/linux/rockchip/patches-5.15/{002-net-usb*,003-dt-bindings*,006-roc
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
-sed -i "s/#TARGET_DEVICES += hinlink_opc-h68k/TARGET_DEVICES += hinlink_opc-h68k/" target/linux/rockchip/image/armv8.mk
-
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
 mv -f tmp/r8125 feeds/kiddin9/

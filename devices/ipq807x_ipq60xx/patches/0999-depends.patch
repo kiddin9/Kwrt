@@ -1,0 +1,28 @@
+--- a/target/linux/ipq807x/image/ipq60xx.mk
++++ b/target/linux/ipq807x/image/ipq60xx.mk
+@@ -68,5 +68,5 @@
+   SUPPORTED_DEVICES := glinet,ax1800
+   DEVICE_DTS_CONFIG := config@cp03-c1
+-  DEVICE_PACKAGES := ath11k-wifi-gl-ax1800 -kmod-usb-dwc3-of-simple kmod-usb-dwc3-qcom kmod-usb3
++  DEVICE_PACKAGES := ath11k-wifi-gl-ax1800 -kmod-usb-dwc3-of-simple kmod-usb-dwc3-qcom kmod-usb3 kmod-hwmon-pwmfan wireless-regdb kmod-sched-cake ath11k-fwtest ftm
+   IMAGE/sysupgrade.tar := sysupgrade-tar | append-gl-metadata
+ endef
+@@ -78,5 +78,5 @@
+   SUPPORTED_DEVICES := glinet,axt1800
+   DEVICE_DTS_CONFIG := config@cp03-c1
+-  DEVICE_PACKAGES := ath11k-wifi-gl-axt1800 -kmod-usb-dwc3-of-simple kmod-usb-dwc3-qcom kmod-usb3
++  DEVICE_PACKAGES := ath11k-wifi-gl-axt1800 -kmod-usb-dwc3-of-simple kmod-usb-dwc3-qcom kmod-usb3 kmod-hwmon-pwmfan wireless-regdb kmod-sched-cake ath11k-fwtest ftm
+   IMAGE/sysupgrade.tar := sysupgrade-tar | append-gl-metadata
+ endef
+
+--- a/target/linux/ipq807x/Makefile
++++ b/target/linux/ipq807x/Makefile
+@@ -15,7 +15,7 @@ include $(INCLUDE_DIR)/target.mk
+ DEFAULT_PACKAGES += kmod-qca-nss-dp kmod-qca-ssdk swconfig \
+ 	kmod-qca-nss-drv \
+ 	kmod-usb-phy-ipq807x kmod-usb-dwc3-of-simple \
+-	kmod-ath11k-ahb kmod-qrtr_mproc wpad \
++	kmod-ath11k-ahb kmod-qrtr_mproc wpad-basic-wolfssl \
+ 	kmod-gpio-button-hotplug \
+ 	qca-thermald-10.4 qca-ssdk-shell kmod-qca-nss-drv-bridge-mgr \
+ 	uboot-envtools

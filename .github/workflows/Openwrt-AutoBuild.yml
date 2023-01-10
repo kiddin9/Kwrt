@@ -142,7 +142,7 @@ jobs:
         if [ "${{matrix.target}}" == "ipq807x_ipq60xx" ]; then
             git clone https://github.com/gl-inet/gl-infra-builder.git
             cd gl-infra-builder
-            python3 setup.py -c configs/config-wlan-ap-5.4.yml
+            python3 setup.py -c configs/config-wlan-ap.yml
             ln -sf gl-infra-builder/wlan-ap/openwrt ../openwrt
             cd -
         elif [ "${{matrix.target}}" == "mediatek_gl_mt7981" ]; then
@@ -257,14 +257,15 @@ jobs:
       run: |
         shopt -s extglob
         mkdir -p firmware/${{matrix.target}}
+        cd openwrt; kernel_v="$(make --file=info.mk kernel_version)"; cd -
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cd openwrt/bin/targets/*/*/
         mv -f profiles.json profiles.json.b
         cp $GITHUB_WORKSPACE/openwrt/.config ${{matrix.target}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{matrix.target}}_kernel.config || true
-        mv -f packages ${{ env.KERNEL }}
+        mv -f packages $kernel_v
         mkdir packages
-        cp -rf ${{ env.KERNEL }}/Packages* packages/
+        cp -rf kernel_v/Packages* packages/
         cd -
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
