@@ -158,6 +158,7 @@ jobs:
            git clone $REPO_URL -b $REPO_BRANCH openwrt
         else
             git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt
+            echo "git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt"
         fi
     
     - name: Free up disk space

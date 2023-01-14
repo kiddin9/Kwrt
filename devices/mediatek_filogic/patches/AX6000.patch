@@ -14,7 +14,7 @@
  define Device/xiaomi_redmi-router-ax6000-ubootmod
    DEVICE_VENDOR := Xiaomi
 -  DEVICE_MODEL := Redmi Router AX6000 (OpenWrt U-Boot layout)
-+  DEVICE_MODEL := Redmi Router AX6000 (U-boot mod layout)
++  DEVICE_MODEL := Redmi Router AX6000 (U-boot专用)
    DEVICE_DTS := mt7986a-xiaomi-redmi-router-ax6000-ubootmod
    DEVICE_DTS_DIR := ../dts
    DEVICE_PACKAGES := kmod-leds-ws2812b
