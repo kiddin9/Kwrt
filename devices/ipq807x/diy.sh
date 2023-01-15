@@ -11,6 +11,9 @@ rm -rf feeds/kiddin9/{rtl8821cu,rtl88x2bu} package/kernel/mt76
 
 sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
 
+curl -sfL https://raw.githubusercontent.com/Boos4721/openwrt/master/target/linux/ipq807x/patches-5.15/700-ipq8074-overclock-cpu-2.2ghz.patch -o target/linux/ipq807x/patches-5.15/700-ipq8074-overclock-cpu-2.2ghz.patch
+
+
 sed -i '$a  \
 CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
 CONFIG_CPU_FREQ_GOV_USERSPACE=y \
