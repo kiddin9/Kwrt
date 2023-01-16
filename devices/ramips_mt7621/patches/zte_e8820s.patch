@@ -196,7 +196,7 @@ diff --git a/target/linux/ramips/dts/mt7621_zte_e8820v2.dts b/target/linux/ramip
 new file mode 100644
 index 000000000000..5a0012441509
 --- /dev/null
-+++ b/target/linux/ramips/dts/mt7621_zte_e8820s.dts
++++ b/target/linux/ramips/dts/mt7621_zte_e8820v2.dts
 @@ -0,0 +1,181 @@
 +#include "mt7621.dtsi"
 +
