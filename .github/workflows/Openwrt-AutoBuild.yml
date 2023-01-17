@@ -69,7 +69,7 @@ jobs:
         elif [ ${{matrix.target}} == "x86_generic" ]; then
             echo "ARCH=linux/amd32" >> $GITHUB_ENV
             echo "MTARGET=x86_generic" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|mediatek_mt7981|mediatek_gl_mt7981|mediatek_filogic|bcm27xx_bcm2710|ipq60xx_generic|ipq807x_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
+        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|mediatek_mt7981|mediatek_mt7981|mediatek_gl_mt7986|mediatek_filogic|bcm27xx_bcm2710|ipq60xx_generic|ipq807x_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
@@ -158,6 +158,7 @@ jobs:
            git clone $REPO_URL -b $REPO_BRANCH openwrt
         else
             git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt
+            echo "git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt"
         fi
     
     - name: Free up disk space
@@ -264,8 +265,7 @@ jobs:
         cp $GITHUB_WORKSPACE/openwrt/.config ${{matrix.target}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{matrix.target}}_kernel.config || true
         mv -f packages $kernel_v
-        mkdir packages
-        cp -rf kernel_v/Packages* packages/
+        ln -sf $kernel_v packages
         cd -
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true

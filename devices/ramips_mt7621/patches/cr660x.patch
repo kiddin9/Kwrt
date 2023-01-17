@@ -128,7 +128,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
 +  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
  	check-size
    DEVICE_PACKAGES += kmod-mt7915e uboot-envtools
-+  DEVICE_MODEL := Mi Router CR6606 / CR6608 / CR6609
++  DEVICE_MODEL := Mi Router CR660X / TR60X
  endef
 -
 -define Device/xiaomi_mi-router-cr6606
