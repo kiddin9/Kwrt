@@ -1,27 +1,3 @@
---- a/target/linux/ipq60xx/Makefile
-+++ b/target/linux/ipq60xx/Makefile
-@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/target.mk
- DEFAULT_PACKAGES += \
- 	kmod-leds-gpio kmod-gpio-button-hotplug swconfig \
- 	kmod-qca-nss-dp kmod-qca-nss-drv kmod-qca-ssdk \
--	kmod-ath11k-ahb qca-ssdk-shell wpad-openssl \
-+	kmod-ath11k-ahb qca-ssdk-shell wpad-basic-wolfssl \
- 	ath11k-firmware-ipq6018 nss-firmware-ipq6018 \
- 	kmod-qca-nss-drv-pppoe kmod-qca-nss-ecm uboot-envtools
- 
-
---- a/target/linux/ipq60xx/image/Makefile
-+++ b/target/linux/ipq60xx/image/Makefile
-@@ -104,7 +104,7 @@ define Device/qihoo_v6
- 	PAGESIZE := 2048
- 	DEVICE_DTS := qcom-ipq6018-qihoo-v6
- 	DEVICE_DTS_CONFIG := config@cp03-c1
--	DEVICE_TITLE := Qihoo V6
-+	DEVICE_TITLE := Qihoo 360 V6
- 	DEVICE_PACKAGES := ath11k-wifi-qihoo-v6 kmod-usb3 kmod-usb-phy-msm
- endef
- TARGET_DEVICES += qihoo_v6
-
 --- a/include/image.mk
 +++ b/include/image.mk
 @@ -300,6 +300,44 @@ ifdef CONFIG_TARGET_ROOTFS_TARGZ

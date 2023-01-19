@@ -108,15 +108,6 @@ index bdaeac2cb16e..72fbd3930a80 100644
    IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
    IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
  	check-size
-@@ -1906,7 +1914,7 @@ define Device/xiaomi_mi-router-4a-gigabit
-   DEVICE_VENDOR := Xiaomi
-   DEVICE_MODEL := Mi Router 4A
-   DEVICE_VARIANT := Gigabit Edition
--  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2
-+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
- endef
- TARGET_DEVICES += xiaomi_mi-router-4a-gigabit
- 
 @@ -1927,30 +1935,14 @@ define Device/xiaomi_mi-router-cr660x
    KERNEL_SIZE := 4096k
    UBINIZE_OPTS := -E 5

@@ -1,6 +1,6 @@
---- a/target/linux/ramips/dts/mt7621_xiaomi_mi-router-4a-3g-v2.dtsi
-+++ b/target/linux/ramips/dts/mt7621_xiaomi_mi-router-4a-3g-v2.dtsi
-@@ -69,40 +69,16 @@
+--- a/target/linux/ramips/dts/mt7621_xiaomi_mi-router-4a-common.dtsi
++++ b/target/linux/ramips/dts/mt7621_xiaomi_mi-router-4a-common.dtsi
+@@ -54,40 +54,16 @@
  				read-only;
  			};
  
@@ -48,7 +48,7 @@
 
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -1926,7 +1926,7 @@ TARGET_DEVICES += xiaomi_mi-router-3g
+@@ -1963,7 +1963,7 @@ TARGET_DEVICES += xiaomi_mi-router-3g
  define Device/xiaomi_mi-router-3g-v2
    $(Device/dsa-migration)
    $(Device/uimage-lzma-loader)
@@ -57,3 +57,17 @@
    DEVICE_VENDOR := Xiaomi
    DEVICE_MODEL := Mi Router 3G
    DEVICE_VARIANT := v2
+@@ -2003,11 +2003,11 @@ TARGET_DEVICES += xiaomi_mi-router-4
+ define Device/xiaomi_mi-router-4a-gigabit
+   $(Device/dsa-migration)
+   $(Device/uimage-lzma-loader)
+-  IMAGE_SIZE := 14848k
++  IMAGE_SIZE := 16064k
+   DEVICE_VENDOR := Xiaomi
+   DEVICE_MODEL := Mi Router 4A
+   DEVICE_VARIANT := Gigabit Edition
+-  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2
++  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
+ endef
+ TARGET_DEVICES += xiaomi_mi-router-4a-gigabit
+ 

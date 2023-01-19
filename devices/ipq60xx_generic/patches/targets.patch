@@ -1,0 +1,34 @@
+--- a/include/target.mk
++++ b/include/target.mk
+@@ -17,7 +17,7 @@ DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fs
+ # For nas targets
+ DEFAULT_PACKAGES.nas:=block-mount fdisk lsblk mdadm
+ # For router targets
+-DEFAULT_PACKAGES.router:=dnsmasq-full iptables ip6tables ppp ppp-mod-pppoe firewall odhcpd-ipv6only odhcp6c luci luci-lib-ipkg
++DEFAULT_PACKAGES.router:=dnsmasq-full iptables ip6tables ppp ppp-mod-pppoe firewall odhcpd-ipv6only odhcp6c luci luci-lib-ipkg kmod-ipt-offload kmod-ipt-nat kmod-ipt-nat6
+ DEFAULT_PACKAGES.bootloader:=
+ 
+ ifneq ($(DUMP),)
+@@ -55,6 +55,22 @@ ifneq ($(filter 4.9,$(KERNEL_PATCHVER)),)
+   DEFAULT_PACKAGES.router:=$(filter-out kmod-ipt-offload,$(DEFAULT_PACKAGES.router))
+ endif
+ 
++ifneq ($(CONFIG_SMALL_FLASH),)
++  DEFAULT_PACKAGES+=-coremark -htop -bash -openssh-sftp-server
++endif
++
++ifeq ($(ARCH),arm)
++  DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
++endif
++
++ifeq ($(ARCH),aarch64)
++  DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
++endif
++
++ifneq ($(CONFIG_USB_SUPPORT),)
++  DEFAULT_PACKAGES+=automount
++endif
++
+ # Add device specific packages (here below to allow device type set from subtarget)
+ DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.$(DEVICE_TYPE))
+ 
