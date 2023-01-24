@@ -1,7 +1,6 @@
 
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
-bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
 mv -f target/linux/armvirt target/linux/armvirt_pcat
 
@@ -12,5 +11,6 @@ mv -f target/linux/armvirt target/linux/armvirt_pcat
 svn co https://github.com/photonicat/rockchip_rk3568_openwrt/trunk/files files
 
 mv -f $SHELL_FOLDER/network files/etc/config/
+
 
 

@@ -1,0 +1,31 @@
+--- a/scripts/json_overview_image_info.py
++++ b/scripts/json_overview_image_info.py
+@@ -47,7 +47,7 @@ def get_initial_output(image_info):
+ 
+ 
+ if output:
+-    default_packages, output["arch_packages"] = run(
++    default_packages, output["arch_packages"], output["kernel_version"], output["initramfs"] = run(
+         [
+             "make",
+             "--no-print-directory",
+@@ -55,6 +55,8 @@ def get_initial_output(image_info):
+             "target/linux/",
+             "val.DEFAULT_PACKAGES",
+             "val.ARCH_PACKAGES",
++            "val.LINUX_VERSION",
++            "val.KERNEL_INITRAMFS",
+         ],
+         stdout=PIPE,
+         stderr=PIPE,
+
+--- a/rules.mk
++++ b/rules.mk
+@@ -59,6 +59,7 @@ _SINGLE=export MAKEFLAGS=$(space);
+ CFLAGS:=
+ ARCH:=$(subst i486,i386,$(subst i586,i386,$(subst i686,i386,$(call qstrip,$(CONFIG_ARCH)))))
+ ARCH_PACKAGES:=$(call qstrip,$(CONFIG_TARGET_ARCH_PACKAGES))
++KERNEL_INITRAMFS:=$(call qstrip,$(CONFIG_TARGET_ROOTFS_INITRAMFS))
+ BOARD:=$(call qstrip,$(CONFIG_TARGET_BOARD))
+ SUBTARGET:=$(call qstrip,$(CONFIG_TARGET_SUBTARGET))
+ TARGET_OPTIMIZATION:=$(call qstrip,$(CONFIG_TARGET_OPTIMIZATION))

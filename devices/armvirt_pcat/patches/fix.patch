@@ -11,11 +11,20 @@
 -FEATURES+=cpiogz ext4 ramdisk squashfs targz
 +FEATURES+=cpiogz ext4 ramdisk squashfs targz boot-part rootfs-part
  
- KERNEL_PATCHVER:=5.15
+ KERNEL_PATCHVER:=5.10
  
  include $(INCLUDE_DIR)/target.mk
  
 -DEFAULT_PACKAGES += mkf2fs e2fsprogs
-+DEFAULT_PACKAGES += mkf2fs e2fsprogs blkid pcat-manager -luci-app-gpsysupgrade
++DEFAULT_PACKAGES += mkf2fs e2fsprogs blkid -luci-app-gpsysupgrade
  
  $(eval $(call BuildTarget))
+
+--- a/target/imagebuilder/files/Makefile
++++ b/target/imagebuilder/files/Makefile
+@@ -141,5 +141,4 @@
+ 	$(MAKE) -s checksum
+ 	rm -rf $(KERNEL_BUILD_DIR)/tmp
+-	rm -rf $(KERNEL_BUILD_DIR)/root.*
+ 
+ _call_manifest: FORCE
