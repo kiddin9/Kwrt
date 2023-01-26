@@ -30,7 +30,7 @@ while [ "$status" == "in_progress" ];do
 	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 done
 
-mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
+mv -f feeds/kiddin9/r81* tmp/
 
 sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
