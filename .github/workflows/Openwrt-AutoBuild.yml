@@ -203,6 +203,15 @@ jobs:
           find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 -E --forward"
           #git apply devices/${{matrix.target}}/patches/*.patch
         fi
+        sed -i '$a  \
+        CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
+        CONFIG_CPU_FREQ_GOV_USERSPACE=y \
+        CONFIG_CPU_FREQ_GOV_ONDEMAND=y \
+        CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y \
+        CONFIG_CRYPTO_CHACHA20_NEON=y \
+        CONFIG_CRYPTO_CHACHA20POLY1305=y \
+        CONFIG_FAT_DEFAULT_IOCHARSET="utf8" \
+        ' `find target/linux -path "target/linux/*/config-*"`
         
     - name: Default PPPOE Setting
       if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
