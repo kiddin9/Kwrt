@@ -21,7 +21,7 @@ curl -sfL https://raw.githubusercontent.com/coolsnowwolf/openwrt-gl-ax1800/maste
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/openwrt-gl-ax1800/master/include/quilt.mk -o include/quilt.mk
 
 rm -rf toolchain/.svn
-rm -rf feeds/kiddin9/{rtl*,nft-fullcone,shortcut-fe,netifd} package/kernel/mt76 toolchain/musl package/feeds/packages/{xtables-addons,openvswitch}
+rm -rf feeds/kiddin9/{rtl*,fullconenat-nft,shortcut-fe,netifd} package/kernel/mt76 toolchain/musl package/feeds/packages/{xtables-addons,openvswitch}
 svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/toolchain/musl toolchain/musl
 svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/toolchain/glibc toolchain/glibc
 
