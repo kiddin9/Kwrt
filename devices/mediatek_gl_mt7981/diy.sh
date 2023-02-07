@@ -6,7 +6,7 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 rm -rf package/feeds/kiddin9/{firewall,rtl*,base-files,netifd}
 
-rm -rf devices/common/patches/{glinet,imagebuilder.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
+rm -rf devices/common/patches/{imagebuilder.patch,fix.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
 
 sed -i "s/BOARD:=mediatek$/BOARD:=mediatek_gl/" target/linux/mediatek/Makefile
 
