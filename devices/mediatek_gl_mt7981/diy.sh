@@ -17,7 +17,7 @@ rm -rf toolchain/musl
 svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/toolchain/musl toolchain/musl
 
 
-sed -i "/mtk_openwrt_feed/d" feeds.conf
+sed -i "/gl_feed_mtk/d" feeds.conf
 sed -i "/gl_feed_common/d" feeds.conf
 sed -i "/gl_feed_21_02/d" feeds.conf
 
