@@ -8,6 +8,7 @@ rm -rf package/feeds
 ./scripts/feeds install -a -p gl_feed_mtk -f
 ./scripts/feeds install -a -p gl_feed_common -f
 ./scripts/feeds install -a -p gl_feed_21_02 -f
+./scripts/feeds install -a -p mtk_openwrt_feed -f
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 
@@ -27,6 +28,7 @@ echo "
 CONFIG_FEED_gl_feed_mtk=n
 CONFIG_FEED_gl_feed_common=n
 CONFIG_FEED_gl_feed_21_02=n
+CONFIG_FEED_mtk_openwrt_feed=n
 " >> devices/common/.config
 
 
