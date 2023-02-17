@@ -17,6 +17,7 @@ rm -rf package/feeds/kiddin9/{firewall,rtl*,base-files,netifd}
 rm -rf devices/common/patches/{imagebuilder.patch,fix.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
 
 sed -i "s/BOARD:=mediatek$/BOARD:=mediatek_gl/" target/linux/mediatek/Makefile
+sed -i "s/TARGET_mediatek/TARGET_mediatek_gl/" target/linux/mediatek/modules.mk
 
 mv -f target/linux/mediatek target/linux/mediatek_gl
 
