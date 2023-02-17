@@ -31,5 +31,3 @@ rm -rf devices/common/patches/{glinet,imagebuilder.patch,fix.patch,iptables.patc
 rm -rf toolchain/musl
 
 svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/toolchain/musl toolchain/musl
-
-make defconfig
