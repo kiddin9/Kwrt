@@ -234,7 +234,7 @@ jobs:
         sleep 5
 
     - name: Cache
-      uses: klever1988/cachewrtbuild@main
+      uses: stupidloud/cachewrtbuild@main
       with:
         ccache: 'true'
         clean: ${{ env.NOCACHE }}
