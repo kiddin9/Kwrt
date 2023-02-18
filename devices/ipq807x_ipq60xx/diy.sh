@@ -20,7 +20,7 @@ CONFIG_FEED_ipq807x=n
 CONFIG_FEED_wifi_ax=n
 " >> devices/common/.config
 
-rm -rf package/feeds/kiddin9/{firewall,rtl*,base-files,netifd,fullconenat-nft,fullconenat-nft,mbedtls,oaf,shortcut-fe,simulated-driver,fast-classifier,fullconenat}
+rm -rf package/feeds/kiddin9/{rtl*,base-files,netifd,fullconenat-nft,fullconenat-nft,mbedtls,oaf,shortcut-fe,simulated-driver,fast-classifier,fullconenat}
 svn co https://github.com/coolsnowwolf/openwrt-gl-ax1800/trunk/package/network/services/fullconenat feeds/kiddin9/fullconenat
 
 rm -rf package/kernel/{ath10k-ct,mt76,rtl8812au-ct}
