@@ -101,7 +101,7 @@
  		echo "$(strings /proc/device-tree/compatible | head -1)" > /tmp/sysinfo/board_name
  	[ ! -e /tmp/sysinfo/model -a -e /proc/device-tree/model ] && \
  		echo "$(cat /proc/device-tree/model)" > /tmp/sysinfo/model
-+	sed -i "s/friendlyelec/friendlyarm/" /tmp/sysinfo/board_name
++	sed -i "s/mediatek_gl/mediatek/" /tmp/sysinfo/board_name
  }
  
  boot_hook_add preinit_main do_sysinfo_generic
