@@ -133,9 +133,6 @@ jobs:
         echo "date2=$(date +'%m/%d %Y')" >> $GITHUB_ENV
         VERSION="$(echo "${{github.event.action}}" | grep -Eo " [0-9.]+" | sed -e 's/ //')" || true
         [ "$VERSION" ] && echo "VERSION=$VERSION" >> $GITHUB_ENV || echo "VERSION=$(date +'%m.%d')" >> $GITHUB_ENV
-        if [[ ${{ contains(github.event.action, 'nocache') }} || ! -f openwrt/staging_dir/*${{ env.MTARGET }}*/bin ]]; then
-           echo "NOCACHE=true" >> $GITHUB_ENV
-        fi
 
     - name: Clone source code
       run: |
@@ -237,7 +234,7 @@ jobs:
       uses: stupidloud/cachewrtbuild@main
       with:
         ccache: 'true'
-        clean: ${{ env.NOCACHE }}
+        clean: ${{ contains(github.event.action, 'nocache') }}
         prefix: ${{ github.workspace }}/openwrt
     
     - name: Check space usage
