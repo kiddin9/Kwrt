@@ -1,6 +1,6 @@
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
-@@ -38,13 +38,15 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
+@@ -38,13 +38,16 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
  		./files/repositories.conf \
  		$(TMP_DIR)/.targetinfo \
  		$(TMP_DIR)/.packageinfo \
@@ -16,6 +16,7 @@
 +	$(SED) 's/^src\/gz \(.*\) https.*top\/\(packages.*\)/src \1 file:\/\/www\/wwwroot\/op.supes.top\/\2/' $(PKG_BUILD_DIR)/repositories.conf
 +	$(SED) 's/^src\/gz \(.*\) https.*top\/\(targets.*\)/src \1 file:\/\/www\/wwwroot\/op.supes.top\/releases\/\2/' $(PKG_BUILD_DIR)/repositories.conf
 +	$(SED) 's/\/kiddin9//' $(PKG_BUILD_DIR)/repositories.conf
++	$(SED) '/openwrt_core/d' $(PKG_BUILD_DIR)/repositories.conf
  
  	$(INSTALL_DIR) $(PKG_BUILD_DIR)/packages
  	# create an empty package index so `opkg` doesn't report an error

@@ -12,6 +12,8 @@ cd new
 cp -rf --parents tools target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} ../
 cd -
 
+sed -i "s/9 -Xe/extreme/" include/image.mk
+
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/master/include/image-commands.mk -o include/image-commands.mk

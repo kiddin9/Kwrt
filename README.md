@@ -1,6 +1,6 @@
 #### 一分钟在线编译定制专属固件: [supes.top](https://supes.top)
 #### 支持200+设备:
-X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、NEO3, 斐讯 N1、K2P、K3, 树莓派 4B、3B/3B+、2B, 电犀牛r68s、r66s, 香橙派 R1 Plus、R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 斐讯K3,  360V6, 玩客云, 极路由 HIWIFI HC5962(极路由4、B70)、HC5661A、HC5761A、HC5861B, 小米4, 小米 R3G, 小米 R3P, newifi-d2 (新路由3), 小娱XY-C5, 竞斗云2.0(P&W R619AC), GL.iNet GL-MT1300、GL-AX1800、GL-AXT1800、GL-microuter-N300、GL-MT300N V2, 小米CR660X(CR6606/CR6608/CR6609), 小米4A千兆版, 小米 R3G-v2, 小米青春版Nano, 迅雷下载宝 timecloud, 优酷 yk-l2, 有华 wr1200js, 向日葵 X3A, 华硕 ASUS RT-ACRH17、RT-AC58u/RT-ACRH13、RT-ac85p、RT-n56u-b1、RT-AC88U、RT-AC1200、RT-AC1200 V2, 网件 NETGEAR R6220、R6260、R6120、R6700-v2、R6800、R6850、R6900-v2、R7450、wndr3700-v5, H1 Box, 贝壳云P1, 我家云lL Pro, x96 Max, 微加云V-Plus, 章鱼星球ZYXQ, GT-King, Odroid N2, MXQ Pro+, 京东无线宝JDCloud RE-SP-01B, Linksys WRT1200AC、WRT1900AC v1、WRT1900AC v2、WRT3200ACM、WRT1900ACS v1、WRT1900ACS v2、WRT32X、EA7500 v2 等
+X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、R5C、R6S、NEO3, 斐讯 N1、K2P、K3, 树莓派 4B、3B/3B+、2B, 电犀牛r68s、r66s, 香橙派 R1 Plus、R1 Plus LTS, 红米AX6, 小米AX3600, 小米AX9000, 红米AX6000, 红米AX6S/小米AX3200, 红米AC2100, 小米AC2100, 斐讯K3,  360V6, 玩客云, 极路由 HIWIFI HC5962(极路由4、B70)、HC5661A、HC5761A、HC5861B, 小米4, 小米 R3G, 小米 R3P, newifi-d2 (新路由3), 小娱XY-C5, 竞斗云2.0(P&W R619AC), GL.iNet GL-MT1300、GL-AX1800、GL-AXT1800、GL-microuter-N300、GL-MT300N V2, 小米CR660X(CR6606/CR6608/CR6609), 小米4A千兆版, 小米 R3G-v2, 小米青春版Nano, 迅雷下载宝 timecloud, 优酷 yk-l2, 有华 wr1200js, 向日葵 X3A, 华硕 ASUS RT-ACRH17、RT-AC58u/RT-ACRH13、RT-ac85p、RT-n56u-b1、RT-AC88U、RT-AC1200、RT-AC1200 V2, 网件 NETGEAR R6220、R6260、R6120、R6700-v2、R6800、R6850、R6900-v2、R7450、wndr3700-v5, H1 Box, 贝壳云P1, 我家云lL Pro, x96 Max, 微加云V-Plus, 章鱼星球ZYXQ, GT-King, Odroid N2, MXQ Pro+, 京东无线宝JDCloud RE-SP-01B, Linksys WRT1200AC、WRT1900AC v1、WRT1900AC v2、WRT3200ACM、WRT1900ACS v1、WRT1900ACS v2、WRT32X、EA7500 v2 等
 
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
@@ -31,21 +31,17 @@ X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、NEO3, 斐讯 N1、K2P、K
 
 + 自建插件仓库囊括了市面上几乎所有开源插件,插件库日更,系统自动更新所有已安装插件.
 
-+ 通过[supes.top](https://supes.top)在线定制专属固件, 无需任何专业知识, 一分钟生成. 同时支持github云编译和本地一键编译.
++ 通过[supes.top](https://supes.top)在线定制专属固件, 无需任何专业知识, 一分钟生成. 同时支持github云编译.
 
 + 后台一键OTA更新固件,省去了每次固件升级都需要找固件,下载固件,上传固件等繁琐操作.
 
 + 后台一键设置旁路由,一键开关IPv6.
 
-+ 支持在线安装Kmod内核模块.
-
-+ 重构版SSR-PLUS,国内外智能DNS解析,支持DOH,Trojan-Go等
++ 支持在线安装全部Kmod内核模块.
 
 + 替换 Uhttpd 为 Nginx, 支持 反向代理; WebDAV等诸多玩法.
 
 + 性能,友好度,易用性,插件,以及针对国内特殊环境等的自定义优化, 开箱即用
-
-+ 自定制清爽Material风格新主题Edge
 
 ## 2. **固件**
 
@@ -66,31 +62,6 @@ X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、NEO3, 斐讯 N1、K2P、K
 + Actions页面选择 Repo Dispatcher 点击 Run workflow
 ### 2.3 **GitHub结合浏览器插件编译**
 请在支持油猴的浏览器中安装 [脚本](https://greasyfork.org/scripts/407616-github-actions-trigger/code/Github%20Actions%20Trigger.user.js) ,仓库右上角会出现 x86_64 Actions,K2P Actions等按钮,点击对应按钮即可.更多玩法 [repo-dispatcher](https://github.com/tete1030/github-repo-dispatcher)
-
-### 2.4 **本地化编译**
-
-#### 注意：
-
-1. **不**要用 **root** 用户 git 和编译！！！
-
-2. 国内用户编译前请准备好梯子,使用大陆白名单或全局模式
-
-3. 请使用Ubuntu 64bit，推荐  Ubuntu 18 或 Ubuntu 20
-
-#### 首次编译:
-
-```
-screen -S openwrt
-bash -c "$(curl -fsSL https://git.io/opbuild.sh)"
-```
-
-#### 二次编译:
-
-```
-screen -S openwrt
-bash -c "$(curl -fsSL https://git.io/rebuild.sh)"
-```
-
 
 ## 3. **使用**
 

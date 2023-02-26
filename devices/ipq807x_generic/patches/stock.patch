@@ -1,0 +1,153 @@
+--- a/target/linux/ipq807x/Makefile
++++ b/target/linux/ipq807x/Makefile
+@@ -12,10 +12,9 @@ KERNEL_PATCHVER:=5.15
+ 
+ include $(INCLUDE_DIR)/target.mk
+ DEFAULT_PACKAGES += \
+-	kmod-usb3 kmod-usb-dwc3 kmod-usb-dwc3-qcom \
+ 	kmod-leds-gpio kmod-gpio-button-hotplug \
+ 	kmod-phy-aquantia kmod-qca-nss-dp \
+ 	ath11k-firmware-ipq8074 kmod-ath11k-ahb \
+-	wpad-basic-mbedtls uboot-envtools
++	wpad-basic-mbedtls uboot-envtools qca-ssdk-shell
+ 
+ $(eval $(call BuildTarget))
+
+--- a/target/linux/ipq807x/image/generic.mk
++++ b/target/linux/ipq807x/image/generic.mk
+@@ -68,7 +68,7 @@ define Device/qnap_301w
+ 	IMAGES += factory.bin sysupgrade.bin
+ 	IMAGE/factory.bin := append-rootfs | pad-rootfs | pad-to 64k
+ 	IMAGE/sysupgrade.bin/squashfs := append-rootfs | pad-to 64k | sysupgrade-tar rootfs=$$$$@ | append-metadata
+-	DEVICE_PACKAGES := ipq-wifi-qnap_301w e2fsprogs kmod-fs-ext4 losetup
++	DEVICE_PACKAGES := ipq-wifi-qnap_301w e2fsprogs kmod-fs-ext4 losetup kmod-usb3 kmod-usb-dwc3 kmod-usb-dwc3-qcom
+ endef
+ TARGET_DEVICES += qnap_301w
+ 
+@@ -89,12 +89,7 @@ define Device/xiaomi_ax3600
+ 	PAGESIZE := 2048
+ 	DEVICE_DTS_CONFIG := config@ac04
+ 	SOC := ipq8071
+-	KERNEL_SIZE := 36608k
+ 	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax3600 kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9887-ct
+-ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+-	ARTIFACTS := initramfs-factory.ubi
+-	ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-uImage.itb | ubinize-kernel
+-endif
+ endef
+ TARGET_DEVICES += xiaomi_ax3600
+ 
+@@ -107,13 +102,8 @@ define Device/xiaomi_ax9000
+ 	PAGESIZE := 2048
+ 	DEVICE_DTS_CONFIG := config@hk14
+ 	SOC := ipq8072
+-	KERNEL_SIZE := 57344k
+ 	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax9000 kmod-ath11k-pci ath11k-firmware-qcn9074 \
+-	kmod-ath10k-ct ath10k-firmware-qca9887-ct
+-ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+-	ARTIFACTS := initramfs-factory.ubi
+-	ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-uImage.itb | ubinize-kernel
+-endif
++	kmod-ath10k-ct ath10k-firmware-qca9887-ct kmod-usb3 kmod-usb-dwc3 kmod-usb-dwc3-qcom
+ endef
+ TARGET_DEVICES += xiaomi_ax9000
+ 
+
+--- a/target/linux/ipq807x/base-files/etc/init.d/bootcount
++++ b/target/linux/ipq807x/base-files/etc/init.d/bootcount
+@@ -9,5 +9,13 @@ boot() {
+ 		# Unset changed flag after sysupgrade complete
+ 		fw_setenv changed
+ 	;;
++	redmi,ax6|\
++	xiaomi,ax3600|\
++	xiaomi,ax9000)
++		# OTA handling should not be used. Reset it just in case.
++		fw_setenv flag_ota_reboot 0
++		# Not strictly needed but useful to handle partition crash condition
++		fw_setenv flag_boot_success 1
++	;;
+ 	esac
+ }
+ 
+
+--- a/target/linux/ipq807x/base-files/lib/upgrade/platform.sh
++++ b/target/linux/ipq807x/base-files/lib/upgrade/platform.sh
+@@ -83,20 +83,29 @@ platform_do_upgrade() {
+ 	redmi,ax6|\
+ 	xiaomi,ax3600|\
+ 	xiaomi,ax9000)
+-		# Make sure that UART is enabled
+-		fw_setenv boot_wait on
+-		fw_setenv uart_en 1
++		part_num="$(fw_printenv -n flag_boot_rootfs)"
++		if [ "$part_num" -eq "1" ]; then
++			CI_UBIPART="rootfs_1"
++			target_num=1
++			# Reset fail flag for the current partition
++			# With both partition set to fail, the partition 2 (bit 1)
++			# is loaded
++			fw_setenv flag_try_sys2_failed 0
++		else
++			CI_UBIPART="rootfs"
++			target_num=0
++			# Reset fail flag for the current partition
++			# or uboot will skip the loading of this partition
++			fw_setenv flag_try_sys1_failed 0
++		fi
++
++		# Tell uboot to switch partition
++		fw_setenv flag_boot_rootfs "$target_num"
++		fw_setenv flag_last_success "$target_num"
+ 
+-		# Enforce single partition.
+-		fw_setenv flag_boot_rootfs 0
+-		fw_setenv flag_last_success 0
+-		fw_setenv flag_boot_success 1
+-		fw_setenv flag_try_sys1_failed 8
+-		fw_setenv flag_try_sys2_failed 8
++		# Reset success flag
++		fw_setenv flag_boot_success 0
+ 
+-		# Kernel and rootfs are placed in 2 different UBI
+-		CI_KERN_UBIPART="ubi_kernel"
+-		CI_ROOT_UBIPART="rootfs"
+ 		nand_do_upgrade "$1"
+ 		;;
+ 	*)
+
+--- /dev/null
++++ b/target/linux/ipq807x/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
+@@ -0,0 +1,20 @@
++#!/bin/sh
++
++[ -e /lib/firmware/$FIRMWARE ] && exit 0
++
++. /lib/functions/caldata.sh
++
++board=$(board_name)
++
++case "$FIRMWARE" in
++"ath10k/cal-pci-0000:01:00.0.bin")
++	case "$board" in
++	xiaomi,ax3600)
++		caldata_extract "0:art" 0x33000 0x844
++		;;
++	esac
++	;;
++*)
++	exit 1
++	;;
++esac
+
+--- a/target/linux/ipq807x/patches-5.15/0102-arm64-dts-ipq8074-add-reserved-memory-nodes.patch
++++ b/target/linux/ipq807x/patches-5.15/0102-arm64-dts-ipq8074-add-reserved-memory-nodes.patch
+@@ -23,7 +23,7 @@ Signed-off-by: Robert Marko <robimarko@gmail.com>
+  		#size-cells = <2>;
+  		ranges;
+  
+-+		nss@40000000 {
+++		nss_region: nss@40000000 {
+ +			no-map;
+ +			reg = <0x0 0x40000000 0x0 0x01000000>;
+ +		};
