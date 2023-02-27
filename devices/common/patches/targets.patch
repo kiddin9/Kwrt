@@ -31,7 +31,7 @@
 +DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
 +endif
 +
-+ifneq ($(CONFIG_USB_SUPPORT),)
++ifneq ($(CONFIG_PACKAGE_kmod-usb3)$(CONFIG_PACKAGE_kmod-usb2),)
 +DEFAULT_PACKAGES+=automount
 +endif
 +
