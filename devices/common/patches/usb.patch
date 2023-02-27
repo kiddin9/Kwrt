@@ -1,0 +1,11 @@
+--- a/package/kernel/linux/modules/usb.mk
++++ b/package/kernel/linux/modules/usb.mk
+@@ -14,7 +14,7 @@ USBINPUT_DIR?=input/misc
+ define KernelPackage/usb-core
+   SUBMENU:=$(USB_MENU)
+   TITLE:=Support for USB
+-  DEPENDS:=@USB_SUPPORT
++  DEPENDS:=@USB_SUPPORT +automount
+   KCONFIG:=CONFIG_USB CONFIG_XPS_USB_HCD_XILINX=n CONFIG_USB_FHCI_HCD=n
+   FILES:= \
+ 	$(LINUX_DIR)/drivers/usb/core/usbcore.ko \
