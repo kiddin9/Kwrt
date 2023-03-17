@@ -233,14 +233,19 @@ jobs:
     - name: Cache
       uses: stupidloud/cachewrtbuild@main
       with:
-        ccache: 'false'
+        ccache: 'true'
         clean: ${{ contains(github.event.action, 'nocache') }}
         prefix: ${{ github.workspace }}/openwrt
     
     - name: Check space usage
       run: |
         shopt -s extglob
-        rm -rf openwrt/staging_dir/!(*${{ env.MTARGET }}*|host|hostpkg) openwrt/build_dir/!(*${{ env.MTARGET }}*|host|hostpkg)
+        cd openwrt
+        if [[ ! -f staging_dir/*${{ env.MTARGET }}*/bin ]]; then
+           make dirclean
+        else
+            rm -rf staging_dir/!(*${{ env.MTARGET }}*|host|hostpkg) build_dir/!(*${{ env.MTARGET }}*|host|hostpkg)
+        fi
         df -hT
 
     - name: SSH connection to Actions
