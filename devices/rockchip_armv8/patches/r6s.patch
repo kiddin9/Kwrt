@@ -26,25 +26,24 @@
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -14,6 +14,7 @@ rockchip_setup_interfaces()
+@@ -15,12 +15,16 @@ rockchip_setup_interfaces()
  	friendlyarm,nanopi-r2s|\
  	friendlyarm,nanopi-r4s|\
  	friendlyarm,nanopi-r4se|\
 +	friendlyarm,nanopi-r5c|\
+ 	rocktech,mpc1903|\
  	sharevdi,guangmiao-g4c|\
  	xunlong,orangepi-r1-plus|\
  	xunlong,orangepi-r1-plus-lts)
-@@ -33,6 +34,9 @@ rockchip_setup_interfaces()
- 	friendlyarm,nanopi-r5s)
- 		ucidef_set_interfaces_lan_wan "eth1 eth2" "eth0"
+ 		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
  		;;
 +	friendlyarm,nanopi-r6s)
 +		ucidef_set_interfaces_lan_wan "eth1 eth0" "eth2"
 +		;;
- 	*)
- 		ucidef_set_interface_lan 'eth0'
+ 	hinlink,opc-h68k)
+ 		ucidef_set_interfaces_lan_wan 'eth1 eth2 eth3' 'eth0'
  		;;
-@@ -46,10 +50,10 @@ generate_mac_from_mmc_cid()
+@@ -48,10 +52,10 @@ generate_mac_from_mmc_cid()
  	echo "$(macaddr_unsetbit_mc "$(macaddr_setbit_la "${mac_base}")")"
  }
  
@@ -57,7 +56,7 @@
  	local address
  
  	if [ -f "$eeprom_path" ]; then
-@@ -90,8 +94,12 @@ rockchip_setup_macs()
+@@ -94,9 +98,13 @@ rockchip_setup_macs()
  		;;
  	friendlyarm,nanopi-r4s|\
  	friendlyarm,nanopi-r4se)
@@ -65,13 +64,14 @@
 -		lan_mac=$(nanopi_r4s_get_mac lan)
 +		wan_mac=$(nanopi_get_mac wan 2-0051)
 +		lan_mac=$(nanopi_get_mac lan 2-0051)
-+		;;
+ 		;;
 +	friendlyarm,nanopi-r6s)
 +		wan_mac=$(nanopi_get_mac wan 6-0053)
 +		lan_mac=$(nanopi_get_mac lan 6-0053)
- 		;;
++ 		;;
  	xunlong,orangepi-r1-plus|\
  	xunlong,orangepi-r1-plus-lts)
+ 		lan_mac=$(cat /sys/class/net/eth1/address)
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
 +++ a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
