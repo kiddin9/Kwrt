@@ -297,8 +297,8 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avzr"
         SOURCE: openwrt/bin/targets
-        REMOTE_HOST: xyt.supes.top
-        REMOTE_PORT: '223'
+        REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+        REMOTE_PORT: ${{ secrets.SERVER_PORT }}
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
 
