@@ -26,23 +26,17 @@
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -15,12 +15,16 @@ rockchip_setup_interfaces()
+@@ -16,6 +16,10 @@ rockchip_setup_interfaces()
  	friendlyarm,nanopi-r2s|\
  	friendlyarm,nanopi-r4s|\
  	friendlyarm,nanopi-r4se|\
 +	friendlyarm,nanopi-r5c|\
- 	rocktech,mpc1903|\
- 	sharevdi,guangmiao-g4c|\
- 	xunlong,orangepi-r1-plus|\
- 	xunlong,orangepi-r1-plus-lts)
- 		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
- 		;;
 +	friendlyarm,nanopi-r6s)
 +		ucidef_set_interfaces_lan_wan "eth1 eth0" "eth2"
 +		;;
- 	hinlink,opc-h68k)
- 		ucidef_set_interfaces_lan_wan 'eth1 eth2 eth3' 'eth0'
- 		;;
+ 	rocktech,mpc1903|\
+ 	sharevdi,guangmiao-g4c|\
+ 	xunlong,orangepi-r1-plus|\
 @@ -48,10 +52,10 @@ generate_mac_from_mmc_cid()
  	echo "$(macaddr_unsetbit_mc "$(macaddr_setbit_la "${mac_base}")")"
  }
