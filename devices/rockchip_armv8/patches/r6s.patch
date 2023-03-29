@@ -74,10 +74,10 @@
 
 --- a/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 +++ a/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
-@@ -51,5 +51,17 @@ friendlyarm,nanopi-r5s)
- 	set_interface_core 2 "eth1"
- 	set_interface_core 4 "eth2"
- 	;;
+@@ -28,6 +28,18 @@ set_interface_core() {
+ }
+ 
+ case "$(board_name)" in
 +friendlyarm,nanopi-r6s)
 +	set_interface_core 2 "eth0"
 +	echo 3e > /sys/class/net/eth0/queues/rx-0/rps_cpus
@@ -90,8 +90,9 @@
 +	set_interface_core 80 "eth2-18"
 +	echo fe > /sys/class/net/eth2/queues/rx-0/rps_cpus
 +	;;
- esac
- 
+ fastrhino,r66s|\
+ friendlyarm,nanopi-r5c|\
+ firefly,rk3568-roc-pc)
 
 --- a/target/linux/rockchip/image/Makefile
 +++ b/target/linux/rockchip/image/Makefile
