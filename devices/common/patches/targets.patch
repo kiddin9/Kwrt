@@ -24,11 +24,11 @@
 +endif
 +
 +ifeq ($(ARCH),arm)
-+DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
++DEFAULT_PACKAGES+=luci-app-cpufreq
 +endif
 +
 +ifeq ($(ARCH),aarch64)
-+DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
++DEFAULT_PACKAGES+=luci-app-cpufreq
 +endif
 +
  # Add device specific packages (here below to allow device type set from subtarget)

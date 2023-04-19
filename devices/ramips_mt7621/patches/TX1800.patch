@@ -96,9 +96,9 @@ index 7514bf65fb10e..738d983af2041 100644
 +h3c,tx1800-plus|\
 +h3c,tx1801-plus|\
 +h3c,tx1806|\
+ asus,rt-ax53u|\
  jcg,q20|\
  netgear,wax202)
- 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x20000" "0x20000"
 diff --git a/target/linux/ramips/dts/mt7621_h3c_tx1800-plus.dts b/target/linux/ramips/dts/mt7621_h3c_tx1800-plus.dts
 new file mode 100644
 index 0000000000000..f763dd14dddf9

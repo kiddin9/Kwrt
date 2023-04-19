@@ -26,6 +26,8 @@ svn co https://github.com/coolsnowwolf/openwrt-gl-ax1800/trunk/package/network/s
 rm -rf package/kernel/{ath10k-ct,mt76,rtl8812au-ct}
 rm -rf feeds/packages/net/xtables-addons package/feeds/packages/{openvswitch,ksmbd} package/feeds/routing/batman-adv
 
+rm -rf package/kernel/exfat
+
 rm -rf devices/common/patches/{glinet,imagebuilder.patch,fix.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
 
 rm -rf toolchain/musl

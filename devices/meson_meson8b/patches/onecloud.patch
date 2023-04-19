@@ -10,3 +10,15 @@
    KERNEL_LOADADDR := 0x00208000
  endef
  ifeq ($(SUBTARGET),meson8b)
+
+--- a/target/linux/meson/files/arch/arm/boot/dts/meson8b-onecloud.dts
++++ b/target/linux/meson/files/arch/arm/boot/dts/meson8b-onecloud.dts
+@@ -137,7 +137,7 @@
+ 	pinctrl-names = "default";
+ 
+ 	phy-handle = <&eth_phy>;
+-	phy-mode = "rgmii-id";
++	phy-mode = "rgmii-rxid";
+ 
+ 	mdio {
+ 		compatible = "snps,dwmac-mdio";

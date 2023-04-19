@@ -34,7 +34,7 @@ jobs:
 
     - name: cancel running workflows
       uses: styfle/cancel-workflow-action@main
-      if: contains(github.event.inputs.param, ' cw')
+      if: contains(github.event.inputs.param, 'cw')
       with:
         workflow_id: all
         access_token: ${{ github.token }}
@@ -118,6 +118,7 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "mediatek_mt7981 ${{ github.event.inputs.param }}", "client_payload": {"target": "mediatek_mt7981"}}'
+          curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
@@ -207,4 +208,3 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ath79_nand ${{ github.event.inputs.param }}", "client_payload": {"target": "ath79_nand"}}'
-

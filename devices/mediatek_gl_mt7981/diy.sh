@@ -14,8 +14,10 @@ rm -rf package/feeds
 
 rm -rf package/feeds/kiddin9/{rtl*,base-files,netifd}
 
-sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2023-12-06/" package/network/utils/iwinfo/Makefile
-sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2023-12-06/" package/network/config/netifd/Makefile
+rm -rf package/libs/mbedtls/patches/200-Implements-AES-and-GCM-with-ARMv8-Crypto-Extensions.patch
+
+sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2024-12-06/" package/network/utils/iwinfo/Makefile
+sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2024-12-06/" package/network/config/netifd/Makefile
 
 rm -rf devices/common/patches/{imagebuilder.patch,fix.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
 

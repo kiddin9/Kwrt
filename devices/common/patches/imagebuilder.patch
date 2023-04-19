@@ -31,7 +31,7 @@
 +	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
 +	echo -e " \
 +	sed -i \"s/[0-9]\+.[0-9]\+.[0-9]\{4\}/$$DATE/\" /etc/openwrt_release \n \
-+	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(PARTSIZE)'/\" /etc/openwrt_release \n \
++	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(ROOTFS_PARTSIZE)'/\" /etc/openwrt_release \n \
 +	sed -i \"s/OpenWrt .* by/OpenWrt $$DATE by/\" /etc/banner \n \
 +	echo \"$$DATE\" >/etc/openwrt_version \n \
 +	"> $(USER_FILES)/etc/uci-defaults/99-version; \
