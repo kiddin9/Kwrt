@@ -127,11 +127,6 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "mediatek_gl_mt7981 ${{ github.event.inputs.param }}", "client_payload": {"target": "mediatek_gl_mt7981"}}'
-          curl \
-          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ramips_mt7621 ${{ github.event.inputs.param }}", "client_payload": {"target": "ramips_mt7621"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
@@ -153,11 +148,6 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
           -d '{"event_type": "ipq40xx_generic ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq40xx_generic"}}'
-          curl \
-          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "bcm4908_generic ${{ github.event.inputs.param }}", "client_payload": {"target": "bcm4908_generic"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \

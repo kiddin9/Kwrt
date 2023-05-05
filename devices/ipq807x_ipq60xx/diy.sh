@@ -20,6 +20,9 @@ CONFIG_FEED_ipq807x=n
 CONFIG_FEED_wifi_ax=n
 " >> devices/common/.config
 
+rm -rf target/imagebuilder
+svn co https://github.com/openwrt/openwrt/branches/openwrt-21.02/target/imagebuilder target/imagebuilder
+
 rm -rf feeds/kiddin9/{rtl*,base-files,netifd,fullconenat-nft,mbedtls,oaf,shortcut-fe,fullconenat}
 svn co https://github.com/coolsnowwolf/openwrt-gl-ax1800/trunk/package/network/services/fullconenat feeds/kiddin9/fullconenat
 
@@ -28,7 +31,7 @@ rm -rf feeds/packages/net/xtables-addons package/feeds/packages/{openvswitch,ksm
 
 rm -rf package/kernel/exfat
 
-rm -rf devices/common/patches/{glinet,imagebuilder.patch,fix.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
+rm -rf devices/common/patches/{glinet,fix.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
 
 rm -rf toolchain/musl
 

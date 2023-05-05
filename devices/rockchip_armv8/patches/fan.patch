@@ -1,0 +1,175 @@
+From 6bd64bbc79b7a86224dea328dee07fa27f2cc06b Mon Sep 17 00:00:00 2001
+From: Lawrence-Tang <tangzongsheng@gmail.com>
+Date: Wed, 20 Oct 2021 15:00:23 +0800
+Subject: [PATCH] rockchip: add fan control for r2s/r4s
+
+---
+ .../armv8/base-files/etc/init.d/fa-fancontrol | 16 ++++
+ .../armv8/base-files/usr/bin/cputemp.sh       | 14 ++++
+ .../usr/bin/fa-fancontrol-direct.sh           | 69 +++++++++++++++++++
+ .../armv8/base-files/usr/bin/fa-fancontrol.sh | 36 ++++++++++
+ 4 files changed, 127 insertions(+)
+ create mode 100755 target/linux/rockchip/armv8/base-files/etc/init.d/fa-fancontrol
+ create mode 100755 target/linux/rockchip/armv8/base-files/usr/bin/cputemp.sh
+ create mode 100755 target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol-direct.sh
+ create mode 100755 target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol.sh
+
+diff --git a/target/linux/rockchip/armv8/base-files/etc/init.d/fa-fancontrol b/target/linux/rockchip/armv8/base-files/etc/init.d/fa-fancontrol
+new file mode 100755
+index 0000000000000..dd848927101b0
+--- /dev/null
++++ b/target/linux/rockchip/armv8/base-files/etc/init.d/fa-fancontrol
+@@ -0,0 +1,16 @@
++#!/bin/sh /etc/rc.common
++
++START=21
++start() {
++    /usr/bin/fa-fancontrol.sh &
++}
++
++stop() {
++kill -9 $(ps -w | grep fa-fancontrol | grep -v grep | awk '{print$1}') 2>/dev/null
++}
++
++restart() {
++stop
++start
++}
++
+diff --git a/target/linux/rockchip/armv8/base-files/usr/bin/cputemp.sh b/target/linux/rockchip/armv8/base-files/usr/bin/cputemp.sh
+new file mode 100755
+index 0000000000000..e497269bccdcd
+--- /dev/null
++++ b/target/linux/rockchip/armv8/base-files/usr/bin/cputemp.sh
+@@ -0,0 +1,14 @@
++#!/bin/bash
++
++while true
++do
++echo "-----------------"
++echo "Curr freq: `cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq`,`cat /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq`"
++echo "Temp: `cat /sys/class/thermal/thermal_zone0/temp`"
++if [ -d /sys/devices/platform/pwm-fan ]; then
++    CUR=`cat /sys/devices/virtual/thermal/cooling_device0/cur_state`
++    MAX=`cat /sys/devices/virtual/thermal/cooling_device0/max_state`
++    echo "Fan Level: ${CUR}/${MAX}"
++fi
++sleep 5
++done
+diff --git a/target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol-direct.sh b/target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol-direct.sh
+new file mode 100755
+index 0000000000000..b16c994d66955
+--- /dev/null
++++ b/target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol-direct.sh
+@@ -0,0 +1,69 @@
++#!/bin/bash
++
++# determine fan controller
++if [ -d /sys/devices/platform/pwm-fan ]; then
++    echo "pls use /usr/bin/fa-fancontrol.sh."
++    exit 1
++fi
++
++if [ ! -d /sys/class/pwm/pwmchip1 ]; then
++    echo "this model does not support pwm."
++    exit 1
++fi
++if [ ! -d /sys/class/pwm/pwmchip1/pwm0 ]; then
++    echo 0 > /sys/class/pwm/pwmchip1/export
++fi
++sleep 1
++while [ ! -d /sys/class/pwm/pwmchip1/pwm0 ];
++do
++    sleep 1
++done
++ISENABLE=`cat /sys/class/pwm/pwmchip1/pwm0/enable`
++if [ $ISENABLE -eq 1 ]; then
++    echo 0 > /sys/class/pwm/pwmchip1/pwm0/enable
++fi
++echo 50000 > /sys/class/pwm/pwmchip1/pwm0/period
++echo 1 > /sys/class/pwm/pwmchip1/pwm0/enable
++
++# max speed run 5s
++echo 46990 > /sys/class/pwm/pwmchip1/pwm0/duty_cycle
++sleep 5
++echo 25000 > /sys/class/pwm/pwmchip1/pwm0/duty_cycle
++
++# declare -a CpuTemps=(55000 43000 38000 32000)
++# declare -a PwmDutyCycles=(1000 20000 30000 45000)
++
++declare -a CpuTemps=(75000 63000 58000 52000)
++declare -a PwmDutyCycles=(25000 35000 45000 46990)
++
++declare -a Percents=(100 75 50 25)
++DefaultDuty=49990
++DefaultPercents=0
++
++while true
++do
++	temp=$(cat /sys/class/thermal/thermal_zone0/temp)
++	INDEX=0
++	FOUNDTEMP=0
++	DUTY=$DefaultDuty
++	PERCENT=$DefaultPercents
++	
++	for i in 0 1 2 3; do
++		if [ $temp -gt ${CpuTemps[$i]} ]; then
++			INDEX=$i
++			FOUNDTEMP=1
++			break
++		fi	
++	done
++	if [ ${FOUNDTEMP} == 1 ]; then
++		DUTY=${PwmDutyCycles[$i]}
++		PERCENT=${Percents[$i]}
++	fi
++
++	echo $DUTY > /sys/class/pwm/pwmchip1/pwm0/duty_cycle;
++
++        # echo "temp: $temp, duty: $DUTY, ${PERCENT}%"
++        # cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq
++
++	sleep 2s;
++done
+diff --git a/target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol.sh b/target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol.sh
+new file mode 100755
+index 0000000000000..e7c14054c80e9
+--- /dev/null
++++ b/target/linux/rockchip/armv8/base-files/usr/bin/fa-fancontrol.sh
+@@ -0,0 +1,36 @@
++#!/bin/bash
++
++# determine fan controller
++if [ -d /sys/devices/platform/pwm-fan ]; then
++    (cd /sys/devices/virtual/thermal/thermal_zone0 && {        
++        logger -p user.info -t "pwmfan" "set the conditions for fan"
++        [ -f trip_point_3_temp ] && {
++            # select fan level 1
++            echo 50000 > trip_point_3_temp
++        }
++        [ -f trip_point_4_temp ] && {
++            # select fan level 2-4
++            echo 55000 > trip_point_4_temp
++        }
++    })
++
++    (cd /sys/devices/virtual/thermal/cooling_device0 && {
++        TYPE=`cat type`
++        if [ $TYPE = 'pwm-fan' ]; then
++            # run 5s
++            for i in `seq 1 5`; do
++                logger -p user.info -t "pwmfan" "start to spin ${i}/5"
++                echo 3 > cur_state
++                sleep 1
++            done
++            logger -p user.info -t "pwmfan" "set to auto"
++            echo 0 > cur_state
++        fi
++    })
++else
++    logger -p user.info -t "pwmfan" "not found cooling device"
++    if [ -d /sys/class/pwm ]; then
++        nohup /usr/bin/fa-fancontrol-direct.sh&
++    fi
++fi
++

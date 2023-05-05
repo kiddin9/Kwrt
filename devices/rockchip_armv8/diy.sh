@@ -18,8 +18,6 @@ curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/ker
 svn co https://github.com/openwrt/openwrt/trunk/package/kernel/mt76 package/feeds/kiddin9/mt76
 curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/feeds/kiddin9/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
 
-svn co https://github.com/openwrt/openwrt/trunk/package/network/services/hostapd  package/feeds/kiddin9/hostapd
-
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
 mv -f tmp/r8125 feeds/kiddin9/

@@ -13,7 +13,7 @@
 +	kmod-ipt-nat6 \
  	odhcp6c \
  	odhcpd-ipv6only \
-@@ -83,4 +85,20 @@
+@@ -83,4 +85,16 @@
      -include ./$(SUBTARGET)/target.mk
    endif
 +endif
@@ -23,14 +23,10 @@
 +endif
 +
 +ifeq ($(ARCH),arm)
-+  DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
++  DEFAULT_PACKAGES+=luci-app-cpufreq
 +endif
 +
 +ifeq ($(ARCH),aarch64)
-+  DEFAULT_PACKAGES+=autocore-arm luci-app-cpufreq
-+endif
-+
-+ifneq ($(CONFIG_USB_SUPPORT),)
-+  DEFAULT_PACKAGES+=automount
++  DEFAULT_PACKAGES+=luci-app-cpufreq
  endif
  
