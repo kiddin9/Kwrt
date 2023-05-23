@@ -12,7 +12,13 @@ rm -rf package/feeds
 ./scripts/feeds install -a -p wifi_ax -f
 ./scripts/feeds install -a -p gl_feeds_common -f
 ./scripts/feeds install -a -p kiddin9 -f
+sed -i '/postgres=5432/d' feeds/packages.index
+sed -i '/postgres=5432/d' feeds/packages/net/gnunet/Makefile
 ./scripts/feeds install -a
+
+sed -i "s/make-ext4fs missing-macros/make-ext4fs meson missing-macros/" tools/Makefile
+curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/openwrt-22.03/include/meson.mk -o include/meson.mk
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/tools/meson tools/meson
 
 echo "
 CONFIG_FEED_gl_feeds_common=n

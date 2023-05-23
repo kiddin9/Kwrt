@@ -1,42 +1,24 @@
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -371,7 +370,7 @@ define Device/Init
-   KERNEL_INITRAMFS_SUFFIX = $$(KERNEL_SUFFIX)
-   KERNEL_IMAGE = $$(KERNEL_PREFIX)$$(KERNEL_SUFFIX)
-   KERNEL_INITRAMFS_PREFIX = $$(IMAGE_PREFIX)-initramfs
--  KERNEL_INITRAMFS_IMAGE = $$(KERNEL_INITRAMFS_PREFIX)$$(KERNEL_INITRAMFS_SUFFIX)
-+  KERNEL_INITRAMFS_IMAGE = $(subst $(IMG_PREFIX_EXTRA),,$(IMG_PREFIX))-$(1)-initramfs$$(KERNEL_INITRAMFS_SUFFIX)
-   KERNEL_INITRAMFS_NAME = $$(KERNEL_NAME)-initramfs
-   KERNEL_INSTALL :=
-   KERNEL_NAME := vmlinux
-@@ -469,7 +468,6 @@ define Device/Check
-   endif
- endef
- 
--ifndef IB
- define Device/Build/initramfs
-   $(call Device/Export,$(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE),$(1))
-   $$(_TARGET): $$(if $$(KERNEL_INITRAMFS),$(BIN_DIR)/$$(KERNEL_INITRAMFS_IMAGE) \
-@@ -479,9 +477,11 @@ define Device/Build/initramfs
-   $(BIN_DIR)/$$(KERNEL_INITRAMFS_IMAGE): $(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE)
- 	cp $$^ $$@
- 
-+  ifndef IB
-   $(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE): $(KDIR)/$$(KERNEL_INITRAMFS_NAME) $(CURDIR)/Makefile $$(KERNEL_DEPENDS) image_prepare
- 	@rm -f $$@
- 	$$(call concat_cmd,$$(KERNEL_INITRAMFS))
-+  endif
- 
-   $(call Device/Export,$(BUILD_DIR)/json_info_files/$$(KERNEL_INITRAMFS_IMAGE).json,$(1))
- 
-@@ -515,7 +515,6 @@ define Device/Build/initramfs
- 	SUPPORTED_DEVICES="$$(SUPPORTED_DEVICES)" \
- 	$(TOPDIR)/scripts/json_add_image_info.py $$@
- endef
--endif
- 
- define Device/Build/compile
-   $$(_COMPILE_TARGET): $(KDIR)/$(1)
+@@ -609,6 +609,7 @@ define Device/Build/image
+ 	IMAGE_TYPE=$(word 1,$(subst ., ,$(2))) \
+ 	IMAGE_FILESYSTEM="$(1)" \
+ 	IMAGE_PREFIX="$(IMAGE_PREFIX)" \
++	KERNEL_INITRAMFS_IMAGE="$(subst $(IMG_PREFIX_EXTRA),,$(KERNEL_INITRAMFS_IMAGE))" \
+ 	DEVICE_VENDOR="$(DEVICE_VENDOR)" \
+ 	DEVICE_MODEL="$(DEVICE_MODEL)" \
+ 	DEVICE_VARIANT="$(DEVICE_VARIANT)" \
+
+--- a/scripts/json_add_image_info.py
++++ b/scripts/json_add_image_info.py
+@@ -48,6 +48,7 @@ def get_titles():
+     "profiles": {
+         device_id: {
+             "image_prefix": getenv("IMAGE_PREFIX"),
++            "image_initramfs": getenv("KERNEL_INITRAMFS_IMAGE"),
+             "images": [
+                 {
+                     "type": getenv("IMAGE_TYPE"),
 
 --- a/scripts/json_overview_image_info.py
 +++ b/scripts/json_overview_image_info.py

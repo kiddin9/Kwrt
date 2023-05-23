@@ -422,6 +422,46 @@
 	};
 };
 
+&dp1 {
+	status = "okay";
+	phy-handle = <&qca8075_0>;
+	label = "lan4";
+	nvmem-cells = <&macaddr_dp1>;
+	nvmem-cell-names = "mac-address";
+};
+
+&dp2 {
+	status = "okay";
+	phy-handle = <&qca8075_1>;
+	label = "lan3";
+	nvmem-cells = <&macaddr_dp2>;
+	nvmem-cell-names = "mac-address";
+};
+
+&dp3 {
+	status = "okay";
+	phy-handle = <&qca8075_2>;
+	label = "lan2";
+	nvmem-cells = <&macaddr_dp3>;
+	nvmem-cell-names = "mac-address";
+};
+
+&dp4 {
+	status = "okay";
+	phy-handle = <&qca8075_3>;
+	label = "lan1";
+	nvmem-cells = <&macaddr_dp4>;
+	nvmem-cell-names = "mac-address";
+};
+
+&dp5 {
+	status = "okay";
+	phy-handle = <&qca8081>;
+	label = "wan";
+	nvmem-cells = <&macaddr_dp5>;
+	nvmem-cell-names = "mac-address";
+};
+
 &edma {
 	status = "okay";
 };

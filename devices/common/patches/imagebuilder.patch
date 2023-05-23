@@ -1,14 +1,5 @@
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
-@@ -26,7 +26,7 @@ all: compile
- 
- $(BIN_DIR)/$(IB_NAME).tar.xz: clean
- 	rm -rf $(PKG_BUILD_DIR)
--	mkdir -p $(IB_KDIR) $(IB_LDIR) $(PKG_BUILD_DIR)/staging_dir/host/lib \
-+	mkdir -p $(IB_KDIR)/tmp $(IB_LDIR) $(PKG_BUILD_DIR)/staging_dir/host/lib \
- 		$(PKG_BUILD_DIR)/target $(PKG_BUILD_DIR)/scripts $(IB_DTSDIR)
- 	-cp $(TOPDIR)/.config $(PKG_BUILD_DIR)/.config
- 	$(SED) 's/^CONFIG_BINARY_FOLDER=.*/# CONFIG_BINARY_FOLDER is not set/' $(PKG_BUILD_DIR)/.config
 @@ -38,13 +38,16 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
  		./files/repositories.conf \
  		$(TMP_DIR)/.targetinfo \
@@ -29,14 +20,6 @@
  
  	$(INSTALL_DIR) $(PKG_BUILD_DIR)/packages
  	# create an empty package index so `opkg` doesn't report an error
-@@ -79,6 +82,7 @@ ifneq ($(CONFIG_SIGNATURE_CHECK),)
- endif
- 
- 	$(CP) -L $(TOPDIR)/target/linux $(PKG_BUILD_DIR)/target/
-+	$(CP) -L $(KERNEL_BUILD_DIR)/tmp/*initramfs* $(IB_KDIR)/tmp/ || true
- 	if [ -d $(TOPDIR)/staging_dir/host/lib/grub ]; then \
- 		$(CP) $(TOPDIR)/staging_dir/host/lib/grub/ $(PKG_BUILD_DIR)/staging_dir/host/lib; \
- 	fi
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
@@ -68,7 +51,7 @@
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
  	$(MAKE) -s checksum
-+	rm -rf $(KERNEL_BUILD_DIR)/tmp/openwrt-20.*
++	rm -rf $(KERNEL_BUILD_DIR)/tmp
 +	rm -rf $(KERNEL_BUILD_DIR)/root.*
  
  _call_manifest: FORCE

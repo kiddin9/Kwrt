@@ -75,6 +75,8 @@ jobs:
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "ath79_nand" ]]; then
             echo "MTARGET=mips_24kc" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "ipq50xx_arm" ]]; then
+            echo "MTARGET=arm_cortex-a7" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "meson_meson8b" ]]; then
@@ -148,11 +150,13 @@ jobs:
             python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
             ln -sf gl-infra-builder/mt7981 ../openwrt
             cd -
-        elif [ ! "${{ env.REPO_BRANCH }}" ]; then
+        elif [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
           REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
            -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1)"
            git clone $REPO_URL -b $REPO_BRANCH openwrt
+        elif [[ ! "${{ env.REPO_BRANCH }}" ]]; then
+            git clone $REPO_URL openwrt
         else
             git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt
             echo "git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt"

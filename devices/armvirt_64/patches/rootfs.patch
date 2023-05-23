@@ -1,11 +1,47 @@
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -770,5 +770,7 @@
+@@ -728,8 +769,10 @@ endef
+ define Device
    $(call Device/InitProfile,$(1))
    $(call Device/Init,$(1))
 +  $(call Device/Init,$(PROFILE_SANITIZED))
    $(call Device/Default,$(1))
+   $(call Device/$(1),$(1))
 +  $(call Device/$(PROFILE_SANITIZED),$(1))
    $(call Device/Check,$(1))
    $(call Device/$(if $(DUMP),Dump,Build),$(1))
+ 
 
+--- a/target/linux/armvirt/image/Makefile
++++ b/target/linux/armvirt/image/Makefile
+@@ -23,10 +23,30 @@ endef
+ 
+ $(eval $(call Image/gzip-ext4-padded-squashfs))
+ 
++define Device/box
++  DEVICE_VENDOR := 
++  DEVICE_MODEL := 电视盒子全系列 / N1
++  DEVICE_PACKAGES :=
++endef
++TARGET_DEVICES += box
++
++define Device/armvirt
++  DEVICE_MODEL := QEMU ARM virt machine
++  DEVICE_PACKAGES :=
++endef
++TARGET_DEVICES += armvirt
++
+ define Image/Build
+ 	$(call Image/Build/$(1))
+ 	$(CP) $(KDIR)/root.$(1) $(BIN_DIR)/$(IMG_ROOTFS)-$(1).img
+ 	$(call Image/Build/gzip/$(1))
++	if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
++	export BIN_DIR=$(BIN_DIR); \
++	export DATE=$(DATE); \
++	cd /www/wwwroot/op.supes.top/bcache/armvirt/64/amlogic-s9xxx-openwrt; \
++	. ../modify_amlogic.sh; \
++	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))) || true; \
++	fi
+ endef
+ 
+ $(eval $(call BuildImage))
