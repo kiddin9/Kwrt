@@ -21,9 +21,14 @@ curl -sfL https://raw.githubusercontent.com/coolsnowwolf/openwrt-gl-ax1800/maste
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/openwrt-gl-ax1800/master/include/quilt.mk -o include/quilt.mk
 
 rm -rf toolchain/.svn
-rm -rf feeds/kiddin9/{rtl*,fullconenat-nft,shortcut-fe,netifd} package/kernel/mt76 toolchain/musl package/feeds/packages/{xtables-addons,openvswitch}
-svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/toolchain/musl toolchain/musl
-svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/toolchain/glibc toolchain/glibc
+rm -rf feeds/kiddin9/{rtl*,fullconenat-nft,shortcut-fe,netifd} package/kernel/mt76 toolchain/musl package/feeds/packages/{xtables-addons,openvswitch} package/libs/elfutils package/utils/util-linux package/feeds/luci/ucode-mod-html package/libs/openssl package/network/utils/iptables package/feeds/packages/v4l2loopback package/feeds/packages/jool package/network/utils/uqmi
+svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/toolchain/musl toolchain/musl
+svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/toolchain/glibc toolchain/glibc
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/libs/elfutils package/libs/elfutils
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/utils/util-linux package/utils/util-linux
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/libs/openssl package/libs/openssl
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/network/utils/iptables package/network/utils/iptables
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/network/utils/uqmi package/network/utils/uqmi
 
 sed -i "s/5.4.0/4.4.0/" toolchain/glibc/common.mk
 

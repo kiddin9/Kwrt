@@ -3,7 +3,7 @@
 shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
-#bash $SHELL_FOLDER/../common/kernel_5.15.sh
+
 
 sed -i "s/DEVICE_MODEL := HC5962$/DEVICE_MODEL := HC5962 \/ B70/" target/linux/ramips/image/mt7621.mk
 

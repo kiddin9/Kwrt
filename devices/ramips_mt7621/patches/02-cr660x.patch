@@ -1,39 +1,19 @@
-From 593d238ebf777c36c9ee819a1e20f59da5adc361 Mon Sep 17 00:00:00 2001
-From: kiddin9 <48883331+kiddin9@users.noreply.github.com>
-Date: Tue, 5 Jul 2022 17:54:53 +0800
-Subject: [PATCH] Update mt7621.mk
-
-Signed-off-by: kiddin9 <48883331+kiddin9@users.noreply.github.com>
----
- target/linux/ramips/image/mt7621.mk | 46 +++++++++--------------------
- 1 file changed, 14 insertions(+), 32 deletions(-)
-
-diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
-index bdaeac2cb16e..72fbd3930a80 100644
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -223,7 +223,7 @@ define Device/asus_rt-n56u-b1
-   DEVICE_VARIANT := B1
-   IMAGE_SIZE := 16064k
-   DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
--	kmod-usb-ledtrig-usbport
-+	kmod-usb-ledtrig-usbport wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
+@@ -157,6 +157,65 @@ define Device/nand
+   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
  endef
- TARGET_DEVICES += asus_rt-n56u-b1
  
-@@ -984,7 +984,7 @@ define Device/jcg_y2
-   JCG_MAXSIZE := 16064k
-   DEVICE_VENDOR := JCG
-   DEVICE_MODEL := Y2
--  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware kmod-usb3
-+  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware kmod-usb3 wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
- endef
- TARGET_DEVICES += jcg_y2
- 
-@@ -1000,6 +1000,16 @@ define Device/lenovo_newifi-d1
- endef
- TARGET_DEVICES += lenovo_newifi-d1
- 
++define Device/phicomm_k2p-32m
++  IMAGE_SIZE := 32128k
++  DEVICE_VENDOR := Phicomm
++  DEVICE_MODEL := K2P
++  DEVICE_VARIANT := 32M
++  SUPPORTED_DEVICES += k2p-32M
++  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
++endef
++TARGET_DEVICES += phicomm_k2p-32m
++
 +define Device/jdcloud_re-sp-01b
 +  $(Device/dsa-migration)
 +  $(Device/uimage-lzma-loader)
@@ -42,84 +22,70 @@ index bdaeac2cb16e..72fbd3930a80 100644
 +  DEVICE_MODEL := RE-SP-01B
 +  DEVICE_PACKAGES := kmod-fs-ext4 kmod-mt7603 kmod-mt7615e kmod-mt7615-firmware kmod-sdhci-mt7620 kmod-usb3
 + endef
-+  TARGET_DEVICES += jdcloud_re-sp-01b
++ TARGET_DEVICES += jdcloud_re-sp-01b
 +
- define Device/linksys_e5600
++define Device/jdcloud_luban
++  $(Device/dsa-migration)
++  $(Device/uimage-lzma-loader)
++  IMAGE_SIZE := 15808k
++  DEVICE_VENDOR := JDCloud
++  DEVICE_MODEL := Luban 鲁班
++  DEVICE_PACKAGES += kmod-mt7915e uboot-envtools wpad-mini -wpad-basic-mbedtls -coremark -htop -bash -openssh-sftp-server
++endef
++TARGET_DEVICES += jdcloud_luban
++
++define Device/zte_e8820s
++  $(Device/dsa-migration)
++  $(Device/uimage-lzma-loader)
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  KERNEL_SIZE := 4096k
++  UBINIZE_OPTS := -E 5
++  IMAGE_SIZE := 130304k
++  IMAGES += factory.bin
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
++	check-size
++  DEVICE_VENDOR := ZTE
++  DEVICE_MODEL := E8820S
++  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 uboot-envtools
++endef
++TARGET_DEVICES += zte_e8820s
++
++define Device/zte_e8820v2
++  $(Device/dsa-migration)
++  $(Device/uimage-lzma-loader)
++  IMAGE_SIZE := 16064k
++  DEVICE_VENDOR := ZTE
++  DEVICE_MODEL := E8820V2
++  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb2 \
++	kmod-usb-ledtrig-usbport wpad-mini -wpad-basic-mbedtls -coremark -htop -bash -openssh-sftp-server
++endef
++TARGET_DEVICES += zte_e8820v2
++
+ define Device/adslr_g7
    $(Device/dsa-migration)
-   $(Device/uimage-lzma-loader)
-@@ -1369,7 +1379,7 @@ define Device/netgear_wndr3700-v5
-   SERCOMM_SWVER := 0x1054
-   SERCOMM_PAD := 320k
-   DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
--	kmod-usb-ledtrig-usbport
-+	kmod-usb-ledtrig-usbport wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
-   SUPPORTED_DEVICES += wndr3700v5
- endef
- TARGET_DEVICES += netgear_wndr3700-v5
-@@ -1400,7 +1410,7 @@ define Device/oraybox_x3a
-   IMAGE_SIZE := 15360k
-   DEVICE_VENDOR := OrayBox
-   DEVICE_MODEL := X3A
--  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
-+  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
- endef
- TARGET_DEVICES += oraybox_x3a
- 
-@@ -1412,7 +1422,7 @@ define Device/phicomm_k2p
-   DEVICE_ALT0_VENDOR := Phicomm
-   DEVICE_ALT0_MODEL := KE 2P
-   SUPPORTED_DEVICES += k2p
--  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
-+  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
- endef
- TARGET_DEVICES += phicomm_k2p
- 
-@@ -1533,7 +1543,7 @@ define Device/thunder_timecloud
    IMAGE_SIZE := 16064k
-   DEVICE_VENDOR := Thunder
-   DEVICE_MODEL := Timecloud
--  DEVICE_PACKAGES := kmod-usb3 -wpad-basic-wolfssl
-+  DEVICE_PACKAGES := kmod-usb3 -wpad-basic-wolfssl -bash -openssh-sftp-server -coremark -htop
-   SUPPORTED_DEVICES += timecloud
- endef
- TARGET_DEVICES += thunder_timecloud
-@@ -1843,7 +1853,6 @@ define Device/xiaomi_nand_separate
-   PAGESIZE := 2048
-   KERNEL_SIZE := 4096k
-   UBINIZE_OPTS := -E 5
+@@ -2427,7 +2486,6 @@ define Device/xiaomi_nand_separate
+   $(Device/nand)
+   $(Device/uimage-lzma-loader)
+   DEVICE_VENDOR := Xiaomi
 -  IMAGES += kernel1.bin rootfs0.bin
    IMAGE/kernel1.bin := append-kernel
    IMAGE/rootfs0.bin := append-ubi | check-size
-   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-@@ -1866,7 +1875,7 @@ define Device/xiaomi_mi-router-3g-v2
-   DEVICE_VENDOR := Xiaomi
-   DEVICE_MODEL := Mi Router 3G
-   DEVICE_VARIANT := v2
--  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2
-+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
-   SUPPORTED_DEVICES += xiaomi,mir3g-v2
  endef
- TARGET_DEVICES += xiaomi_mi-router-3g-v2
-@@ -1881,7 +1890,6 @@ define Device/xiaomi_mi-router-3-pro
-   IMAGE_SIZE := 255488k
+@@ -2511,30 +2569,14 @@ define Device/xiaomi_mi-router-cr660x
+   $(Device/nand)
+   $(Device/uimage-lzma-loader)
    DEVICE_VENDOR := Xiaomi
-   DEVICE_MODEL := Mi Router 3 Pro
--  IMAGES += factory.bin
-   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-   IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
- 	check-size
-@@ -1927,30 +1935,14 @@ define Device/xiaomi_mi-router-cr660x
-   KERNEL_SIZE := 4096k
-   UBINIZE_OPTS := -E 5
++  DEVICE_MODEL := Mi Router CR660X / TR60X
    IMAGE_SIZE := 128512k
 -  IMAGES += firmware.bin
-+  IMAGES += factory.bin
-   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 -  IMAGE/firmware.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
++  IMAGES += factory.bin
 +  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
  	check-size
-   DEVICE_PACKAGES += kmod-mt7915e uboot-envtools
-+  DEVICE_MODEL := Mi Router CR660X / TR60X
+   DEVICE_PACKAGES += kmod-mt7915-firmware
  endef
 -
 -define Device/xiaomi_mi-router-cr6606
@@ -142,25 +108,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
 +TARGET_DEVICES += xiaomi_mi-router-cr660x
  
  define Device/xiaomi_redmi-router-ac2100
-   $(Device/xiaomi_nand_separate)
-@@ -1985,7 +1977,7 @@ define Device/youhua_wr1200js
-   DEVICE_VENDOR := YouHua
-   DEVICE_MODEL := WR1200JS
-   DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
--	kmod-usb-ledtrig-usbport
-+	kmod-usb-ledtrig-usbport wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
- endef
- TARGET_DEVICES += youhua_wr1200js
- 
-@@ -1995,7 +1987,7 @@ define Device/youku_yk-l2
-   DEVICE_VENDOR := Youku
-   DEVICE_MODEL := YK-L2
-   DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 \
--	kmod-usb-ledtrig-usbport
-+	kmod-usb-ledtrig-usbport wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
-   UIMAGE_MAGIC := 0x12291000
-   UIMAGE_NAME := 400000000000000000003000
- 
+   $(Device/xiaomi_nand_separate) 
 
 --- /dev/null
 +++ b/target/linux/ramips/dts/mt7621_xiaomi_mi-router-cr660x.dts
@@ -190,29 +138,29 @@ index bdaeac2cb16e..72fbd3930a80 100644
 
 --- a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
 +++ b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
-@@ -28,9 +28,7 @@ ramips_setup_interfaces()
- 	hiwifi,hc5962|\
+@@ -48,9 +48,7 @@ ramips_setup_interfaces()
+ 	sim,simax1800t|\
  	xiaomi,mi-router-3-pro|\
  	xiaomi,mi-router-ac2100|\
 -	xiaomi,mi-router-cr6606|\
 -	xiaomi,mi-router-cr6608|\
 -	xiaomi,mi-router-cr6609|\
 +	xiaomi,mi-router-cr660x|\
- 	xiaomi,redmi-router-ac2100)
+ 	xiaomi,redmi-router-ac2100|\
+ 	zyxel,wsm20)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
- 		;;
-@@ -45,6 +43,7 @@ ramips_setup_interfaces()
+@@ -68,6 +66,7 @@ ramips_setup_interfaces()
  	iptime,a3002mesh|\
  	jcg,q20|\
  	lenovo,newifi-d1|\
 +	jdcloud,re-sp-01b|\
  	mikrotik,routerboard-m33g|\
+ 	mts,wg430223|\
  	oraybox,x3a|\
- 	renkforce,ws-wn530hp3-a|\
 
 --- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
-@@ -92,9 +92,7 @@ platform_do_upgrade() {
+@@ -109,9 +109,8 @@ platform_do_upgrade() {
  	xiaomi,mi-router-3-pro|\
  	xiaomi,mi-router-4|\
  	xiaomi,mi-router-ac2100|\
@@ -220,6 +168,7 @@ index bdaeac2cb16e..72fbd3930a80 100644
 -	xiaomi,mi-router-cr6608|\
 -	xiaomi,mi-router-cr6609|\
 +	xiaomi,mi-router-cr660x|\
++	zte,e8820s|\
  	xiaomi,redmi-router-ac2100|\
  	zyxel,nwa50ax|\
  	zyxel,nwa55axe)

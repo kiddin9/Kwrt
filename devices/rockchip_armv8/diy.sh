@@ -2,7 +2,6 @@
 
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
-bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
 rm -rf package/boot/uboot-rockchip
 svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/uboot-rockchip package/boot/uboot-rockchip

@@ -25,7 +25,7 @@ X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、R5C、R6S、NEO3, 斐讯 
 <a href="https://t.me/opwrt" target="_blank">TG通知频道</a>
 ## 1. **特色**
 
-+ Cutting edge,openwrt官方openwrt-22.03分支版本, Kernel 5.15, 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-23.05分支版本, Kernel 5.15, 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能, 后台在线选装插件,系统升级不丢失插件和配置.
 

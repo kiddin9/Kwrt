@@ -1,6 +1,60 @@
+diff --git a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts b/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
+similarity index 94%
+rename from target/linux/ramips/dts/mt7621_phicomm_k2p.dts
+rename to target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
+index b18d12608acc7..8f72ac2a48280 100644
+--- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
+@@ -4,9 +4,6 @@
+ #include <dt-bindings/input/input.h>
+ 
+ / {
+-	compatible = "phicomm,k2p", "mediatek,mt7621-soc";
+-	model = "Phicomm K2P";
+-
+ 	aliases {
+ 		led-boot = &led_blue;
+ 		led-failsafe = &led_blue;
+@@ -47,7 +44,7 @@
+ &spi0 {
+ 	status = "okay";
+ 
+-	flash@0 {
++	flash: flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-max-frequency = <50000000>;
+@@ -81,10 +78,9 @@
+ 				read-only;
+ 			};
+ 
+-			partition@a0000 {
++			firmware: partition@a0000 {
+ 				compatible = "denx,uimage";
+ 				label = "firmware";
+-				reg = <0xa0000 0xf60000>;
+ 			};
+ 		};
+ 	};
+diff --git a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
+new file mode 100644
+index 0000000000000..5bad6f2d9562d
+--- /dev/null
++++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
+@@ -0,0 +1,10 @@
++#include "mt7621_phicomm_k2p.dtsi"
++
++/ {
++	compatible = "phicomm,k2p", "mediatek,mt7621-soc";
++ 	model = "Phicomm K2P";
++};
++
++&firmware {
++	reg = <0xa0000 0x1f60000>;
++};
 diff --git a/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts b/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
 new file mode 100644
-index 000000000000..e828b069afb4
+index 0000000000000..5bad6f2d9562d
 --- /dev/null
 +++ b/target/linux/ramips/dts/mt7621_phicomm_k2p-32m.dts
 @@ -0,0 +1,14 @@
@@ -18,376 +72,6 @@ index 000000000000..e828b069afb4
 +&flash {
 +	broken-flash-reset;
 +};
-diff --git a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
-index fa02521ba6c1..1a973a2a82ce 100644
---- a/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
-+++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dts
-@@ -1,169 +1,10 @@
--#include "mt7621.dtsi"
--
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/input/input.h>
-+#include "mt7621_phicomm_k2p.dtsi"
- 
- / {
- 	compatible = "phicomm,k2p", "mediatek,mt7621-soc";
- 	model = "Phicomm K2P";
--
--	aliases {
--		led-boot = &led_blue;
--		led-failsafe = &led_blue;
--		led-running = &led_blue;
--		led-upgrade = &led_blue;
--	};
--
--	leds {
--		compatible = "gpio-leds";
--
--		stat_r {
--			label = "red:status";
--			gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
--		};
--
--		stat_y {
--			label = "yellow:status";
--			gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
--		};
--
--		led_blue: stat_b {
--			label = "blue:status";
--			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
--		};
--	};
--
--	keys {
--		compatible = "gpio-keys";
--
--		reset {
--			label = "reset";
--			gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
--			linux,code = <KEY_RESTART>;
--		};
--	};
--};
--
--&spi0 {
--	status = "okay";
--
--	flash@0 {
--		compatible = "jedec,spi-nor";
--		reg = <0>;
--		spi-max-frequency = <50000000>;
--
--		partitions {
--			compatible = "fixed-partitions";
--			#address-cells = <1>;
--			#size-cells = <1>;
--
--			partition@0 {
--				label = "u-boot";
--				reg = <0x0 0x30000>;
--				read-only;
--			};
--
--			partition@30000 {
--				label = "u-boot-env";
--				reg = <0x30000 0x10000>;
--				read-only;
--			};
--
--			factory: partition@40000 {
--				label = "factory";
--				reg = <0x40000 0x10000>;
--				read-only;
--			};
--
--			partition@50000 {
--				label = "permanent_config";
--				reg = <0x50000 0x50000>;
--				read-only;
--			};
--
--			partition@a0000 {
--				compatible = "denx,uimage";
--				label = "firmware";
--				reg = <0xa0000 0xf60000>;
--			};
--		};
--	};
- };
- 
--&pcie {
--	status = "okay";
--};
--
--&pcie0 {
--	wifi@0,0 {
--		compatible = "mediatek,mt76";
--		reg = <0x0000 0 0 0 0>;
--		mediatek,mtd-eeprom = <&factory 0x0>;
--
--		/* 5 GHz (phy1) does not take the address from calibration data,
--		   but setting it manually here works */
--		nvmem-cells = <&macaddr_factory_4>;
--		nvmem-cell-names = "mac-address";
--	};
--};
--
--&gmac0 {
--	nvmem-cells = <&macaddr_factory_e000>;
--	nvmem-cell-names = "mac-address";
--};
--
--&switch0 {
--	ports {
--		port@0 {
--			status = "okay";
--			label = "lan1";
--		};
--
--		port@1 {
--			status = "okay";
--			label = "lan2";
--		};
--
--		port@2 {
--			status = "okay";
--			label = "lan3";
--		};
--
--		port@3 {
--			status = "okay";
--			label = "lan4";
--		};
--
--		port@4 {
--			status = "okay";
--			label = "wan";
--			nvmem-cells = <&macaddr_factory_e006>;
--			nvmem-cell-names = "mac-address";
--		};
--	};
--};
--
--&state_default {
--	gpio {
--		groups = "i2c", "jtag";
--		function = "gpio";
--	};
--};
--
--&factory {
--	compatible = "nvmem-cells";
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	macaddr_factory_4: macaddr@4 {
--		reg = <0x4 0x6>;
--	};
--
--	macaddr_factory_e000: macaddr@e000 {
--		reg = <0xe000 0x6>;
--	};
--
--	macaddr_factory_e006: macaddr@e006 {
--		reg = <0xe006 0x6>;
--	};
-+&firmware {
-+	reg = <0xa0000 0xf60000>;
- };
-diff --git a/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi b/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
-new file mode 100644
-index 000000000000..90458050554c
---- /dev/null
-+++ b/target/linux/ramips/dts/mt7621_phicomm_k2p.dtsi
-@@ -0,0 +1,165 @@
-+#include "mt7621.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	aliases {
-+		led-boot = &led_blue;
-+		led-failsafe = &led_blue;
-+		led-running = &led_blue;
-+		led-upgrade = &led_blue;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		stat_r {
-+			label = "red:status";
-+			gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		stat_y {
-+			label = "yellow:status";
-+			gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led_blue: stat_b {
-+			label = "blue:status";
-+			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	keys {
-+		compatible = "gpio-keys";
-+
-+		reset {
-+			label = "reset";
-+			gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_RESTART>;
-+		};
-+	};
-+};
-+
-+&spi0 {
-+	status = "okay";
-+
-+	flash: flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "u-boot";
-+				reg = <0x0 0x30000>;
-+				read-only;
-+			};
-+
-+			partition@30000 {
-+				label = "u-boot-env";
-+				reg = <0x30000 0x10000>;
-+				read-only;
-+			};
-+
-+			factory: partition@40000 {
-+				label = "factory";
-+				reg = <0x40000 0x10000>;
-+				read-only;
-+			};
-+
-+			partition@50000 {
-+				label = "permanent_config";
-+				reg = <0x50000 0x50000>;
-+				read-only;
-+			};
-+
-+			firmware: partition@a0000 {
-+				compatible = "denx,uimage";
-+				label = "firmware";
-+			};
-+		};
-+	};
-+};
-+
-+&pcie {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	wifi@0,0 {
-+		compatible = "mediatek,mt76";
-+		reg = <0x0000 0 0 0 0>;
-+		mediatek,mtd-eeprom = <&factory 0x0>;
-+
-+		/* 5 GHz (phy1) does not take the address from calibration data,
-+		   but setting it manually here works */
-+		nvmem-cells = <&macaddr_factory_4>;
-+		nvmem-cell-names = "mac-address";
-+	};
-+};
-+
-+&gmac0 {
-+	nvmem-cells = <&macaddr_factory_e000>;
-+	nvmem-cell-names = "mac-address";
-+};
-+
-+&switch0 {
-+	ports {
-+		port@0 {
-+			status = "okay";
-+			label = "lan1";
-+		};
-+
-+		port@1 {
-+			status = "okay";
-+			label = "lan2";
-+		};
-+
-+		port@2 {
-+			status = "okay";
-+			label = "lan3";
-+		};
-+
-+		port@3 {
-+			status = "okay";
-+			label = "lan4";
-+		};
-+
-+		port@4 {
-+			status = "okay";
-+			label = "wan";
-+			nvmem-cells = <&macaddr_factory_e006>;
-+			nvmem-cell-names = "mac-address";
-+		};
-+	};
-+};
-+
-+&state_default {
-+	gpio {
-+		groups = "i2c", "jtag";
-+		function = "gpio";
-+	};
-+};
-+
-+&factory {
-+	compatible = "nvmem-cells";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	macaddr_factory_4: macaddr@4 {
-+		reg = <0x4 0x6>;
-+	};
-+
-+	macaddr_factory_e000: macaddr@e000 {
-+		reg = <0xe000 0x6>;
-+	};
-+
-+	macaddr_factory_e006: macaddr@e006 {
-+		reg = <0xe006 0x6>;
-+	};
-+};
-diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
-index 8c3ef04e35f4..b043d14bd12f 100644
---- a/target/linux/ramips/image/mt7621.mk
-+++ b/target/linux/ramips/image/mt7621.mk
-@@ -829,6 +829,16 @@ define Device/phicomm_k2p
- endef
- TARGET_DEVICES += phicomm_k2p
- 
-+define Device/phicomm_k2p-32m
-+  IMAGE_SIZE := 32128k
-+  DEVICE_VENDOR := Phicomm
-+  DEVICE_MODEL := K2P
-+  DEVICE_VARIANT := 32M
-+  SUPPORTED_DEVICES += k2p-32M
-+  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
-+endef
-+TARGET_DEVICES += phicomm_k2p-32m
-+
- define Device/planex_vr500
-   $(Device/uimage-lzma-loader)
-   IMAGE_SIZE := 65216k
-
 --- a/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
 +++ b/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
 @@ -28,7 +28,8 @@ case "$board" in

@@ -5,6 +5,6 @@
  
  include $(INCLUDE_DIR)/target.mk
 -DEFAULT_PACKAGES += kmod-leds-gpio kmod-gpio-button-hotplug
-+DEFAULT_PACKAGES += kmod-leds-gpio kmod-gpio-button-hotplug wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
++DEFAULT_PACKAGES += kmod-leds-gpio kmod-gpio-button-hotplug wpad-mini -wpad-basic-mbedtls -coremark -htop -bash -openssh-sftp-server
  
  $(eval $(call BuildTarget))

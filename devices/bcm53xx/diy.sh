@@ -3,7 +3,7 @@
 shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
-#bash $SHELL_FOLDER/../common/kernel_5.15.sh
+
 
 sed -i "s/^TARGET_DEVICES /# TARGET_DEVICES /" target/linux/bcm53xx/image/Makefile
 sed -i "s/# TARGET_DEVICES += phicomm_k3/TARGET_DEVICES += phicomm_k3/" target/linux/bcm53xx/image/Makefile

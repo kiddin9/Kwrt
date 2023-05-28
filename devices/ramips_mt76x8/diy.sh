@@ -5,7 +5,7 @@ shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/2e6d19ee32399e37c7545aefc57d41541a406d55.patch | patch -d './' -p1 --forward" || true
-#bash $SHELL_FOLDER/../common/kernel_5.15.sh
+
 
 #sh -c "curl -sfL https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/11287.patch | patch -d './' -p1 --forward"
 

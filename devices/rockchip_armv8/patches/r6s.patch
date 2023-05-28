@@ -1,6 +1,6 @@
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -52,4 +52,22 @@
+@@ -52,4 +52,31 @@
  TARGET_DEVICES += friendlyarm_nanopi-r2s
  
 +define Device/friendlyarm_nanopi-r6c
@@ -20,6 +20,15 @@
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
 +TARGET_DEVICES += friendlyarm_nanopi-r6s
++
++define Device/friendlyarm_nanopc-t6
++  DEVICE_VENDOR := FriendlyARM
++  DEVICE_MODEL := NanoPC T6
++  SOC := rk3328
++  DEVICE_PACKAGES := -luci-app-gpsysupgrade
++  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
++endef
++TARGET_DEVICES += friendlyarm_nanopc-t6
 +
  define Device/friendlyarm_nanopi-r4s
    DEVICE_VENDOR := FriendlyARM
@@ -124,7 +133,7 @@
  include $(SUBTARGET).mk
  
 +define Image/Build
-+	if [[ "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r6s" || "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r6c" ]]; then \
++	if [[ "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r6s" || "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r6c" || "$(PROFILE_SANITIZED)" == "friendlyarm_nanopc-t6" ]]; then \
 +		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 +		export BIN_DIR=$(BIN_DIR); \
 +		export TOPDIR=$(TOPDIR); \
@@ -132,7 +141,7 @@
 +		. ../modify_packit.sh; \
 +		./build.sh sd-img; \
 +		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
-+		rm -rf $(BIN_DIR)/*r6s-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
++		rm -rf $(BIN_DIR)/$(PROFILE_SANITIZED)-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
 +	fi
 +endef
 +

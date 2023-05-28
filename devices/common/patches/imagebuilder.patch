@@ -13,8 +13,8 @@
  	$(call FeedSourcesAppend,$(PKG_BUILD_DIR)/repositories.conf)
  	$(VERSION_SED_SCRIPT) $(PKG_BUILD_DIR)/repositories.conf
 -endif
-+	$(SED) 's/^src\/gz \(.*\) https.*top\/\(packages.*\)/src \1 file:\/\/www\/wwwroot\/op.supes.top\/\2/' $(PKG_BUILD_DIR)/repositories.conf
-+	$(SED) 's/^src\/gz \(.*\) https.*top\/\(targets.*\)/src \1 file:\/\/www\/wwwroot\/op.supes.top\/releases\/\2/' $(PKG_BUILD_DIR)/repositories.conf
++	$(SED) 's/^src\/gz \(.*\) https.*top\/\(.*packages.*\)/src \1 file:\/\/www\/wwwroot\/op.supes.top\/\2/' $(PKG_BUILD_DIR)/repositories.conf
++	$(SED) 's/^src\/gz \(.*\) https.*top\/\(.*targets.*\)/src \1 file:\/\/www\/wwwroot\/op.supes.top\/\2/' $(PKG_BUILD_DIR)/repositories.conf
 +	$(SED) 's/\/kiddin9//' $(PKG_BUILD_DIR)/repositories.conf
 +	$(SED) '/openwrt_core/d' $(PKG_BUILD_DIR)/repositories.conf
  

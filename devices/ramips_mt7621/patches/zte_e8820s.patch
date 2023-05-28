@@ -379,46 +379,7 @@ index 000000000000..5a0012441509
 +		reg = <0xe006 0x6>;
 +	};
 +};
-diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
-index 961f8a3b7514a..266ecd57ec8d5 100644
---- a/target/linux/ramips/image/mt7621.mk
-+++ b/target/linux/ramips/image/mt7621.mk
-@@ -2205,6 +2205,35 @@ define Device/zio_freezio
- endef
- TARGET_DEVICES += zio_freezio
- 
-+define Device/zte_e8820s
-+  $(Device/dsa-migration)
-+  $(Device/uimage-lzma-loader)
-+  BLOCKSIZE := 128k
-+  PAGESIZE := 2048
-+  KERNEL_SIZE := 4096k
-+  UBINIZE_OPTS := -E 5
-+  IMAGE_SIZE := 130304k
-+  IMAGES += factory.bin
-+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-+  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
-+	check-size
-+  DEVICE_VENDOR := ZTE
-+  DEVICE_MODEL := E8820S
-+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 uboot-envtools
-+endef
-+TARGET_DEVICES += zte_e8820s
-+
-+define Device/zte_e8820v2
-+  $(Device/dsa-migration)
-+  $(Device/uimage-lzma-loader)
-+  IMAGE_SIZE := 16064k
-+  DEVICE_VENDOR := ZTE
-+  DEVICE_MODEL := E8820V2
-+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb2 \
-+	  kmod-usb-ledtrig-usbport wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
-+endef
-+TARGET_DEVICES += zte_e8820v2
-+
- define Device/zyxel_nr7101
-   $(Device/dsa-migration)
-   BLOCKSIZE := 128k
+
 diff --git a/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds b/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
 index aad2e32b36210..a6a4707fc295d 100644
 --- a/target/linux/ramips/mt7621/base-files/etc/board.d/01_leds
@@ -440,15 +401,3 @@ index aad2e32b36210..a6a4707fc295d 100644
  esac
  
  board_config_flush
-diff --git a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
-index 6cfc852c11c25..0a73fed98927b 100755
---- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
-@@ -96,6 +96,7 @@ platform_do_upgrade() {
- 	xiaomi,mi-router-cr6608|\
- 	xiaomi,mi-router-cr6609|\
- 	xiaomi,redmi-router-ac2100|\
-+	zte,e8820s|\
- 	zyxel,nwa50ax|\
- 	zyxel,nwa55axe)
- 		nand_do_upgrade "$1"

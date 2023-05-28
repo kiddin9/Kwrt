@@ -175,24 +175,3 @@ index 0000000..ed1ebed
 +		reg = <0x3fffa 0x6>;
 +	};
 +};
-diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
-index 795f567..02c4da8 100644
---- a/target/linux/ramips/image/mt7621.mk
-+++ b/target/linux/ramips/image/mt7621.mk
-@@ -1816,6 +1816,16 @@ define Device/xiaoyu_xy-c5
- endef
- TARGET_DEVICES += xiaoyu_xy-c5
- 
-+define Device/jdcloud_luban
-+  $(Device/dsa-migration)
-+  $(Device/uimage-lzma-loader)
-+  IMAGE_SIZE := 15808k
-+  DEVICE_VENDOR := JDCloud
-+  DEVICE_MODEL := Luban 鲁班
-+  DEVICE_PACKAGES += kmod-mt7915e uboot-envtools wpad-mini -wpad-basic-wolfssl -coremark -htop -bash -openssh-sftp-server
-+endef
-+TARGET_DEVICES += jdcloud_luban
-+
- define Device/xzwifi_creativebox-v1
-   $(Device/dsa-migration)
-   IMAGE_SIZE := 32448k
