@@ -39,3 +39,17 @@
          ],
          stdout=PIPE,
          stderr=PIPE,
+
+--- a/package/mtk/applications/luci-app-mtk/luasrc/view/admin_mtk/mtk_wifi_vif_cfg.htm
++++ b/package/mtk/applications/luci-app-mtk/luasrc/view/admin_mtk/mtk_wifi_vif_cfg.htm
+@@ -581,9 +581,7 @@ <h2><%:Interface Configurations%> - <%=vifname and devname.."@"..vifname or devn
+         </table>
+         <h3><%:Access control MAC address list%></h3>
+         <textarea name="__maclist" id="__maclist" style="width:98%; height: 100px;"><%
+-        local list = cfgs["AccessControlList"..(vifidx-1)] or ""
+-        print(table.concat(list:split(";"), "\n"))
+-        %></textarea>
++        local list = cfgs["AccessControlList"..(vifidx-1)] or "" %><%=table.concat(list:split(";"), "\n")%></textarea>
+         </fieldset>
+ 
+         <% if string.split(cfgs.WirelessMode,";")[1] == "16" or string.split(cfgs.WirelessMode,";")[1] == "17" or string.split(cfgs.WirelessMode,";")[1] == "18" then %>
