@@ -21,7 +21,7 @@
 +define Device/box
 +  DEVICE_VENDOR := 
 +  DEVICE_MODEL := 电视盒子全系列 / N1
-+  DEVICE_PACKAGES :=
++  DEVICE_PACKAGES := perlbase-base btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk
 +endef
 +TARGET_DEVICES += box
 +

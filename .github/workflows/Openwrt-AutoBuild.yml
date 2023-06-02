@@ -103,10 +103,8 @@ jobs:
     - name: Trigger Packages Update
       continue-on-error: true
       run: |
-        gitdate=$(curl -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
-        gitdate=$(date -d "$gitdate" +%s)
-        now=$(date -d "$(date)" +%s)
-        if [[ $(expr $gitdate + 300) < $now ]]; then
+        status=$(curl -H "Authorization: token ${{ secrets.REPO_TOKEN }} -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+        if [[ "$status" == "completed" ]]; then
           curl -X POST https://api.github.com/repos/kiddin9/openwrt-packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
