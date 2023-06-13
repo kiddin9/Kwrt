@@ -4,7 +4,7 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/feeds/kiddin9/rtl*
+rm -rf package/feeds/kiddin9/rtl* package/feeds/packages/gptfdisk
 
 sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2024-12-06/" package/network/config/netifd/Makefile
 

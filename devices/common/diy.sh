@@ -43,10 +43,24 @@ sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/backport-5.15 target/linux/generic/backport-5.15
 find target/linux/generic/backport-5.15 -name "[0-9][0-9][0-9]-[a-z][a-z]*" -exec rm -f {} \;
-rm -rf target/linux/generic/backport-5.15/{799-v6.0-net-mii*,802-v6.1-nvmem*,803-v5.19-nvmem*,733-v6.2-02-net-mediatek-sgmii-ensure*,733-v6.2-03-net-mediatek*,733-v6.2-04-mtk_sgmii-enable*,730-11-v6.3-net-ethernet-mtk_eth*,775-v5.16-net-phylink*,776-v5.16-net-ethernet-*,612-v6.3-skbuff-Fix*}
+rm -rf target/linux/generic/backport-5.15/{799-v6.0-net-mii*,802-v6.1-nvmem*,803-v5.19-nvmem*,733-v6.2-02-net-mediatek-sgmii-ensure*,733-v6.2-03-net-mediatek*,733-v6.2-04-mtk_sgmii-enable*,775-v5.16-net-phylink*,776-v5.16-net-ethernet-*}
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch
 sed -i "s/CONFIG_WERROR=y/CONFIG_WERROR=n/" target/linux/generic/config-5.15
 ) &
+
+grep -q "2023-" package/kernel/mt76/Makefile && {
+mkdir package/kernel/mt76/patches
+curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
+}
+
+grep -q "1.8.8" package/network/utils/iptables/Makefile && {
+rm -rf package/network/utils/iptables
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/network/utils/iptables package/network/utils/iptables
+}
+
+grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {
+sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a48d0bdb77eb93f7fba6e055dace125c72755b6a.patch | patch -d './' -p1 --forward"
+}
 
 sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's/Os/O2/g' include/target.mk

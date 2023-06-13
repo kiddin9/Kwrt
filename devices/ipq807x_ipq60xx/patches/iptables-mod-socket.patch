@@ -1,0 +1,26 @@
+--- a/package/network/utils/iptables/Makefile
++++ b/package/network/utils/iptables/Makefile
+@@ -394,4 +394,17 @@
+ endef
+ 
++define Package/iptables-mod-socket
++$(call Package/iptables/Module, +kmod-ipt-socket)
++  TITLE:=Socket match iptables extensions
++endef
++
++define Package/iptables-mod-socket/description
++Socket match iptables extensions.
++
++ Matches:
++  - socket
++
++endef
++
+ define Package/iptables-mod-tproxy
+ $(call Package/iptables/Module, +kmod-ipt-tproxy)
+@@ -679,4 +692,5 @@
+ $(eval $(call BuildPlugin,iptables-mod-rpfilter,$(IPT_RPFILTER-m)))
+ $(eval $(call BuildPlugin,iptables-mod-led,$(IPT_LED-m)))
++$(eval $(call BuildPlugin,iptables-mod-socket,$(IPT_SOCKET-m)))
+ $(eval $(call BuildPlugin,iptables-mod-tproxy,$(IPT_TPROXY-m)))
+ $(eval $(call BuildPlugin,iptables-mod-tee,$(IPT_TEE-m)))
