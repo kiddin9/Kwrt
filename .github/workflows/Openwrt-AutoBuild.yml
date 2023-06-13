@@ -307,7 +307,7 @@ jobs:
         TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
 
     - name: Upload firmware for artifact
-      uses: kiddin9/upload-artifact@main
+      uses: actions/upload-artifact@main
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
