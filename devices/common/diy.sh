@@ -48,10 +48,10 @@ curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linu
 sed -i "s/CONFIG_WERROR=y/CONFIG_WERROR=n/" target/linux/generic/config-5.15
 ) &
 
-grep -q "2023-" package/kernel/mt76/Makefile && {
+grep -q "23.05" include/version.mk && {
 mkdir package/kernel/mt76/patches
 curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
-}
+} || rm -rf devices/common/patches/mt7922.patch
 
 grep -q "1.8.8" package/network/utils/iptables/Makefile && {
 rm -rf package/network/utils/iptables
