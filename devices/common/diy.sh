@@ -20,8 +20,6 @@ sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' pac
 sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite --force-depends/' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-base luci-compat luci-lib-ipkg luci-lib-fs \
-luci-app-vssr luci-app-argon-config luci-app-turboacc luci-app-unblockmusic luci-app-uugamebooster luci-app-nfs \
-kmod-fs-nfs kmod-fs-nfs-common kmod-fs-nfs-common-rpcsec kmod-fs-nfs-v4 kmod-fs-nfsd nfs-kernel-server nfs-kernel-server-utils nfs-utils nfs-utils-libs \
 coremark wget-ssl curl autocore htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash openssh-sftp-server block-mount resolveip ds-lite swconfig /" include/target.mk
 sed -i "s/procd-ujail//" include/target.mk
 
