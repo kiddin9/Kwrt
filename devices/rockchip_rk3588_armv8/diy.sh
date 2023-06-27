@@ -14,10 +14,7 @@ CONFIG_SENSORS_PWM_FAN=y
 
 mv -f target/linux/rockchip target/linux/rockchip_rk3588
 
-rm -rf package/feeds/packages/glib2 package/devel/perf package/feeds/kiddin9/{shortcut-fe,fibocom_QMI_WWAN,oaf} package/feeds/packages/bluez
-
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack_5.10
-rm -rf target/linux/generic/hack_5.10/{220-gc_sections*,781-dsa-register*,780-drivers-net*,996-fs-ntfs3*,100-update-mtk_wed_h.patch}
+rm -rf package/feeds/packages/glib2 package/devel/perf package/feeds/kiddin9/{shortcut-fe,fibocom_QMI_WWAN,oaf,fast-classifier,firewall,rtl88x2bu,rtl8821cu} package/feeds/packages/bluez package/kernel/ksmbd package/feeds/routing/batman-adv
 
 #curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
