@@ -1,0 +1,120 @@
+From 44dd825c5b12f61907b3ce360fed5da2b11dc4d5 Mon Sep 17 00:00:00 2001
+From: Marty Jones <mj8263788@gmail.com>
+Date: Thu, 25 May 2023 11:27:08 -0400
+Subject: [PATCH] rockchip: add FriendlyElec NanoPC-T6
+
+Signed-off-by: Marty Jones <mj8263788@gmail.com>
+---
+ .../armv8/base-files/etc/board.d/01_leds         |  4 ++++
+ .../armv8/base-files/etc/board.d/02_network      |  2 ++
+ .../etc/hotplug.d/net/40-net-smp-affinity        |  4 ++++
+ target/linux/rockchip_rk3588/armv8/config-5.10          |  5 +++--
+ target/linux/rockchip_rk3588/image/armv8.mk             | 16 ++++++++++++++++
+ 5 files changed, 29 insertions(+), 2 deletions(-)
+
+diff --git a/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/01_leds b/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/01_leds
+index 8030960fb39e1..838a8ca9d407b 100644
+--- a/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/01_leds
++++ b/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/01_leds
+@@ -16,6 +16,10 @@ friendlyarm,nanopi-r4s)
+ 	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth0"
+ 	ucidef_set_led_netdev "lan" "LAN" "green:lan" "eth1"
+ 	;;
++friendlyelec,nanopc-t6)
++	ucidef_set_led_netdev "lan" "LAN" "sys_led" "eth1"
++	ucidef_set_led_netdev "wan" "WAN" "usr_led" "eth0"
++	;;
+ friendlyelec,nanopi-r6c)
+ 	ucidef_set_led_netdev "wan" "WAN" "wan_led" "eth0"
+ 	ucidef_set_led_netdev "lan" "LAN" "lan1_led" "eth1"
+diff --git a/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/02_network b/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/02_network
+index 967cc42156a47..9e2df3c7e36e4 100644
+--- a/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/02_network
++++ b/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/02_network
+@@ -11,6 +11,7 @@ rockchip_setup_interfaces()
+ 	friendlyarm,nanopi-r4s)
+ 		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
+ 		;;
++	friendlyelec,nanopc-t6|\
+ 	friendlyelec,nanopi-r6c)
+ 		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
+ 		;;
+@@ -65,6 +66,7 @@ rockchip_setup_macs()
+ 		wan_mac=$(generate_mac_from_mmc_cid mmcblk0)
+ 		lan_mac=$(macaddr_add "$wan_mac" 1)
+ 		;;
++	friendlyelec,nanopc-t6|\
+ 	friendlyelec,nanopi-r6c|\
+ 	friendlyelec,nanopi-r6s|\
+ 	friendlyarm,nanopi-r4s)
+diff --git a/target/linux/rockchip_rk3588/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity b/target/linux/rockchip_rk3588/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
+index cf9715d69a691..cf0e799b0924a 100644
+--- a/target/linux/rockchip_rk3588/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
++++ b/target/linux/rockchip_rk3588/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
+@@ -37,6 +37,10 @@ friendlyarm,nanopi-r4s)
+ 	set_interface_core 10 "eth0"
+ 	set_interface_core 20 "eth1"
+ 	;;
++friendlyelec,nanopc-t6)
++	set_interface_core 20 "eth0"
++	set_interface_core 40 "eth1"
++	;;
+ friendlyelec,nanopi-r6c)
+ 	set_interface_core 20 "eth0"
+ 	set_interface_core 40 "eth1"
+diff --git a/target/linux/rockchip_rk3588/armv8/config-5.10 b/target/linux/rockchip_rk3588/armv8/config-5.10
+index 319ad8f92b788..17eba42056cab 100644
+--- a/target/linux/rockchip_rk3588/armv8/config-5.10
++++ b/target/linux/rockchip_rk3588/armv8/config-5.10
+@@ -45,6 +45,7 @@ CONFIG_ARM64_ERRATUM_1530923=y
+ # CONFIG_ARM64_ERRATUM_2051678 is not set
+ # CONFIG_ARM64_ERRATUM_2054223 is not set
+ # CONFIG_ARM64_ERRATUM_2067961 is not set
++CONFIG_ARM64_ERRATUM_2441007=y
+ CONFIG_ARM64_ERRATUM_843419=y
+ CONFIG_ARM64_ERRATUM_845719=y
+ CONFIG_ARM64_ERRATUM_858921=y
+@@ -863,14 +864,14 @@ CONFIG_PHYS_ADDR_T_64BIT=y
+ # CONFIG_PHY_ROCKCHIP_DP is not set
+ # CONFIG_PHY_ROCKCHIP_DPHY_RX0 is not set
+ CONFIG_PHY_ROCKCHIP_EMMC=y
+-# CONFIG_PHY_ROCKCHIP_INNO_COMBPHY is not set
++CONFIG_PHY_ROCKCHIP_INNO_COMBPHY=y
+ # CONFIG_PHY_ROCKCHIP_INNO_DSIDPHY is not set
+ # CONFIG_PHY_ROCKCHIP_INNO_HDMI is not set
+ CONFIG_PHY_ROCKCHIP_INNO_USB2=y
+ CONFIG_PHY_ROCKCHIP_INNO_USB3=y
+ CONFIG_PHY_ROCKCHIP_NANENG_COMBO_PHY=y
+ # CONFIG_PHY_ROCKCHIP_NANENG_EDP is not set
+-# CONFIG_PHY_ROCKCHIP_NANENG_USB2 is not set
++CONFIG_PHY_ROCKCHIP_NANENG_USB2=y
+ CONFIG_PHY_ROCKCHIP_PCIE=y
+ # CONFIG_PHY_ROCKCHIP_SAMSUNG_DCPHY is not set
+ # CONFIG_PHY_ROCKCHIP_SAMSUNG_HDPTX is not set
+diff --git a/target/linux/rockchip_rk3588/image/armv8.mk b/target/linux/rockchip_rk3588/image/armv8.mk
+index c9fa75376f979..cece2bc0cf8c7 100644
+--- a/target/linux/rockchip_rk3588/image/armv8.mk
++++ b/target/linux/rockchip_rk3588/image/armv8.mk
+@@ -5,6 +5,22 @@
+ # FIT will be loaded at 0x02080000. Leave 16M for that, align it to 2M and load the kernel after it.
+ KERNEL_LOADADDR := 0x03200000
+ 
++define Device/friendlyelec_nanopc-t6
++  DEVICE_VENDOR := Friendlyelec
++  DEVICE_MODEL := NanoPC T6
++  SOC := rk3588
++  UBOOT_DEVICE_NAME := nanopi-r6c-rk3588
++  IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r6c | pine64-img | gzip | append-metadata
++ DEVICE_PACKAGES := \
++	blkid block-mount blockd btrfs-progs f2fs-tools f2fsck fdisk fixparts fstools gdisk \
++	kmod-ata-ahci kmod-ata-core kmod-fs-autofs4 kmod-fs-btrfs kmod-fs-exfat kmod-fs-exportfs luci-app-ttyd \
++	kmod-fs-ext4 kmod-fs-squashfs kmod-nvme kmod-usb-net-rtl8152 kmod-usb-storage kmod-usb-storage-extras kmod-usb-storage-uas \
++	kmod-usb-xhci-hcd kmod-usb3 losetup lsblk luci luci-proto-wireguard mkf2fs mount-utils parted partx-util pciutils resize2fs \
++	kmod-r8125 usbutils wget-ssl smartmontools luci-app-statistics collectd-mod-cpufreq collectd-mod-sensors collectd-mod-thermal \
++	collectd-mod-conntrack collectd-mod-irq dnsmasq-full -dnsmasq ethtool iperf3-ssl
++endef
++TARGET_DEVICES += friendlyelec_nanopc-t6
++
+ define Device/friendlyelec_nanopi-r6c
+   DEVICE_VENDOR := Friendlyelec
+   DEVICE_MODEL := NanoPi R6C
