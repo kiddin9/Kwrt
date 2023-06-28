@@ -1,0 +1,23 @@
+--- a/package/boot/arm-trusted-firmware-rockchip/Makefile
++++ b/package/boot/arm-trusted-firmware-rockchip/Makefile
+@@ -28,7 +28,7 @@ define Package/arm-trusted-firmware-rockchip
+     SECTION:=boot
+     CATEGORY:=Boot Loaders
+     TITLE:=ARM Trusted Firmware for Rockchip
+-    DEPENDS:=@TARGET_rockchip_armv8
++    DEPENDS:=@TARGET_rockchip_rk3588_armv8
+ endef
+ 
+ define Build/Prepare
+
+--- a/package/boot/uboot-rockchip/Makefile
++++ b/package/boot/uboot-rockchip/Makefile
+@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/u-boot.mk
+ include $(INCLUDE_DIR)/package.mk
+ 
+ define U-Boot/Default
+-  BUILD_TARGET:=rockchip
++  BUILD_TARGET:=rockchip_rk3588
+   UENV:=default
+   HIDDEN:=1
+ endef

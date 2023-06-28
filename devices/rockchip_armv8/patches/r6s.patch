@@ -82,8 +82,8 @@
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
 +++ a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
-@@ -30,6 +30,19 @@ friendlyarm,nanopi-r5s)
- hinlink,opc-h68k)
+@@ -36,6 +36,15 @@ hinlink,opc-h68k|\
+ hinlink,opc-h69k)
  	ucidef_set_led_netdev "wan" "WAN" "blue:net" "eth0"
  	;;
 +friendlyarm,nanopi-r6s)
@@ -92,10 +92,6 @@
 +	ucidef_set_led_netdev "lan2" "LAN2" "green:lan2" "eth0"
 +	;;
 +friendlyarm,nanopi-r6c)
-+	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth0"
-+	ucidef_set_led_netdev "lan1" "LAN1" "green:lan" "eth1"
-+	;;
-+friendlyarm,nanopc-t6)
 +	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth0"
 +	ucidef_set_led_netdev "lan1" "LAN1" "green:lan" "eth1"
 +	;;

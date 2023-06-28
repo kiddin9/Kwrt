@@ -120,3 +120,22 @@
  	DEVICE_PACKAGES := ath11k-wifi-qihoo-v6 kmod-usb3 kmod-usb-phy-msm
  endef
  TARGET_DEVICES += qihoo_v6
+
+--- a/target/linux/ipq60xx/files-4.4/arch/arm64/boot/dts/qcom/qcom-ipq6018-zn-m2.dts
++++ b/target/linux/ipq60xx/files-4.4/arch/arm64/boot/dts/qcom/qcom-ipq6018-zn-m2.dts
+@@ -70,3 +70,15 @@
+ 		};
+ 	};
+ };
++
++&qusb_phy_0 {
++status = "ok";
++};
++
++&ssphy_0 {
++status = "ok";
++};
++
++&usb3 {
++status = "ok";
++};
