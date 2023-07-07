@@ -14,7 +14,28 @@
 
 --- a/target/linux/armsr/image/Makefile
 +++ b/target/linux/armsr/image/Makefile
-@@ -115,4 +115,21 @@ define Device/generic
+@@ -74,7 +74,8 @@ define Build/grub-install
+ endef
+ 
+ DEVICE_VARS += GRUB2_VARIANT UBOOT
+-define Device/efi-default
++
++define Device/generic
+   IMAGE/rootfs.img := append-rootfs | pad-to $(ROOTFS_PARTSIZE)
+   IMAGE/rootfs.img.gz := append-rootfs | pad-to $(ROOTFS_PARTSIZE) | gzip
+   IMAGE/combined.img := grub-config efi | combined efi | grub-install efi | append-metadata
+@@ -98,10 +99,6 @@ define Device/efi-default
+  ifeq ($(CONFIG_arm),y)
+   KERNEL_NAME = zImage
+  endif
+-endef
+-
+-define Device/generic
+-  $(call Device/efi-default)
+   DEVICE_TITLE := Generic EFI Boot
+   GRUB2_VARIANT := generic
+   FILESYSTEMS := ext4 squashfs
+@@ -115,4 +112,21 @@ define Device/generic
  endef
  TARGET_DEVICES += generic
  
@@ -25,14 +46,14 @@
 +endef
 +TARGET_DEVICES += box
 +
-+ define Image/Build
-+	if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
-+	export BIN_DIR=$(BIN_DIR); \
-+	export DATE=$(DATE); \
-+	cd /www/wwwroot/op.supes.top/bcache/armvirt/64/amlogic-s9xxx-openwrt; \
-+	. ../modify_amlogic.sh; \
-+	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))) || true; \
-+	fi
-+ endef
++define Image/Build
++  if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
++  	export BIN_DIR=$(BIN_DIR); \
++  	export DATE=$(DATE); \
++  	cd /www/wwwroot/op.supes.top/bcache/armvirt/64/amlogic-s9xxx-openwrt; \
++  	. ../modify_amlogic.sh; \
++  	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))) || true; \
++  fi
++endef
 +
  $(eval $(call BuildImage))
