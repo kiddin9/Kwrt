@@ -12,11 +12,11 @@
    $(call Device/$(if $(DUMP),Dump,Build),$(1))
  
 
---- a/target/linux/armvirt/image/Makefile
-+++ b/target/linux/armvirt/image/Makefile
-@@ -23,10 +23,30 @@ endef
- 
- $(eval $(call Image/gzip-ext4-padded-squashfs))
+--- a/target/linux/armsr/image/Makefile
++++ b/target/linux/armsr/image/Makefile
+@@ -115,4 +115,21 @@ define Device/generic
+ endef
+ TARGET_DEVICES += generic
  
 +define Device/box
 +  DEVICE_VENDOR := 
@@ -25,16 +25,7 @@
 +endef
 +TARGET_DEVICES += box
 +
-+define Device/armvirt
-+  DEVICE_MODEL := QEMU ARM virt machine
-+  DEVICE_PACKAGES :=
-+endef
-+TARGET_DEVICES += armvirt
-+
- define Image/Build
- 	$(call Image/Build/$(1))
- 	$(CP) $(KDIR)/root.$(1) $(BIN_DIR)/$(IMG_ROOTFS)-$(1).img
- 	$(call Image/Build/gzip/$(1))
++ define Image/Build
 +	if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
 +	export BIN_DIR=$(BIN_DIR); \
 +	export DATE=$(DATE); \
@@ -42,6 +33,6 @@
 +	. ../modify_amlogic.sh; \
 +	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))) || true; \
 +	fi
- endef
- 
++ endef
++
  $(eval $(call BuildImage))

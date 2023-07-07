@@ -578,11 +578,10 @@ index 00000000000..be76ddf12e4
 
 --- a/target/linux/ipq807x/image/generic.mk
 +++ b/target/linux/ipq807x/image/generic.mk
-@@ -147,6 +147,19 @@
- endif
+@@ -162,6 +162,19 @@ endif
  endef
  TARGET_DEVICES += xiaomi_ax9000
-+
+ 
 +define Device/zte_mf269
 +	$(call Device/FitImage)
 +	$(call Device/UbiFit)
@@ -595,6 +594,7 @@ index 00000000000..be76ddf12e4
 +	DEVICE_PACKAGES := ipq-wifi-zte_mf269
 +endef
 +TARGET_DEVICES += zte_mf269
- 
++
  define Device/zyxel_nbg7815
  	$(call Device/FitImage)
+ 	$(call Device/EmmcImage)
