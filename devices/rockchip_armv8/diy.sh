@@ -14,6 +14,8 @@ rm -rf target/linux/rockchip/patches-5.15/{002-net-usb*,204-rockchip-rk3328*,003
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
+sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
+
 mv -f tmp/r8125 feeds/kiddin9/
 
 rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update

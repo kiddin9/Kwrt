@@ -38,7 +38,13 @@
 
 --- a/package/boot/uboot-envtools/files/mediatek_filogic
 +++ b/package/boot/uboot-envtools/files/mediatek_filogic
-@@ -54,8 +54,7 @@ xiaomi,redmi-router-ax6000-stock)
+@@ -51,11 +51,13 @@ xiaomi,redmi-router-ax6000-stock)
+ 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x10000" "0x20000"
+ 	ubootenv_add_uci_sys_config "/dev/mtd2" "0x0" "0x10000" "0x20000"
+ 	;;
++xiaomi,redmi-router-ax6000*)
++	ubootenv_add_uci_config "/dev/mtd2" "0x0" "0x10000" "0x20000" "1"
++	;;
  qihoo,360t7|\
  tplink,tl-xdr4288|\
  tplink,tl-xdr6086|\
