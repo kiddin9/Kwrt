@@ -36,13 +36,12 @@
      IMAGES-y += combined.img
    endif
    ifeq ($(CONFIG_VMDK_IMAGES),y)
-@@ -115,4 +113,21 @@ define Device/generic
+@@ -115,4 +113,20 @@ define Device/generic
  endef
  TARGET_DEVICES += generic
  
 +define Device/box
-+  DEVICE_VENDOR := 
-+  DEVICE_MODEL := 电视盒子全系列 / N1
++  DEVICE_TITLE := 电视盒子全系列 / N1
 +  DEVICE_PACKAGES := perlbase-base btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk -luci-app-attendedsysupgrade -luci-app-gpsysupgrade
 +endef
 +TARGET_DEVICES += box
