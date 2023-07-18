@@ -11,38 +11,38 @@
    $(call Device/Check,$(1))
    $(call Device/$(if $(DUMP),Dump,Build),$(1))
  
+--- a/include/image.mk
++++ b/include/image.mk
+@@ -599,7 +599,7 @@ define Device/Build/kernel
+   $$(_TARGET): $$(if $$(KERNEL_INSTALL),$(BIN_DIR)/$$(KERNEL_IMAGE))
+   $(call Device/Export,$$(KDIR_KERNEL_IMAGE),$(1))
+   $(BIN_DIR)/$$(KERNEL_IMAGE): $$(KDIR_KERNEL_IMAGE)
+-	cp $$^ $$@
++	cp generic-kernel.bin $$@
+   ifndef IB
+     ifdef CONFIG_IB
+       install: $$(KDIR_KERNEL_IMAGE)
 
 --- a/target/linux/armsr/image/Makefile
 +++ b/target/linux/armsr/image/Makefile
-@@ -74,7 +74,8 @@ define Build/grub-install
- endef
- 
- DEVICE_VARS += GRUB2_VARIANT UBOOT
--define Device/efi-default
-+
-+define Device/generic
-   IMAGE/rootfs.img := append-rootfs | pad-to $(ROOTFS_PARTSIZE)
-   IMAGE/rootfs.img.gz := append-rootfs | pad-to $(ROOTFS_PARTSIZE) | gzip
-   IMAGE/combined.img := grub-config efi | combined efi | grub-install efi | append-metadata
-@@ -98,10 +99,6 @@ define Device/efi-default
-  ifeq ($(CONFIG_arm),y)
-   KERNEL_NAME = zImage
-  endif
--endef
--
--define Device/generic
--  $(call Device/efi-default)
-   DEVICE_TITLE := Generic EFI Boot
-   GRUB2_VARIANT := generic
-   FILESYSTEMS := ext4 squashfs
-@@ -115,4 +112,21 @@ define Device/generic
+@@ -81,10 +81,8 @@ define Device/efi-default
+   IMAGE/combined.img.gz := grub-config efi | combined efi | grub-install efi | gzip | append-metadata
+   IMAGE/combined.vmdk := grub-config efi | combined efi | grub-install efi | qemu-image vmdk
+  ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
+-    IMAGES-y := rootfs.img.gz
+     IMAGES-y += combined.img.gz
+   else
+-    IMAGES-y := rootfs.img
+     IMAGES-y += combined.img
+   endif
+   ifeq ($(CONFIG_VMDK_IMAGES),y)
+@@ -115,4 +113,20 @@ define Device/generic
  endef
  TARGET_DEVICES += generic
  
 +define Device/box
-+  DEVICE_VENDOR := 
-+  DEVICE_MODEL := 电视盒子全系列 / N1
-+  DEVICE_PACKAGES := perlbase-base btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk
++  DEVICE_TITLE := 电视盒子全系列 / N1
++  DEVICE_PACKAGES := perlbase-base btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk -luci-app-attendedsysupgrade -luci-app-gpsysupgrade
 +endef
 +TARGET_DEVICES += box
 +
@@ -50,7 +50,7 @@
 +  if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
 +  	export BIN_DIR=$(BIN_DIR); \
 +  	export DATE=$(DATE); \
-+  	cd /www/wwwroot/op.supes.top/bcache/armvirt/64/amlogic-s9xxx-openwrt; \
++  	cd /www/wwwroot/op.supes.top/bcache/armsr/armv8/amlogic-s9xxx-openwrt; \
 +  	. ../modify_amlogic.sh; \
 +  	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))) || true; \
 +  fi
