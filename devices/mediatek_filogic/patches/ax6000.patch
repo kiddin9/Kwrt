@@ -1,6 +1,6 @@
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -351,29 +351,18 @@ TARGET_DEVICES += xiaomi_redmi-router-ax6000-stock
+@@ -384,29 +384,18 @@ TARGET_DEVICES += xiaomi_redmi-router-ax6000-stock
  
  define Device/xiaomi_redmi-router-ax6000-ubootmod
    DEVICE_VENDOR := Xiaomi
@@ -14,8 +14,7 @@
    UBINIZE_OPTS := -E 5
    BLOCKSIZE := 128k
    PAGESIZE := 2048
-+  IMAGE_SIZE := 112640k
-   KERNEL_IN_UBI := 1
+-  KERNEL_IN_UBI := 1
 -  UBOOTENV_IN_UBI := 1
 -  KERNEL := kernel-bin | gzip
 -  KERNEL_INITRAMFS := kernel-bin | lzma | \
@@ -25,12 +24,12 @@
 -  ARTIFACTS := preloader.bin bl31-uboot.fip
 -  ARTIFACT/preloader.bin := mt7986-bl2 spim-nand-ddr4
 -  ARTIFACT/bl31-uboot.fip := mt7986-bl31-uboot xiaomi_redmi-router-ax6000
--ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+ ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
 -  ARTIFACTS += initramfs-factory.ubi
 -  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-recovery.itb | ubinize-kernel
--endif
-+  IMAGES += factory.bin
-+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
++  ARTIFACTS := initramfs-factory.ubi
++  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-kernel.bin | ubinize-kernel
+ endif
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
  endef
  TARGET_DEVICES += xiaomi_redmi-router-ax6000-ubootmod
@@ -38,13 +37,17 @@
 
 --- a/package/boot/uboot-envtools/files/mediatek_filogic
 +++ b/package/boot/uboot-envtools/files/mediatek_filogic
-@@ -51,11 +51,13 @@ xiaomi,redmi-router-ax6000-stock)
+@@ -47,7 +47,8 @@ mercusys,mr90x-v1)
+ netgear,wax220)
+ 	ubootenv_add_uci_config "/dev/mtd5" "0x0" "0x20000" "0x20000"
+ 	;;
+-xiaomi,redmi-router-ax6000-stock)
++xiaomi,redmi-router-ax6000-stock|\
++xiaomi,redmi-router-ax6000-ubootmod)
  	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x10000" "0x20000"
  	ubootenv_add_uci_sys_config "/dev/mtd2" "0x0" "0x10000" "0x20000"
  	;;
-+xiaomi,redmi-router-ax6000*)
-+	ubootenv_add_uci_config "/dev/mtd2" "0x0" "0x10000" "0x20000" "1"
-+	;;
+@@ -55,8 +56,7 @@ h3c,magic-nx30-pro|\
  qihoo,360t7|\
  tplink,tl-xdr4288|\
  tplink,tl-xdr6086|\
@@ -57,7 +60,7 @@
 
 --- a/target/linux/mediatek/dts/mt7986a-xiaomi-redmi-router-ax6000-ubootmod.dts
 +++ b/target/linux/mediatek/dts/mt7986a-xiaomi-redmi-router-ax6000-ubootmod.dts
-@@ -4,13 +4,86 @@
+@@ -4,13 +4,31 @@
  #include "mt7986a-xiaomi-redmi-router-ax6000.dtsi"
  
  / {
@@ -66,86 +69,28 @@
  	compatible = "xiaomi,redmi-router-ax6000-ubootmod", "mediatek,mt7986a";
  };
  
--&partitions {
--	partition@580000 {
--		label = "ubi";
--		reg = <0x580000 0x7a80000>;
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_flash_pins>;
-+	cs-gpios = <0>, <0>;
-+	status = "okay";
-+
-+	spi_nand: spi_nand@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spi-nand";
-+		reg = <1>;
-+		spi-max-frequency = <52000000>;
-+		spi-tx-buswidth = <4>;
-+		spi-rx-buswidth = <4>;
-+		spi-cal-enable;
-+		spi-cal-mode = "read-data";
-+		spi-cal-datalen = <7>;
-+		spi-cal-data = /bits/ 8 <0x53 0x50 0x49 0x4E 0x41 0x4E 0x44>; /* 'SPINAND' */
-+		spi-cal-addrlen = <5>;
-+		spi-cal-addr = /bits/ 32 <0x0 0x0 0x0 0x0 0x0>;
-+	};
++&spi_nand_flash {
++	mediatek,nmbm;
++	mediatek,bmt-max-ratio = <1>;
++	mediatek,bmt-max-reserved-blocks = <64>;
 +};
 +
-+/ {
-+	nmbm_spim_nand {
-+		compatible = "generic,nmbm";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
+ &partitions {
+ 	partition@580000 {
++		label = "crash";
++		reg = <0x580000 0x40000>;
++		read-only;
++	};
 +
-+		lower-mtd-device = <&spi_nand>;
-+		forced-create;
++	partition@5c0000 {
++		label = "crash_log";
++		reg = <0x5c0000 0x40000>;
++		read-only;
++	};
 +
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <0x01>;
-+			#size-cells = <0x01>;
-+
-+			partition@0 {
-+				label = "BL2";
-+				reg = <0x00 0x100000>;
-+			};
-+
-+			partition@100000 {
-+				label = "Nvram";
-+				reg = <0x100000 0x40000>;
-+			};
-+
-+			partition@140000 {
-+				label = "Bdata";
-+				reg = <0x140000 0x40000>;
-+			};
-+
-+			partition@180000 {
-+				label = "Factory";
-+				reg = <0x180000 0x200000>;
-+			};
-+
-+			partition@380000 {
-+				label = "FIP";
-+				reg = <0x380000 0x200000>;
-+			};
-+
-+			partition@580000 {
-+				label = "crash";
-+				reg = <0x580000 0x40000>;
-+			};
-+
-+			partition@5c0000 {
-+				label = "crash_log";
-+				reg = <0x5c0000 0x40000>;
-+			};
-+
-+			partition@600000 {
-+				label = "ubi";
-+				reg = <0x600000 0x6e00000>;
-+			};
-+		};
++	partition@600000 {
+ 		label = "ubi";
+-		reg = <0x580000 0x7a80000>;
++		reg = <0x600000 0x6e00000>;
  	};
  };

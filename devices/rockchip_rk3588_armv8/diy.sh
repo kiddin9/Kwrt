@@ -18,5 +18,7 @@ mv -f target/linux/rockchip target/linux/rockchip_rk3588
 
 rm -rf package/feeds/packages/glib2 package/devel/perf package/feeds/kiddin9/{shortcut-fe,fibocom_QMI_WWAN,oaf,fast-classifier,firewall,rtl88x2bu,rtl8821cu} package/feeds/packages/bluez package/kernel/ksmbd package/feeds/routing/batman-adv
 
+sed -i "/friendlyelec/d" package/feeds/kiddin9/base-files/files/lib/preinit/02_sysinfo
+
 #curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
