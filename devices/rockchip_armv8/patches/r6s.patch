@@ -35,8 +35,8 @@
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -19,9 +19,14 @@ rockchip_setup_interfaces()
- 	rocktech,mpc1903|\
+@@ -21,9 +21,14 @@ rockchip_setup_interfaces()
+ 	sharevdi,h3399pc|\
  	sharevdi,guangmiao-g4c|\
  	xunlong,orangepi-r1-plus|\
 -	xunlong,orangepi-r1-plus-lts)
@@ -48,11 +48,11 @@
 +	friendlyarm,nanopi-r6s)
 +		ucidef_set_interfaces_lan_wan "eth1 eth0" "eth2"
 +		;;
- 	hinlink,opc-h68k|\
- 	hinlink,opc-h69k)
- 		ucidef_set_interfaces_lan_wan 'eth1 eth2 eth3' 'eth0'
-@@ -51,10 +56,10 @@ generate_mac_from_mmc_cid()
- 	echo "$(macaddr_unsetbit_mc "$(macaddr_setbit_la "${mac_base}")")"
+ 	fastrhino,r66s|\
+ 	firefly,rk3568-roc-pc|\
+ 	friendlyarm,nanopi-r5c|\
+@@ -45,10 +50,10 @@ rockchip_setup_interfaces()
+ 	esac
  }
  
 -nanopi_r4s_get_mac()
@@ -64,7 +64,7 @@
  	local address
  
  	if [ -f "$eeprom_path" ]; then
-@@ -100,8 +105,12 @@ rockchip_setup_macs()
+@@ -94,8 +99,12 @@ rockchip_setup_macs()
  		;;
  	friendlyarm,nanopi-r4s|\
  	friendlyarm,nanopi-r4se)
@@ -77,8 +77,8 @@
 +		wan_mac=$(nanopi_get_mac wan 6-0053)
 +		lan_mac=$(nanopi_get_mac lan 6-0053)
  		;;
- 	xunlong,orangepi-r1-plus|\
- 	xunlong,orangepi-r1-plus-lts)
+ 	friendlyarm,nanopi-r5c|\
+ 	friendlyarm,nanopi-r5s|\
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
 +++ a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
@@ -129,20 +129,18 @@
 
 --- a/target/linux/rockchip/image/Makefile
 +++ b/target/linux/rockchip/image/Makefile
-@@ -79,4 +79,17 @@ endif
+@@ -79,4 +79,15 @@ endif
  
  include $(SUBTARGET).mk
  
 +define Image/Build
-+	if [[ "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r6s" || "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r6c" || "$(PROFILE_SANITIZED)" == "friendlyarm_nanopc-t6" ]]; then \
++	if [[ "$(PROFILE_SANITIZED)" == "$(PROFILE_SANITIZED)" == "friendlyarm_nanopc-t6" ]]; then \
 +		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
 +		export BIN_DIR=$(BIN_DIR); \
 +		export TOPDIR=$(TOPDIR); \
-+		cd /www/wwwroot/op.supes.top/bcache/rockchip/armv8/friendlywrt22-rk3588; \
-+		. ../modify_packit.sh; \
-+		./build.sh sd-img; \
-+		[ "$(MORE)" == "eflasher" ] && ./build.sh emmc-img; \
-+		rm -rf $(BIN_DIR)/$(PROFILE_SANITIZED)-squashfs-sysupgrade.img.gz $(BIN_DIR)/images-for-eflasher; \
++		export MORE=$(MORE); \
++		cd /data/packit/friendlywrt22-rk3588; \
++		. ~/packit/packit_nanopi.sh; \
 +	fi
 +endef
 +

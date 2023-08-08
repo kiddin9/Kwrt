@@ -18,7 +18,7 @@
    $(call Device/Export,$$(KDIR_KERNEL_IMAGE),$(1))
    $(BIN_DIR)/$$(KERNEL_IMAGE): $$(KDIR_KERNEL_IMAGE)
 -	cp $$^ $$@
-+	cp generic-kernel.bin $$@
++	cp $(KDIR)/generic-kernel.bin $$@
    ifndef IB
      ifdef CONFIG_IB
        install: $$(KDIR_KERNEL_IMAGE)
@@ -36,7 +36,7 @@
      IMAGES-y += combined.img
    endif
    ifeq ($(CONFIG_VMDK_IMAGES),y)
-@@ -115,4 +113,20 @@ define Device/generic
+@@ -115,4 +113,21 @@ define Device/generic
  endef
  TARGET_DEVICES += generic
  
@@ -50,9 +50,10 @@
 +  if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
 +  	export BIN_DIR=$(BIN_DIR); \
 +  	export DATE=$(DATE); \
-+  	cd /www/wwwroot/op.supes.top/bcache/armsr/armv8/amlogic-s9xxx-openwrt; \
-+  	. ../modify_amlogic.sh; \
-+  	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))) || true; \
++  	export MORE=$(MORE); \
++	export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
++  	cd /data/packit/amlogic-s9xxx-openwrt; \
++  	. ~/packit/packit_amlogic.sh; \
 +  fi
 +endef
 +

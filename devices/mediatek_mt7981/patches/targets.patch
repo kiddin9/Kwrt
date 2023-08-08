@@ -1,6 +1,6 @@
 --- a/include/target.mk
 +++ b/include/target.mk
-@@ -46,28 +46,27 @@ DEFAULT_PACKAGES.router:=\
+@@ -46,27 +46,27 @@ DEFAULT_PACKAGES.router:=\
  	dnsmasq-full \
  	firewall \
  	iptables \
@@ -22,7 +22,6 @@
 -	kmod-nf-nathelper-extra \
 -	luci \
 -	luci-app-filetransfer \
--	luci-app-turboacc \
 -	luci-compat \
 -	luci-lib-base \
 -	luci-lib-fs \

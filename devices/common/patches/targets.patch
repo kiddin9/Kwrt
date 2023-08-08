@@ -1,23 +1,3 @@
---- a/Makefile
-+++ b/Makefile
-@@ -40,6 +40,7 @@ else
-   include tools/Makefile
-   include toolchain/Makefile
- 
-+include $(INCLUDE_DIR)/target.mk
- $(toolchain/stamp-compile): $(tools/stamp-compile) $(if $(CONFIG_BUILDBOT),toolchain_rebuild_check)
- $(target/stamp-compile): $(toolchain/stamp-compile) $(tools/stamp-compile) $(BUILD_DIR)/.prepared
- $(package/stamp-compile): $(target/stamp-compile) $(package/stamp-cleanup)
-@@ -131,6 +132,8 @@ world: prepare $(target/stamp-compile) $(package/stamp-compile) $(package/stamp-
- 	$(_SINGLE)$(SUBMAKE) -r package/index
- 	$(_SINGLE)$(SUBMAKE) -r json_overview_image_info
- 	$(_SINGLE)$(SUBMAKE) -r checksum
-+	cp $(BIN_DIR)/packages/Packages.manifest $(BIN_DIR)/
-+	mv $(BIN_DIR)/packages $(BIN_DIR)/$(LINUX_VERSION) 2>/dev/null
- ifneq ($(CONFIG_CCACHE),)
- 	$(STAGING_DIR_HOST)/bin/ccache -s
- endif
-
 --- a/include/target.mk
 +++ b/include/target.mk
 @@ -53,10 +53,10 @@ DEFAULT_PACKAGES.nas:=\
