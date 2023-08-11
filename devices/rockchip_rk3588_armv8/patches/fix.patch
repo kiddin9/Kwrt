@@ -21,3 +21,20 @@
    UENV:=default
    HIDDEN:=1
  endef
+
+new file mode 100644
+index 000000000..ddfa7f575
+--- /dev/null
++++ b/target/linux/rockchip_rk3588/patches-5.10/199-fix_pthread_once_error.patch
+@@ -0,0 +1,11 @@
++--- a/scripts/Makefile
+++++ b/scripts/Makefile
++@@ -22,7 +22,7 @@
++ HOSTCFLAGS_sign-file.o = $(CRYPTO_CFLAGS)
++ HOSTLDLIBS_sign-file = $(CRYPTO_LIBS)
++ HOSTCFLAGS_extract-cert.o = $(CRYPTO_CFLAGS)
++-HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS)
+++HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS) -lpthread
++ 
++ ifdef CONFIG_UNWINDER_ORC
++ ifeq ($(ARCH),x86_64)
