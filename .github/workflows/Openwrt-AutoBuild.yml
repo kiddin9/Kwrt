@@ -219,6 +219,10 @@ jobs:
       run: |
         cd openwrt
         make defconfig
+        if [[ ! "${{matrix.target}}" =~ (armsr_armv8|bcm27xx_*|meson_meson8b|rockchip_*|sunxi_*|x86_*) ]]; then
+        sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
+        make defconfig
+        fi
         cat .config
 
     - name: Download package
