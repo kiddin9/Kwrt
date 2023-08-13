@@ -24,7 +24,7 @@
  UBOOT_TARGETS := \
    nanopi-r6c-rk3588 \
    nanopi-r6s-rk3588 \
-+  orangepi-5-rk3588 \  
++   orangepi-5-rk3588 \
    orangepi-5-plus-rk3588 \
    rock-5b-rk3588 \
    bpi-r2-pro-rk3568 \
