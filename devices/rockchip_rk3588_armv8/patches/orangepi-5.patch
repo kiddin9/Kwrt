@@ -1,6 +1,6 @@
 --- a/package/boot/uboot-rockchip/Makefile
 +++ b/package/boot/uboot-rockchip/Makefile
-@@ -161,6 +161,19 @@ define U-Boot/nanopi-r6c-rk3588
+@@ -175,6 +175,19 @@ define U-Boot/nanopi-r6s-rk3588
  
  endef
  
@@ -17,9 +17,17 @@
 +  DDR_3588:=$(1)
 +endef
 +
- define U-Boot/nanopi-r6s-rk3588
+ define U-Boot/orangepi-5-plus-rk3588
    BUILD_SUBTARGET:=armv8
-   NAME:=NANOPI-R6C
+   NAME:=ORANGEPI-5-PLUS
+@@ -204,6 +217,7 @@ endef
+ UBOOT_TARGETS := \
+   nanopi-r6c-rk3588 \
+   nanopi-r6s-rk3588 \
++  orangepi-5-rk3588 \  
+   orangepi-5-plus-rk3588 \
+   rock-5b-rk3588 \
+   bpi-r2-pro-rk3568 \
 
 --- a/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip_rk3588/armv8/base-files/etc/board.d/02_network
