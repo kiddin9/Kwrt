@@ -1,0 +1,34 @@
+--- a/net/netfilter/xt_connmark.c
++++ b/net/netfilter/xt_connmark.c
+@@ -118,14 +118,6 @@
+ 	return connmark_tg_shift(skb, &info3);
+ }
+ 
+-static unsigned int
+-connmark_tg_v3(struct sk_buff *skb, const struct xt_action_param *par)
+-+{
+-	const struct xt_connmark_tginfo3 *info = par->targinfo;
+-
+-	return connmark_tg_shift(skb, info);
+-}
+-
+ static int connmark_tg_check(const struct xt_tgchk_param *par)
+ {
+ 	int ret;
+@@ -192,16 +184,6 @@
+ 		.targetsize     = sizeof(struct xt_connmark_tginfo2),
+ 		.destroy        = connmark_tg_destroy,
+ 		.me             = THIS_MODULE,
+-	},
+-	{
+-		.name           = "CONNMARK",
+-		.revision       = 3,
+-		.family         = NFPROTO_UNSPEC,
+-		.checkentry     = connmark_tg_check,
+-		.target         = connmark_tg_v3,
+-		.targetsize     = sizeof(struct xt_connmark_tginfo3),
+-		.destroy        = connmark_tg_destroy,
+-		.me             = THIS_MODULE,
+ 	}
+ };
+ 

@@ -14,6 +14,9 @@ rm -rf target/linux/rockchip/patches-5.15/{002-net-usb*,204-rockchip-rk3328*,003
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
+curl -sfL https://raw.githubusercontent.com/icevel/lede-pico3399-ro/master/package/boot/uboot-rockchip/patches/308-rockchip-rk3399-Add-support-for-rockchip-pico3399.patch -o package/boot/uboot-rockchip/patches/308-rockchip-rk3399-Add-support-for-rockchip-pico3399.patch
+curl -sfL https://raw.githubusercontent.com/icevel/lede-pico3399-ro/master/target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3399-pico3399.dts -o target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3399-pico3399.dts
+
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
 mv -f tmp/r8125 feeds/kiddin9/

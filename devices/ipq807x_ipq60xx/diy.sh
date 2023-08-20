@@ -22,7 +22,7 @@ CONFIG_FEED_ipq807x=n
 CONFIG_FEED_wifi_ax=n
 " >> devices/common/.config
 
-sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2024-12-06/" package/feeds/wifi_ax/hostapd/Makefile
+sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2099-12-06/" package/feeds/wifi_ax/hostapd/Makefile
 
 rm -rf target/imagebuilder
 svn co https://github.com/openwrt/openwrt/branches/openwrt-21.02/target/imagebuilder target/imagebuilder

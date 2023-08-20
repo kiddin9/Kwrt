@@ -30,7 +30,7 @@
 +  IMAGE_SIZE := 15808k
 +  DEVICE_VENDOR := JDCloud
 +  DEVICE_MODEL := Luban 鲁班
-+  DEVICE_PACKAGES += kmod-mt7915e uboot-envtools wpad-mini -wpad-basic-mbedtls -coremark -htop -bash -openssh-sftp-server
++  DEVICE_PACKAGES += kmod-mt7915e uboot-envtools  kmod-mmc kmod-sdhci kmod-sdhci-mt7620 kmod-fs-ext4 wpad-mini -wpad-basic-mbedtls -coremark -htop -bash -openssh-sftp-server
 +endef
 +TARGET_DEVICES += jdcloud_luban
 +

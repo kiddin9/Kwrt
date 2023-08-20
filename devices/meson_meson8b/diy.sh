@@ -12,3 +12,6 @@ svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/meson target/linu
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-5.10 -o include/kernel-5.10
 
 svn co https://github.com/openwrt/routing/branches/openwrt-22.03/batman-adv feeds/routing/batman-adv
+
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += automount/' target/linux/meson/Makefile
+

@@ -1,0 +1,182 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2021 Rockchip Electronics Co., Ltd.
+ *
+ */
+
+&csi2_dcphy0 {
+	status = "disabled";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi_in_cam0: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&ov13850_out>;
+				data-lanes = <1 2>;
+			};
+
+			mipi_in_cam1: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&ov13855_out>;
+				data-lanes = <1 2>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			csidcphy0_out: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&mipi0_csi2_input>;
+			};
+		};
+	};
+};
+
+&i2c7 {
+	status = "okay";
+        pinctrl-names = "default";
+        pinctrl-0 = <&i2c7m0_xfer>;
+
+	vm149c_p2: vm149c-p2@c {
+		compatible = "silicon touch,vm149c";
+		status = "disabled";
+		reg = <0x0c>;
+		rockchip,camera-module-index = <1>;
+		rockchip,camera-module-facing = "back";
+	};
+
+	ov13850_2: ov13850-2@10 {
+		compatible = "ovti,ov13850";
+		status = "disabled";
+		reg = <0x10>;
+		clocks = <&cru CLK_MIPI_CAMARAOUT_M4>;
+		clock-names = "xvclk";
+                power-domains = <&power RK3588_PD_VI>;
+		pinctrl-names = "default";
+                pinctrl-0 = <&mipim0_camera4_clk>;
+		rockchip,grf = <&sys_grf>;
+		reset-gpios = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
+		pwdn-gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "CMK-CT0116";
+		rockchip,camera-module-lens-name = "default";
+		lens-focus = <&vm149c_p2>;
+		port {
+			ov13850_out: endpoint {
+				remote-endpoint = <&mipi_in_cam0>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+
+	dw9714_p2: dw9714-p2@c {
+		compatible = "dongwoon,dw9714";
+		status = "disabled";
+		reg = <0x0c>;
+		rockchip,camera-module-index = <0>;
+		rockchip,vcm-start-current = <10>;
+		rockchip,vcm-rated-current = <85>;
+		rockchip,vcm-step-mode = <5>;
+		rockchip,camera-module-facing = "back";
+	};
+
+	ov13855_2: ov13855-2@36 {
+		compatible = "ovti,ov13855";
+		status = "disabled";
+		reg = <0x36>;
+		clocks = <&cru CLK_MIPI_CAMARAOUT_M4>;
+		clock-names = "xvclk";
+		power-domains = <&power RK3588_PD_VI>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&mipim0_camera4_clk>;
+		rockchip,grf = <&sys_grf>;
+		reset-gpios = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
+		pwdn-gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "CMK-OT2016-FV1";
+		rockchip,camera-module-lens-name = "default";
+		lens-focus = <&dw9714_p2>;
+		port {
+			ov13855_out: endpoint {
+				remote-endpoint = <&mipi_in_cam1>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+};
+
+&mipi0_csi2 {
+	status = "disabled";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi0_csi2_input: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&csidcphy0_out>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi0_csi2_output: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&cif_mipi_in0>;
+			};
+		};
+	};
+};
+
+&rkcif_mipi_lvds {
+	status = "disabled";
+
+	port {
+		cif_mipi_in0: endpoint {
+			remote-endpoint = <&mipi0_csi2_output>;
+		};
+	};
+};
+
+&rkcif_mipi_lvds_sditf {
+	status = "disabled";
+
+	port {
+		mipi_lvds_sditf: endpoint {
+			remote-endpoint = <&isp1_in1>;
+		};
+	};
+};
+
+&rkisp0_vir0 {
+	status = "disabled";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		isp1_in1: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&mipi_lvds_sditf>;
+		};
+	};
+};

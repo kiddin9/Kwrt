@@ -8,7 +8,7 @@ rm -rf package/feeds/kiddin9/rtl* package/feeds/packages/gptfdisk package/utils/
 
 rm -rf devices/common/patches/{fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 
-sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2024-12-06/" package/network/config/netifd/Makefile
+sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2099-12-06/" package/network/config/netifd/Makefile
 
 rm -rf toolchain/musl package/utils/e2fsprogs package/libs/libselinux package/feeds/packages/acl package/feeds/luci/ucode-mod-html package/feeds/luci/rpcd-mod-luci
 

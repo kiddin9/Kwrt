@@ -21,3 +21,49 @@
    UENV:=default
    HIDDEN:=1
  endef
+
+new file mode 100644
+index 000000000..ddfa7f575
+--- /dev/null
++++ b/target/linux/rockchip_rk3588/patches-5.10/199-fix_pthread_once_error.patch
+@@ -0,0 +1,11 @@
++--- a/scripts/Makefile
+++++ b/scripts/Makefile
++@@ -22,7 +22,7 @@
++ HOSTCFLAGS_sign-file.o = $(CRYPTO_CFLAGS)
++ HOSTLDLIBS_sign-file = $(CRYPTO_LIBS)
++ HOSTCFLAGS_extract-cert.o = $(CRYPTO_CFLAGS)
++-HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS)
+++HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS) -lpthread
++ 
++ ifdef CONFIG_UNWINDER_ORC
++ ifeq ($(ARCH),x86_64)
+
+--- a/package/kernel/linux/modules/netfilter.mk
++++ b/package/kernel/linux/modules/netfilter.mk
+@@ -39,6 +39,17 @@ endef
+ 
+ $(eval $(call KernelPackage,nf-reject6))
+ 
++define KernelPackage/nf-conncount
++  SUBMENU:=$(NF_MENU)
++  TITLE:=Netfilter conncount support
++  KCONFIG:=$(KCONFIG_NF_CONNCOUNT)
++  HIDDEN:=1
++  DEPENDS:=+kmod-nf-conntrack
++  FILES:=$(foreach mod,$(NF_CONNCOUNT-m),$(LINUX_DIR)/net/$(mod).ko)
++  AUTOLOAD:=$(call AutoProbe,$(notdir $(NF_CONNCOUNT-m)))
++endef
++
++$(eval $(call KernelPackage,nf-conncount))
+ 
+ define KernelPackage/nf-ipt
+   SUBMENU:=$(NF_MENU)
+@@ -236,6 +247,7 @@ $(eval $(call KernelPackage,ipt-conntrack))
+ 
+ define KernelPackage/ipt-conntrack-extra
+   TITLE:=Extra connection tracking modules
++  DEPENDS:=+kmod-nf-conncount
+   KCONFIG:=$(KCONFIG_IPT_CONNTRACK_EXTRA)
+   FILES:=$(foreach mod,$(IPT_CONNTRACK_EXTRA-m),$(LINUX_DIR)/net/$(mod).ko)
+   AUTOLOAD:=$(call AutoProbe,$(notdir $(IPT_CONNTRACK_EXTRA-m)))

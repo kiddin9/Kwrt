@@ -1,0 +1,101 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+&dsi0 {
+	status = "disabled";
+};
+
+&dsi0_panel {
+	status = "disabled";
+	reset-gpios = <&gpio1 RK_PB1 GPIO_ACTIVE_LOW>;
+	enable-gpios = <&gpio1 RK_PA0 GPIO_ACTIVE_HIGH>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&lcd0_rst_gpio>;
+};
+
+&dsi0_in_vp2 {
+	status = "disabled";
+};
+
+&dsi0_in_vp3 {
+	status = "disabled";
+};
+
+&route_dsi0 {
+	status = "disabled";
+	connect = <&vp3_out_dsi0>;
+};
+
+&mipi_dcphy0 {
+	status = "okay";
+};
+
+&i2c7 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c7m0_xfer>;
+
+	gt9xx_1: touchscreen@14 {
+		compatible = "goodix,gt9271";
+		reg = <0x14>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <RK_PB5 IRQ_TYPE_LEVEL_LOW>;
+		irq-gpios = <&gpio1 RK_PB5 IRQ_TYPE_LEVEL_LOW>;
+		reset-gpios = <&gpio1 RK_PB4 GPIO_ACTIVE_HIGH>;
+		touchscreen-inverted-x;
+		//touchscreen-inverted-y;
+		touchscreen-swapped-x-y;
+		touchscreen-size-x = <1280>;
+		touchscreen-size-y = <800>;
+		status = "okay";
+	};
+};
+
+
+
+&dsi1 {
+	status = "disabled";
+};
+
+&dsi1_panel {
+	status = "disabled";
+	reset-gpios = <&gpio1 RK_PB3 GPIO_ACTIVE_LOW>;
+	enable-gpios = <&gpio1 RK_PA1 GPIO_ACTIVE_HIGH>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&lcd1_rst_gpio>;
+};
+
+&dsi1_in_vp2 {
+	status = "disabled";
+};
+
+&dsi1_in_vp3 {
+	status = "disabled";
+};
+
+&route_dsi1 {
+	status = "disabled";
+	connect = <&vp3_out_dsi1>;
+};
+
+&mipi_dcphy1 {
+	status = "okay";
+};
+
+&i2c2 {
+	status = "okay";
+
+	gt9xx_0: touchscreen@14 {
+		compatible = "goodix,gt9271";
+		reg = <0x14>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
+		irq-gpios = <&gpio1 RK_PA7 IRQ_TYPE_LEVEL_LOW>;
+		reset-gpios = <&gpio1 RK_PA4 GPIO_ACTIVE_HIGH>;
+		touchscreen-inverted-x;
+		//touchscreen-inverted-y;
+		touchscreen-swapped-x-y;
+		touchscreen-size-x = <1280>;
+		touchscreen-size-y = <800>;
+		status = "okay";
+	};
+};
