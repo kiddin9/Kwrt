@@ -4,6 +4,8 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
+sh -c curl -sfL https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/11542.patch | git apply -p1
+
 sed -i "s/^TARGET_DEVICES /# TARGET_DEVICES /" target/linux/bcm53xx/image/Makefile
 sed -i "s/# TARGET_DEVICES += phicomm_k3/TARGET_DEVICES += phicomm_k3/" target/linux/bcm53xx/image/Makefile
 sed -i "s/# TARGET_DEVICES += asus_rt-ac88u/TARGET_DEVICES += asus_rt-ac88u/" target/linux/bcm53xx/image/Makefile

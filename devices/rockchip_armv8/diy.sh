@@ -6,16 +6,15 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 rm -rf package/boot/uboot-rockchip
 svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/uboot-rockchip package/boot/uboot-rockchip
 svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
-rm -rf target/linux/rockchip/!(Makefile|patches-5.15)
+
+rm -rf target/linux/generic target/linux/rockchip/!(Makefile)
+
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic target/linux/generic
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
-rm -rf target/linux/rockchip/{.svn,patches-5.15/.svn}
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip/patches-5.15 target/linux/rockchip/patches-5.15
-rm -rf target/linux/rockchip/patches-5.15/{002-net-usb*,204-rockchip-rk3328*,003-dt-bindings*,006-rockchip-rk3399*,072-v6.2-net-phy*,073-v6.2-net-phy*,074-v6.3-net-phy*,075-v6.3-net-phy*,076-v6.3-net-phy*,077-v6.3-net-phy*,078-v6.3-net-phy*,079-v6.3-net-phy*,202-rockchip-rk3328-Add*,203-rockchip-rk3328-Add*}
+
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-5.15 -o include/kernel-5.15
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
-
-curl -sfL https://raw.githubusercontent.com/icevel/lede-pico3399-ro/master/package/boot/uboot-rockchip/patches/308-rockchip-rk3399-Add-support-for-rockchip-pico3399.patch -o package/boot/uboot-rockchip/patches/308-rockchip-rk3399-Add-support-for-rockchip-pico3399.patch
-curl -sfL https://raw.githubusercontent.com/icevel/lede-pico3399-ro/master/target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3399-pico3399.dts -o target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3399-pico3399.dts
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 

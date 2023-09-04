@@ -83,7 +83,7 @@ index 0000000000000..759baae3aeb18
  	tplink,tl-xdr6088|\
  	xiaomi,mi-router-wr30u-112m-nmbm|\
  	xiaomi,mi-router-wr30u-ubootmod|\
-+	xiaomi,redmi-router-ax6000|\	
++	xiaomi,redmi-router-ax6000|\
  	xiaomi,redmi-router-ax6000-ubootmod)
  		CI_KERNPART="fit"
  		nand_do_upgrade "$1"
