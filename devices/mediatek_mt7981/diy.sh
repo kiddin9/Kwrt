@@ -19,5 +19,3 @@ svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/utils/u
 #ln -sf $(pwd)/feeds/luci/modules/luci-base package/feeds/kiddin9/
 
 sed -i "s/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-mtk mii_mgr wifi-profile mtkhqos_util wireless-regdb switch regs kmod-warp kmod-mt_wifi kmod-mediatek_hnat kmod-conninfra datconf-lua/" target/linux/mediatek/Makefile
-
-rm -rf devices/common/patches/enable_wifi.patch

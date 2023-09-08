@@ -60,6 +60,8 @@ grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a48d0bdb77eb93f7fba6e055dace125c72755b6a.patch | patch -d './' -p1 --forward"
 }
 
+sed -i "/wireless.${name}.disabled/d" package/kernel/mac80211/files/lib/wifi/mac80211.sh
+
 sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's/Os/O2/g' include/target.mk
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
