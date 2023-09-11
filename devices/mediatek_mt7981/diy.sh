@@ -4,17 +4,16 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/feeds/kiddin9/rtl* package/feeds/packages/gptfdisk package/utils/f2fs-tools
+rm -rf package/feeds/kiddin9/rtl*
 
-rm -rf devices/common/patches/{fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
+rm -rf devices/common/patches/{fix.patch,iptables.patch,kernel-defaults.patch,targets.patch} package/feeds/luci/rpcd-mod-luci package/feeds/packages/{ksmbd-tools,glib2}
 
 sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2099-12-06/" package/network/config/netifd/Makefile
 
-rm -rf toolchain/musl package/utils/e2fsprogs package/libs/libselinux package/feeds/packages/acl package/feeds/luci/ucode-mod-html package/feeds/luci/rpcd-mod-luci
+sed -i "/KernelPackage,sound-soc-core/d" package/kernel/linux/modules/sound.mk
+sed -i "/KernelPackage,multimedia-input/d" package/kernel/linux/modules/video.mk
 
 svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/toolchain/musl toolchain/musl
-svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/utils/e2fsprogs package/utils/e2fsprogs
-svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/libs/libselinux package/libs/libselinux
 svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/utils/ucode package/utils/ucode
 #ln -sf $(pwd)/feeds/luci/modules/luci-base package/feeds/kiddin9/
 

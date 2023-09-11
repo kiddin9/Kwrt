@@ -5,27 +5,15 @@
      CATEGORY:=Boot Loaders
      TITLE:=ARM Trusted Firmware for Rockchip
 -    DEPENDS:=@TARGET_rockchip_armv8
-+    DEPENDS:=@TARGET_rockchip_rk3588_armv8
++    DEPENDS:=@TARGET_rockchip_armv8_bsp
  endef
  
  define Build/Prepare
 
---- a/package/boot/uboot-rockchip/Makefile
-+++ b/package/boot/uboot-rockchip/Makefile
-@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/u-boot.mk
- include $(INCLUDE_DIR)/package.mk
- 
- define U-Boot/Default
--  BUILD_TARGET:=rockchip
-+  BUILD_TARGET:=rockchip_rk3588
-   UENV:=default
-   HIDDEN:=1
- endef
-
 new file mode 100644
 index 000000000..ddfa7f575
 --- /dev/null
-+++ b/target/linux/rockchip_rk3588/patches-5.10/199-fix_pthread_once_error.patch
++++ b/target/linux/rockchip/patches-5.10/199-fix_pthread_once_error.patch
 @@ -0,0 +1,11 @@
 +--- a/scripts/Makefile
 ++++ b/scripts/Makefile

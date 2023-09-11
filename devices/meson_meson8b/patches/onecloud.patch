@@ -11,18 +11,6 @@
  endef
  ifeq ($(SUBTARGET),meson8b)
 
---- a/target/linux/meson/files/arch/arm/boot/dts/meson8b-onecloud.dts
-+++ b/target/linux/meson/files/arch/arm/boot/dts/meson8b-onecloud.dts
-@@ -137,7 +137,7 @@
- 	pinctrl-names = "default";
- 
- 	phy-handle = <&eth_phy>;
--	phy-mode = "rgmii-id";
-+	phy-mode = "rgmii-rxid";
- 
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
-
 --- a/package/kernel/linux/modules/netsupport.mk
 +++ b/package/kernel/linux/modules/netsupport.mk
 @@ -93,7 +93,8 @@ define KernelPackage/vxlan

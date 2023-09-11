@@ -1,0 +1,145 @@
+--- a/package/firmware/ipq-wifi/Makefile
++++ b/package/firmware/ipq-wifi/Makefile
+@@ -35,6 +35,8 @@ ALLWIFIBOARDS:= \
+ 	edimax_cax1800 \
+ 	glinet_gl-ax1800 \
+ 	glinet_gl-axt1800 \
++	qihoo_v6 \
++	cmiot_ax18 \
+ 	netgear_rax120v2 \
+ 	netgear_wax218 \
+ 	prpl_haze \
+@@ -128,6 +130,8 @@ $(eval $(call generate-ipq-wifi-package,edgecore_eap102,Edgecore EAP102))
+ $(eval $(call generate-ipq-wifi-package,edimax_cax1800,Edimax CAX1800))
+ $(eval $(call generate-ipq-wifi-package,glinet_gl-ax1800,GL.iNet GL-AX1800))
+ $(eval $(call generate-ipq-wifi-package,glinet_gl-axt1800,GL.iNet GL-AXT1800))
++$(eval $(call generate-ipq-wifi-package,qihoo_v6,QIHOO 360V6))
++$(eval $(call generate-ipq-wifi-package,cmiot_ax18,CMIOT AX18))
+ $(eval $(call generate-ipq-wifi-package,netgear_rax120v2,Netgear RAX120v2))
+ $(eval $(call generate-ipq-wifi-package,netgear_wax218,Netgear WAX218))
+ $(eval $(call generate-ipq-wifi-package,qnap_301w,QNAP 301w))
+
+--- a/target/linux/qualcommax/image/ipq60xx.mk
++++ b/target/linux/qualcommax/image/ipq60xx.mk
+@@ -11,6 +11,45 @@ define Device/UbiFit
+ 	IMAGE/nand-sysupgrade.bin := sysupgrade-tar | append-metadata
+ endef
+ 
++define Device/cmiot_ax18
++	$(call Device/FitImage)
++	$(call Device/UbiFit)
++	DEVICE_VENDOR := CMIOT
++	DEVICE_MODEL := AX18
++	BLOCKSIZE := 128k
++	PAGESIZE := 2048
++	DEVICE_DTS_CONFIG := config@cp03-c1
++	DEVICE_PACKAGES := ipq-wifi-cmiot_ax18
++	SOC := ipq6018
++endef
++TARGET_DEVICES += cmiot_ax18
++
++define Device/qihoo_v6
++	$(call Device/FitImage)
++	$(call Device/UbiFit)
++	DEVICE_VENDOR := Qihoo 360
++	DEVICE_MODEL := V6
++	BLOCKSIZE := 128k
++	PAGESIZE := 2048
++	DEVICE_DTS_CONFIG := config@cp03-c1
++	DEVICE_PACKAGES := ath11k-wifi-qihoo_v6
++	SOC := ipq6018
++endef
++TARGET_DEVICES += qihoo_v6
++
++define Device/zn_m2
++	$(call Device/FitImage)
++	$(call Device/UbiFit)
++	DEVICE_VENDOR := ZN
++	DEVICE_MODEL := M2
++	BLOCKSIZE := 128k
++	PAGESIZE := 2048
++	DEVICE_DTS_CONFIG := config@cp03-c1
++	DEVICE_PACKAGES := ipq-wifi-cmiot_ax18
++	SOC := ipq6018
++endef
++TARGET_DEVICES += zn_m2
++
+ define Device/glinet_gl-ax1800
+ 	$(call Device/FitImage)
+ 	$(call Device/UbiFit)
+
+--- a/target/linux/qualcommax/ipq60xx/base-files/etc/board.d/02_network
++++ b/target/linux/qualcommax/ipq60xx/base-files/etc/board.d/02_network
+@@ -11,6 +11,14 @@ ipq807x_setup_interfaces()
+ 	local board="$1"
+ 
+ 	case "$board" in
++	cmiot,ax18|\
++	qihoo,v6|\
++	zn,m2)
++		ucidef_set_interfaces_lan_wan "eth1 eth2 eth3" "eth0"
++		;;
++	linksys,mr7350)
++		ucidef_set_interfaces_lan_wan "eth0 eth1 eth2 eth3" "eth4"
++		;;
+ 	glinet,gl-ax1800)
+ 		ucidef_set_interfaces_lan_wan "eth1 eth2 eth3 eth4" "eth0"
+ 		;;
+
+--- a/target/linux/qualcommax/ipq60xx/base-files/etc/board.d/01_leds
++++ b/target/linux/qualcommax/ipq60xx/base-files/etc/board.d/01_leds
+@@ -6,7 +6,14 @@ board_config_update
+ board=$(board_name)
+ 
+ case "$board" in
+-
++cmiot,ax18|\
++zn,m2)
++	ucidef_set_led_netdev "wan" "WAN" "blue:wan" "eth0"
++	ucidef_set_led_netdev "wlan2g" "WLAN2G" "blue:wlan2g" "wlan1"
++	ucidef_set_led_netdev "wlan5g" "WLAN5G" "blue:wlan5g" "wlan0"
++	;;
++*)
++	;;
+ esac
+ 
+ board_config_flush
+
+--- a/target/linux/qualcommax/ipq60xx/base-files/lib/upgrade/platform.sh
++++ b/target/linux/qualcommax/ipq60xx/base-files/lib/upgrade/platform.sh
+@@ -16,6 +16,9 @@ platform_pre_upgrade() {
+ 
+ platform_do_upgrade() {
+ 	case "$(board_name)" in
++	cmiot,ax18|\
++	qihoo,v6|\
++	zn,m2|\
+ 	glinet,gl-axt1800|\
+ 	glinet,gl-ax1800)
+ 		nand_do_upgrade "$1"
+
+--- a/target/linux/qualcommax/ipq60xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
++++ b/target/linux/qualcommax/ipq60xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
+@@ -9,6 +9,10 @@ board=$(board_name)
+ case "$FIRMWARE" in
+ "ath11k/IPQ6018/hw1.0/cal-ahb-c000000.wifi.bin")
+ 	case $(board_name) in
++	cmiot,ax18|\
++	linksys,mr7350|\
++	qihoo,v6|\
++	zn,m2|\
+ 	glinet,gl-axt1800|\
+ 	glinet,gl-ax1800)
+ 		caldata_extract "0:art" 0x1000 0x10000
+
+--- a/package/feeds/kiddin9/base-files/files/etc/init.d/led
++++ b/package/feeds/kiddin9/base-files/files/etc/init.d/led
+@@ -76,6 +76,8 @@ load_led() {
+ 		"netdev")
+ 			[ -n "$dev" ] && {
+ 				echo $dev > /sys/class/leds/${sysfs}/device_name
++				[ -e "/sys/class/leds/${sysfs}/mode" ]  && \
++					echo $mode > /sys/class/leds/${sysfs}/mode
+ 				for m in $mode; do
+ 					[ -e "/sys/class/leds/${sysfs}/$m" ] && \
+ 						echo 1 > /sys/class/leds/${sysfs}/$m

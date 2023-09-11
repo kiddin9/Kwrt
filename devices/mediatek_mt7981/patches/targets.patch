@@ -42,3 +42,16 @@
  target_conf=$(subst .,_,$(subst -,_,$(subst /,_,$(1))))
  ifeq ($(DUMP),)
    PLATFORM_DIR:=$(TOPDIR)/target/linux/$(BOARD)
+
+--- a/target/linux/mediatek/image/mt7981.mk
++++ b/target/linux/mediatek/image/mt7981.mk
+@@ -375,8 +375,7 @@ define Device/cmcc_rax3000m
+   DEVICE_MODEL := RAX3000M
+   DEVICE_DTS := mt7981-cmcc-rax3000m
+   DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
+-  DEVICE_PACKAGES := automount blkid luci-app-ksmbd luci-i18n-ksmbd-zh-cn ksmbd-utils \
+-			luci-app-usb-printer luci-i18n-usb-printer-zh-cn \
++  DEVICE_PACKAGES := automount blkid \
+ 			kmod-nls-cp437 kmod-nls-iso8859-1
+   SUPPORTED_DEVICES := cmcc,rax3000m
+   UBINIZE_OPTS := -E 5

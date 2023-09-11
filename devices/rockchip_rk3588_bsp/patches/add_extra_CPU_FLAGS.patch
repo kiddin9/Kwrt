@@ -4,7 +4,7 @@
      CPU_CFLAGS_arc700 = -mcpu=arc700
      CPU_CFLAGS_archs = -mcpu=archs
    endif
-+  ifeq ($(BOARD),rockchip_rk3588)
++  ifeq ($(BOARD),rockchip)
 +    CPU_CFLAGS = -O3 -pipe
 +    CPU_CFLAGS_cortex-a53 = -mcpu=cortex-a53
 +    CPU_CFLAGS_cortex-a55 = -march=armv8-a+crypto+crc -mcpu=cortex-a55+crypto+crc -mtune=cortex-a55
