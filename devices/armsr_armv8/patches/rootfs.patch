@@ -46,6 +46,12 @@
 +endef
 +TARGET_DEVICES += box
 +
++define Device/h28k
++  DEVICE_TITLE := Hlink H28K
++  DEVICE_PACKAGES := perlbase-base perlbase-utf8 perlbase-time perlbase-xsloader perlbase-file btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk automount -luci-app-attendedsysupgrade -luci-app-gpsysupgrade
++endef
++TARGET_DEVICES += h28k
++
 +define Image/Build
 +  if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
 +  	export BIN_DIR=$(BIN_DIR); \
@@ -54,6 +60,17 @@
 +	export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
 +  	cd /data/packit/amlogic-s9xxx-openwrt; \
 +  	. ~/packit/packit_amlogic.sh; \
++  fi
++  if [ "$(PROFILE_SANITIZED)" == "h28k" ]; then \
++  	export BIN_DIR=$(BIN_DIR); \
++  	export DATE=$(DATE); \
++  	export MORE=$(MORE); \
++  	export SELECT_OUTPUTPATH=$(BIN_DIR); \
++  	export OPENWRT_ARMVIRT=$(BIN_DIR)/openwrt-$(DATE)*armsr-armv8-box-rootfs.tar.gz; \
++  	export PACKAGE_SOC=$(PROFILE_SANITIZED); \
++	export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
++  	cd /data/packit/amlogic-s9xxx-openwrt; \
++  	. ~/packit/packit_flippy.sh; \
 +  fi
 +endef
 +
