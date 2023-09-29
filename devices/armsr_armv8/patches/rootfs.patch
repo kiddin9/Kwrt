@@ -36,7 +36,7 @@
      IMAGES-y += combined.img
    endif
    ifeq ($(CONFIG_VMDK_IMAGES),y)
-@@ -115,4 +113,21 @@ define Device/generic
+@@ -116,4 +114,34 @@ define Device/generic
  endef
  TARGET_DEVICES += generic
  
@@ -60,16 +60,12 @@
 +	export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
 +  	cd /data/packit/amlogic-s9xxx-openwrt; \
 +  	. ~/packit/packit_amlogic.sh; \
-+  fi
-+  if [ "$(PROFILE_SANITIZED)" == "h28k" ]; then \
++  elif [ "$(PROFILE_SANITIZED)" == "h28k" ]; then \
 +  	export BIN_DIR=$(BIN_DIR); \
 +  	export DATE=$(DATE); \
-+  	export MORE=$(MORE); \
-+  	export SELECT_OUTPUTPATH=$(BIN_DIR); \
-+  	export OPENWRT_ARMVIRT=$(BIN_DIR)/openwrt-$(DATE)*armsr-armv8-box-rootfs.tar.gz; \
 +  	export PACKAGE_SOC=$(PROFILE_SANITIZED); \
-+	export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
-+  	cd /data/packit/amlogic-s9xxx-openwrt; \
++	export ROOTFS_MB=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
++  	cd /data/packit/flippy-openwrt-actions; \
 +  	. ~/packit/packit_flippy.sh; \
 +  fi
 +endef
