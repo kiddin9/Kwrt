@@ -276,15 +276,6 @@ jobs:
         echo "NOTICE=请分配不少于1G的存储容量" >> $GITHUB_ENV
         fi
 
-    - name: Upload firmware for artifact
-      uses: actions/upload-artifact@main
-      continue-on-error: true
-      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
-      with:
-        name: ${{ env.VERSION }}_${{matrix.target}}
-        path: |
-          openwrt/bin/targets/
-
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
@@ -296,6 +287,15 @@ jobs:
         REMOTE_PORT: ${{ secrets.SERVER_PORT }}
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
+
+    - name: Upload firmware for artifact
+      uses: actions/upload-artifact@main
+      continue-on-error: true
+      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
+      with:
+        name: ${{ env.VERSION }}_${{matrix.target}}
+        path: |
+          openwrt/bin/targets/
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
