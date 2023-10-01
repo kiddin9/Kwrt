@@ -278,6 +278,7 @@ jobs:
 
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
+      continue-on-error: true
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -290,7 +291,6 @@ jobs:
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
-      continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }}_${{matrix.target}}
