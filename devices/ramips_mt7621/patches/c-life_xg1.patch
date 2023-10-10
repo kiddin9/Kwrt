@@ -1,0 +1,373 @@
+From a3b880a4e8654e86eaf1a8854a07fd90783682ce Mon Sep 17 00:00:00 2001
+From: syb999 <54659466+syb999@users.noreply.github.com>
+Date: Sun, 4 Sep 2022 18:30:18 +0800
+Subject: [PATCH] ramips: add support for C-Life XG1 [WIFI6] (#10057)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+CPU: MediaTek MT7621AT
+  Flash: Micron MT29F2G08ABAGAWP 128M
+  RAM: 256 M
+  WiFi: MT7915 2.4/5 GHz 2T2R
+  Ethernet: 10/100/1000 Mbps x3
+  LED: Status (red / blue / white / green / purple / cyan)
+  USB: 2.0 x 1
+  ZigBee/BlueTooth
+  USB Audio: iec958 x 1
+  Button: Reset
+  Power: DC 12V,1.5A
+
+开启ssh方法:
+  打开网页:192.168.10.1,用户路由器底面标注的用户名密码完成登陆。
+  然后打开网页:http://192.168.10.1/cgi-bin/luci/admin/mtk/console，在命令行中输入以下命令:
+  echo -en "root\nroot\n" | passwd
+  然后打开网页:http://192.168.10.1/cgi-bin/luci/pti/ssh_open
+  即可ssh登陆192.168.10.1,用户名root,密码root
+
+刷入openwrt:
+
+开启ssh后，上传breed-mt7621-xiaomi-r3g.bin到路由器/tmp目录。
+然后使用下面命令刷入breed:
+mtd -r write /tmp/breed-mt7621-xiaomi-r3g.bin Bootloader
+等待机器重启，等1分钟断开电源。
+按住C-Life XG1机身正面的圆形IoT按钮(gpio 18),通电就能进入breed刷机.
+---
+ package/boot/uboot-envtools/files/ramips      |   1 +
+ target/linux/ramips/dts/mt7621_c-life_xg1.dts | 160 ++++++++++++++++++
+ target/linux/ramips/image/mt7621.mk           |  17 ++
+ .../mt7621/base-files/etc/board.d/02_network  |   9 +
+ .../etc/hotplug.d/ieee80211/10_fix_wifi_mac   |   6 +
+ .../mt7621/base-files/lib/upgrade/platform.sh |   1 +
+ 6 files changed, 194 insertions(+)
+ create mode 100644 target/linux/ramips/dts/mt7621_c-life_xg1.dts
+
+diff --git a/package/boot/uboot-envtools/files/ramips b/package/boot/uboot-envtools/files/ramips
+index 2942fb6af807a..4323a2574c55b 100644
+--- a/package/boot/uboot-envtools/files/ramips
++++ b/package/boot/uboot-envtools/files/ramips
+@@ -70,6 +70,7 @@
+ h3c,tx1800-plus|\
+ h3c,tx1801-plus|\
+ h3c,tx1806|\
++c-life,xg1|\
+ jcg,q20|\
+ linksys,e7350|\
+ netgear,wax202|\
+
+--- a/target/linux/ramips/dts/mt7621.dtsi
++++ b/target/linux/ramips/dts/mt7621.dtsi
+@@ -437,6 +437,13 @@
+ 		clock-names = "nfi_clk";
+ 	};
+ 
++	ethsys: ethsys@1e000000 {
++		compatible = "mediatek,mt7621-ethsys",
++			     "syscon";
++		reg = <0x1e000000 0x1000>;
++		#clock-cells = <1>;
++	};
++
+ 	ethernet: ethernet@1e100000 {
+ 		compatible = "mediatek,mt7621-eth";
+ 		reg = <0x1e100000 0x10000>;
+@@ -542,6 +549,59 @@
+ 		};
+ 	};
+ 
++	hnat: hnat@1e100000 {
++		compatible = "mediatek,mtk-hnat_v1";
++		ext-devices = "ra0", "rai0", "rax0",
++			"apcli0", "apclii0","apclix0";
++		reg = <0x1e100000 0x3000>;
++
++		resets = <&ethsys 0>;
++		reset-names = "mtketh";
++
++		mtketh-wan = "wan";
++		mtketh-ppd = "lan";
++		mtketh-lan = "lan";
++		mtketh-max-gmac = <1>;
++		mtkdsa-wan-port = <4>;
++	};
++
++	gsw: gsw@1e110000 {
++		compatible = "mediatek,mt753x";
++		reg = <0x1e110000 0x8000>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SHARED 23 IRQ_TYPE_LEVEL_HIGH>;
++
++		mediatek,mcm;
++		mediatek,mdio = <&mdio>;
++		mt7530,direct-phy-access;
++
++		resets = <&rstctrl 2>;
++		reset-names = "mcm";
++		status = "disabled";
++
++		port@5 {
++			compatible = "mediatek,mt753x-port";
++			reg = <5>;
++			phy-mode = "rgmii";
++
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++		};
++
++		port@6 {
++			compatible = "mediatek,mt753x-port";
++			reg = <6>;
++			phy-mode = "rgmii";
++
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++		};
++	};
++
+ 	pcie: pcie@1e140000 {
+ 		compatible = "mediatek,mt7621-pci";
+ 		reg = <0x1e140000 0x100>, /* host-pci bridge registers */
+diff --git a/target/linux/ramips/dts/mt7621_c-life_xg1.dts b/target/linux/ramips/dts/mt7621_c-life_xg1.dts
+new file mode 100644
+index 0000000000000..b3744ff989c06
+--- /dev/null
++++ b/target/linux/ramips/dts/mt7621_c-life_xg1.dts
+@@ -0,0 +1,160 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++#include "mt7621.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	compatible = "c-life,xg1", "mediatek,mt7621-soc";
++	model = "C-Life XG1";
++
++	aliases {
++		led-boot = &led_status_red;
++		led-failsafe = &led_status_red;
++		led-running = &led_status_blue;
++		led-upgrade = &led_status_blue;
++		label-mac-device = &gmac0;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_status_red: status_red {
++			label = "red:status";
++			gpios = <&gpio 14 GPIO_ACTIVE_HIGH>;
++		};
++
++		led_status_blue: status_blue {
++			label = "blue:status";
++			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			label = "reset";
++			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_RESTART>;
++		};
++
++		wps {
++			label = "wps";
++			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_WPS_BUTTON>;
++		};
++	};
++};
++
++&nand {
++	status = "okay";
++
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "Bootloader";
++			reg = <0x0 0x80000>;
++		};
++
++		partition@80000 {
++			label = "Nvram";
++			reg = <0x80000 0x40000>;
++			read-only;
++		};
++
++		partition@c0000 {
++			label = "Bdata";
++			reg = <0xc0000 0x40000>;
++			read-only;
++		};
++
++		factory: partition@100000 {
++			label = "Factory";
++			reg = <0x100000 0x80000>;
++			read-only;
++		};
++
++		partition@180000 {
++			label = "crash";
++			reg = <0x180000 0x40000>;
++			read-only;
++		};
++
++		partition@1c0000 {
++			label = "crash_log";
++			reg = <0x1c0000 0x40000>;
++			read-only;
++		};
++
++		partition@200000 {
++			label = "kernel";
++			reg = <0x200000 0x400000>;
++		};
++
++		partition@600000 {
++			label = "ubi";
++			reg = <0x600000 0x7980000>;
++		};
++	};
++};
++
++&pcie {
++	status = "okay";
++};
++
++&pcie1 {
++	wifi@0,0 {
++		compatible = "mediatek,mt76";
++		reg = <0x0000 0 0 0 0>;
++		mediatek,mtd-eeprom = <&factory 0x0>;
++	};
++};
++
++&gmac0 {
++	mtd-mac-address = <&factory 0x04>;
++};
++
++&gmac1 {
++	mtd-mac-address = <&factory 0x0a>;
++	phy-mode = "rgmii";
++	status = "okay";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++		pause;
++	};
++};
++
++&gsw {
++	mediatek,portmap = "llllw";
++	status = "okay";
++};
++
++&hnat {
++	mtketh-wan = "eth1";
++	mtketh-ppd = "eth0";
++	mtketh-lan = "eth0";
++	mtketh-max-gmac = <2>;
++	/delete-property/ mtkdsa-wan-port;
++};
++
++&switch0 {
++	status = "disabled";
++};
++
++&state_default {
++	gpio {
++		groups = "jtag", "wdt";
++		function = "gpio";
++	};
++};
+diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
+index e2402fc9701e2..efc1d0515b45d 100644
+--- a/target/linux/ramips/image/mt7621.mk
++++ b/target/linux/ramips/image/mt7621.mk
+@@ -582,6 +582,23 @@
+ endef
+ TARGET_DEVICES += cudy_m1800
+ 
++define Device/c-life_xg1
++  $(Device/dsa-migration)
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  UBINIZE_OPTS := -E 5
++  KERNEL_SIZE := 4096k
++  IMAGE_SIZE := 91136k
++  IMAGES += factory.bin
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
++	check-size
++  DEVICE_VENDOR := C-Life
++  DEVICE_MODEL := XG1
++  DEVICE_PACKAGES := kmod-mt7915-firmware uboot-envtools kmod-usb3
++endef
++TARGET_DEVICES += c-life_xg1
++
+ define Device/cudy_wr1300-v1
+   $(Device/dsa-migration)
+   IMAGE_SIZE := 15872k
+diff --git a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+index 250210a473211..83623652e99a9 100644
+--- a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
++++ b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+@@ -198,6 +198,11 @@ ramips_setup_macs()
+ 		lan_mac=$wan_mac
+ 		label_mac=$wan_mac
+ 		;;
++	c-life,xg1)
++		base_mac=$(cat /sys/class/net/eth0/address)
++		lan_mac=$(macaddr_add "$base_mac" -1)
++		wan_mac=$(macaddr_add "$lan_mac" -1)
++		;;
+ 	dlink,dir-860l-b1)
+ 		lan_mac=$(mtd_get_mac_ascii factory lanmac)
+ 		wan_mac=$(mtd_get_mac_ascii factory wanmac)
+diff --git a/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac b/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
+index bb66c1e6a2d80..937986230e4f1 100644
+--- a/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
++++ b/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
+@@ -33,6 +33,12 @@
+ 		[ "$PHYNBR" = "1" ] && \
+ 		macaddr_setbit_la "$(macaddr_add $hw_mac_addr 0x100000)" > /sys${DEVPATH}/macaddress
+ 		;;
++	c-life,xg1)
++		if [ "$PHYNBR" = "1" ]; then
++			base_mac=$(macaddr_add "$(mtd_get_mac_binary factory 0x4)" 1)
++			macaddr_setbit_la "$base_mac" > /sys${DEVPATH}/macaddress
++		fi
++		;;
+ 	dlink,dap-1620-b1|\
+ 	dlink,dir-853-a1)
+ 		lan_mac_addr="$(mtd_get_mac_binary factory 0xe000)"
+diff --git a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
+index af9dc9ca9a1eb..427c39c0675ff 100755
+--- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
++++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
+@@ -63,6 +63,7 @@
+ 	beeline,smartbox-turbo|\
+ 	beeline,smartbox-turbo-plus|\
+ 	belkin,rt1800|\
++	c-life,xg1|\
+ 	dlink,dap-x1860-a1|\
+ 	dlink,dir-1960-a1|\
+ 	dlink,dir-2640-a1|\
+

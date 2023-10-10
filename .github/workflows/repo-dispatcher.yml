@@ -127,6 +127,11 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
+          -d '{"event_type": "mediatek_mt7986 ${{ github.event.inputs.param }}", "client_payload": {"target": "mediatek_mt7986"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
           -d '{"event_type": "ipq50xx_arm ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq50xx_arm"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
@@ -163,11 +168,6 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
           -d '{"event_type": "ipq806x_generic ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq806x_generic"}}'
-          curl \
-          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
-          -d '{"event_type": "ipq807x_ipq60xx ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq807x_ipq60xx"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \

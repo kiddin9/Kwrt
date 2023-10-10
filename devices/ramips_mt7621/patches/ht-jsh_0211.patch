@@ -1,0 +1,172 @@
+From e56218bff2d67efe4192f7b8d87525b101861194 Mon Sep 17 00:00:00 2001
+From: AmadeusGhost <42570690+AmadeusGhost@users.noreply.github.com>
+Date: Fri, 2 Jun 2023 23:03:25 +0800
+Subject: [PATCH] ramips: add HT-JSH-0211 support
+
+Replace the boot loader to the breed of K2P.
+---
+ target/linux/ramips/Makefile                  |   2 +-
+ .../linux/ramips/dts/mt7621_ht-jsh_0211.dts   | 105 ++++++++++++++++++
+ target/linux/ramips/image/mt7621.mk           |   9 ++
+ .../mt7621/base-files/etc/board.d/02_network  |   4 +
+ 4 files changed, 119 insertions(+), 1 deletion(-)
+ create mode 100644 target/linux/ramips/dts/mt7621_ht-jsh_0211.dts
+
+diff --git a/target/linux/ramips/Makefile b/target/linux/ramips/Makefile
+index 3053906f68496..b336489f4da00 100644
+--- a/target/linux/ramips/Makefile
++++ b/target/linux/ramips/Makefile
+@@ -18,6 +18,6 @@ define Target/Description
+ endef
+ 
+ include $(INCLUDE_DIR)/target.mk
+-DEFAULT_PACKAGES += kmod-leds-gpio kmod-gpio-button-hotplug
++DEFAULT_PACKAGES += kmod-leds-gpio kmod-gpio-button-hotplug -procd-ujail
+ 
+ $(eval $(call BuildTarget))
+diff --git a/target/linux/ramips/dts/mt7621_ht-jsh_0211.dts b/target/linux/ramips/dts/mt7621_ht-jsh_0211.dts
+new file mode 100644
+index 0000000000000..fa4d209e80e20
+--- /dev/null
++++ b/target/linux/ramips/dts/mt7621_ht-jsh_0211.dts
+@@ -0,0 +1,105 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include "mt7621.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	compatible = "ht-jsh,0211", "mediatek,mt7621-soc";
++	model = "HT-JSH-0211";
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			label = "reset";
++			gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_RESTART>;
++		};
++	};
++};
++
++&spi0 {
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "Bootloader";
++				reg = <0x0 0x30000>;
++				read-only;
++			};
++
++			partition@30000 {
++				label = "Config";
++				reg = <0x30000 0x10000>;
++				read-only;
++			};
++
++			factory: partition@40000 {
++				label = "Factory";
++				reg = <0x40000 0x10000>;
++				read-only;
++			};
++
++			partition@50000 {
++				compatible = "denx,uimage";
++				label = "firmware";
++				reg = <0x50000 0xfb0000>;
++			};
++		};
++	};
++};
++
++&pcie {
++	status = "okay";
++};
++
++&pcie0 {
++	mt76@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		mediatek,mtd-eeprom = <&factory 0x0>;
++	};
++};
++
++&gmac0 {
++	mtd-mac-address = <&factory 0xe000>;
++};
++
++&gmac1 {
++	mtd-mac-address = <&factory 0xe006>;
++	status = "okay";
++};
++
++&gsw {
++	mediatek,portmap = "wllll";
++	status = "okay";
++};
++
++&hnat {
++	mtketh-wan = "eth1";
++	mtketh-ppd = "eth0";
++	mtketh-lan = "eth0";
++	mtketh-max-gmac = <2>;
++	/delete-property/ mtkdsa-wan-port;
++};
++
++&switch0 {
++	status = "disabled";
++};
++
++&state_default {
++	gpio {
++		groups = "i2c";
++		function = "gpio";
++	};
++};
+diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
+index 1908f60bc37bc..bc6a3ac05ae3a 100644
+--- a/target/linux/ramips/image/mt7621.mk
++++ b/target/linux/ramips/image/mt7621.mk
+@@ -802,6 +802,15 @@ define Device/hiwifi_hc5962
+ endef
+ TARGET_DEVICES += hiwifi_hc5962
+ 
++define Device/ht-jsh_0211
++  $(Device/dsa-migration)
++  IMAGE_SIZE := 16064k
++  DEVICE_VENDOR := HT-JSH
++  DEVICE_MODEL := 0211
++  DEVICE_PACKAGES := kmod-mt7603
++endef
++TARGET_DEVICES += ht-jsh_0211
++
+ define Device/iodata_wn-ax1167gr
+   $(Device/dsa-migration)
+   $(Device/uimage-lzma-loader)
+diff --git a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+index 37037c666d980..816e7c3dd2f4b 100644
+--- a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
++++ b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+@@ -65,6 +65,10 @@ ramips_setup_interfaces()
+ 	hatlab,gateboard-one)
+ 		ucidef_set_interfaces_lan_wan "eth0 eth1 eth2 eth3 eth4" "eth5"
+ 		;;
++	ht-jsh,0211)
++		ucidef_add_switch "switch0" \
++			"0:wan" "2:lan" "3:lan" "6u@eth0" "5u@eth1"
++		;;
+ 	linksys,re6500|\
+ 	netgear,wac104)
+ 		ucidef_set_interface_lan "lan1 lan2 lan3 lan4"

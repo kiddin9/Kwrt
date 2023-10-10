@@ -40,7 +40,7 @@ MAC addresses as verified by stock firmware:
  create mode 100644 target/linux/ipq806x/files-5.15/arch/arm/boot/dts/qcom-ipq8064-r3d.dts
 
 diff --git a/package/boot/uboot-envtools/files/ipq806x b/package/boot/uboot-envtools/files/ipq806x
-index 01a86c7b19fc..c0a781c1e21b 100644
+index 01a86c7b19fca..c0a781c1e21b4 100644
 --- a/package/boot/uboot-envtools/files/ipq806x
 +++ b/package/boot/uboot-envtools/files/ipq806x
 @@ -52,6 +52,10 @@ qcom,ipq8064-ap148|\
@@ -63,7 +63,7 @@ index 01a86c7b19fc..c0a781c1e21b 100644
  
  exit 0
 diff --git a/target/linux/ipq806x/base-files/etc/board.d/02_network b/target/linux/ipq806x/base-files/etc/board.d/02_network
-index 8dd52452b173..df27cbde7c5d 100644
+index 8dd52452b1739..df27cbde7c5d8 100644
 --- a/target/linux/ipq806x/base-files/etc/board.d/02_network
 +++ b/target/linux/ipq806x/base-files/etc/board.d/02_network
 @@ -89,6 +89,10 @@ nokia,ac400i |\
@@ -78,7 +78,7 @@ index 8dd52452b173..df27cbde7c5d 100644
  	hw_mac_addr=$(mtd_get_mac_ascii 0:appsblenv ethaddr)
  	ucidef_add_switch "switch0" \
 diff --git a/target/linux/ipq806x/base-files/etc/hotplug.d/firmware/11-ath10k-caldata b/target/linux/ipq806x/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
-index 4c5019cf5bd2..aa8ed06aae4b 100644
+index 4c5019cf5bd24..aa8ed06aae4b3 100644
 --- a/target/linux/ipq806x/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
 +++ b/target/linux/ipq806x/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
 @@ -56,6 +56,9 @@ case "$FIRMWARE" in
@@ -102,7 +102,7 @@ index 4c5019cf5bd2..aa8ed06aae4b 100644
  		caldata_extract "0:art" 0x5000 0x2f20
  		ath10k_patch_mac $(mtd_get_mac_ascii 0:appsblenv ethaddr)
 diff --git a/target/linux/ipq806x/base-files/etc/init.d/bootcount b/target/linux/ipq806x/base-files/etc/init.d/bootcount
-index cb32a4ed3568..9d9ab3f100fe 100755
+index cb32a4ed3568d..9d9ab3f100fe2 100755
 --- a/target/linux/ipq806x/base-files/etc/init.d/bootcount
 +++ b/target/linux/ipq806x/base-files/etc/init.d/bootcount
 @@ -16,5 +16,13 @@ boot() {
@@ -120,7 +120,7 @@ index cb32a4ed3568..9d9ab3f100fe 100755
  	esac
  }
 diff --git a/target/linux/ipq806x/base-files/lib/upgrade/platform.sh b/target/linux/ipq806x/base-files/lib/upgrade/platform.sh
-index 5ec4f513bd33..b142fce86a08 100644
+index 5ec4f513bd33d..b142fce86a082 100644
 --- a/target/linux/ipq806x/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/ipq806x/base-files/lib/upgrade/platform.sh
 @@ -71,6 +71,9 @@ platform_do_upgrade() {
@@ -135,7 +135,7 @@ index 5ec4f513bd33..b142fce86a08 100644
  		;;
 diff --git a/target/linux/ipq806x/base-files/lib/upgrade/xiaomi.sh b/target/linux/ipq806x/base-files/lib/upgrade/xiaomi.sh
 new file mode 100644
-index 000000000000..9246e8f867e3
+index 0000000000000..9246e8f867e3f
 --- /dev/null
 +++ b/target/linux/ipq806x/base-files/lib/upgrade/xiaomi.sh
 @@ -0,0 +1,441 @@
@@ -582,7 +582,7 @@ index 000000000000..9246e8f867e3
 +}
 diff --git a/target/linux/ipq806x/files-5.15/arch/arm/boot/dts/qcom-ipq8064-r3d.dts b/target/linux/ipq806x/files-5.15/arch/arm/boot/dts/qcom-ipq8064-r3d.dts
 new file mode 100644
-index 000000000000..fd952d230c5d
+index 0000000000000..fd952d230c5da
 --- /dev/null
 +++ b/target/linux/ipq806x/files-5.15/arch/arm/boot/dts/qcom-ipq8064-r3d.dts
 @@ -0,0 +1,479 @@
@@ -1066,7 +1066,7 @@ index 000000000000..fd952d230c5d
 +	};
 +};
 diff --git a/target/linux/ipq806x/image/generic.mk b/target/linux/ipq806x/image/generic.mk
-index aac0a2c8fadf..b437706cd445 100644
+index aac0a2c8fadfd..b437706cd445e 100644
 --- a/target/linux/ipq806x/image/generic.mk
 +++ b/target/linux/ipq806x/image/generic.mk
 @@ -471,6 +471,23 @@ define Device/ubnt_unifi-ac-hd

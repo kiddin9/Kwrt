@@ -11,21 +11,19 @@ sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/
 
 echo '
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-5.10
+' >> ./target/linux/rockchip/armv8/config-6.1
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
-rm -rf package/devel/perf package/feeds/kiddin9/{shortcut-fe,oaf,fast-classifier,rtl8821cu,rtl88x2bu} package/kernel/rtl8812au-ct package/kernel/ath10k-ct package/feeds/routing/batman-adv
-
-sed -i "/KernelPackage,dma-buf/d" package/kernel/linux/modules/other.mk
+rm -rf feeds/kiddin9/{quectel_MHI,shortcut-fe,quectel_Gobinet,rtl88*}
 
 sed -i "/friendlyelec/d" package/feeds/kiddin9/base-files/files/lib/preinit/02_sysinfo
-
-sed -i "s/ath11k ath11k-ahb ath11k-pci //" package/kernel/mac80211/ath.mk
 
 mv -f target/linux/rockchip/image/armv8.mk target/linux/rockchip/image/rk3588_bsp.mk
 
 mv -f target/linux/rockchip/armv8 target/linux/rockchip/rk3588_bsp
+
+sed -i "s/BUILD_SUBTARGET:=armv8/BUILD_SUBTARGET:=rk3588_bsp/" package/boot/uboot-rockchip/Makefile
 
 #curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
