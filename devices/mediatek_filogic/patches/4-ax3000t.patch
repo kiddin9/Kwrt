@@ -8,7 +8,6 @@ Subject: [PATCH] mediatek: add Xiaomi AX3000T support
  .../mediatek/dts/mt7981b-xiaomi-ax3000t.dts   |  49 ++++
  .../dts/mt7981b-xiaomi_mi-router.dtsi         | 241 ++++++++++++++++
  .../filogic/base-files/etc/board.d/02_network |   4 +-
- .../etc/hotplug.d/ieee80211/11_fix_wifi_mac   |   2 +-
  target/linux/mediatek/image/filogic.mk        |  14 +
  7 files changed, 325 insertions(+), 248 deletions(-)
  create mode 100644 target/linux/mediatek/dts/mt7981b-xiaomi-ax3000t.dts
@@ -18,14 +17,15 @@ diff --git a/package/boot/uboot-envtools/files/mediatek_filogic b/package/boot/u
 index a8def1d00b764..3ad8f80c750e0 100644
 --- a/package/boot/uboot-envtools/files/mediatek_filogic
 +++ b/package/boot/uboot-envtools/files/mediatek_filogic
-@@ -35,6 +35,7 @@ bananapi,bpi-r3)
- 	esac
- 	;;
- xiaomi,mi-router-wr30u|\
+@@ -62,6 +62,7 @@
+ tplink,tl-xdr4288|\
+ tplink,tl-xdr6086|\
+ tplink,tl-xdr6088|\
 +xiaomi,mi-router-ax3000t|\
- xiaomi,redmi-router-ax6000)
- 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x10000" "0x20000"
- 	ubootenv_add_uci_sys_config "/dev/mtd2" "0x0" "0x10000" "0x20000"
+ xiaomi,mi-router-wr30u-ubootmod|\
+ xiaomi,redmi-router-ax6000-ubootmod)
+ 	. /lib/upgrade/nand.sh
+
 diff --git a/target/linux/mediatek/dts/mt7981b-xiaomi-ax3000t.dts b/target/linux/mediatek/dts/mt7981b-xiaomi-ax3000t.dts
 new file mode 100644
 index 0000000000000..96f7680ef23a8
@@ -332,36 +332,27 @@ diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/t
 index f760b23dc417b..9e0d53912912e 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -14,7 +14,7 @@ mediatek_setup_interfaces()
- 	bananapi,bpi-r3)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
- 		;;
--	cetron,ct3003|\
-+	cetron,ct3003*|\
- 	jcg,q30-pro|\
- 	qihoo,360t7)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" wan
-@@ -40,6 +40,7 @@ mediatek_setup_interfaces()
+@@ -52,6 +52,7 @@
+ 	tplink,tl-xdr6086)
  		ucidef_set_interfaces_lan_wan "lan1 lan2" eth1
  		;;
- 	xiaomi,mi-router-wr30u|\
 +	xiaomi,mi-router-ax3000t|\
- 	xiaomi,redmi-router-ax6000)
- 		ucidef_set_interfaces_lan_wan "lan2 lan3 lan4" wan
- 		;;
-@@ -82,6 +83,7 @@ mediatek_setup_macs()
+ 	xiaomi,mi-router-wr30u-112m-nmbm|\
+ 	xiaomi,mi-router-wr30u-stock|\
+ 	xiaomi,mi-router-wr30u-ubootmod|\
+@@ -101,6 +102,7 @@
+ 		wan_mac=$(macaddr_add "$lan_mac" 1)
  		label_mac=$wan_mac
  		;;
- 	xiaomi,mi-router-wr30u|\
 +	xiaomi,mi-router-ax3000t|\
- 	xiaomi,redmi-router-ax6000)
- 		wan_mac=$(mtd_get_mac_ascii Bdata ethaddr_wan)
- 		label_mac=$wan_mac
+ 	xiaomi,mi-router-wr30u-112m-nmbm|\
+ 	xiaomi,mi-router-wr30u-stock|\
+ 	xiaomi,mi-router-wr30u-ubootmod|\
 diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
 index 282054886b56e..413860a1a672c 100644
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -319,6 +319,20 @@ define Device/tplink_tl-xdr6088
+@@ -417,6 +417,20 @@
  endef
  TARGET_DEVICES += tplink_tl-xdr6088
  
@@ -379,6 +370,6 @@ index 282054886b56e..413860a1a672c 100644
 +endef
 +TARGET_DEVICES += xiaomi_mi-router-ax3000t
 +
- define Device/xiaomi_mi-router-wr30u
+ define Device/xiaomi_mi-router-wr30u-112m-nmbm
    DEVICE_VENDOR := Xiaomi
-   DEVICE_MODEL := Mi Router WR30U
+   DEVICE_MODEL := Mi Router WR30U (112M UBI with NMBM-Enabled layout)
