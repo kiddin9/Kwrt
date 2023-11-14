@@ -9,8 +9,8 @@ svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/arm-t
 
 rm -rf target/linux/generic target/linux/rockchip/!(Makefile)
 
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic target/linux/generic
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
+svn export https://github.com/coolsnowwolf/lede/trunk/target/linux/generic target/linux/generic
+svn checkout https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-5.15 -o include/kernel-5.15
 

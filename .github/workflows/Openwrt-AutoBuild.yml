@@ -287,7 +287,7 @@ jobs:
         REMOTE_HOST: ${{ secrets.SERVER_HOST }}
         REMOTE_PORT: ${{ secrets.SERVER_PORT }}
         REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/releases/tmp/"
+        TARGET: "/www/wwwroot/dl.openwrt.ai/releases/tmp/"
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
@@ -323,7 +323,7 @@ jobs:
       continue-on-error: true
       run: |
         echo -e "墙内加速下载 🚀:\n" >> release.txt
-        echo -e "[腾讯云] (https://op.supes.top/firmware/${{matrix.target}}/ ☁)\n" >> release.txt
+        echo -e "[腾讯云] (https://dl.openwrt.ai/firmware/${{matrix.target}}/ ☁)\n" >> release.txt
         [ ${{ env.WETRANS }} ] && echo -e "[WeTransfer] (${{ env.WETRANS }} 🗽)\n" >> release.txt
         [ ${{ env.COWURL }} ] && echo -e "[奶牛上传] (${{ env.COWURL }} 🐮)\n" >> release.txt
         [ ${{ env.NOTICE }} ] && echo -e "${{ env.NOTICE }}" >> release.txt || true
@@ -374,7 +374,7 @@ jobs:
       if: env.TELEGRAM_TOKEN && ! contains(github.event.action, 'notg')
       continue-on-error: true
       run: |
-        curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译成功 😋  https://op.supes.top/firmware/${{matrix.target}}/  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=🎉 OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译成功 😋  https://dl.openwrt.ai/firmware/${{matrix.target}}/  ${{ env.COWURL }}   ${{ env.WETRANS }} 🚀" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage"
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
