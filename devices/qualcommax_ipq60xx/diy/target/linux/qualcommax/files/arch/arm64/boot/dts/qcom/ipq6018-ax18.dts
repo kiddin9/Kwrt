@@ -65,3 +65,7 @@
 		};
 	};
 };
+
+&wifi {
+	qcom,ath11k-calibration-variant = "CMIOT-AX18";
+};
