@@ -1,0 +1,791 @@
+From fe10f9743935d6986e80e7cb082469e6bc5a03f0 Mon Sep 17 00:00:00 2001
+From: Jianhui Zhao <zhaojh329@gmail.com>
+Date: Sun, 24 Sep 2023 22:34:12 +0800
+Subject: [PATCH] filogic: add support for GL.iNet GL-MT6000
+
+Hardware specification:
+* SoC: MediaTek MT7986A 4x A53
+* Flash: 8GB EMMC
+* RAM: 1GB DDR4
+* Ethernet:
+  * 2x2.5G RJ45 port (RTL8221B)
+  * 4x1G RJ45 ports (MT7531AE)
+* WLAN:
+  * 2.4GHz: MT7976GN 4T4R
+  * 5GHz: MT7976AN 4T4R
+* Button: Reset
+* LED: 1 x dual color LED
+* USB: 1 x USB 3.0
+* Power: DC 12V 4A
+* UART: 3V3 115200 8N1 (Pinout: GND TX RX VCC)
+* JTAG: 9 PIN
+
+If you want to use u-boot from OpenWrt, you can upgrade it safely.
+* bl2: openwrt-mediatek-filogic-glinet_gl-mt6000-preloader.bin
+* fip: openwrt-mediatek-filogic-glinet_gl-mt6000-bl31-uboot.fip
+
+`openwrt-mediatek-filogic-glinet_gl-mt6000-squashfs-factory.bin` is used in OpenWrt's u-boot.
+
+Signed-off-by: Jianhui Zhao <zhaojh329@gmail.com>
+---
+ .../uboot-envtools/files/mediatek_filogic     |   4 +
+ package/boot/uboot-mediatek/Makefile          |  13 +
+ .../patches/436-add-glinet-mt6000.patch       | 274 ++++++++++++++++
+ .../mediatek/dts/mt7986a-glinet-gl-mt6000.dts | 306 ++++++++++++++++++
+ .../filogic/base-files/etc/board.d/02_network |   6 +
+ .../etc/hotplug.d/firmware/11-mt76-caldata    |   7 +
+ .../etc/hotplug.d/ieee80211/11_fix_wifi_mac   |   5 +
+ .../base-files/lib/upgrade/platform.sh        |   6 +
+ target/linux/mediatek/image/filogic.mk        |  15 +
+ 9 files changed, 636 insertions(+)
+ create mode 100644 package/boot/uboot-mediatek/patches/436-add-glinet-mt6000.patch
+ create mode 100644 target/linux/mediatek/dts/mt7986a-glinet-gl-mt6000.dts
+
+diff --git a/package/boot/uboot-envtools/files/mediatek_filogic b/package/boot/uboot-envtools/files/mediatek_filogic
+index 803800ce1c751..4b8fe6b80126e 100644
+--- a/package/boot/uboot-envtools/files/mediatek_filogic
++++ b/package/boot/uboot-envtools/files/mediatek_filogic
+@@ -40,6 +40,10 @@ bananapi,bpi-r3)
+ glinet,gl-mt3000)
+ 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x80000" "0x20000"
+ 	;;
++glinet,gl-mt6000)
++	local envdev=$(find_mmc_part "u-boot-env")
++	ubootenv_add_uci_config "$envdev" "0x0" "0x80000"
++	;;
+ mercusys,mr90x-v1)
+ 	local envdev=/dev/mtd$(find_mtd_index "u-boot-env")
+ 	ubootenv_add_uci_config "$envdev" "0x0" "0x20000" "0x20000" "1"
+diff --git a/package/boot/uboot-mediatek/Makefile b/package/boot/uboot-mediatek/Makefile
+index 62199871e6b33..1a97570031c43 100644
+--- a/package/boot/uboot-mediatek/Makefile
++++ b/package/boot/uboot-mediatek/Makefile
+@@ -357,6 +357,18 @@ define U-Boot/mt7986_bananapi_bpi-r3-nor
+   FIP_COMPRESS:=1
+ endef
+ 
++define U-Boot/mt7986_glinet_gl-mt6000
++  NAME:=GL.iNet GL-MT6000
++  BUILD_SUBTARGET:=filogic
++  BUILD_DEVICES:=glinet_gl-mt6000
++  UBOOT_CONFIG:=mt7986a_glinet_gl-mt6000
++  UBOOT_IMAGE:=u-boot.fip
++  BL2_BOOTDEV:=emmc
++  BL2_SOC:=mt7986
++  BL2_DDRTYPE:=ddr4
++  DEPENDS:=+trusted-firmware-a-mt7986-emmc-ddr4
++endef
++
+ define U-Boot/mt7986_tplink_tl-xdr4288
+   NAME:=TP-LINK TL-XDR4288
+   BUILD_SUBTARGET:=filogic
+@@ -496,6 +508,7 @@ UBOOT_TARGETS := \
+ 	mt7986_bananapi_bpi-r3-sdmmc \
+ 	mt7986_bananapi_bpi-r3-snand \
+ 	mt7986_bananapi_bpi-r3-nor \
++	mt7986_glinet_gl-mt6000 \
+ 	mt7986_tplink_tl-xdr4288 \
+ 	mt7986_tplink_tl-xdr6086 \
+ 	mt7986_tplink_tl-xdr6088 \
+diff --git a/package/boot/uboot-mediatek/patches/436-add-glinet-mt6000.patch b/package/boot/uboot-mediatek/patches/436-add-glinet-mt6000.patch
+new file mode 100644
+index 0000000000000..ad138acfd921d
+--- /dev/null
++++ b/package/boot/uboot-mediatek/patches/436-add-glinet-mt6000.patch
+@@ -0,0 +1,274 @@
++--- /dev/null
+++++ b/arch/arm/dts/mt7986a-glinet-gl-mt6000.dts
++@@ -0,0 +1,135 @@
+++// SPDX-License-Identifier: GPL-2.0
+++
+++/dts-v1/;
+++#include <dt-bindings/input/linux-event-codes.h>
+++#include <dt-bindings/gpio/gpio.h>
+++
+++#include "mt7986.dtsi"
+++
+++/ {
+++	model = "GL.iNet GL-MT6000";
+++	compatible = "glinet,gl-mt6000", "mediatek,mt7986-emmc-rfb", "mediatek,mt7986";
+++
+++	chosen {
+++		stdout-path = &uart0;
+++		tick-timer = &timer0;
+++	};
+++
+++	memory@40000000 {
+++		device_type = "memory";
+++		reg = <0x40000000 0x40000000>;
+++	};
+++
+++    reg_1p8v: regulator-1p8v {
+++		compatible = "regulator-fixed";
+++		regulator-name = "fixed-1.8V";
+++		regulator-min-microvolt = <1800000>;
+++		regulator-max-microvolt = <1800000>;
+++		regulator-boot-on;
+++		regulator-always-on;
+++	};
+++
+++	reg_3p3v: regulator-3p3v {
+++		compatible = "regulator-fixed";
+++		regulator-name = "fixed-3.3V";
+++		regulator-min-microvolt = <3300000>;
+++		regulator-max-microvolt = <3300000>;
+++		regulator-boot-on;
+++		regulator-always-on;
+++	};
+++
+++	keys {
+++		compatible = "gpio-keys";
+++
+++		wps {
+++			label = "reset";
+++			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
+++			linux,code = <KEY_RESTART>;
+++		};
+++	};
+++
+++	leds {
+++		compatible = "gpio-leds";
+++
+++		led_status_blue: green {
+++			label = "blue:status";
+++			gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
+++		};
+++
+++		led_status_white: blue {
+++			label = "white:status";
+++			gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+++		};
+++	};
+++
+++};
+++
+++&uart0 {
+++	mediatek,force-highspeed;
+++	status = "okay";
+++};
+++
+++&eth {
+++	status = "okay";
+++	mediatek,gmac-id = <0>;
+++	phy-mode = "2500base-x";
+++	mediatek,switch = "mt7531";
+++	reset-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
+++
+++	fixed-link {
+++		speed = <2500>;
+++		full-duplex;
+++	};
+++};
+++
+++&pinctrl {
+++	mmc0_pins_default: mmc0default {
+++		mux {
+++			function = "flash";
+++			groups =  "emmc_51";
+++		};
+++
+++		conf-cmd-dat {
+++			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
+++			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
+++			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
+++			input-enable;
+++			drive-strength = <MTK_DRIVE_4mA>;
+++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+++		};
+++
+++		conf-clk {
+++			pins = "EMMC_CK";
+++			drive-strength = <MTK_DRIVE_6mA>;
+++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+++		};
+++
+++		conf-dsl {
+++			pins = "EMMC_DSL";
+++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+++		};
+++
+++		conf-rst {
+++			pins = "EMMC_RSTB";
+++			drive-strength = <MTK_DRIVE_4mA>;
+++			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+++		};
+++	};
+++};
+++
+++&mmc0 {
+++	pinctrl-names = "default";
+++	pinctrl-0 = <&mmc0_pins_default>;
+++	bus-width = <8>;
+++	max-frequency = <200000000>;
+++	cap-mmc-highspeed;
+++	cap-mmc-hw-reset;
+++	vmmc-supply = <&reg_3p3v>;
+++	vqmmc-supply = <&reg_1p8v>;
+++	non-removable;
+++	status = "okay";
+++};
+++
+++&wmcpu_emi {
+++	status = "disabled";
+++};
++--- /dev/null
+++++ b/configs/mt7986a_glinet_gl-mt6000_defconfig
++@@ -0,0 +1,105 @@
+++CONFIG_ARM=y
+++CONFIG_SYS_HAS_NONCACHED_MEMORY=y
+++CONFIG_POSITION_INDEPENDENT=y
+++CONFIG_ARCH_MEDIATEK=y
+++CONFIG_TEXT_BASE=0x41e00000
+++CONFIG_SYS_MALLOC_F_LEN=0x4000
+++CONFIG_NR_DRAM_BANKS=1
+++CONFIG_ENV_SIZE=0x80000
+++CONFIG_ENV_OFFSET=0x400000
+++CONFIG_DEFAULT_DEVICE_TREE="mt7986a-glinet-gl-mt6000"
+++CONFIG_SYS_PROMPT="MT7986> "
+++CONFIG_OF_LIBFDT_OVERLAY=y
+++CONFIG_TARGET_MT7986=y
+++CONFIG_PRE_CON_BUF_ADDR=0x4007EF00
+++CONFIG_DEBUG_UART_BASE=0x11002000
+++CONFIG_DEBUG_UART_CLOCK=40000000
+++CONFIG_SYS_LOAD_ADDR=0x46000000
+++CONFIG_DEBUG_UART=y
+++CONFIG_AHCI=y
+++CONFIG_FIT=y
+++CONFIG_AUTOBOOT_KEYED=y
+++CONFIG_AUTOBOOT_MENU_SHOW=y
+++CONFIG_DEFAULT_FDT_FILE="mediatek/mt7986a-glinet-gl-mt6000.dtb"
+++CONFIG_LOGLEVEL=7
+++CONFIG_PRE_CONSOLE_BUFFER=y
+++CONFIG_LOG=y
+++CONFIG_BOARD_LATE_INIT=y
+++CONFIG_HUSH_PARSER=y
+++CONFIG_CMD_CPU=y
+++CONFIG_CMD_LICENSE=y
+++CONFIG_CMD_BOOTMENU=y
+++CONFIG_CMD_ASKENV=y
+++CONFIG_CMD_ERASEENV=y
+++CONFIG_CMD_ENV_FLAGS=y
+++CONFIG_CMD_STRINGS=y
+++CONFIG_CMD_DM=y
+++CONFIG_CMD_GPIO=y
+++CONFIG_CMD_PWM=y
+++CONFIG_CMD_GPT=y
+++CONFIG_CMD_MMC=y
+++CONFIG_CMD_PART=y
+++CONFIG_CMD_USB=y
+++CONFIG_CMD_DHCP=y
+++CONFIG_CMD_TFTPSRV=y
+++CONFIG_CMD_RARP=y
+++CONFIG_CMD_PING=y
+++CONFIG_CMD_CDP=y
+++CONFIG_CMD_SNTP=y
+++CONFIG_CMD_DNS=y
+++CONFIG_CMD_LINK_LOCAL=y
+++CONFIG_CMD_CACHE=y
+++CONFIG_CMD_PSTORE=y
+++CONFIG_CMD_PSTORE_MEM_ADDR=0x42ff0000
+++CONFIG_CMD_UUID=y
+++CONFIG_CMD_HASH=y
+++CONFIG_CMD_SMC=y
+++CONFIG_OF_EMBED=y
+++CONFIG_ENV_OVERWRITE=y
+++CONFIG_ENV_IS_IN_MMC=y
+++CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+++CONFIG_USE_DEFAULT_ENV_FILE=y
+++CONFIG_DEFAULT_ENV_FILE="glinet_gl-mt6000_env"
+++CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+++CONFIG_VERSION_VARIABLE=y
+++CONFIG_NET_RANDOM_ETHADDR=y
+++CONFIG_NETCONSOLE=y
+++CONFIG_USE_IPADDR=y
+++CONFIG_IPADDR="192.168.1.1"
+++CONFIG_USE_SERVERIP=y
+++CONFIG_SERVERIP="192.168.1.254"
+++CONFIG_REGMAP=y
+++CONFIG_SYSCON=y
+++CONFIG_BUTTON=y
+++CONFIG_BUTTON_GPIO=y
+++CONFIG_CLK=y
+++CONFIG_GPIO_HOG=y
+++CONFIG_LED=y
+++CONFIG_LED_BLINK=y
+++CONFIG_LED_GPIO=y
+++CONFIG_SUPPORT_EMMC_BOOT=y
+++CONFIG_MMC_HS200_SUPPORT=y
+++CONFIG_MMC_MTK=y
+++CONFIG_PHY_FIXED=y
+++CONFIG_MEDIATEK_ETH=y
+++CONFIG_PHY=y
+++CONFIG_PHY_MTK_TPHY=y
+++CONFIG_PINCTRL=y
+++CONFIG_PINCONF=y
+++CONFIG_PINCTRL_MT7986=y
+++CONFIG_POWER_DOMAIN=y
+++CONFIG_MTK_POWER_DOMAIN=y
+++CONFIG_DM_REGULATOR=y
+++CONFIG_DM_REGULATOR_FIXED=y
+++CONFIG_DM_REGULATOR_GPIO=y
+++CONFIG_DM_PWM=y
+++CONFIG_PWM_MTK=y
+++CONFIG_RAM=y
+++CONFIG_DM_SERIAL=y
+++CONFIG_MTK_SERIAL=y
+++CONFIG_USB=y
+++CONFIG_USB_XHCI_HCD=y
+++CONFIG_USB_XHCI_MTK=y
+++CONFIG_USB_STORAGE=y
+++CONFIG_HEXDUMP=y
+++CONFIG_LMB_MAX_REGIONS=64
++--- /dev/null
+++++ b/glinet_gl-mt6000_env
++@@ -0,0 +1,25 @@
+++ipaddr=192.168.1.1
+++serverip=192.168.1.254
+++loadaddr=0x46000000
+++bootdelay=3
+++bootfile_bl2=openwrt-mediatek-filogic-glinet_gl-mt6000-preloader.bin
+++bootfile_fip=openwrt-mediatek-filogic-glinet_gl-mt6000-bl31-uboot.fip
+++bootfile_firmware=openwrt-mediatek-filogic-glinet_gl-mt6000-squashfs-factory.bin
+++bootmenu_confirm_return=askenv - Press ENTER to return to menu ; bootmenu 60
+++bootmenu_title=      *** U-Boot Boot Menu for GL-iNet GL-MT6000 ***
+++bootmenu_0=Startup system (Default).=run boot_system
+++bootmenu_1=Load Firmware via TFTP then write to eMMC.=run boot_tftp_firmware ; run bootmenu_confirm_return
+++bootmenu_2=Load BL31+U-Boot FIP via TFTP then write to eMMC.=run boot_tftp_write_fip ; run bootmenu_confirm_return
+++bootmenu_3=mLoad BL2 preloader via TFTP then write to eMMC.=run boot_tftp_write_bl2 ; run bootmenu_confirm_return
+++bootmenu_4=Reboot.=reset
+++bootmenu_5=Reset all settings to factory defaults.=run reset_factory ; reset
+++filesize_to_blk=setexpr cnt $filesize + 0x1ff && setexpr cnt $cnt / 0x200
+++mmc_read_kernel=mmc read $loadaddr $part_addr 0x100 && imszb $loadaddr image_size && test 0x$image_size -le 0x$part_size && mmc read $loadaddr $part_addr $image_size
+++boot_system=part start mmc 0 kernel part_addr && part size mmc 0 kernel part_size && run mmc_read_kernel && bootm
+++boot_tftp_firmware=tftpboot $loadaddr $bootfile_firmware && run emmc_write_firmware
+++boot_tftp_write_fip=tftpboot $loadaddr $bootfile_fip && run emmc_write_fip
+++boot_tftp_write_bl2=tftpboot $loadaddr $bootfile_bl2 && run emmc_write_bl2
+++emmc_write_firmware=part start mmc 0 kernel part_addr && run filesize_to_blk && mmc write $loadaddr $part_addr $cnt
+++emmc_write_bl2=run filesize_to_blk && test 0x$cnt -le 0x800 && mmc partconf 0 1 1 1 &&  && mmc write $loadaddr 0x0 0x800 ; mmc partconf 0 1 1 0
+++emmc_write_fip=part start mmc 0 fip part_addr && part size mmc 0 fip part_size && run filesize_to_blk && test 0x$cnt -le 0x$part_size && mmc write $loadaddr $part_addr $cnt
+++reset_factory=eraseenv && reset
+diff --git a/target/linux/mediatek/dts/mt7986a-glinet-gl-mt6000.dts b/target/linux/mediatek/dts/mt7986a-glinet-gl-mt6000.dts
+new file mode 100644
+index 0000000000000..2be1907f632f1
+--- /dev/null
++++ b/target/linux/mediatek/dts/mt7986a-glinet-gl-mt6000.dts
+@@ -0,0 +1,306 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/mt65xx.h>
++
++#include "mt7986a.dtsi"
++
++/ {
++	model = "GL.iNet GL-MT6000";
++	compatible = "glinet,gl-mt6000", "mediatek,mt7986a";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++		bootargs-append = " root=PARTLABEL=rootfs rootwait";
++	};
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1.8vd";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_run: led@0 {
++			label = "blue:run";
++			gpios = <&pio 38 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++
++		led@1 {
++			label = "white:system";
++			gpios = <&pio 37 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	usb_vbus: regulator-usb-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpios = <&pio 24 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-boot-on;
++	};
++};
++
++&eth {
++	status = "okay";
++
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		phy-mode = "2500base-x";
++
++		fixed-link {
++			speed = <2500>;
++			full-duplex;
++			pause;
++		};
++	};
++
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-mode = "2500base-x";
++		phy-handle = <&phy1>;
++	};
++
++	mdio: mdio-bus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy1: phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c45";
++			reg = <1>;
++			reset-assert-us = <100000>;
++			reset-deassert-us = <100000>;
++			reset-gpios = <&pio 10 GPIO_ACTIVE_LOW>;
++			interrupt-parent = <&pio>;
++			interrupts = <46 IRQ_TYPE_LEVEL_LOW>;
++			realtek,aldps-enable;
++		};
++
++		phy7: ethernet-phy@7 {
++			compatible = "ethernet-phy-ieee802.3-c45";
++			reg = <7>;
++			reset-assert-us = <100000>;
++			reset-deassert-us = <100000>;
++			reset-gpios = <&pio 19 GPIO_ACTIVE_LOW>;
++			interrupt-parent = <&pio>;
++			interrupts = <47 IRQ_TYPE_LEVEL_LOW>;
++			realtek,aldps-enable;
++		};
++
++		switch: switch@31 {
++			compatible = "mediatek,mt7531";
++			reg = <31>;
++			reset-gpios = <&pio 18 GPIO_ACTIVE_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			interrupt-parent = <&pio>;
++			interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					label = "lan2";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "lan3";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "lan4";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "lan5";
++				};
++
++				port@5 {
++					reg = <5>;
++					label = "lan1";
++					phy-handle = <&phy7>;
++					phy-mode = "2500base-x";
++				};
++
++				port@6 {
++					reg = <6>;
++					ethernet = <&gmac0>;
++					phy-mode = "2500base-x";
++
++					fixed-link {
++						speed = <2500>;
++						full-duplex;
++						pause;
++					};
++				};
++			};
++		};
++	};
++};
++
++&pio {
++	wf_2g_5g_pins: wf_2g_5g-pins {
++		mux {
++			function = "wifi";
++			groups = "wf_2g", "wf_5g";
++		};
++		conf {
++			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
++			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
++			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
++			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
++			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
++			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
++			       "WF1_TOP_CLK", "WF1_TOP_DATA";
++			drive-strength = <4>;
++		};
++	};
++
++	mmc0_pins_default: mmc0-pins {
++		mux {
++			function = "emmc";
++			groups = "emmc_51";
++		};
++		conf-cmd-dat {
++			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
++			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
++			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
++			input-enable;
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++		conf-clk {
++			pins = "EMMC_CK";
++			drive-strength = <6>;
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-ds {
++			pins = "EMMC_DSL";
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-rst {
++			pins = "EMMC_RSTB";
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++	};
++
++	mmc0_pins_uhs: mmc0-uhs-pins {
++		mux {
++			function = "emmc";
++			groups = "emmc_51";
++		};
++		conf-cmd-dat {
++			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
++			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
++			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
++			input-enable;
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++		conf-clk {
++			pins = "EMMC_CK";
++			drive-strength = <6>;
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-ds {
++			pins = "EMMC_DSL";
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-rst {
++			pins = "EMMC_RSTB";
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++	};
++};
++
++&crypto {
++	status = "okay";
++};
++
++&ssusb {
++	vusb33-supply = <&reg_3p3v>;
++	vbus-supply = <&usb_vbus>;
++	status = "okay";
++};
++
++&trng {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&usb_phy {
++	status = "okay";
++};
++
++&watchdog {
++	status = "okay";
++};
++
++&wifi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&wf_2g_5g_pins>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc0_pins_default>;
++	pinctrl-1 = <&mmc0_pins_uhs>;
++	bus-width = <8>;
++	max-frequency = <200000000>;
++	cap-mmc-highspeed;
++	mmc-hs200-1_8v;
++	mmc-hs400-1_8v;
++	hs400-ds-delay = <0x14014>;
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_1p8v>;
++	non-removable;
++	no-sd;
++	no-sdio;
++	status = "okay";
++};
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 42490cf8b3a0d..590c1fb2a6648 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -48,6 +48,7 @@ mediatek_setup_interfaces()
+ 	qihoo,360t7)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" wan
+ 		;;
++	glinet,gl-mt6000|\
+ 	tplink,tl-xdr4288|\
+ 	tplink,tl-xdr6088)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 lan5" eth1
+@@ -90,6 +91,11 @@ mediatek_setup_macs()
+ 		wan_mac=$(macaddr_add "$lan_mac" 3)
+ 		label_mac=$lan_mac
+ 		;;
++	glinet,gl-mt6000)
++		label_mac=$(mmc_get_mac_binary factory 0x0a)
++		wan_mac=$label_mac
++		lan_mac=$(macaddr_add "$label_mac" 2)
++		;;
+ 	h3c,magic-nx30-pro)
+ 		wan_mac=$(mtd_get_mac_ascii pdt_data_1 ethaddr)
+ 		lan_mac=$(macaddr_add "$wan_mac" 1)
+diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+index f6f18272cc3d0..e4d33879c6d14 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+@@ -36,6 +36,13 @@ case "$FIRMWARE" in
+ 		;;
+ 	esac
+ 	;;
++"mediatek/mt7986_eeprom_mt7976_dual.bin")
++	case "$board" in
++	glinet,gl-mt6000)
++		caldata_extract_mmc "factory" 0x0 0x1000
++		;;
++	esac
++	;;
+ *)
+ 	exit 1
+ 	;;
+diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+index 0fc90bd41b107..115ff2201ece6 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+@@ -43,6 +43,11 @@ case "$board" in
+ 		[ "$PHYNBR" = "0" ] && echo "$addr" > /sys${DEVPATH}/macaddress
+ 		[ "$PHYNBR" = "1" ] && macaddr_setbit_la $(macaddr_add $addr 1) > /sys${DEVPATH}/macaddress
+ 		;;
++	glinet,gl-mt6000)
++		addr=$(mmc_get_mac_binary factory 0x04)
++		[ "$PHYNBR" = "0" ] && echo "$addr" > /sys${DEVPATH}/macaddress
++		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
++		;;
+ 	h3c,magic-nx30-pro)
+ 		addr=$(mtd_get_mac_ascii pdt_data_1 ethaddr)
+ 		[ "$PHYNBR" = "0" ] && macaddr_add $addr 2 > /sys${DEVPATH}/macaddress
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index 6155ddab72687..42156aefb4d66 100755
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -100,6 +100,11 @@
+ 		CI_UBIPART="ubi0"
+ 		nand_do_upgrade "$1"
+ 		;;
++	glinet,gl-mt6000)
++		CI_KERNPART="kernel"
++		CI_ROOTPART="rootfs"
++		emmc_do_upgrade "$1"
++		;;
+ 	h3c,magic-nx30-pro|\
+ 	mediatek,mt7981-rfb|\
+ 	qihoo,360t7|\
+@@ -161,6 +166,9 @@
+ 			;;
+ 		esac
+ 		;;
++	glinet,gl-mt6000)
++ 		emmc_copy_config
++ 		;;
+ 	esac
+ }
+ 
+diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
+index c9cf30b1cea1c..6082cf5f47ebd 100644
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -239,6 +239,21 @@ define Device/glinet_gl-mt3000
+ endef
+ TARGET_DEVICES += glinet_gl-mt3000
+ 
++define Device/glinet_gl-mt6000
++  DEVICE_VENDOR := GL.iNet
++  DEVICE_MODEL := GL-MT6000
++  DEVICE_DTS := mt7986a-glinet-gl-mt6000
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-usb2 kmod-usb3 kmod-mt7986-firmware mt7986-wo-firmware e2fsprogs f2fsck mkf2fs
++  IMAGES += factory.bin
++  IMAGE/factory.bin := append-kernel | pad-to 32M | append-rootfs
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-gl-metadata
++  ARTIFACTS := preloader.bin bl31-uboot.fip
++  ARTIFACT/preloader.bin := mt7986-bl2 emmc-ddr4
++  ARTIFACT/bl31-uboot.fip := mt7986-bl31-uboot glinet_gl-mt6000
++endef
++TARGET_DEVICES += glinet_gl-mt6000
++
+ define Device/h3c_magic-nx30-pro
+   DEVICE_VENDOR := H3C
+   DEVICE_MODEL := Magic NX30 Pro
