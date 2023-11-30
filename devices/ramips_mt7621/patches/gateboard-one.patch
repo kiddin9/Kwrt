@@ -4,9 +4,6 @@ Date: Thu, 30 Nov 2023 08:38:22 +0800
 Subject: [PATCH] update
 
 ---
- .../kernel/8563-watchdog/8563-watchdog.init   |  18 +
- .../kernel/8563-watchdog/files/8563-watchdog  |  17 +
- .../8563-watchdog/files/8563-watchdog.init    |  18 +
  scripts/gen-rddependencies.sh                 |  13 +
  target/linux/ramips/Makefile                  |   2 +-
  .../dts/mt7621_hatlab_gateboard-one.dts       | 372 ++++++++++++++++++
@@ -16,83 +13,9 @@ Subject: [PATCH] update
  .../mt7621/base-files/sbin/fixup-mac-address  |   4 +
  target/linux/ramips/mt7621/config-5.15        |   1 +
  11 files changed, 489 insertions(+), 1 deletion(-)
- create mode 100644 package/kernel/8563-watchdog/8563-watchdog.init
- create mode 100644 package/kernel/8563-watchdog/files/8563-watchdog
- create mode 100644 package/kernel/8563-watchdog/files/8563-watchdog.init
  create mode 100755 scripts/gen-rddependencies.sh
  create mode 100644 target/linux/ramips/dts/mt7621_hatlab_gateboard-one.dts
 
-diff --git a/package/kernel/8563-watchdog/8563-watchdog.init b/package/kernel/8563-watchdog/8563-watchdog.init
-new file mode 100644
-index 0000000000000..a2edc7ab81429
---- /dev/null
-+++ b/package/kernel/8563-watchdog/8563-watchdog.init
-@@ -0,0 +1,18 @@
-+#!/bin/sh /etc/rc.common
-+#
-+# Copyright (C) 2011 OpenWrt.org
-+#
-+
-+START=11
-+STOP=11
-+
-+USE_PROCD=1
-+NAME=8563-watchdog
-+PROG=/sbin/8563-watchdog
-+
-+start_service() {
-+	procd_open_instance
-+	procd_set_param command "${PROG}" "${gpio}"
-+	procd_set_param respawn
-+	procd_close_instance
-+}
-diff --git a/package/kernel/8563-watchdog/files/8563-watchdog b/package/kernel/8563-watchdog/files/8563-watchdog
-new file mode 100644
-index 0000000000000..193dde2c9f32f
---- /dev/null
-+++ b/package/kernel/8563-watchdog/files/8563-watchdog
-@@ -0,0 +1,17 @@
-+#!/bin/sh
-+
-+BUS="0"
-+ADDR="0x51"
-+TIMEOUT="0x78" # 120 seconds
-+let TICK="5"
-+
-+trap "" INT HUP
-+
-+i2cset -y -f ${BUS} ${ADDR} 0x0F ${TIMEOUT}	# reset Timer
-+i2cset -y -f ${BUS} ${ADDR} 0x0E 0x82 # enable Timer countdown
-+i2cset -y -f ${BUS} ${ADDR} 0x01 0x11 # enable Timer interrupt
-+
-+while true; do
-+	i2cset -y -f ${BUS} ${ADDR} 0x0F ${TIMEOUT} # reset Timer
-+	sleep ${TICK}
-+done
-diff --git a/package/kernel/8563-watchdog/files/8563-watchdog.init b/package/kernel/8563-watchdog/files/8563-watchdog.init
-new file mode 100644
-index 0000000000000..a2edc7ab81429
---- /dev/null
-+++ b/package/kernel/8563-watchdog/files/8563-watchdog.init
-@@ -0,0 +1,18 @@
-+#!/bin/sh /etc/rc.common
-+#
-+# Copyright (C) 2011 OpenWrt.org
-+#
-+
-+START=11
-+STOP=11
-+
-+USE_PROCD=1
-+NAME=8563-watchdog
-+PROG=/sbin/8563-watchdog
-+
-+start_service() {
-+	procd_open_instance
-+	procd_set_param command "${PROG}" "${gpio}"
-+	procd_set_param respawn
-+	procd_close_instance
-+}
 diff --git a/scripts/gen-rddependencies.sh b/scripts/gen-rddependencies.sh
 new file mode 100755
 index 0000000000000..509d6a4fa67e4
@@ -536,7 +459,7 @@ index d456176a0178e..0de36ae7c86cf 100644
 +  $(Device/dsa-migration)
 +  DEVICE_VENDOR := HATLab
 +  DEVICE_MODEL := GateBoard-One
-+  DEVICE_PACKAGES := 8563-watchdog kmod-i2c-gpio kmod-gpio-pcf857x kmod-sdhci-mt7620 kmod-usb3 kmod-usb-storage kmod-usb-ledtrig-usbport kmod-fs-ext4 kmod-hwmon-lm75 kmod-thermal kmod-hwmon-gpiofan kmod-rtc-pcf8563 kmod-phy-realtek kmod-sfp
++  DEVICE_PACKAGES := kmod-i2c-gpio kmod-gpio-pcf857x kmod-sdhci-mt7620 kmod-usb3 kmod-usb-storage kmod-usb-ledtrig-usbport kmod-fs-ext4 kmod-hwmon-lm75 kmod-thermal kmod-hwmon-gpiofan kmod-rtc-pcf8563 kmod-phy-realtek kmod-sfp
 +  MKUBIFS_OPTS := -m 2048 -e 124KiB -c 1024
 +  KERNEL := kernel-bin | gzip | fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
 +  IMAGE/kernel.itb := append-kernel
