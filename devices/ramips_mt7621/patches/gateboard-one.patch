@@ -4,7 +4,7 @@ Date: Thu, 30 Nov 2023 12:03:50 +0800
 Subject: [PATCH] update
 
 ---
- .../kernel/8563-watchdog/8563-watchdog.init   |  29 ++
+ .../kernel/8563-watchdog/Makefile   |  29 ++
  .../kernel/8563-watchdog/files/8563-watchdog  |  17 +
  .../8563-watchdog/files/8563-watchdog.init    |  18 +
  scripts/gen-rddependencies.sh                 |  13 +
@@ -16,17 +16,17 @@ Subject: [PATCH] update
  .../mt7621/base-files/sbin/fixup-mac-address  |   4 +
  target/linux/ramips/mt7621/config-5.15        |   1 +
  11 files changed, 500 insertions(+), 1 deletion(-)
- create mode 100644 package/kernel/8563-watchdog/8563-watchdog.init
+ create mode 100644 package/kernel/8563-watchdog/Makefile
  create mode 100644 package/kernel/8563-watchdog/files/8563-watchdog
  create mode 100644 package/kernel/8563-watchdog/files/8563-watchdog.init
  create mode 100755 scripts/gen-rddependencies.sh
  create mode 100644 target/linux/ramips/dts/mt7621_hatlab_gateboard-one.dts
 
-diff --git a/package/kernel/8563-watchdog/8563-watchdog.init b/package/kernel/8563-watchdog/8563-watchdog.init
+diff --git a/package/kernel/8563-watchdog/Makefile b/package/kernel/8563-watchdog/Makefile
 new file mode 100644
 index 0000000000000..81956a100e0df
 --- /dev/null
-+++ b/package/kernel/8563-watchdog/8563-watchdog.init
++++ b/package/kernel/8563-watchdog/Makefile
 @@ -0,0 +1,29 @@
 +include $(TOPDIR)/rules.mk
 +
