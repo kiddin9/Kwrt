@@ -30,6 +30,8 @@ sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/
 
 sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
 
+cp -Rf $SHELL_FOLDER/diy/* ./
+
 echo '
 CONFIG_SENSORS_PWM_FAN=y
 ' >> ./target/linux/rockchip/armv8/config-5.15
