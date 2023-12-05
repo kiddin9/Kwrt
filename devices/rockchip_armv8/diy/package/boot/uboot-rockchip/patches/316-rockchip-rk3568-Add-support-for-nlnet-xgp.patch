@@ -13,7 +13,7 @@
 @@ -0,0 +1,21 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
-+#include "rk3568-u-boot.dtsi"
++#include "rk356x-u-boot.dtsi"
 +
 +/ {
 +	chosen {
