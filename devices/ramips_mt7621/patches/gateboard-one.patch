@@ -1,0 +1,613 @@
+From 09516f5f61930eb2a54388da04ca5363cb514792 Mon Sep 17 00:00:00 2001
+From: kiddin9 <48883331+kiddin9@users.noreply.github.com>
+Date: Fri, 1 Dec 2023 06:28:22 +0800
+Subject: [PATCH] update
+
+---
+ scripts/gen-rddependencies.sh                 |  13 +
+ target/linux/ramips/Makefile                  |   2 +-
+ .../dts/mt7621_hatlab_gateboard-one.dts       | 390 ++++++++++++++++++
+ target/linux/ramips/image/mt7621.mk           |  36 ++
+ .../mt7621/base-files/etc/board.d/02_network  |   3 +
+ .../mt7621/base-files/lib/upgrade/platform.sh |   6 +
+ .../mt7621/base-files/sbin/fixup-mac-address  |   4 +
+ target/linux/ramips/mt7621/config-5.15        |   1 +
+ ...spi-nor-Add-support-for-Puya-p25d40h.patch |  47 +++
+ 9 files changed, 501 insertions(+), 1 deletion(-)
+ create mode 100755 scripts/gen-rddependencies.sh
+ create mode 100644 target/linux/ramips/dts/mt7621_hatlab_gateboard-one.dts
+ create mode 100644 target/linux/ramips/patches-5.15/406-mtd-spi-nor-Add-support-for-Puya-p25d40h.patch
+
+diff --git a/scripts/gen-rddependencies.sh b/scripts/gen-rddependencies.sh
+new file mode 100755
+index 0000000000000..509d6a4fa67e4
+--- /dev/null
++++ b/scripts/gen-rddependencies.sh
+@@ -0,0 +1,13 @@
++#!/bin/sh
++
++TARGETS=$*
++READELF="${READELF:-readelf}"
++XARGS="${XARGS:-xargs -r}"
++
++find $TARGETS -type f -a -exec file {} \; | \
++  sed -n -e 's/^\(.*\):.*ELF.*\(executable\|shared object\).*,.*/\1/p' | \
++  $XARGS -n1 $READELF -l | grep 'Requesting' | cut -d':' -f2 | tr -d ' ]' | \
++  $XARGS basename
++
++cd `dirname ${0}`
++./gen-dependencies.sh ${TARGETS}
+diff --git a/target/linux/ramips/Makefile b/target/linux/ramips/Makefile
+index 77b82d5334c22..caf5099d1a116 100644
+--- a/target/linux/ramips/Makefile
++++ b/target/linux/ramips/Makefile
+@@ -8,7 +8,7 @@ ARCH:=mipsel
+ BOARD:=ramips
+ BOARDNAME:=MediaTek Ralink MIPS
+ SUBTARGETS:=mt7620 mt7621 mt76x8 rt288x rt305x rt3883
+-FEATURES:=squashfs gpio
++FEATURES:=squashfs gpio boot-part rootfs-part
+ 
+ KERNEL_PATCHVER:=5.15
+ 
+diff --git a/target/linux/ramips/dts/mt7621_hatlab_gateboard-one.dts b/target/linux/ramips/dts/mt7621_hatlab_gateboard-one.dts
+new file mode 100644
+index 0000000000000..e982afaac511a
+--- /dev/null
++++ b/target/linux/ramips/dts/mt7621_hatlab_gateboard-one.dts
+@@ -0,0 +1,390 @@
++#include "mt7621.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/thermal/thermal.h>
++
++/ {
++	compatible = "hatlab,gateboard-one", "mediatek,mt7621-soc";
++	model = "HATLab GateBoard-One";
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++	};
++
++	aliases {
++		led-boot = &led_sys;
++		led-failsafe = &led_sys;
++		led-running = &led_sys;
++		led-upgrade = &led_sys;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_sys: sys {
++			label = "green:sys";
++			gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
++		};
++
++		usb {
++			label = "blue:usb";
++			gpios = <&gpio 16 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&xhci_ehci_port1>;
++			linux,default-trigger = "usbport";
++		};
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			label = "reset";
++			gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
++			linux,code = <KEY_RESTART>;
++		};
++	};
++
++	gpio_export {
++		compatible = "gpio-export";
++		#size-cells = <0>;
++
++		power_peripheral {
++			gpio-export,name = "power_peripheral";
++			gpio-export,output = <0>;
++			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	cpu_fan: cpu_fan {
++		compatible = "gpio-fan";
++		gpios = <&gpio 13 GPIO_ACTIVE_HIGH
++				 &gpio 14 GPIO_ACTIVE_HIGH>;
++		gpio-fan,speed-map = <	0		0
++								2000	1
++								4000	2
++								6000	3>;
++		#cooling-cells = <2>;
++	};
++
++	thermal-zones {
++		cpu-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <250>;
++
++			thermal-sensors = <&cpu_sensor>;
++
++			trips {
++				cpu_warm: cpu-warm {
++					temperature = <26000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu_hot: cpu-hot {
++					temperature = <37000>;
++					hysteresis = <2000>;
++					type = "active";
++				};
++
++				cpu_alert: cpu-alert {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&cpu_warm>;
++					cooling-device = <&cpu_fan THERMAL_NO_LIMIT 2>;
++				};
++
++				map1 {
++					trip = <&cpu_hot>;
++					cooling-device = <&cpu_fan 3 THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++	};
++
++	crypto: crypto@1e004000 {
++		status = "okay";
++
++		compatible = "mediatek,mtk-eip93";
++		reg = <0x1e004000 0x1000>;
++
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SHARED 19 IRQ_TYPE_LEVEL_HIGH>;
++	};
++	
++	i2c_gpio: i2c-gpio {
++		compatible = "i2c-gpio";
++
++		sda-gpios = <&gpio 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpio 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		status = "disabled";
++	};
++
++	i2c_sfp: i2c-sfp {
++		compatible = "i2c-gpio";
++
++		sda-gpios = <&expender0 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&expender0 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	i2c_sfp_alias_0: i2c-sfp-alias-0 {
++		compatible = "i2c-gpio";
++
++		sda-gpios = <&expender0_alias_0 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&expender0_alias_0 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	sfp: sfp {
++		compatible = "sff,sfp";
++		i2c-bus = <&i2c_sfp>;
++
++		maximum-power-milliwatt = <5000>;
++
++		mod-def0-gpios = <&expender0 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
++
++		// los-gpios = <&expender0 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
++		// rate-select0-gpios = <&expender0 4 GPIO_ACTIVE_HIGH>;
++		// tx-disable-gpios = <&expender0 6 GPIO_ACTIVE_HIGH>;
++		// tx-fault-gpios = <&expender0 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
++	};
++
++	sfp_alias_0: sfp-alias-0 {
++		compatible = "sff,sfp";
++		i2c-bus = <&i2c_sfp_alias_0>;
++
++		maximum-power-milliwatt = <5000>;
++
++		mod-def0-gpios = <&expender0_alias_0 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
++
++		// los-gpios = <&expender0_alias_0 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
++		// rate-select0-gpios = <&expender0_alias_0 4 GPIO_ACTIVE_HIGH>;
++		// tx-disable-gpios = <&expender0_alias_0 6 GPIO_ACTIVE_HIGH>;
++		// tx-fault-gpios = <&expender0_alias_0 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
++	};
++};
++
++&spi0 {
++	status = "okay";
++
++	spi-nor@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <30000000>;
++
++		partitions@0 {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "u-boot";
++				reg = <0x0 0x70000>;
++				read-only;
++			};
++
++			partition@70000 {
++				label = "u-boot-env";
++				reg = <0x70000 0x8000>;
++			};
++
++			factory: partition@78000 {
++				label = "factory";
++				reg = <0x78000 0x8000>;
++			};
++		};
++	};
++
++	spi-nand@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spi-nand";
++		reg = <1>;
++		spi-max-frequency = <30000000>;
++
++		partition@0 {
++			label = "nand0-ubi";
++			reg = <0x0 0x0>;
++		};
++	};
++};
++
++&uartlite2 {
++	status = "okay";
++};
++
++&uartlite3 {
++	status = "okay";
++};
++
++&state_default {
++	gpio {
++		groups = "wdt", "jtag", "i2c";
++		function = "gpio";
++	};
++};
++
++&pcie {
++	status = "okay";
++};
++
++&pcie0 {
++	mt76@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		mediatek,eeprom-file = "mt76.pcie0.eeprom";
++	};
++};
++
++&pcie1 {
++	mt76@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		mediatek,eeprom-file = "mt76.pcie1.eeprom";
++	};
++};
++
++&pcie2 {
++	mt76@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		mediatek,eeprom-file = "mt76.pcie2.eeprom";
++	};
++};
++
++&sdhci {
++	status = "okay";
++	max-frequency = <20000000>;
++};
++
++&mdio {
++	ephy7: ethernet-phy@7 {
++		reg = <7>;
++		eee-broken-1000t;
++		eee-broken-100tx;
++		realtek,autotxid;
++	};
++};
++
++&gmac0 {
++	label = "dsa0";
++	nvmem-cells = <&macaddr_factory_0>;
++	nvmem-cell-names = "mac-address";
++	phy-mode = "trgmii";
++};
++
++&gmac1 {
++	status = "okay";
++	label = "eth5";
++
++	nvmem-cells = <&macaddr_factory_0>;
++	nvmem-cell-names = "mac-address";
++	mac-address-increment = <6>;
++
++	phy-handle = <&ephy7>;
++	phy-mode = "rgmii-rxid";
++};
++
++&switch0 {
++	ports {
++		port@0 {
++			status = "okay";
++			label = "eth0";
++			nvmem-cells = <&macaddr_factory_0>;
++			nvmem-cell-names = "mac-address";
++			mac-address-increment = <1>;
++		};
++
++		port@1 {
++			status = "okay";
++			label = "eth1";
++			nvmem-cells = <&macaddr_factory_0>;
++			nvmem-cell-names = "mac-address";
++			mac-address-increment = <2>;
++		};
++
++		port@2 {
++			status = "okay";
++			label = "eth2";
++			nvmem-cells = <&macaddr_factory_0>;
++			nvmem-cell-names = "mac-address";
++			mac-address-increment = <3>;
++		};
++
++		port@3 {
++			status = "okay";
++			label = "eth3";
++			nvmem-cells = <&macaddr_factory_0>;
++			nvmem-cell-names = "mac-address";
++			mac-address-increment = <4>;
++		};
++
++		port@4 {
++			status = "okay";
++			label = "eth4";
++			nvmem-cells = <&macaddr_factory_0>;
++			nvmem-cell-names = "mac-address";
++			mac-address-increment = <5>;
++		};
++	};
++};
++
++&i2c_gpio {
++	status = "okay";
++
++	expender0: pcf8574a@38 {
++		compatible = "nxp,pcf8574a";
++		reg = <0x38>;
++		interrupt-parent = <&gpio>;
++		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	expender0_alias_0: pcf8574@20 {
++		compatible = "nxp,pcf8574";
++		reg = <0x20>;
++		interrupt-parent = <&gpio>;
++		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	rtc0: pcf8563@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++
++	cpu_sensor: lm75@4f {
++		compatible = "national,lm75";
++		reg = <0x4f>;
++		#thermal-sensor-cells = <0>;
++	};
++};
++
++&factory {
++	compatible = "nvmem-cells";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	#mtd-mac-address = <&factory 0x0>;
++
++	macaddr_factory_0: macaddr@0 {
++		reg = <0x0 0x6>;
++	};
++};
+diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
+index d456176a0178e..0f81321a52248 100644
+--- a/target/linux/ramips/image/mt7621.mk
++++ b/target/linux/ramips/image/mt7621.mk
+@@ -42,6 +42,20 @@ define Build/haier-sim_wr1800k-factory
+   rm -rf "$@.tmp" "$@.tmp.tgz"
+ endef
+ 
++define Build/hatlab-gateboard-combined
++  rm -fR $@.bootfs.img
++
++	mkfs.fat $@.bootfs.img -C 16384
++	mcopy -i $@.bootfs.img $(IMAGE_KERNEL) ::vmlinux.itb
++
++	PADDING="1" SIGNATURE="$(IMG_PART_SIGNATURE)" \
++	GUID="$(IMG_PART_DISKGUID)" $(SCRIPT_DIR)/gen_image_generic.sh \
++	$@ \
++	$(CONFIG_TARGET_KERNEL_PARTSIZE) $@.bootfs.img \
++	$(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
++	256
++endef
++
+ define Build/iodata-mstc-header
+ 	( \
+ 		data_size_crc="$$(dd if=$@ ibs=64 skip=1 2>/dev/null | gzip -c | \
+@@ -1123,6 +1137,28 @@ define Device/haier_har-20s2u1
+ endef
+ TARGET_DEVICES += haier_har-20s2u1
+ 
++define Device/hatlab_gateboard-one
++  $(Device/dsa-migration)
++  DEVICE_VENDOR := HATLab
++  DEVICE_MODEL := GateBoard-One
++  DEVICE_PACKAGES := kmod-i2c-gpio kmod-gpio-pcf857x kmod-sdhci-mt7620 kmod-usb3 kmod-usb-storage kmod-usb-ledtrig-usbport kmod-fs-ext4 kmod-hwmon-lm75 kmod-thermal kmod-hwmon-gpiofan kmod-rtc-pcf8563 kmod-phy-realtek kmod-sfp
++  MKUBIFS_OPTS := -m 2048 -e 124KiB -c 1024
++  KERNEL := kernel-bin | gzip | fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
++  IMAGE/kernel.itb := append-kernel
++  IMAGE/rootfs.img := append-rootfs
++  IMAGE/rootfs.img.gz := append-rootfs | gzip
++  IMAGE/combined.img := hatlab-gateboard-combined | append-metadata
++  IMAGE/combined.img.gz := hatlab-gateboard-combined | gzip | append-metadata
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++  IMAGES := kernel.itb sysupgrade.bin
++  ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
++    IMAGES += rootfs.img.gz combined.img.gz
++  else
++    IMAGES += rootfs.img combined.img
++  endif
++endef
++TARGET_DEVICES += hatlab_gateboard-one
++
+ define Device/hilink_hlk-7621a-evb
+   $(Device/dsa-migration)
+   $(Device/uimage-lzma-loader)
+diff --git a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+index 4b23afc1cf291..dca281172348f 100644
+--- a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
++++ b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+@@ -150,6 +150,9 @@ ramips_setup_interfaces()
+ 	meig,slt866)
+ 		ucidef_set_interfaces_lan_wan "lan" "wan"
+ 		;;
++	hatlab,gateboard-one)
++		ucidef_set_interfaces_lan_wan "eth0 eth1 eth2 eth3 eth4" "eth5"
++		;;
+ 	*)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
+ 		;;
+diff --git a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
+index 5d8305b788cce..b38fe16145ad9 100755
+--- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
++++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
+@@ -160,6 +160,12 @@ platform_do_upgrade() {
+ 		;;
+ 	zyxel,wsm20)
+ 		zyxel_mstc_upgrade_prepare
++		nand_do_upgrade "$1"
++		;;
++	hatlab,gateboard-one)
++		CI_KERNPART="vmlinux.itb"
++		CI_UBIPART="nand0-ubi"
++
+ 		nand_do_upgrade "$1"
+ 		;;
+ 	*)
+diff --git a/target/linux/ramips/mt7621/base-files/sbin/fixup-mac-address b/target/linux/ramips/mt7621/base-files/sbin/fixup-mac-address
+index dad15c584216d..375db51647b70 100755
+--- a/target/linux/ramips/mt7621/base-files/sbin/fixup-mac-address
++++ b/target/linux/ramips/mt7621/base-files/sbin/fixup-mac-address
+@@ -13,6 +13,10 @@ case $board in
+ 		partname=factory
+ 		offset=$((0xe000))
+ 	;;
++	hatlab,gateboard-one)
++		partname=factory
++		offset=$((0x0))
++	;;
+ 	*)
+ 		echo "Unsupported board"
+ 		exit 1
+diff --git a/target/linux/ramips/mt7621/config-5.15 b/target/linux/ramips/mt7621/config-5.15
+index 05e4c1ce87799..b93159ed079ef 100644
+--- a/target/linux/ramips/mt7621/config-5.15
++++ b/target/linux/ramips/mt7621/config-5.15
+@@ -156,6 +156,7 @@ CONFIG_MTD_PHYSMAP=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_ROUTERBOOT_PARTS=y
+ CONFIG_MTD_SERCOMM_PARTS=y
++CONFIG_MTD_SPI_NAND=y
+ CONFIG_MTD_SPI_NOR=y
+ CONFIG_MTD_SPI_NOR_USE_VARIABLE_ERASE=y
+ CONFIG_MTD_SPLIT_FIT_FW=y
+diff --git a/target/linux/ramips/patches-5.15/406-mtd-spi-nor-Add-support-for-Puya-p25d40h.patch b/target/linux/ramips/patches-5.15/406-mtd-spi-nor-Add-support-for-Puya-p25d40h.patch
+new file mode 100644
+index 0000000000000..88ae591fca963
+--- /dev/null
++++ b/target/linux/ramips/patches-5.15/406-mtd-spi-nor-Add-support-for-Puya-p25d40h.patch
+@@ -0,0 +1,47 @@
++--- a/drivers/mtd/spi-nor/Makefile
+++++ b/drivers/mtd/spi-nor/Makefile
++@@ -12,6 +12,7 @@ spi-nor-objs			+= intel.o
++ spi-nor-objs			+= issi.o
++ spi-nor-objs			+= macronix.o
++ spi-nor-objs			+= micron-st.o
+++spi-nor-objs			+= puya.o
++ spi-nor-objs			+= spansion.o
++ spi-nor-objs			+= sst.o
++ spi-nor-objs			+= winbond.o
++--- /dev/null
+++++ b/drivers/mtd/spi-nor/puya.c
++@@ -0,0 +1,14 @@
+++#include <linux/mtd/spi-nor.h>
+++
+++#include "core.h"
+++
+++static const struct flash_info puya_parts[] = {
+++	/* PUYA */
+++	{ "p25d40h", INFO(0x856013, 0, 64 * 1024,  8,  SECT_4K) },
+++};
+++
+++const struct spi_nor_manufacturer spi_nor_puya = {
+++	.name = "puya",
+++	.parts = puya_parts,
+++	.nparts = ARRAY_SIZE(puya_parts),
+++};
++--- a/drivers/mtd/spi-nor/core.c
+++++ b/drivers/mtd/spi-nor/core.c
++@@ -1852,6 +1852,7 @@ static const struct spi_nor_manufacturer
++ 	&spi_nor_issi,
++ 	&spi_nor_macronix,
++ 	&spi_nor_micron,
+++	&spi_nor_puya,
++ 	&spi_nor_st,
++ 	&spi_nor_spansion,
++ 	&spi_nor_sst,
++--- a/drivers/mtd/spi-nor/core.h
+++++ b/drivers/mtd/spi-nor/core.h
++@@ -483,6 +483,7 @@ extern const struct spi_nor_manufacturer
++ extern const struct spi_nor_manufacturer spi_nor_issi;
++ extern const struct spi_nor_manufacturer spi_nor_macronix;
++ extern const struct spi_nor_manufacturer spi_nor_micron;
+++extern const struct spi_nor_manufacturer spi_nor_puya;
++ extern const struct spi_nor_manufacturer spi_nor_st;
++ extern const struct spi_nor_manufacturer spi_nor_spansion;
++ extern const struct spi_nor_manufacturer spi_nor_sst;

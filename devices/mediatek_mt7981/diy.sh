@@ -6,7 +6,7 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 rm -rf feeds/kiddin9/{rtl*,fullconenat-nft} package/feeds/luci/rpcd-mod-luci toolchain/musl package/feeds/packages/gptfdisk package/utils/f2fs-tools package/utils/e2fsprogs package/libs/libselinux package/feeds/packages/acl package/feeds/packages/libevdev
 
-rm -rf devices/common/patches/{fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
+rm -rf devices/common/patches/{rootfstargz.patch,kernel_version.patch,seccomp.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 
 #sed -i "/KernelPackage,sound-soc-core/d" package/kernel/linux/modules/sound.mk
 #sed -i "/KernelPackage,multimedia-input/d" package/kernel/linux/modules/video.mk
