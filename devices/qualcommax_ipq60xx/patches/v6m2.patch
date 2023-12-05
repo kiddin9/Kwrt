@@ -1,23 +1,24 @@
 --- a/package/firmware/ipq-wifi/Makefile
 +++ b/package/firmware/ipq-wifi/Makefile
-@@ -35,6 +35,8 @@ ALLWIFIBOARDS:= \
- 	edimax_cax1800 \
- 	glinet_gl-ax1800 \
- 	glinet_gl-axt1800 \
+@@ -51,7 +51,9 @@ ALLWIFIBOARDS:= \
+ 	zte_mf289f \
+ 	zte_mf287 \
+ 	zte_mf287plus \
+-	zyxel_nbg7815
++	zyxel_nbg7815 \
 +	qihoo_v6 \
-+	cmiot_ax18 \
- 	netgear_rax120v2 \
- 	netgear_wax218 \
- 	prpl_haze \
-@@ -128,6 +130,8 @@ $(eval $(call generate-ipq-wifi-package,edgecore_eap102,Edgecore EAP102))
- $(eval $(call generate-ipq-wifi-package,edimax_cax1800,Edimax CAX1800))
- $(eval $(call generate-ipq-wifi-package,glinet_gl-ax1800,GL.iNet GL-AX1800))
- $(eval $(call generate-ipq-wifi-package,glinet_gl-axt1800,GL.iNet GL-AXT1800))
++	cmiot_ax18
+ 
+ ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ipq-wifi-$(BOARD))
+ 
+@@ -165,5 +167,7 @@ $(eval $(call generate-ipq-wifi-package,zte_mf289f,ZTE MF289F))
+ $(eval $(call generate-ipq-wifi-package,zte_mf287,ZTE MF287))
+ $(eval $(call generate-ipq-wifi-package,zte_mf287plus,ZTE MF287Plus))
+ $(eval $(call generate-ipq-wifi-package,zyxel_nbg7815,Zyxel NBG7815))
 +$(eval $(call generate-ipq-wifi-package,qihoo_v6,QIHOO 360V6))
 +$(eval $(call generate-ipq-wifi-package,cmiot_ax18,CMIOT AX18))
- $(eval $(call generate-ipq-wifi-package,netgear_rax120v2,Netgear RAX120v2))
- $(eval $(call generate-ipq-wifi-package,netgear_wax218,Netgear WAX218))
- $(eval $(call generate-ipq-wifi-package,qnap_301w,QNAP 301w))
+ 
+ $(foreach PACKAGE,$(ALLWIFIPACKAGES),$(eval $(call BuildPackage,$(PACKAGE))))
 
 --- a/target/linux/qualcommax/image/ipq60xx.mk
 +++ b/target/linux/qualcommax/image/ipq60xx.mk
@@ -88,19 +89,16 @@
 
 --- a/target/linux/qualcommax/ipq60xx/base-files/etc/board.d/01_leds
 +++ b/target/linux/qualcommax/ipq60xx/base-files/etc/board.d/01_leds
-@@ -6,7 +6,14 @@ board_config_update
- board=$(board_name)
- 
- case "$board" in
--
-+cmiot,ax18|\
-+zn,m2)
-+	ucidef_set_led_netdev "wan" "WAN" "blue:wan" "eth0"
-+	ucidef_set_led_netdev "wlan2g" "WLAN2G" "blue:wlan2g" "wlan1"
-+	ucidef_set_led_netdev "wlan5g" "WLAN5G" "blue:wlan5g" "wlan0"
-+	;;
-+*)
-+	;;
+@@ -9,6 +9,12 @@ case "$board" in
+     jdc,ax1800-pro)
+         ucidef_set_led_netdev "wan" "WAN" "net_blue" "eth3"
+         ;;
++    cmiot,ax18|\
++    zn,m2)
++        ucidef_set_led_netdev "wan" "WAN" "blue:wan" "eth0"
++        ucidef_set_led_netdev "wlan2g" "WLAN2G" "blue:wlan2g" "wlan1"
++        ucidef_set_led_netdev "wlan5g" "WLAN5G" "blue:wlan5g" "wlan0"
++        ;;
  esac
  
  board_config_flush
