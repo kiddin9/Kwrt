@@ -4,9 +4,24 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-svn checkout https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-6.1 target/linux/generic/hack-6.1
+function git_clone_path() {
+          branch="$1" rurl="$2" localdir="gitemp" && shift 2
+          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
+          if [ "$?" != 0 ]; then
+            echo "error on $rurl"
+            return 0
+          fi
+          cd $localdir
+          git sparse-checkout init --cone
+          git sparse-checkout set $@
+          mv -n $@/* ../$@/ || true
+		  rm -rf gitemp
+          cd ..
+          }
 
-svn export https://github.com/coolsnowwolf/lede/trunk/target/linux/meson target/linux/meson
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.1
+
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/meson
 
 rm -rf package/feeds/kiddin9/quectel_Gobinet
 

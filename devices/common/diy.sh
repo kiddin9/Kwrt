@@ -2,6 +2,21 @@
 #=================================================
 shopt -s extglob
 
+function git_clone_path() {
+          branch="$1" rurl="$2" localdir="gitemp" && shift 2
+          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
+          if [ "$?" != 0 ]; then
+            echo "error on $rurl"
+            return 0
+          fi
+          cd $localdir
+          git sparse-checkout init --cone
+          git sparse-checkout set $@
+          mv -n $@/* ../$@/ || true
+		  rm -rf gitemp
+          cd ..
+          }
+
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
@@ -39,7 +54,7 @@ sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
 
 #sed -i "/call Build\/check-size,\$\$(KERNEL_SIZE)/d" include/image.mk
 
-svn checkout https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-5.15
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch
 sed -i "s/CONFIG_WERROR=y/CONFIG_WERROR=n/" target/linux/generic/config-5.15
 
@@ -50,7 +65,7 @@ curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/packa
 
 grep -q "1.8.8" package/network/utils/iptables/Makefile && {
 rm -rf package/network/utils/iptables
-svn export https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/network/utils/iptables package/network/utils/iptables
+git_clone_path openwrt-22.03 https://github.com/openwrt/openwrt package/network/utils/iptables
 }
 
 grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {

@@ -2,17 +2,32 @@
 
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
+function git_clone_path() {
+          branch="$1" rurl="$2" localdir="gitemp" && shift 2
+          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
+          if [ "$?" != 0 ]; then
+            echo "error on $rurl"
+            return 0
+          fi
+          cd $localdir
+          git sparse-checkout init --cone
+          git sparse-checkout set $@
+          mv -n $@/* ../$@/ || true
+		  rm -rf gitemp
+          cd ..
+          }
 
 rm -rf package/devel/kselftests-bpf package/network/utils/xdp-tools
 
 rm -rf package/boot/uboot-rockchip
-svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/uboot-rockchip package/boot/uboot-rockchip
-svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
+
+git_clone_path master https://github.com/coolsnowwolf/lede package/boot/uboot-rockchip
+git_clone_path master https://github.com/coolsnowwolf/lede package/boot/arm-trusted-firmware-rockchip-vendor
 
 rm -rf target/linux/generic target/linux/rockchip/!(Makefile)
 
-svn export https://github.com/coolsnowwolf/lede/trunk/target/linux/generic target/linux/generic
-svn checkout https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-5.15 -o include/kernel-5.15
 
