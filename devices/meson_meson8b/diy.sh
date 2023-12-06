@@ -15,8 +15,8 @@ function git_clone_path() {
           git sparse-checkout init --cone
           git sparse-checkout set $@
           mv -n $@/* ../$@/ || true
+		  cd ..
 		  rm -rf gitemp
-          cd ..
           }
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.1

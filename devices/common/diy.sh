@@ -13,8 +13,8 @@ function git_clone_path() {
           git sparse-checkout init --cone
           git sparse-checkout set $@
           mv -n $@/* ../$@/ || true
-		  rm -rf gitemp
           cd ..
+		  rm -rf gitemp
           }
 
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default

@@ -15,8 +15,8 @@ function git_clone_path() {
           git sparse-checkout init --cone
           git sparse-checkout set $@
           mv -n $@/* ../$@/ || true
+		  cd ..
 		  rm -rf gitemp
-          cd ..
           }
 
 rm -rf feeds/kiddin9/{rtl*,fullconenat-nft} package/feeds/luci/rpcd-mod-luci toolchain/musl package/feeds/packages/gptfdisk package/utils/f2fs-tools package/utils/e2fsprogs package/libs/libselinux package/feeds/packages/acl package/feeds/packages/libevdev

@@ -13,8 +13,8 @@ function git_clone_path() {
           git sparse-checkout init --cone
           git sparse-checkout set $@
           mv -n $@/* ../$@/ || true
+		  cd ..
 		  rm -rf gitemp
-          cd ..
           }
 
 rm -rf package/devel/kselftests-bpf package/network/utils/xdp-tools
