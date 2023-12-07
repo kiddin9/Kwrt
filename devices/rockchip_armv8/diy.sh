@@ -12,7 +12,7 @@ function git_clone_path() {
           cd $localdir
           git sparse-checkout init --cone
           git sparse-checkout set $@
-          mv -n $@/* ../$@/ || true
+          mv -n $@/* ../$@/ || cp -rfa $@/. ../$@
 		  cd ..
 		  rm -rf gitemp
           }
