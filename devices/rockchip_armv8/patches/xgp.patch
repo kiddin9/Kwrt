@@ -6,15 +6,15 @@ index bc3297efa9d4e..4875f01b43617 100644
    DDR:=rk3568_ddr_1560MHz_v1.13.bin
  endef
  
-+define U-Boot/xgp-rk3568
++define U-Boot/nlnet-xgp-rk3568
 +  BUILD_SUBTARGET:=armv8
-+  NAME:=XGP Board
++  NAME:=NLnet XGP Board
 +  BUILD_DEVICES:= \
 +    nlnet_xgp
-+  DEPENDS:=+PACKAGE_u-boot-xgp-rk3568:arm-trusted-firmware-rk3568
++  DEPENDS:=+PACKAGE_u-boot-nlnet-xgp-rk3568:arm-trusted-firmware-rk3568
 +  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
-+  ATF:=rk3568_bl31_v1.28.elf
-+  DDR:=rk3568_ddr_1560MHz_v1.13.bin
++  ATF:=rk3568_bl31_v1.43.elf
++  DDR:=rk3568_ddr_1560MHz_v1.18.bin
 +endef
 +
  define U-Boot/photonicat-rk3568
@@ -24,7 +24,7 @@ index bc3297efa9d4e..4875f01b43617 100644
  UBOOT_TARGETS := \
    mrkaio-m68s-rk3568 \
    opc-h68k-rk3568 \
-+  xgp-rk3568 \
++  nlnet-xgp-rk3568 \
    photonicat-rk3568 \
    radxa-e25-rk3568 \
    rock-3a-rk3568 \
@@ -52,21 +52,17 @@ diff --git a/target/linux/rockchip/image/armv8.mk b/target/linux/rockchip/image/
 index 88f40f98f45db..c8fe96f74d37e 100644
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -81,6 +80,21 @@ $(call Device/fastrhino_common)
+@@ -81,6 +80,17 @@ $(call Device/fastrhino_common)
  endef
  TARGET_DEVICES += fastrhino_r68s
  
-+define Device/nlnet_common
-+  DEVICE_VENDOR := NLnet
-+  SOC := rk3568
-+  UBOOT_DEVICE_NAME := xgp-rk3568
-+  IMAGE/sysupgrade.img.gz := boot-combined | boot-script nlnet-xgp | pine64-img | gzip | append-metadata
-+  DEVICE_PACKAGES := kmod-r8125
-+endef
-+
 +define Device/nlnet_xgp
-+$(call Device/nlnet_common)
++  DEVICE_VENDOR := NLnet
 +  DEVICE_MODEL := XiGuaPi
++  SOC := rk3568
++  UBOOT_DEVICE_NAME := nlnet-xgp-rk3568
++  IMAGE/sysupgrade.img.gz := boot-combined | boot-script nlnet-xgp | pine64-img | gzip | append-metadata
++  DEVICE_PACKAGES := kmod-hwmon-pwmfan kmod-mt7921e wpad-openssl
 +  DEVICE_DTS = rockchip/rk3568-xgp rockchip/rk3568-xgp-v3
 +endef
 +TARGET_DEVICES += nlnet_xgp
