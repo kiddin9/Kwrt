@@ -1,0 +1,400 @@
+From 09d5ae78b47a9d893a570c1d5ef69cba5680565c Mon Sep 17 00:00:00 2001
+From: coolsnowwolf <coolsnowwolf@gmail.com>
+Date: Thu, 16 Nov 2023 23:02:33 +0800
+Subject: [PATCH] mediatek: add support for JDCloud AX6000
+
+---
+ .../mediatek/dts/mt7986a-jdcloud-re-cs-05.dts | 281 ++++++++++++++++++
+ .../filogic/base-files/etc/board.d/02_network |   6 +
+ .../etc/hotplug.d/firmware/11-mt76-caldata    |   3 +-
+ .../base-files/lib/preinit/81_fix_eeprom      |   3 +-
+ .../base-files/lib/upgrade/platform.sh        |   6 +-
+ 5 files changed, 295 insertions(+), 4 deletions(-)
+ create mode 100644 target/linux/mediatek/dts/mt7986a-jdcloud-re-cs-05.dts
+
+diff --git a/target/linux/mediatek/dts/mt7986a-jdcloud-re-cs-05.dts b/target/linux/mediatek/dts/mt7986a-jdcloud-re-cs-05.dts
+new file mode 100644
+index 0000000000000..00b4c79c6bf8f
+--- /dev/null
++++ b/target/linux/mediatek/dts/mt7986a-jdcloud-re-cs-05.dts
+@@ -0,0 +1,275 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++#include "mt7986a.dtsi"
++
++/ {
++	model = "JDCloud RE-CS-05";
++	compatible = "jdcloud,re-cs-05", "mediatek,mt7986a";
++
++	aliases {
++		serial0 = &uart0;
++		led-boot = &led_status_green;
++		led-failsafe = &led_status_red;
++		led-running = &led_status_blue;
++		led-upgrade = &led_status_red;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++		bootargs = "console=ttyS0,115200n8 root=PARTLABEL=rootfs rootwait";
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
++		};
++
++		wps {
++			label = "wps";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&pio 10 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_status_blue: blue {
++			label = "blue:status";
++			gpios = <&pio 7 GPIO_ACTIVE_HIGH>;
++		};
++
++		led_status_red: red {
++			label = "red:status";
++			gpios = <&pio 11 GPIO_ACTIVE_HIGH>;
++		};
++
++		led_status_green: green {
++			label = "green:status";
++			gpios = <&pio 12 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++};
++
++&crypto {
++	status = "okay";
++};
++
++&eth {
++	status = "okay";
++
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		phy-mode = "2500base-x";
++
++		fixed-link {
++			speed = <2500>;
++			full-duplex;
++			pause;
++		};
++	};
++
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-handle = <&phy6>;
++		phy-mode = "2500base-x";
++	};
++
++	mdio: mdio-bus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
++
++&mdio {
++	phy6: ethernet-phy@6 {
++		compatible = "ethernet-phy-ieee802.3-c45";
++		reg = <6>;
++		reset-assert-us = <100000>;
++		reset-deassert-us = <100000>;
++		reset-gpios = <&pio 6 GPIO_ACTIVE_LOW>;
++		realtek,aldps-enable;
++	};
++
++	switch: switch@0 {
++		compatible = "mediatek,mt7531";
++		reg = <31>;
++		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupt-parent = <&pio>;
++		interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
++	};
++};
++
++&switch {
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@1 {
++			reg = <1>;
++			label = "lan1";
++		};
++
++		port@2 {
++			reg = <2>;
++			label = "lan2";
++		};
++
++		port@3 {
++			reg = <3>;
++			label = "lan3";
++		};
++
++		port@4 {
++			reg = <4>;
++			label = "lan4";
++		};
++
++		port@6 {
++			reg = <6>;
++			ethernet = <&gmac0>;
++			phy-mode = "2500base-x";
++
++			fixed-link {
++				speed = <2500>;
++				full-duplex;
++				pause;
++			};
++		};
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc0_pins_default>;
++	pinctrl-1 = <&mmc0_pins_uhs>;
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	hs400-ds-delay = <0x14014>;
++	max-frequency = <200000000>;
++	mmc-hs200-1_8v;
++	mmc-hs400-1_8v;
++	non-removable;
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_1p8v>;
++	status = "okay";
++};
++
++&pio {
++	mmc0_pins_default: mmc0-pins {
++		mux {
++			function = "emmc";
++			groups = "emmc_51";
++		};
++		conf-cmd-dat {
++			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
++			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
++			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
++			input-enable;
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++		conf-clk {
++			pins = "EMMC_CK";
++			drive-strength = <6>;
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-ds {
++			pins = "EMMC_DSL";
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-rst {
++			pins = "EMMC_RSTB";
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++	};
++
++	mmc0_pins_uhs: mmc0-uhs-pins {
++		mux {
++			function = "emmc";
++			groups = "emmc_51";
++		};
++		conf-cmd-dat {
++			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
++			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
++			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
++			input-enable;
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++		conf-clk {
++			pins = "EMMC_CK";
++			drive-strength = <6>;
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-ds {
++			pins = "EMMC_DSL";
++			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
++		};
++		conf-rst {
++			pins = "EMMC_RSTB";
++			drive-strength = <4>;
++			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
++		};
++	};
++
++	wf_2g_5g_pins: wf_2g_5g-pins {
++		mux {
++			function = "wifi";
++			groups = "wf_2g", "wf_5g";
++		};
++		conf {
++			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
++			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
++			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
++			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
++			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
++			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
++			       "WF1_TOP_CLK", "WF1_TOP_DATA";
++			drive-strength = <4>;
++		};
++	};
++};
++
++&trng {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&watchdog {
++	status = "okay";
++};
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index c2c50f6b5fd6f..750de97f36691 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -12,6 +12,7 @@
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 game" eth1
+ 		;;
+ 	asus,tuf-ax4200|\
++	jdcloud,re-cs-05|\
+ 	mediatek,mt7981-rfb)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" eth1
+ 		;;
+@@ -120,6 +121,11 @@
+ 		lan_mac=$(mmc_get_mac_binary factory 0x2a)
+ 		label_mac=$lan_mac
+ 		;;
++		jdcloud,re-cs-05)
++		wan_mac=$(mmc_get_mac_binary factory 0x24)
++		lan_mac=$(mmc_get_mac_binary factory 0x2a)
++		label_mac=$lan_mac
++		;;
+ 	qihoo,360t7)
+ 		lan_mac=$(mtd_get_mac_ascii factory lanMac)
+ 		wan_mac=$(macaddr_add "$lan_mac" 1)
+diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+index 6437dfbe62103..56a704f5a1686 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+@@ -17,7 +17,8 @@ case "$FIRMWARE" in
+ 	;;
+ "mediatek/mt7986_eeprom_mt7976_dual.bin")
+ 	case "$board" in
+-	glinet,gl-mt6000)
++	glinet,gl-mt6000|\
++	jdcloud,re-cs-05)
+ 		caldata_extract_mmc "factory" 0x0 0x1000
+ 		;;
+ 	esac
+diff --git a/target/linux/mediatek/filogic/base-files/lib/preinit/81_fix_eeprom b/target/linux/mediatek/filogic/base-files/lib/preinit/81_fix_eeprom
+index bbda755a97924..ee36ffe7cd6c4 100644
+--- a/target/linux/mediatek/filogic/base-files/lib/preinit/81_fix_eeprom
++++ b/target/linux/mediatek/filogic/base-files/lib/preinit/81_fix_eeprom
+@@ -2,6 +2,13 @@
+ 
+ preinit_fix_eeprom() {
+ 	case $(board_name) in
++	jdcloud,re-cs-05)
++		mmc_part=$(find_mmc_part factory)
++		FIRMWARE="mediatek/mt7986_eeprom_mt7976_dual.bin"
++		[ ! -e /lib/firmware/"$FIRMWARE" ] && \
++			export FIRMWARE="$FIRMWARE" && \
++			caldata_extract_mmc "factory" 0x0 0x1000
++		;;
+ 	mercusys,mr90x-v1)
+ 		eeprom="/lib/firmware/mediatek/mt7986_eeprom_mt7975_dual.bin"
+ 		oem="/tmp/tp_data/MT7986_EEPROM.bin"
+
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index 9649a2c99b1b8..8619c72b860ff 100755
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -100,7 +100,8 @@
+ 		CI_UBIPART="ubi0"
+ 		nand_do_upgrade "$1"
+ 		;;
+-	glinet,gl-mt6000)
++	glinet,gl-mt6000|\
++	jdcloud,re-cs-05)
+ 		CI_KERNPART="kernel"
+ 		CI_ROOTPART="rootfs"
+ 		emmc_do_upgrade "$1"
+@@ -167,7 +168,8 @@
+ 			;;
+ 		esac
+ 		;;
+-	glinet,gl-mt6000)
++	glinet,gl-mt6000|\
++	jdcloud,re-cs-05)
+  		emmc_copy_config
+  		;;
+ 	esac
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -296,6 +296,21 @@
+ endef
+ TARGET_DEVICES += jcg_q30-pro
+ 
++define Device/jdcloud_re-cs-05
++  DEVICE_VENDOR := JDCloud
++  DEVICE_MODEL := AX6000
++  DEVICE_DTS := mt7986a-jdcloud-re-cs-05
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := e2fsprogs f2fsck mkf2fs kmod-mt7986-firmware mt7986-wo-firmware
++  UBINIZE_OPTS := -E 5
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  IMAGES := sysupgrade.bin
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += jdcloud_re-cs-05
++
++
+ define Device/netgear_wax220
+   DEVICE_VENDOR := NETGEAR
+   DEVICE_MODEL := WAX220

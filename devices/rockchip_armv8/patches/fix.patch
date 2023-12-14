@@ -54,22 +54,3 @@ index 57d5b0f8d9be..73d9f52caf99 100644
  +CONFIG_SYSRESET=y
  +CONFIG_USB=y
  +CONFIG_USB_XHCI_HCD=y
-
---- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
-+++ b/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
-@@ -9,13 +9,13 @@ boardname="${board##*,}"
- board_config_update
- 
- case $board in
--friendlyarm,nanopi-r2c|\
--friendlyarm,nanopi-r2s|\
- xunlong,orangepi-r1-plus|\
- xunlong,orangepi-r1-plus-lts)
- 	ucidef_set_led_netdev "wan" "WAN" "$boardname:green:wan" "eth0"
- 	ucidef_set_led_netdev "lan" "LAN" "$boardname:green:lan" "eth1"
- 	;;
-+friendlyarm,nanopi-r2c|\
-+friendlyarm,nanopi-r2s|\
- friendlyarm,nanopi-r4s|\
- friendlyarm,nanopi-r4se|\
- sharevdi,guangmiao-g4c)
