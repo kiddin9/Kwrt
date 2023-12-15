@@ -58,7 +58,7 @@
 +  BUILD_SUBTARGET:=armv8
 +  NAME:=NanoPi R2C Plus
 +  BUILD_DEVICES:= \
-+    friendlyarm_nanopi-r2c-plus
++    friendlyarm_nanopi-plus-r2c
 +  DEPENDS:=+PACKAGE_u-boot-nanopi-r2c-rk3328:arm-trusted-firmware-rk3328
 +  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
 +  ATF:=rk322xh_bl31_v1.49.elf
