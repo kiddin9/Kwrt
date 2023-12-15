@@ -1,5 +1,6 @@
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
+@@ -91,6 +91,16 @@
  endef
  TARGET_DEVICES += friendlyarm_nanopi-r2c
  
