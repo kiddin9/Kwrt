@@ -72,8 +72,8 @@ index 88f40f98f45db..c8fe96f74d37e 100644
    DEVICE_MODEL := NanoPi NEO3
 diff --git a/target/linux/rockchip/patches-5.15/210-rockchip-rk356x-add-support-for-new-boards.patch b/target/linux/rockchip/patches-5.15/210-rockchip-rk356x-add-support-for-new-boards.patch
 index 2f9a26979dc4b..f66423793c78d 100644
---- a/target/linux/rockchip/patches-5.15/210-rockchip-rk356x-add-support-for-new-boards.patch
-+++ b/target/linux/rockchip/patches-5.15/210-rockchip-rk356x-add-support-for-new-boards.patch
+--- a/target/linux/rockchip/patches-5.15/211-rockchip-rk356x-add-support-for-new-boards.patch
++++ b/target/linux/rockchip/patches-5.15/211-rockchip-rk356x-add-support-for-new-boards.patch
 @@ -19,4 +19,5 @@
  +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-r68s.dtb
  +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-seewo-sv21.dtb
