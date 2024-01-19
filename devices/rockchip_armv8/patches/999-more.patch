@@ -1,25 +1,35 @@
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -52,4 +52,31 @@
- TARGET_DEVICES += friendlyarm_nanopi-r2s
+@@ -162,6 +162,42 @@
+ endef
+ TARGET_DEVICES += friendlyarm_nanopi-r5s
  
-+define Device/friendlyarm_nanopi-r6c
++define Device/friendlyarm_nanopi-m4
 +  DEVICE_VENDOR := FriendlyARM
-+  DEVICE_MODEL := NanoPi R6C
++  DEVICE_MODEL := NanoPi M4
 +  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
-+TARGET_DEVICES += friendlyarm_nanopi-r6c
++TARGET_DEVICES += friendlyarm_nanopi-m4
 +
-+define Device/friendlyarm_nanopi-r6s
++define Device/friendlyarm_nanopi-neo4
 +  DEVICE_VENDOR := FriendlyARM
-+  DEVICE_MODEL := NanoPi R6S
++  DEVICE_MODEL := NanoPi NEO4
 +  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
-+TARGET_DEVICES += friendlyarm_nanopi-r6s
++TARGET_DEVICES += friendlyarm_nanopi-neo4
++
++define Device/friendlyarm_nanopc-t4
++  DEVICE_VENDOR := FriendlyARM
++  DEVICE_MODEL := NanoPC T4
++  SOC := rk3328
++  DEVICE_PACKAGES := -luci-app-gpsysupgrade
++  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
++endef
++TARGET_DEVICES += friendlyarm_nanopc-t4
 +
 +define Device/friendlyarm_nanopc-t6
 +  DEVICE_VENDOR := FriendlyARM
@@ -30,30 +40,57 @@
 +endef
 +TARGET_DEVICES += friendlyarm_nanopc-t6
 +
- define Device/friendlyarm_nanopi-r4s
-   DEVICE_VENDOR := FriendlyARM
+ define Device/firefly_station-p2
+   DEVICE_VENDOR := Firefly
+   DEVICE_MODEL := Station P2
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -21,9 +21,14 @@ rockchip_setup_interfaces()
+@@ -23,8 +23,15 @@
  	sharevdi,h3399pc|\
  	sharevdi,guangmiao-g4c|\
  	xunlong,orangepi-r1-plus|\
 -	xunlong,orangepi-r1-plus-lts)
 +	xunlong,orangepi-r1-plus-lts|\
-+	friendlyarm,nanopc-t6|\
-+	friendlyarm,nanopi-r6c)
++	friendlyarm,nanopc-t6)
  		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
- 		;;
-+	friendlyarm,nanopi-r6s)
-+		ucidef_set_interfaces_lan_wan "eth1 eth0" "eth2"
 +		;;
++	friendlyarm,nanopc-t4 | \
++	friendlyarm,nanopi-m4 | \
++	friendlyarm,nanopi-neo4 | \
++	som-rk3399 | cm3588)
++		ucidef_set_interfaces_lan_wan 'wlan0' 'eth0'
+ 		;;
  	fastrhino,r66s|\
  	firefly,rk3568-roc-pc|\
- 	friendlyarm,nanopi-r5c|\
-@@ -45,10 +50,10 @@ rockchip_setup_interfaces()
+@@ -48,10 +56,10 @@
  	esac
  }
+ 
+-nanopi_r4s_get_mac()
++nanopi_get_mac()
+ {
+ 	local interface=$1
+-	local eeprom_path="/sys/bus/i2c/devices/2-0051/eeprom"
++	local eeprom_path="/sys/bus/i2c/devices/$2/eeprom"
+ 	local address
+ 
+ 	if [ -f "$eeprom_path" ]; then
+@@ -98,8 +106,12 @@
+ 		;;
+ 	friendlyarm,nanopi-r4s|\
+ 	friendlyarm,nanopi-r4se)
+-		wan_mac=$(nanopi_r4s_get_mac wan)
+-		lan_mac=$(nanopi_r4s_get_mac lan)
++		wan_mac=$(nanopi_get_mac wan 2-0051)
++		lan_mac=$(nanopi_get_mac lan 2-0051)
++		;;
++	nanopi-r6s|nanopi-r6c|nanopc-t6)
++		wan_mac=$(nanopi_get_mac wan 6-0053)
++		lan_mac=$(nanopi_get_mac lan 6-0053)
+ 		;;
+ 	friendlyarm,nanopi-r2c-plus|\
+ 	friendlyarm,nanopi-r5c|\
  
 -nanopi_r4s_get_mac()
 +nanopi_get_mac()
@@ -80,56 +117,32 @@
  	friendlyarm,nanopi-r5c|\
  	friendlyarm,nanopi-r5s|\
 
---- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
-+++ a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
-@@ -36,6 +36,15 @@ hinlink,opc-h68k|\
- hinlink,opc-h69k)
- 	ucidef_set_led_netdev "wan" "WAN" "blue:net" "eth0"
- 	;;
-+friendlyarm,nanopi-r6s)
-+	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth2"
-+	ucidef_set_led_netdev "lan1" "LAN1" "green:lan1" "eth1"
-+	ucidef_set_led_netdev "lan2" "LAN2" "green:lan2" "eth0"
-+	;;
-+friendlyarm,nanopi-r6c)
-+	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth0"
-+	ucidef_set_led_netdev "lan1" "LAN1" "green:lan" "eth1"
-+	;;
- esac
- 
- board_config_flush
-
 --- a/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
 +++ a/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
-@@ -52,5 +52,25 @@ friendlyarm,nanopi-r5s)
+@@ -53,5 +53,19 @@
  	set_interface_core 2 "eth1"
  	set_interface_core 4 "eth2"
  	;;
-+friendlyarm,nanopi-r6s)
-+	set_interface_core 2 "eth0"
-+	echo 3e > /sys/class/net/eth0/queues/rx-0/rps_cpus
-+	set_interface_core 10 "eth1-0"
-+	set_interface_core 20 "eth1-16"
-+	set_interface_core 20 "eth1-18"
-+	echo fe > /sys/class/net/eth1/queues/rx-0/rps_cpus
-+	set_interface_core 40 "eth2-0"
-+	set_interface_core 80 "eth2-16"
-+	set_interface_core 80 "eth2-18"
-+	echo fe > /sys/class/net/eth2/queues/rx-0/rps_cpus
-+	;;
-+friendlyarm,nanopi-r6c)
-+	set_interface_core 40 "eth0"
++friendlyarm,nanopc-t6)
++	set_interface_core 8 "eth0-0"
++	set_interface_core 8 "eth0-16"
++	set_interface_core 8 "eth0-18"
 +	echo fe > /sys/class/net/eth0/queues/rx-0/rps_cpus
-+	set_interface_core 10 "eth1-0"
-+	set_interface_core 20 "eth1-16"
-+	set_interface_core 20 "eth1-18"
++	set_interface_core 4 "eth1-0"
++	set_interface_core 4 "eth1-16"
++	set_interface_core 4 "eth1-18"
 +	echo fe > /sys/class/net/eth1/queues/rx-0/rps_cpus
++	seconds="0"
++	set_interface_core 40 "xhci-hcd:usb5"
++	set_interface_core 40 "xhci-hcd:usb7"
++	set_interface_rps "fe" "wlan0"
 +	;;
  esac
+ 
 
 --- a/target/linux/rockchip/image/Makefile
 +++ b/target/linux/rockchip/image/Makefile
-@@ -79,4 +79,15 @@ endif
+@@ -79,4 +79,23 @@ endif
  
  include $(SUBTARGET).mk
  
@@ -139,7 +152,15 @@
 +		export BIN_DIR=$(BIN_DIR); \
 +		export TOPDIR=$(TOPDIR); \
 +		export MORE=$(MORE); \
-+		cd /data/packit/friendlywrt22-rk3588; \
++		cd /data/packit/friendlywrt23-rk3588; \
++		. ~/packit/packit_nanopi.sh; \
++	fi
++	if [[ "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-m4" || "$(PROFILE_SANITIZED)" == "friendlyarm_nanopc-t4" || "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-neo4" ]]; then \
++		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
++		export BIN_DIR=$(BIN_DIR); \
++		export TOPDIR=$(TOPDIR); \
++		export MORE=$(MORE); \
++		cd /data/packit/friendlywrt23-rk3399; \
 +		. ~/packit/packit_nanopi.sh; \
 +	fi
 +endef
