@@ -17,7 +17,7 @@ function git_clone_path() {
 		  rm -rf gitemp
           }
 
-rm -rf package/devel/kselftests-bpf package/network/utils/xdp-tools
+rm -rf package/devel/kselftests-bpf package/network/utils/xdp-tools package/feeds/packages/v4l2loopback
 
 rm -rf package/boot/uboot-rockchip
 
