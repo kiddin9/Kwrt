@@ -1,13 +1,12 @@
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -162,6 +162,42 @@
+@@ -162,6 +162,46 @@
  endef
  TARGET_DEVICES += friendlyarm_nanopi-r5s
  
 +define Device/friendlyarm_nanopi-m4
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPi M4
-+  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
@@ -16,7 +15,6 @@
 +define Device/friendlyarm_nanopi-neo4
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPi NEO4
-+  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
@@ -25,7 +23,6 @@
 +define Device/friendlyarm_nanopc-t4
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPC T4
-+  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
@@ -34,11 +31,18 @@
 +define Device/friendlyarm_nanopc-t6
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPC T6
-+  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
 +TARGET_DEVICES += friendlyarm_nanopc-t6
++
++define Device/friendlyarm_nanopi-r2s-plus
++  DEVICE_VENDOR := FriendlyARM
++  DEVICE_MODEL := NanoPi R2S Plus
++  DEVICE_PACKAGES := -luci-app-gpsysupgrade
++  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
++endef
++TARGET_DEVICES += friendlyarm_nanopi-r2s-plus
 +
  define Device/firefly_station-p2
    DEVICE_VENDOR := Firefly
@@ -142,7 +146,7 @@
 
 --- a/target/linux/rockchip/image/Makefile
 +++ b/target/linux/rockchip/image/Makefile
-@@ -79,4 +79,23 @@ endif
+@@ -79,4 +79,31 @@ endif
  
  include $(SUBTARGET).mk
  
@@ -161,6 +165,14 @@
 +		export TOPDIR=$(TOPDIR); \
 +		export MORE=$(MORE); \
 +		cd /data/packit/friendlywrt23-rk3399; \
++		. ~/packit/packit_nanopi.sh; \
++	fi
++	if [[ "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r2s-plus" ]]; then \
++		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
++		export BIN_DIR=$(BIN_DIR); \
++		export TOPDIR=$(TOPDIR); \
++		export MORE=$(MORE); \
++		cd /data/packit/friendlywrt23-rk3328; \
 +		. ~/packit/packit_nanopi.sh; \
 +	fi
 +endef
