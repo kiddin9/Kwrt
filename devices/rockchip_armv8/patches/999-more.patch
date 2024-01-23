@@ -1,12 +1,13 @@
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -162,6 +162,46 @@
+@@ -162,6 +162,51 @@
  endef
  TARGET_DEVICES += friendlyarm_nanopi-r5s
  
 +define Device/friendlyarm_nanopi-m4
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPi M4
++  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
@@ -15,6 +16,7 @@
 +define Device/friendlyarm_nanopi-neo4
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPi NEO4
++  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
@@ -23,6 +25,7 @@
 +define Device/friendlyarm_nanopc-t4
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPC T4
++  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
@@ -31,6 +34,7 @@
 +define Device/friendlyarm_nanopc-t6
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPC T6
++  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
@@ -39,8 +43,10 @@
 +define Device/friendlyarm_nanopi-r2s-plus
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPi R2S Plus
++  SOC := rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
++  DEVICE_PACKAGES := kmod-usb-net-rtl8152
 +endef
 +TARGET_DEVICES += friendlyarm_nanopi-r2s-plus
 +
