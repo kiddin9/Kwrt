@@ -4,21 +4,6 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-function git_clone_path() {
-          branch="$1" rurl="$2" localdir="gitemp" && shift 2
-          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
-          if [ "$?" != 0 ]; then
-            echo "error on $rurl"
-            return 0
-          fi
-          cd $localdir
-          git sparse-checkout init --cone
-          git sparse-checkout set $@
-          mv -n $@/* ../$@/ || cp -rf $@ ../$(dirname "$@")/
-		  cd ..
-		  rm -rf gitemp
-          }
-
 rm -rf feeds/kiddin9/{rtl*,fullconenat-nft} package/feeds/luci/rpcd-mod-luci toolchain/musl package/feeds/packages/gptfdisk package/utils/f2fs-tools package/utils/e2fsprogs package/libs/libselinux package/feeds/packages/acl package/feeds/packages/libevdev
 
 rm -rf devices/common/patches/{rootfstargz.patch,kernel_version.patch,seccomp.patch,iptables.patch,kernel-defaults.patch,targets.patch}
