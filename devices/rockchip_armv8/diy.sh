@@ -3,7 +3,7 @@
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/devel/kselftests-bpf package/network/utils/xdp-tools package/feeds/packages/v4l2loopback package/feeds/routing/batman-adv
+rm -rf package/devel/kselftests-bpf package/feeds/routing/batman-adv
 
 rm -rf package/boot/uboot-rockchip
 
