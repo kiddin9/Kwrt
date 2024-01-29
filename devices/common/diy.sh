@@ -17,6 +17,7 @@ function git_clone_path() {
 		  rm -rf gitemp
           }
 
+export -f git_clone_path
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
