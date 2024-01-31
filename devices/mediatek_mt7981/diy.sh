@@ -6,15 +6,15 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 rm -rf feeds/kiddin9/{rtl*,fullconenat-nft} package/feeds/luci/rpcd-mod-luci toolchain/musl package/feeds/packages/gptfdisk package/utils/f2fs-tools package/utils/e2fsprogs package/libs/libselinux package/feeds/packages/acl package/feeds/packages/libevdev
 
-rm -rf devices/common/patches/{fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
+rm -rf devices/common/patches/{rootfstargz.patch,kernel_version.patch,seccomp.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 
 #sed -i "/KernelPackage,sound-soc-core/d" package/kernel/linux/modules/sound.mk
 #sed -i "/KernelPackage,multimedia-input/d" package/kernel/linux/modules/video.mk
 
-svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/toolchain/musl toolchain/musl
-svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/utils/e2fsprogs package/utils/e2fsprogs
-svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/utils/ucode package/utils/ucode
-svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/libs/libselinux package/libs/libselinux
+git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt toolchain/musl
+git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt package/utils/e2fsprogs
+git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt package/utils/ucode
+git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt package/libs/libselinux
 #ln -sf $(pwd)/feeds/luci/modules/luci-base package/feeds/kiddin9/
 
 sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2099-12-06/" package/network/config/netifd/Makefile

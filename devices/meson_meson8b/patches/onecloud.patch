@@ -1,6 +1,6 @@
 --- a/target/linux/meson/image/Makefile
 +++ b/target/linux/meson/image/Makefile
-@@ -112,7 +112,8 @@ endif
+@@ -46,7 +46,8 @@ endef
  
  define Device/thunder-onecloud
    DEVICE_DTS := meson8b-onecloud
@@ -8,18 +8,16 @@
 +  DEVICE_TITLE := OneCloud 玩客云
 +  DEVICE_PACKAGES += kmod-usb-net-rtl8152
    KERNEL_LOADADDR := 0x00208000
+   IMAGE/emmc.img := boot-script onecloud | emmc-common $$(DEVICE_NAME)
  endef
- ifeq ($(SUBTARGET),meson8b)
-
---- a/package/kernel/linux/modules/netsupport.mk
-+++ b/package/kernel/linux/modules/netsupport.mk
-@@ -93,7 +93,8 @@ define KernelPackage/vxlan
- 	+IPV6:kmod-udptunnel6
-   KCONFIG:=CONFIG_VXLAN
-   FILES:= \
--	$(LINUX_DIR)/drivers/net/vxlan/vxlan.ko
-+	$(LINUX_DIR)/drivers/net/vxlan.ko@lt5.5 \
-+	$(LINUX_DIR)/drivers/net/vxlan/vxlan.ko@ge5.6
-   AUTOLOAD:=$(call AutoLoad,13,vxlan)
- endef
+@@ -54,4 +55,10 @@ ifeq ($(SUBTARGET),meson8b)
+   TARGET_DEVICES += thunder-onecloud
+ endif
  
++define Image/Build
++  export BIN_DIR=$(BIN_DIR); \
++  cd /data/packit/openwrt-onecloud || true; \
++  . ~/packit/packit_onecloud1.sh || true;
++endef
++
+ $(eval $(call BuildImage))

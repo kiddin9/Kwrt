@@ -45,13 +45,11 @@
 
 --- a/target/linux/mediatek/image/mt7981.mk
 +++ b/target/linux/mediatek/image/mt7981.mk
-@@ -375,8 +375,7 @@ define Device/cmcc_rax3000m
-   DEVICE_MODEL := RAX3000M
-   DEVICE_DTS := mt7981-cmcc-rax3000m
-   DEVICE_DTS_DIR := $(DTS_DIR)/mediatek
--  DEVICE_PACKAGES := automount blkid luci-app-ksmbd luci-i18n-ksmbd-zh-cn ksmbd-utils \
--			luci-app-usb-printer luci-i18n-usb-printer-zh-cn \
-+  DEVICE_PACKAGES := automount blkid \
- 			kmod-nls-cp437 kmod-nls-iso8859-1 \
- 			kmod-usb-net-rndis usbutils
-   SUPPORTED_DEVICES := cmcc,rax3000m
+@@ -2,7 +2,6 @@ KERNEL_LOADADDR := 0x48080000
+ 
+ MT7981_USB_PKGS := automount blkid blockdev fdisk \
+     kmod-nls-cp437 kmod-nls-iso8859-1 kmod-usb2 kmod-usb3 \
+-    luci-app-usb-printer luci-i18n-usb-printer-zh-cn \
+     kmod-usb-net-rndis usbutils
+ 
+ define Device/mt7981-spim-nor-rfb

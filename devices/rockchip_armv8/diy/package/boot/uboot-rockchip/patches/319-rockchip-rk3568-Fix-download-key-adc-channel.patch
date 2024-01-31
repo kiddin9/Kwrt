@@ -1,0 +1,27 @@
+--- a/arch/arm/mach-rockchip/boot_mode.c
++++ b/arch/arm/mach-rockchip/boot_mode.c
+@@ -43,6 +43,9 @@
+ 	struct udevice *dev;
+ 	struct uclass *uc;
+ 	int ret;
++	const void *blob = gd->fdt_blob;
++	int node, channel = 1;
++	unsigned int chns[2];
+ 
+ 	ret = uclass_get(UCLASS_ADC, &uc);
+ 	if (ret)
+@@ -51,7 +54,13 @@
+ 	ret = -ENODEV;
+ 	uclass_foreach_dev(dev, uc) {
+ 		if (!strncmp(dev->name, "saradc", 6)) {
+-			ret = adc_channel_single_shot(dev->name, 1, &val);
++			node = fdt_node_offset_by_compatible(blob, 0, "adc-keys");
++			if (node >= 0) {
++				if (!fdtdec_get_int_array(blob, node, "io-channels", chns, 2))
++					channel = chns[1];
++			}
++
++			ret = adc_channel_single_shot(dev->name, channel, &val);
+ 			break;
+ 		}
+ 	}

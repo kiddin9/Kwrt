@@ -1,0 +1,30 @@
+--- a/scripts/json_overview_image_info.py
++++ b/scripts/json_overview_image_info.py
+@@ -47,7 +47,7 @@ def get_initial_output(image_info):
+ 
+ 
+ if output:
+-    default_packages, output["arch_packages"] = run(
++    default_packages, output["arch_packages"], output["kernel_version"] = run(
+         [
+             "make",
+             "--no-print-directory",
+@@ -55,6 +55,7 @@ def get_initial_output(image_info):
+             "target/linux/",
+             "val.DEFAULT_PACKAGES",
+             "val.ARCH_PACKAGES",
++            "val.LINUX_VERSION",
+         ],
+         stdout=PIPE,
+         stderr=PIPE,
+
+--- a/scripts/json_add_image_info.py
++++ b/scripts/json_add_image_info.py
+@@ -55,6 +55,7 @@ def get_titles():
+     "profiles": {
+         device_id: {
+             "image_prefix": getenv("DEVICE_IMG_PREFIX"),
++            "image_initramfs": getenv("KERNEL_INITRAMFS_IMAGE"),
+             "images": [
+                 {
+                     "type": getenv("FILE_TYPE"),
