@@ -9,13 +9,15 @@ sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/' target/linux/rockchip/Makefile
 
+rm -rf package/network/utils/xdp-tools package/devel/kselftests-bpf
+
 echo '
 CONFIG_SENSORS_PWM_FAN=y
 ' >> ./target/linux/rockchip/armv8/config-6.1
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
-rm -rf feeds/kiddin9/{quectel_MHI,shortcut-fe,quectel_Gobinet,rtl88*}
+rm -rf feeds/kiddin9/{quectel_MHI,shortcut-fe,quectel_Gobinet,rtl88*} devices/common/patches/kernel_version.patch devices/common/patches/rootfstargz.patch
 
 sed -i "/friendlyelec/d" package/feeds/kiddin9/base-files/files/lib/preinit/02_sysinfo
 

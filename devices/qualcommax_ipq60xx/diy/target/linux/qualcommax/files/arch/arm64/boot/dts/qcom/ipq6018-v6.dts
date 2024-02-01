@@ -99,7 +99,7 @@
 };
 
 &soc {
-	dp1: dp@1 {
+	dp@1 {
 		compatible = "qcom,nss-dp";
 		reg = <0x0 0x3a001000 0x0 0x200>;
 		qcom,mactype = <0>;
