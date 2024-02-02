@@ -41,7 +41,7 @@
  				compatible = "denx,uimage";
  				label = "firmware";
 -				reg = <0x180000 0xe80000>;
-+				reg = <0x50000 0xfb0000>;
++				reg = <0x50000 0x1fb0000>;
  			};
  		};
  	};
