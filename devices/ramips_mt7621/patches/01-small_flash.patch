@@ -71,7 +71,7 @@ index 2697f84bf7684..df8c7d233cf1e 100644
    $(Device/dsa-migration)
    $(Device/uimage-lzma-loader)
 -  IMAGE_SIZE := 14848k
-+  IMAGE_SIZE := 16064k
++  IMAGE_SIZE := 32448k
    DEVICE_VENDOR := Xiaomi
    DEVICE_MODEL := Mi Router 3G
    DEVICE_VARIANT := v2
