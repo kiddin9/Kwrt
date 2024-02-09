@@ -6,7 +6,7 @@
  	zte_mf287plus \
 -	zyxel_nbg7815
 +	zyxel_nbg7815 \
-+	qihoo_v6 \
++	qihoo_360v6 \
 +	cmiot_ax18
  
  ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ipq-wifi-$(BOARD))
@@ -15,7 +15,7 @@
  $(eval $(call generate-ipq-wifi-package,netgear_wax218,Netgear WAX218))
  $(eval $(call generate-ipq-wifi-package,netgear_wax620,Netgear WAX620))
  $(eval $(call generate-ipq-wifi-package,netgear_wax630,Netgear WAX630))
-+$(eval $(call generate-ipq-wifi-package,qihoo_v6,QIHOO 360V6))
++$(eval $(call generate-ipq-wifi-package,qihoo_360v6,QIHOO 360V6))
 +$(eval $(call generate-ipq-wifi-package,zyxel_nbg7815,Zyxel NBG7815))
  $(eval $(call generate-ipq-wifi-package,qnap_301w,QNAP 301w))
  $(eval $(call generate-ipq-wifi-package,prpl_haze,prpl Haze))
@@ -27,7 +27,7 @@
  endef
  TARGET_DEVICES += cmiot_ax18
  
-+define Device/qihoo_v6
++define Device/qihoo_360v6
 +	$(call Device/FitImage)
 +	$(call Device/UbiFit)
 +	DEVICE_VENDOR := Qihoo 360
@@ -35,10 +35,10 @@
 +	BLOCKSIZE := 128k
 +	PAGESIZE := 2048
 +	DEVICE_DTS_CONFIG := config@cp03-c1
-+	DEVICE_PACKAGES := ath11k-wifi-qihoo_v6
-+	SOC := ipq6018
++	DEVICE_PACKAGES := ipq-wifi-qihoo_360v6
++	SOC := ipq6000
 +endef
-+TARGET_DEVICES += qihoo_v6
++TARGET_DEVICES += qihoo_360v6
 +
 +define Device/zn_m2
 +	$(call Device/FitImage)

@@ -26,19 +26,6 @@
    DEVICE_VENDOR := Xiaomi
    DEVICE_MODEL := Redmi Router AX6000 (stock layout)
 
---- a/package/boot/uboot-envtools/files/mediatek_filogic
-+++ b/package/boot/uboot-envtools/files/mediatek_filogic
-@@ -67,6 +66,9 @@ xiaomi,redmi-router-ax6000-ubootmod)
- 	ubootenv_add_uci_config "$envdev" "0x0" "0x1f000" "0x20000" "1"
- 	ubootenv_add_uci_config "$envdev2" "0x0" "0x1f000" "0x20000" "1"
- 	;;
-+xiaomi,redmi-router-ax6000)
-+	ubootenv_add_uci_config "/dev/mtd2" "0x0" "0x10000" "0x20000" "1"
-+	;;
- zyxel,ex5601-t0)
- 	local envdev=/dev/mtd$(find_mtd_index "u-boot-env")
- 	ubootenv_add_uci_config "$envdev" "0x0" "0x20000" "0x40000" "2"
-
 new file mode 100644
 index 0000000000000..759baae3aeb18
 --- /dev/null
@@ -79,10 +66,11 @@ index 0000000000000..759baae3aeb18
 
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -95,6 +95,7 @@ platform_do_upgrade() {
+@@ -95,6 +95,8 @@ platform_do_upgrade() {
  	tplink,tl-xdr6088|\
  	xiaomi,mi-router-wr30u-112m-nmbm|\
  	xiaomi,mi-router-wr30u-ubootmod|\
++	xiaomi,mi-router-ax3000t|\
 +	xiaomi,redmi-router-ax6000|\
  	xiaomi,redmi-router-ax6000-ubootmod)
  		CI_KERNPART="fit"

@@ -42,13 +42,13 @@
  
 +define Device/box
 +  DEVICE_TITLE := 电视盒子全系列 / N1
-+  DEVICE_PACKAGES := perlbase-base perlbase-utf8 perlbase-time perlbase-xsloader perlbase-file btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk automount -luci-app-attendedsysupgrade -luci-app-gpsysupgrade
++  DEVICE_PACKAGES := perlbase-base perlbase-utf8 perlbase-time perlbase-xsloader perlbase-file btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk automount
 +endef
 +TARGET_DEVICES += box
 +
 +define Device/h28k
 +  DEVICE_TITLE := HinLink H28K
-+  DEVICE_PACKAGES := perlbase-base perlbase-utf8 perlbase-time perlbase-xsloader perlbase-file btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk automount -luci-app-attendedsysupgrade -luci-app-gpsysupgrade
++  DEVICE_PACKAGES := perlbase-base perlbase-utf8 perlbase-time perlbase-xsloader perlbase-file btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk automount
 +endef
 +TARGET_DEVICES += h28k
 +

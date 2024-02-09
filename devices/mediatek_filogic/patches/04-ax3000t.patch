@@ -13,19 +13,6 @@ Subject: [PATCH] mediatek: add Xiaomi AX3000T support
  create mode 100644 target/linux/mediatek/dts/mt7981b-xiaomi-ax3000t.dts
  create mode 100644 target/linux/mediatek/dts/mt7981b-xiaomi_mi-router.dtsi
 
-diff --git a/package/boot/uboot-envtools/files/mediatek_filogic b/package/boot/uboot-envtools/files/mediatek_filogic
-index a8def1d00b764..3ad8f80c750e0 100644
---- a/package/boot/uboot-envtools/files/mediatek_filogic
-+++ b/package/boot/uboot-envtools/files/mediatek_filogic
-@@ -62,6 +62,7 @@
- tplink,tl-xdr4288|\
- tplink,tl-xdr6086|\
- tplink,tl-xdr6088|\
-+xiaomi,mi-router-ax3000t|\
- xiaomi,mi-router-wr30u-ubootmod|\
- xiaomi,redmi-router-ax6000-ubootmod)
- 	. /lib/upgrade/nand.sh
-
 diff --git a/target/linux/mediatek/dts/mt7981b-xiaomi-ax3000t.dts b/target/linux/mediatek/dts/mt7981b-xiaomi-ax3000t.dts
 new file mode 100644
 index 0000000000000..96f7680ef23a8
@@ -352,7 +339,7 @@ diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/imag
 index 282054886b56e..413860a1a672c 100644
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -417,6 +417,20 @@
+@@ -417,6 +417,22 @@
  endef
  TARGET_DEVICES += tplink_tl-xdr6088
  
@@ -366,6 +353,8 @@ index 282054886b56e..413860a1a672c 100644
 +  PAGESIZE := 2048
 +  KERNEL_IN_UBI := 1
 +  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
++  IMAGES += factory.bin
++  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 +endef
 +TARGET_DEVICES += xiaomi_mi-router-ax3000t

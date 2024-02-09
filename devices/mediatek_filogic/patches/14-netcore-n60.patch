@@ -1,0 +1,359 @@
+From a8ddfc2e1025e2f35099b8757c7cf581cc87716b Mon Sep 17 00:00:00 2001
+From: aiamadeus <2789289348@qq.com>
+Date: Wed, 1 Nov 2023 20:25:18 +0800
+Subject: [PATCH] mediatek: add Netcore N60 support
+
+Connect to the router using ssh or telnet,
+username: useradmin, password is the web
+login password of the router.
+
+Signed-off-by: AnYun <amadeus@openjmu.xyz>
+---
+ .../mediatek/dts/mt7986a-netcore-n60.dts      | 284 ++++++++++++++++++
+ .../filogic/base-files/etc/board.d/02_network |   3 +-
+ .../etc/hotplug.d/ieee80211/11_fix_wifi_mac   |   3 +-
+ target/linux/mediatek/image/filogic.mk        |  14 +
+ 4 files changed, 302 insertions(+), 2 deletions(-)
+ create mode 100644 target/linux/mediatek/dts/mt7986a-netcore-n60.dts
+
+diff --git a/target/linux/mediatek/dts/mt7986a-netcore-n60.dts b/target/linux/mediatek/dts/mt7986a-netcore-n60.dts
+new file mode 100644
+index 0000000000000..4cbd9bdf0deb9
+--- /dev/null
++++ b/target/linux/mediatek/dts/mt7986a-netcore-n60.dts
+@@ -0,0 +1,284 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++#include "mt7986a.dtsi"
++
++/ {
++	model = "Netcore N60";
++	compatible = "netcore,n60", "mediatek,mt7986a";
++
++	aliases {
++		serial0 = &uart0;
++		label-mac-device = &gmac0;
++		led-boot = &led_status_red;
++		led-failsafe = &led_status_red;
++		led-running = &led_status_blue;
++		led-upgrade = &led_status_blue;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0 0x40000000 0 0x10000000>;
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
++		};
++
++		mesh {
++			label = "mesh";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&pio 10 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led_status_red: status_red {
++			label = "red:status";
++			gpios = <&pio 29 GPIO_ACTIVE_LOW>;
++		};
++
++		led_status_blue: status_blue {
++			label = "blue:status";
++			gpios = <&pio 32 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&crypto {
++	status = "okay";
++};
++
++&eth {
++	status = "okay";
++
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		phy-mode = "2500base-x";
++
++		nvmem-cells = <&macaddr_lan>;
++		nvmem-cell-names = "mac-address";
++
++		fixed-link {
++			speed = <2500>;
++			full-duplex;
++			pause;
++		};
++	};
++
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-handle = <&phy6>;
++		phy-mode = "2500base-x";
++
++		nvmem-cells = <&macaddr_wan>;
++		nvmem-cell-names = "mac-address";
++	};
++
++	mdio: mdio-bus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
++
++&mdio {
++	reset-delay-us = <600>;
++	reset-post-delay-us = <20000>;
++	reset-gpios = <&pio 6 GPIO_ACTIVE_LOW>;
++
++	phy6: phy@6 {
++		compatible = "ethernet-phy-ieee802.3-c45";
++		reg = <6>;
++		mxl,led-config = <0x0 0x0 0x0 0x3f0>;
++	};
++
++	switch: switch@0 {
++		compatible = "mediatek,mt7531";
++		reg = <31>;
++		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupt-parent = <&pio>;
++		interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
++	};
++};
++
++&switch {
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			label = "lan1";
++		};
++
++		port@1 {
++			reg = <1>;
++			label = "lan2";
++		};
++
++		port@3 {
++			reg = <3>;
++			label = "lan3";
++		};
++
++		port@4 {
++			reg = <4>;
++			label = "lan4";
++		};
++
++		port@6 {
++			reg = <6>;
++			label = "cpu";
++			ethernet = <&gmac0>;
++			phy-mode = "2500base-x";
++
++			fixed-link {
++				speed = <2500>;
++				full-duplex;
++				pause;
++			};
++		};
++	};
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_flash_pins>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "spi-nand";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++
++		spi-max-frequency = <20000000>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++
++		mediatek,nmbm;
++		mediatek,bmt-max-ratio = <1>;
++		mediatek,bmt-max-reserved-blocks = <64>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "BL2";
++				reg = <0x0000000 0x0100000>;
++				read-only;
++			};
++
++			partition@100000 {
++				label = "u-boot-env";
++				reg = <0x0100000 0x0080000>;
++			};
++
++			factory: partition@180000 {
++				label = "Factory";
++				reg = <0x0180000 0x0200000>;
++				read-only;
++			};
++
++			partition@380000 {
++				label = "FIP";
++				reg = <0x0380000 0x0200000>;
++				read-only;
++			};
++
++			partition@580000 {
++				label = "ubi";
++				reg = <0x0580000 0x7280000>;
++			};
++		};
++	};
++};
++
++&pio {
++	spi_flash_pins: spi-flash-pins-33-to-38 {
++		mux {
++			function = "spi";
++			groups = "spi0", "spi0_wp_hold";
++		};
++		conf-pu {
++			pins = "SPI2_CS", "SPI2_HOLD", "SPI2_WP";
++			drive-strength = <8>;
++			mediatek,pull-up-adv = <0>; /* bias-disable */
++		};
++		conf-pd {
++			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
++			drive-strength = <8>;
++			mediatek,pull-down-adv = <0>; /* bias-disable */
++		};
++	};
++
++	wf_2g_5g_pins: wf_2g_5g-pins {
++		mux {
++			function = "wifi";
++			groups = "wf_2g", "wf_5g";
++		};
++		conf {
++			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
++			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
++			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
++			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
++			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
++			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
++			       "WF1_TOP_CLK", "WF1_TOP_DATA";
++			drive-strength = <4>;
++		};
++	};
++};
++
++&trng {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&watchdog {
++	status = "okay";
++};
++
++&wifi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&wf_2g_5g_pins>;
++
++	mediatek,mtd-eeprom = <&factory 0x0>;
++};
++
++&factory {
++	compatible = "nvmem-cells";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	macaddr_lan: macaddr@1fef20 {
++		reg = <0x1fef20 0x6>;
++	};
++
++	macaddr_wan: macaddr@1fef26 {
++		reg = <0x1fef26 0x6>;
++	};
++};
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 6fa3a9218c629..b8ac6337bd15f 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -26,6 +26,7 @@
+ 	asus,tuf-ax4200|\
+ 	jdcloud,re-cp-03|\
+ 	mediatek,mt7981-rfb|\
++	netcore,n60|\
+ 	ruijie,rg-x60-pro|\
+ 	zbtlink,zbt-z8102ax)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" eth1
+diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+index 7f97e55f1f973..9e35c61434be3 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+@@ -34,7 +34,8 @@ case "$board" in
+ 		[ "$PHYNBR" = "0" ] && macaddr_add $addr 2 > /sys${DEVPATH}/macaddress
+ 		[ "$PHYNBR" = "1" ] && macaddr_add $addr 3 > /sys${DEVPATH}/macaddress
+ 		;;
+-	jcg,q30-pro)
++	jcg,q30-pro|\
++	netcore,n60)
+ 		# Originally, phy1 is phy0 mac with LA bit set. However, this would conflict
+ 		# addresses on multiple VIFs with the other radio. Use label mac to set LA bit.
+ 		[ "$PHYNBR" = "1" ] && macaddr_setbit_la $(get_mac_label) > /sys${DEVPATH}/macaddress
+diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
+index ee29b1b5c6660..9cfd720e138df 100644
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -273,6 +273,20 @@ define Device/mediatek_mt7986b-rfb
+ endef
+ TARGET_DEVICES += mediatek_mt7986b-rfb
+ 
++define Device/netcore_n60
++  DEVICE_VENDOR := Netcore
++  DEVICE_MODEL := N60
++  DEVICE_DTS := mt7986a-netcore-n60
++  DEVICE_DTS_DIR := ../dts
++  UBINIZE_OPTS := -E 5
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  KERNEL_IN_UBI := 1
++  DEVICE_PACKAGES := kmod-mt7986-firmware mt7986-wo-firmware
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += netcore_n60
++
+ define Device/qihoo_360t7
+   DEVICE_VENDOR := Qihoo
+   DEVICE_MODEL := 360T7
