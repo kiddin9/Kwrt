@@ -9,36 +9,33 @@
  	h3c,magic-nx30-pro)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
  		;;
-@@ -103,12 +103,16 @@ mediatek_setup_macs()
+@@ -103,9 +103,7 @@ mediatek_setup_macs()
  		wan_mac=$(macaddr_add "$lan_mac" 3)
  		label_mac=$lan_mac
  		;;
 -	cmcc,rax3000m)
-+	cmcc,rax3000m*)
- 		case "$(cmdline_get_var root)" in
- 		/dev/mmc*)
+-		case "$(cmdline_get_var root)" in
+-		/dev/mmc*)
++	cmcc,rax3000m-emmc)
  			wan_mac=$(mmc_get_mac_binary factory 0x2a)
  			lan_mac=$(mmc_get_mac_binary factory 0x24)
  			label_mac=$wan_mac
-+		*)
-+			wan_mac=$(mtd_get_mac_binary factory 0x2a)
-+			lan_mac=$(mtd_get_mac_binary factory 0x24)
-+			label_mac=$lan_mac
- 		;;
- 		esac
- 		;;
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -46,7 +46,7 @@ case "$board" in
+@@ -46,9 +46,9 @@ case "$board" in
  		[ "$PHYNBR" = "0" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
  		[ "$PHYNBR" = "1" ] && macaddr_setbit_la $(macaddr_add $addr 2) > /sys${DEVPATH}/macaddress
  		;;
 -	cmcc,rax3000m)
+-		case "$(cmdline_get_var root)" in
+-		/dev/mmc*)
 +	cmcc,rax3000m*)
- 		case "$(cmdline_get_var root)" in
- 		/dev/mmc*)
++		case "$board" in
++		cmcc,rax3000m-emmc)
  			addr=$(mmc_get_mac_binary factory 0xa)
+ 			;;
+ 		*)
 
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
