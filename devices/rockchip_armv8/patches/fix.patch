@@ -54,3 +54,17 @@ index 57d5b0f8d9be..73d9f52caf99 100644
  +CONFIG_SYSRESET=y
  +CONFIG_USB=y
  +CONFIG_USB_XHCI_HCD=y
+
+--- a/package/kernel/linux/modules/netdevices.mk
++++ b/package/kernel/linux/modules/netdevices.mk
+@@ -363,7 +363,9 @@ define KernelPackage/phy-aquantia
+   TITLE:=Aquantia Ethernet PHYs
+   DEPENDS:=+kmod-libphy +kmod-hwmon-core +kmod-lib-crc-ccitt
+   KCONFIG:=CONFIG_AQUANTIA_PHY
+-  FILES:=$(LINUX_DIR)/drivers/net/phy/aquantia/aquantia.ko
++  FILES:= \
++  $(LINUX_DIR)/drivers/net/phy/aquantia.ko@lt6.1 \
++   $(LINUX_DIR)/drivers/net/phy/aquantia/aquantia.ko@ge6.1
+   AUTOLOAD:=$(call AutoLoad,18,aquantia,1)
+ endef
+ 

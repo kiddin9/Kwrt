@@ -5,7 +5,7 @@
 
 / {
 	model = "CMCC RAX3000M (NAND version)";
-	compatible = "cmcc,rax3000m-nand", "mediatek,mt7981";
+	compatible = "cmcc,rax3000m", "mediatek,mt7981";
 
 	aliases {
 		label-mac-device = &gmac1;
