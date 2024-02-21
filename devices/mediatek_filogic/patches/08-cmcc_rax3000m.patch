@@ -9,17 +9,6 @@
  	h3c,magic-nx30-pro)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
  		;;
-@@ -103,9 +103,7 @@ mediatek_setup_macs()
- 		wan_mac=$(macaddr_add "$lan_mac" 3)
- 		label_mac=$lan_mac
- 		;;
--	cmcc,rax3000m)
--		case "$(cmdline_get_var root)" in
--		/dev/mmc*)
-+	cmcc,rax3000m-emmc)
- 			wan_mac=$(mmc_get_mac_binary factory 0x2a)
- 			lan_mac=$(mmc_get_mac_binary factory 0x24)
- 			label_mac=$wan_mac
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac

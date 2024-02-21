@@ -26,6 +26,7 @@ CONFIG_MMC_DEBUG=y
 CONFIG_MMC_SDHCI=y
 CONFIG_MMC_SDHCI_ACPI=y
 CONFIG_MMC_SDHCI_PCI=y
+CONFIG_DRM_I915=y
 ' >> ./target/linux/x86/config-5.15
 
 sed -i "s/DEVICE_MODEL := x86/DEVICE_MODEL := x86\/32/" target/linux/x86/image/generic.mk
