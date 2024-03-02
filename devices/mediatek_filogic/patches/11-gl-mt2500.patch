@@ -238,17 +238,17 @@ index 3c278d5faf2c4..6130768cb4c66 100755
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 @@ -97,6 +97,7 @@ platform_do_upgrade() {
- 	cudy,wr3000-v1)
  		default_do_upgrade "$1"
  		;;
+ 	cmcc,rax3000m-emmc|\
 +	glinet,gl-mt2500|\
  	glinet,gl-mt6000)
  		CI_KERNPART="kernel"
  		CI_ROOTPART="rootfs"
 @@ -176,6 +177,7 @@ platform_copy_config() {
- 			;;
  		esac
  		;;
+ 	cmcc,rax3000m-emmc|\
 +	glinet,gl-mt2500|\
  	glinet,gl-mt6000|\
  	ubnt,unifi-6-plus)

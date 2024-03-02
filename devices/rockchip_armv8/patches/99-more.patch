@@ -1,6 +1,55 @@
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -141,6 +141,47 @@ define Device/friendlyarm_nanopi-r5s
+@@ -3,7 +3,7 @@
+ # Copyright (C) 2020 Tobias Maedel
+ 
+ define Device/ariaboard_photonicat
+-  DEVICE_VENDOR := Ariaboard
++  DEVICE_VENDOR := 光影猫
+   DEVICE_MODEL := Photonicat
+   SOC := rk3568
+   UBOOT_DEVICE_NAME := photonicat-rk3568
+ 
+@@ -72,6 +72,17 @@ $(call Device/fastrhino_common)
+ endef
+ TARGET_DEVICES += fastrhino_r68s
+ 
++define Device/nlnet_xgp
++  DEVICE_VENDOR := NLnet
++  DEVICE_MODEL := XiGuaPi
++  SOC := rk3568
++  UBOOT_DEVICE_NAME := nlnet-xgp-rk3568
++  IMAGE/sysupgrade.img.gz := boot-combined | boot-script nlnet-xgp | pine64-img | gzip | append-metadata
++  DEVICE_PACKAGES := kmod-hwmon-pwmfan kmod-mt7921e wpad-openssl
++  DEVICE_DTS = rockchip/rk3568-xgp rockchip/rk3568-xgp-v3
++endef
++TARGET_DEVICES += nlnet_xgp
++
+ define Device/friendlyarm_nanopi-neo3
+   DEVICE_VENDOR := FriendlyARM
+   DEVICE_MODEL := NanoPi NEO3
+@@ -91,9 +102,19 @@ define Device/friendlyarm_nanopi-r2c
+ endef
+ TARGET_DEVICES += friendlyarm_nanopi-r2c
+ 
++define Device/friendlyarm_nanopi-r2c-plus
++  DEVICE_VENDOR := FriendlyARM
++  DEVICE_MODEL := NanoPi R2C Plus
++  SOC := rk3328
++  UBOOT_DEVICE_NAME := nanopi-r2c-plus-rk3328
++  IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r2s | pine64-bin | gzip | append-metadata
++  DEVICE_PACKAGES := kmod-usb-net-rtl8152
++endef
++TARGET_DEVICES += friendlyarm_nanopi-r2c-plus
++
+ define Device/friendlyarm_nanopi-r2s
+   DEVICE_VENDOR := FriendlyARM
+-  DEVICE_MODEL := NanoPi R2S
++  DEVICE_MODEL := NanoPi R2S / R2S Plus
+   SOC := rk3328
+   UBOOT_DEVICE_NAME := nanopi-r2s-rk3328
+   IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r2s | pine64-bin | gzip | append-metadata
+@@ -141,6 +162,38 @@ define Device/friendlyarm_nanopi-r5s
  endef
  TARGET_DEVICES += friendlyarm_nanopi-r5s
  
@@ -36,28 +85,18 @@
 +endef
 +TARGET_DEVICES += friendlyarm_nanopc-t6
 +
-+define Device/friendlyarm_nanopi-r2s-plus
-+  DEVICE_VENDOR := FriendlyARM
-+  DEVICE_MODEL := NanoPi R2S Plus
-+  SOC := rk3328
-+  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
-+  DEVICE_PACKAGES := kmod-usb-net-rtl8152
-+endef
-+TARGET_DEVICES += friendlyarm_nanopi-r2s-plus
-+
  define Device/firefly_station-p2
    DEVICE_VENDOR := Firefly
    DEVICE_MODEL := Station P2
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -23,8 +23,16 @@
+@@ -23,8 +23,15 @@
  	sharevdi,h3399pc|\
  	sharevdi,guangmiao-g4c|\
  	xunlong,orangepi-r1-plus|\
 -	xunlong,orangepi-r1-plus-lts)
 +	xunlong,orangepi-r1-plus-lts|\
-+	friendlyarm,orangepi-r2s-plus|\
 +	friendlyarm,nanopc-t6)
  		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
 +		;;
@@ -173,7 +212,7 @@
 
 --- a/target/linux/rockchip/image/Makefile
 +++ b/target/linux/rockchip/image/Makefile
-@@ -79,4 +79,31 @@ endif
+@@ -79,4 +79,23 @@ endif
  
  include $(SUBTARGET).mk
  
@@ -192,14 +231,6 @@
 +		export TOPDIR=$(TOPDIR); \
 +		export MORE=$(MORE); \
 +		cd /data/packit/friendlywrt23-rk3399; \
-+		. ~/packit/packit_nanopi.sh; \
-+	fi
-+	if [[ "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-r2s-plus" ]]; then \
-+		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
-+		export BIN_DIR=$(BIN_DIR); \
-+		export TOPDIR=$(TOPDIR); \
-+		export MORE=$(MORE); \
-+		cd /data/packit/friendlywrt23-rk3328; \
 +		. ~/packit/packit_nanopi.sh; \
 +	fi
 +endef

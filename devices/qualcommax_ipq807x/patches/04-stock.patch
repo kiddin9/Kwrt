@@ -1,26 +1,25 @@
---- a/target/linux/ipq807x/image/generic.mk
-+++ b/target/linux/ipq807x/image/generic.mk
-@@ -134,12 +134,7 @@ define Device/xiaomi_ax3600
+--- a/target/linux/qualcommax/image/ipq807x.mk
++++ b/target/linux/qualcommax/image/ipq807x.mk
+@@ -256,12 +256,7 @@ define Device/xiaomi_ax3600
  	PAGESIZE := 2048
  	DEVICE_DTS_CONFIG := config@ac04
  	SOC := ipq8071
 -	KERNEL_SIZE := 36608k
--	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax3600 kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9887-ct
+ 	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax3600 kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9887-ct
 -ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
 -	ARTIFACTS := initramfs-factory.ubi
 -	ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-uImage.itb | ubinize-kernel
 -endif
-+	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax3600 kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9887-ct -kmod-usb3 -kmod-usb-dwc3 -kmod-usb-dwc3-qcom
  endef
  TARGET_DEVICES += xiaomi_ax3600
  
-@@ -152,13 +147,8 @@ define Device/xiaomi_ax9000
+@@ -274,13 +269,8 @@ define Device/xiaomi_ax9000
  	PAGESIZE := 2048
  	DEVICE_DTS_CONFIG := config@hk14
  	SOC := ipq8072
 -	KERNEL_SIZE := 57344k
  	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax9000 kmod-ath11k-pci ath11k-firmware-qcn9074 \
- 	kmod-ath10k-ct ath10k-firmware-qca9887-ct
+ 		kmod-ath10k-ct ath10k-firmware-qca9887-ct
 -ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
 -	ARTIFACTS := initramfs-factory.ubi
 -	ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-uImage.itb | ubinize-kernel
@@ -29,8 +28,8 @@
  TARGET_DEVICES += xiaomi_ax9000
  
 
---- a/target/linux/ipq807x/base-files/etc/init.d/bootcount
-+++ b/target/linux/ipq807x/base-files/etc/init.d/bootcount
+--- a/target/linux/qualcommax/ipq807x/base-files/etc/init.d/bootcount
++++ b/target/linux/qualcommax/ipq807x/base-files/etc/init.d/bootcount
 @@ -9,5 +9,13 @@ boot() {
  		# Unset changed flag after sysupgrade complete
  		fw_setenv changed
@@ -47,8 +46,8 @@
  }
  
 
---- a/target/linux/ipq807x/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/ipq807x/base-files/lib/upgrade/platform.sh
+--- a/target/linux/qualcommax/ipq807x/base-files/lib/upgrade/platform.sh
++++ b/target/linux/qualcommax/ipq807x/base-files/lib/upgrade/platform.sh
 @@ -83,20 +83,29 @@ platform_do_upgrade() {
  	redmi,ax6|\
  	xiaomi,ax3600|\
@@ -92,38 +91,3 @@
  		;;
  	*)
 
---- /dev/null
-+++ b/target/linux/ipq807x/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
-@@ -0,0 +1,20 @@
-+#!/bin/sh
-+
-+[ -e /lib/firmware/$FIRMWARE ] && exit 0
-+
-+. /lib/functions/caldata.sh
-+
-+board=$(board_name)
-+
-+case "$FIRMWARE" in
-+"ath10k/cal-pci-0000:01:00.0.bin")
-+	case "$board" in
-+	xiaomi,ax3600)
-+		caldata_extract "0:art" 0x33000 0x844
-+		;;
-+	esac
-+	;;
-+*)
-+	exit 1
-+	;;
-+esac
-
---- a/target/linux/ipq807x/patches-5.15/0102-arm64-dts-ipq8074-add-reserved-memory-nodes.patch
-+++ b/target/linux/ipq807x/patches-5.15/0102-arm64-dts-ipq8074-add-reserved-memory-nodes.patch
-@@ -23,7 +23,7 @@ Signed-off-by: Robert Marko <robimarko@gmail.com>
-  		#size-cells = <2>;
-  		ranges;
-  
--+		nss@40000000 {
-++		nss_region: nss@40000000 {
- +			no-map;
- +			reg = <0x0 0x40000000 0x0 0x01000000>;
- +		};

@@ -1,23 +1,3 @@
---- a/target/linux/rockchip/image/armv8.mk
-+++ b/target/linux/rockchip/image/armv8.mk
-@@ -91,6 +91,16 @@
- endef
- TARGET_DEVICES += friendlyarm_nanopi-r2c
- 
-+define Device/friendlyarm_nanopi-r2c-plus
-+  DEVICE_VENDOR := FriendlyARM
-+  DEVICE_MODEL := NanoPi R2C Plus
-+  SOC := rk3328
-+  UBOOT_DEVICE_NAME := nanopi-r2c-plus-rk3328
-+  IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r2s | pine64-bin | gzip | append-metadata
-+  DEVICE_PACKAGES := kmod-usb-net-rtl8152
-+endef
-+TARGET_DEVICES += friendlyarm_nanopi-r2c-plus
-+
- define Device/friendlyarm_nanopi-r2s
-   DEVICE_VENDOR := FriendlyARM
-   DEVICE_MODEL := NanoPi R2S
-
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 @@ -14,6 +14,7 @@

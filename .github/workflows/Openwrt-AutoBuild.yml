@@ -183,7 +183,6 @@ jobs:
         cp -rf devices/${{matrix.target}}/. openwrt/
         cp -rf devices openwrt/
         cd openwrt
-        cp -Rf ./diy/* ./ || true
         chmod +x devices/common/$DIY_SH
         /bin/bash "devices/common/$DIY_SH"
         cp -f devices/common/$CONFIG_FILE .config
@@ -196,6 +195,7 @@ jobs:
           echo "/bin/bash devices/${{matrix.target}}/$DIY_SH"
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
+        cp -Rf ./diy/* ./ || true
 
     - name: Apply patches
       run: |
