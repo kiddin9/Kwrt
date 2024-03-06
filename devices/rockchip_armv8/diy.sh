@@ -33,6 +33,7 @@ sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/
 cp -Rf $SHELL_FOLDER/diy/* ./
 
 sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
+sed -i 's,NanoPi R2S$,NanoPi R2S / R2S Plus,' target/linux/rockchip/image/armv8.mk
 
 echo '
 CONFIG_SENSORS_PWM_FAN=y
