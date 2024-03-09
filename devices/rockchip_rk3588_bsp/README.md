@@ -1,1 +1,0 @@
-源码来源 https://github.com/mj22226/openwrt 感谢

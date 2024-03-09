@@ -41,6 +41,9 @@ sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-5.15
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch
+
+curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/main/package/kernel/mac80211/realtek.mk -o package/kernel/mac80211/realtek.mk
+
 sed -i "s/CONFIG_WERROR=y/CONFIG_WERROR=n/" target/linux/generic/config-5.15
 
 grep -q "23.05" include/version.mk && [ -d package/kernel/mt76 ] && {
