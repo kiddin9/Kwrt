@@ -2,6 +2,16 @@ diff --git a/package/boot/uboot-rockchip/Makefile b/package/boot/uboot-rockchip/
 index 096692f4214..54df60aa350 100644
 --- a/package/boot/uboot-rockchip/Makefile
 +++ b/package/boot/uboot-rockchip/Makefile
+@@ -51,7 +51,8 @@ define U-Boot/nanopi-r2s-rk3328
+   $(U-Boot/Default/rk3328)
+   NAME:=NanoPi R2S
+   BUILD_DEVICES:= \
+-    friendlyarm_nanopi-r2s
++    friendlyarm_nanopi-r2s \
++    friendlyarm_nanopi-neo3
+ endef
+ 
+ define U-Boot/orangepi-r1-plus-rk3328
 @@ -141,6 +141,27 @@ define U-Boot/rockpro64-rk3399
      pine64_rockpro64
  endef
@@ -63,32 +73,39 @@ index 7eb99ade652..92ede0f46e6 100644
 +	sharevdi,h3399pc)
  		wan_mac=$(macaddr_generate_from_mmc_cid mmcblk0)
  		lan_mac=$(macaddr_add "$wan_mac" 1)
-diff --git a/target/linux/rockchip/image/armv8.mk b/target/linux/rockchip/image/armv8.mk
-index 61ffb09607b..7c88ec80851 100644
+
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -309,7 +309,38 @@
-   BOOT_FLOW := pine64-bin
+@@ -280,6 +280,46 @@
  endef
  TARGET_DEVICES += radxa_rock-pi-e
+ 
++define Device/friendlyarm_nanopi-neo3
++  DEVICE_VENDOR := FriendlyARM
++  DEVICE_MODEL := NanoPi NEO3
++  SOC := rk3328
++  UBOOT_DEVICE_NAME := nanopi-r2s-rk3328
++  BOOT_FLOW := pine64-bin
++endef
++TARGET_DEVICES += friendlyarm_nanopi-neo3
 +
 +define Device/rongpin_king3399
 +  DEVICE_VENDOR := Rongpin
 +  DEVICE_MODEL := King3399
 +  SOC := rk3399
 +  UBOOT_DEVICE_NAME := rongpin-king3399-rk3399
-+  IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r4s | pine64-bin | gzip | append-metadata
-+  DEVICE_PACKAGES := kmod-r8169 -urngd kmod-brcmfmac cypress-firmware-4356-sdio rongpin-king3399-firmware wpad-openssl
++  BOOT_FLOW := pine64-bin
++  DEVICE_PACKAGES := kmod-r8169 -urngd kmod-brcmfmac cypress-firmware-4356-sdio rongpin-king3399-firmware wpad-basic-mbedtls
 +endef
 +TARGET_DEVICES += rongpin_king3399
- 
++
 +define Device/rocktech_mpc1903
 +  DEVICE_VENDOR := Rocktech
 +  DEVICE_MODEL := MPC1903
 +  SOC := rk3399
 +  SUPPORTED_DEVICES := rocktech,mpc1903
 +  UBOOT_DEVICE_NAME := rocktech-mpc1903-rk3399
-+  IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-bin | gzip | append-metadata
++  BOOT_FLOW := pine64-bin
 +  DEVICE_PACKAGES := kmod-usb-net-smsc75xx kmod-usb-serial-cp210x -urngd
 +endef
 +TARGET_DEVICES += rocktech_mpc1903
@@ -98,7 +115,7 @@ index 61ffb09607b..7c88ec80851 100644
 +  DEVICE_MODEL := H3399PC
 +  SOC := rk3399
 +  UBOOT_DEVICE_NAME := sharevdi-h3399pc-rk3399
-+  IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r4s | pine64-bin | gzip | append-metadata
++  BOOT_FLOW := pine64-bin
 +  DEVICE_PACKAGES := kmod-r8169 -urngd
 +endef
 +TARGET_DEVICES += sharevdi_h3399pc
