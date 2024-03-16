@@ -263,8 +263,8 @@ index 53e7b024e40fb..61637e09c7f0e 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -17,6 +17,7 @@ mediatek_setup_interfaces()
+ 		;;
  	asus,rt-ax59u|\
- 	cetron,ct3003|\
  	cetron,ct3003|\
 +	cmcc,a10|\
  	confiabits,mt7981|\

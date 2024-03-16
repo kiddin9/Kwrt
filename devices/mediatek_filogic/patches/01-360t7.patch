@@ -27,7 +27,7 @@
    UBINIZE_OPTS := -E 5
    BLOCKSIZE := 128k
    PAGESIZE := 2048
-+  IMAGE_SIZE := 36864k
++  IMAGE_SIZE := 112640k
    KERNEL_IN_UBI := 1
 -  UBOOTENV_IN_UBI := 1
 -  IMAGES := sysupgrade.itb

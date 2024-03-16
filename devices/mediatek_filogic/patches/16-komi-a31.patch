@@ -281,9 +281,9 @@ index b5e5eca6afd12..33e52743d5bfe 100644
  	cmcc,rax3000m*|\
 +	konka,komi-a31|\
 +	imou,lc-hx3001|\
- 	h3c,magic-nx30-pro)
+ 	h3c,magic-nx30-pro|\
+ 	zbtlink,zbt-z8103ax)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
- 		;;
 diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 index 794944d1aa918..2ca44b55c21fa 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac

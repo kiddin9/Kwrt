@@ -363,8 +363,8 @@ index b86c376d74176..28e5f26958567 100644
 +		lan_mac=$(macaddr_add "$label_mac" 1)
 +		;;
  	xiaomi,mi-router-ax3000t|\
- 	xiaomi,mi-router-wr30u-112m-nmbm|\
- 	xiaomi,mi-router-wr30u-stock|\
+ 	xiaomi,mi-router-ax3000t-ubootmod|\
+ 	xiaomi,mi-router-wr30u|\
 diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 index d9e0335b67f3b..0e6c3c1dbcb56 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac

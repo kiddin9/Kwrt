@@ -288,17 +288,17 @@ index 00000000000..605721f2d08
 +	mediatek,mtd-eeprom = <&factory 0x0>;
 +};
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index 2e978be6804bf..429c6f359fed4 100644
+index 8e4fd8003c168..c21f23d4587f2 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -34,6 +34,7 @@ mediatek_setup_interfaces()
- 	bananapi,bpi-r3)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
+@@ -41,6 +41,7 @@ mediatek_setup_interfaces()
+ 	bananapi,bpi-r4)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 eth1" "wan eth2"
  		;;
 +	abt,asr3000|\
  	cmcc,rax3000m*|\
- 	h3c,magic-nx30-pro)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
+ 	h3c,magic-nx30-pro|\
+ 	zbtlink,zbt-z8103ax)
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
 index 3d625a820d6..9290afe4c31 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
