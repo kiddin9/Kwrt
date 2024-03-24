@@ -10,23 +10,6 @@
  	zbtlink,zbt-z8103ax)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
 
---- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-+++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -57,6 +57,13 @@ case "$board" in
- 		esac
- 		[ "$PHYNBR" = "1" ] && echo "$addr" > /sys${DEVPATH}/macaddress
- 		;;
-+	cmcc,rax3000m-emmc)
-+		[ "$PHYNBR" = "1" ] && mmc_get_mac_binary factory 0xa > /sys${DEVPATH}/macaddress
-+		;;
-+	cmcc,a10|\
-+	cmcc,rax3000m-nand)
-+		[ "$PHYNBR" = "1" ] && mtd_get_mac_binary Factory 0xa > /sys${DEVPATH}/macaddress
-+		;;
- 	cudy,wr3000-v1)
- 		addr=$(mtd_get_mac_binary bdinfo 0xde00)
- 		# Originally, phy0 is phy1 mac with LA bit set. However, this would conflict
-
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
 @@ -280,7 +280,38 @@ define Device/cmcc_rax3000m
