@@ -1,8 +1,8 @@
 diff --git a/package/firmware/linux-firmware/intel.mk b/package/firmware/linux-firmware/intel.mk
-index 923701c703d..7f60014ea6c 100644
+index 0719e2b28c386..9f8ac874fe24b 100644
 --- a/package/firmware/linux-firmware/intel.mk
 +++ b/package/firmware/linux-firmware/intel.mk
-@@ -176,3 +176,95 @@ define Package/e100-firmware/install
+@@ -208,3 +208,108 @@ define Package/e100-firmware/install
  	$(INSTALL_DATA) $(PKG_BUILD_DIR)/e100/d102e_ucode.bin $(1)/lib/firmware/e100/
  endef
  $(eval $(call BuildPackage,e100-firmware))
@@ -14,7 +14,12 @@ index 923701c703d..7f60014ea6c 100644
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_dmc_ver2_09.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_dmc_ver2_10.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_dmc_ver2_12.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_dmc_ver2_14.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_dmc_ver2_16.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_guc_62.0.3.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_guc_69.0.3.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_guc_70.1.1.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adlp_guc_70.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/adls_dmc_ver2_01.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/bxt_dmc_ver1_07.bin $(1)/lib/firmware/i915/
 +	ln -s /lib/firmware/i915/bxt_dmc_ver1_07.bin $(1)/lib/firmware/i915/bxt_dmc_ver1.bin
@@ -41,12 +46,15 @@ index 923701c703d..7f60014ea6c 100644
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/ehl_guc_33.0.4.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/ehl_guc_49.0.1.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/ehl_guc_62.0.0.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/ehl_guc_69.0.3.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/ehl_guc_70.1.1.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/ehl_huc_9.0.0.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_dmc_ver1_04.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_guc_32.0.3.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_guc_33.0.0.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_guc_49.0.1.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_guc_62.0.0.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_guc_70.1.1.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_huc_4.0.0.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/glk_huc_ver03_01_2893.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/icl_dmc_ver1_07.bin $(1)/lib/firmware/i915/
@@ -64,6 +72,7 @@ index 923701c703d..7f60014ea6c 100644
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/kbl_guc_33.0.0.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/kbl_guc_49.0.1.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/kbl_guc_62.0.0.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/kbl_guc_70.1.1.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/kbl_guc_ver9_14.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/kbl_guc_ver9_39.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/kbl_huc_4.0.0.bin $(1)/lib/firmware/i915/
@@ -92,6 +101,10 @@ index 923701c703d..7f60014ea6c 100644
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_guc_35.2.0.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_guc_49.0.1.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_guc_62.0.0.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_guc_69.0.3.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_guc_70.1.1.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_guc_70.bin $(1)/lib/firmware/i915/
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_huc.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_huc_7.0.12.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_huc_7.0.3.bin $(1)/lib/firmware/i915/
 +	$(INSTALL_DATA) $(PKG_BUILD_DIR)/i915/tgl_huc_7.5.0.bin $(1)/lib/firmware/i915/
@@ -154,45 +167,3 @@ index 5ed0d5dbbf2..a853a8c7980 100644
  define KernelPackage/irqbypass
    SUBMENU:=Virtualization
    TITLE:=IRQ offload/bypass manager
-
---- a/target/linux/x86/64/config-5.15
-+++ b/target/linux/x86/64/config-5.15
-@@ -117,30 +117,12 @@ CONFIG_DRM_FBDEV_EMULATION=y
- CONFIG_DRM_FBDEV_OVERALLOC=100
- CONFIG_DRM_GEM_SHMEM_HELPER=y
- # CONFIG_DRM_HYPERV is not set
--CONFIG_DRM_I915=y
--CONFIG_DRM_I915_CAPTURE_ERROR=y
--CONFIG_DRM_I915_COMPRESS_ERROR=y
--# CONFIG_DRM_I915_DEBUG is not set
--# CONFIG_DRM_I915_DEBUG_GUC is not set
--# CONFIG_DRM_I915_DEBUG_MMIO is not set
--# CONFIG_DRM_I915_DEBUG_RUNTIME_PM is not set
--# CONFIG_DRM_I915_DEBUG_VBLANK_EVADE is not set
--CONFIG_DRM_I915_FENCE_TIMEOUT=10000
- CONFIG_DRM_I915_FORCE_PROBE=""
--CONFIG_DRM_I915_GVT=y
- CONFIG_DRM_I915_HEARTBEAT_INTERVAL=2500
--# CONFIG_DRM_I915_LOW_LEVEL_TRACEPOINTS is not set
--CONFIG_DRM_I915_MAX_REQUEST_BUSYWAIT=8000
- CONFIG_DRM_I915_PREEMPT_TIMEOUT=640
- CONFIG_DRM_I915_REQUEST_TIMEOUT=20000
--# CONFIG_DRM_I915_SELFTEST is not set
- CONFIG_DRM_I915_STOP_TIMEOUT=100
--# CONFIG_DRM_I915_SW_FENCE_CHECK_DAG is not set
--# CONFIG_DRM_I915_SW_FENCE_DEBUG_OBJECTS is not set
- CONFIG_DRM_I915_TIMESLICE_DURATION=1
--CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND=250
--CONFIG_DRM_I915_USERPTR=y
--# CONFIG_DRM_I915_WERROR is not set
- CONFIG_DRM_KMS_HELPER=y
- CONFIG_DRM_MIPI_DSI=y
- CONFIG_DRM_PANEL=y
-@@ -178,6 +160,7 @@ CONFIG_FB_CMDLINE=y
- CONFIG_FB_DEFERRED_IO=y
- CONFIG_FB_EFI=y
- CONFIG_FB_HYPERV=y
-+# CONFIG_FB_INTEL is not set
- CONFIG_FB_MODE_HELPERS=y
- CONFIG_FB_SIMPLE=y
- CONFIG_FB_SYS_COPYAREA=y
