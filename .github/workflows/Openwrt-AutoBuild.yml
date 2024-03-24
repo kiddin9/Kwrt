@@ -139,7 +139,7 @@ jobs:
         REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
            -H "Authorization: Bearer ${{ secrets.TOKEN_KIDDIN9 }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v23 | tail -n 1)"
-        REPO_BRANCH="openwrt-23.05"
+        #REPO_BRANCH="openwrt-23.05"
         #echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/`echo $REPO_BRANCH  | cut -d . -f 1,2 | sed -e 's/^v//'`\"">>devices/common/.config
         echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/23.05\"">>devices/common/.config
         if [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
