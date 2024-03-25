@@ -25,7 +25,7 @@ rm -rf libs/xr_usb_serial_common net/coova-chilli net/xtables-addons
 git_clone_path master https://github.com/openwrt/packages libs/xr_usb_serial_common
 git_clone_path master https://github.com/openwrt/packages net/coova-chilli
 git_clone_path master https://github.com/openwrt/packages net/xtables-addons
-cd -
+cd ~/openwrt
 
 sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
 

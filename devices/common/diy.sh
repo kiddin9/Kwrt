@@ -53,10 +53,10 @@ mkdir package/kernel/mt76/patches
 curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
 }
 
-rm -rf feeds/packages/libs/libpfring
 cd feeds/packages
+rm -rf libs/libpfring
 git_clone_path master https://github.com/openwrt/packages libs/libpfring
-cd -
+cd ~/openwrt
 
 rm -rf package/network/utils/xdp-tools
 
