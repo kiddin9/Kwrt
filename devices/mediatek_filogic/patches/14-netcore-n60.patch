@@ -316,8 +316,8 @@ index 6fa3a9218c629..b8ac6337bd15f 100644
  	mediatek,mt7981-rfb|\
 +	netcore,n60|\
  	ruijie,rg-x60-pro|\
+ 	unielec,u7981-01*|\
  	zbtlink,zbt-z8102ax)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" eth1
 diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 index 7f97e55f1f973..9e35c61434be3 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac

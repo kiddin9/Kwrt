@@ -350,9 +350,9 @@ index b86c376d74176..28e5f26958567 100644
  	jdcloud,re-cp-03|\
  	mediatek,mt7981-rfb|\
 +	ruijie,rg-x60-pro|\
+ 	unielec,u7981-01*|\
  	zbtlink,zbt-z8102ax)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" eth1
- 		;;
 @@ -150,6 +151,11 @@
  		wan_mac=$(macaddr_add "$lan_mac" 1)
  		label_mac=$wan_mac

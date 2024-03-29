@@ -39,6 +39,8 @@ sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
 
 #sed -i "/call Build\/check-size,\$\$(KERNEL_SIZE)/d" include/image.mk
 
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-5.15
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch
 
@@ -51,17 +53,12 @@ mkdir package/kernel/mt76/patches
 curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
 }
 
-rm -rf feeds/packages/libs/libpfring
 cd feeds/packages
+rm -rf libs/libpfring 
 git_clone_path master https://github.com/openwrt/packages libs/libpfring
-cd -
+cd ../../
 
-rm -rf package/network/utils/xdp-tools
-
-grep -q "1.8.8" package/network/utils/iptables/Makefile && {
-rm -rf package/network/utils/iptables
-git_clone_path openwrt-22.03 https://github.com/openwrt/openwrt package/network/utils/iptables
-}
+rm -rf package/network/utils/xdp-tools package/feeds/kiddin9/quectel_MHI package/feeds/packages/v4l2loopback
 
 grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a48d0bdb77eb93f7fba6e055dace125c72755b6a.patch | patch -d './' -p1 --forward"

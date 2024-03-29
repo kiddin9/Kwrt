@@ -1,9 +1,9 @@
 --- a/target/linux/x86/base-files/etc/board.d/02_network
 +++ b/target/linux/x86/base-files/etc/board.d/02_network
-@@ -22,6 +22,9 @@ traverse-technologies-geos)
- 	macaddr="$(cat /sys/class/net/eth0/address)" 2>/dev/null
- 	[ -n "$macaddr" ] && ucidef_set_interface_macaddr "wan" "$macaddr"
- 	;;
+@@ -86,6 +86,9 @@ silicom-80500-0214-*)
+         ucidef_set_network_device_path "eth3" "pci0000:00/0000:00:10.0/0000:07:00.0"
+         ucidef_set_interfaces_lan_wan "eth0 eth1 eth2 eth3" "wan0"
+         ;;
 +*)
 +	[ "$(ip address | grep ^[0-9] | awk -F: '{print $2}' | sed "s/ //g" | grep '^[e]' | grep -cvE "(@|\.)")" -gt 2 ] && ucidef_set_interfaces_lan_wan "$(ip address | grep ^[0-9] | awk -F: '{print $2}' | sed "s/ //g" | grep '^[e]' | grep -vE "(@|\.|eth1)" | tr "\n" " " | sed "s/ $//")" "eth1"
 +	;;

@@ -8,7 +8,6 @@ git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/file
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/patches-6.1
 
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/x86/base-files/etc/board.d/02_network -o target/linux/x86/base-files/etc/board.d/02_network
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/x86/64/config-6.1 -o target/linux/x86/64/config-6.1
