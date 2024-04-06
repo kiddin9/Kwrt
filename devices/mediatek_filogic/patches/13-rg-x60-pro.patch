@@ -346,9 +346,9 @@ index b86c376d74176..28e5f26958567 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -26,6 +26,7 @@
- 	asus,tuf-ax4200|\
  	jdcloud,re-cp-03|\
  	mediatek,mt7981-rfb|\
+ 	netcore,n60|\
 +	ruijie,rg-x60-pro|\
  	unielec,u7981-01*|\
  	zbtlink,zbt-z8102ax)

@@ -32,7 +32,7 @@ while [[ "$status" == "in_progress" || "$status" == "queued" ]];do
 done
 
 
-mv -f feeds/kiddin9/r81* tmp/
+mv -f feeds/kiddin9/{r81*} tmp/
 
 sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
