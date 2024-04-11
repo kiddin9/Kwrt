@@ -123,10 +123,10 @@ index 7eb99ade652..92ede0f46e6 100644
  define Device/xunlong_orangepi-5
    DEVICE_VENDOR := Xunlong
    DEVICE_MODEL := Orange Pi 5
-diff --git a/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch b/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
+diff --git a/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch b/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
 index 231bca2b544..441ce2f4e59 100644
---- a/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
-+++ b/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
+--- a/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
++++ b/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
 @@ -1,10 +1,13 @@
  --- a/arch/arm64/boot/dts/rockchip/Makefile
  +++ b/arch/arm64/boot/dts/rockchip/Makefile

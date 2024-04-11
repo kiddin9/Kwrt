@@ -1,7 +1,7 @@
-diff --git a/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch b/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
+diff --git a/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch b/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
 index 231bca2b544..0c4b2c55d9a 100644
---- a/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
-+++ b/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
+--- a/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
++++ b/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
 @@ -19,7 +19,7 @@
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-r4s-enterprise.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb

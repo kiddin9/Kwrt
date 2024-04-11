@@ -52,8 +52,8 @@
    DEVICE_VENDOR := Firefly
    DEVICE_MODEL := ROC-RK3328-CC
 
---- a/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
-+++ b/target/linux/rockchip/patches-6.1/900-arm64-boot-add-dts-files.patch
+--- a/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
++++ b/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
 @@ -16,11 +16,12 @@
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-r4s-enterprise.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
