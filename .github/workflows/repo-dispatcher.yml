@@ -24,6 +24,7 @@ on:
 env:
   TOKEN_KIDDIN9: ${{ secrets.TOKEN_KIDDIN9 }}
   TZ: Asia/Shanghai
+  UPLOAD_FIRMWARE_FOR_RELEASE: true
 
 jobs:
   build:
