@@ -130,8 +130,8 @@ index 231bca2b544..441ce2f4e59 100644
 @@ -1,10 +1,13 @@
  --- a/arch/arm64/boot/dts/rockchip/Makefile
  +++ b/arch/arm64/boot/dts/rockchip/Makefile
--@@ -34,6 +34,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gr
-+@@ -34,6 +34,10 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gr
+-@@ -38,6 +38,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gr
++@@ -38,6 +38,10 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gr
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-dumo.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-inx.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-kd.dtb
@@ -149,8 +149,8 @@ index ac01f8bb352..6f08c2d1190 100644
 @@ -1,10 +1,12 @@
  --- a/arch/arm/dts/Makefile
  +++ b/arch/arm/dts/Makefile
--@@ -147,6 +147,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
-+@@ -147,6 +147,9 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
+-@@ -148,6 +148,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
++@@ -148,6 +148,9 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
   	rk3399-firefly.dtb \
   	rk3399-gru-bob.dtb \
   	rk3399-gru-kevin.dtb \
