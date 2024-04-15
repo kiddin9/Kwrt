@@ -1,0 +1,21 @@
+--- a/package/kernel/qca-ssdk/Makefile
++++ b/package/kernel/qca-ssdk/Makefile
+@@ -32,11 +32,17 @@ endef
+ 
+ GCC_VERSION=$(shell echo "$(CONFIG_GCC_VERSION)" | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
+ 
++ifdef CONFIG_TOOLCHAIN_BIN_PATH
++TOOLCHAIN_BIN_PATH=$(CONFIG_TOOLCHAIN_BIN_PATH)
++else
++TOOLCHAIN_BIN_PATH=$(TOOLCHAIN_DIR)/bin
++endif
++
+ LNX_CONFIG_OPTS = LNX_MAKEOPTS='$(KERNEL_MAKEOPTS)' PRJ_PATH=$(PKG_BUILD_DIR) MODULE_TYPE=KSLIB modules
+ 
+ MAKE_FLAGS+= \
+ 	TARGET_NAME=$(CONFIG_TARGET_NAME) \
+-	TOOL_PATH=$(firstword $(TOOLCHAIN_BIN_DIRS)) \
++	TOOL_PATH=$(TOOLCHAIN_BIN_PATH) \
+ 	SYS_PATH=$(LINUX_DIR) \
+ 	TOOLPREFIX=$(TARGET_CROSS) \
+ 	KVER=$(LINUX_VERSION) \

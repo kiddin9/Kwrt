@@ -5,10 +5,10 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 bash $SHELL_FOLDER/../common/kernel_6.1.sh
 
-rm -rf package/kernel/qca-nss-dp package/kernel/qca-ssdk
-
 git_clone_path master https://github.com/openwrt/openwrt target/linux/qualcommax
 
-git_clone_path master https://github.com/coolsnowwolf/lede package/qca
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.6
 
-sed -i "s/KERNEL_PATCHVER:=6.6/KERNEL_PATCHVER:=6.1/" target/linux/qualcommax/Makefile
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.6/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-6.6/613-netfilter_optional_tcp_window_check.patch
+
+rm -rf target/linux/generic/hack-6.6/{410-block-fit-partition-parser.patch,724-net-phy-aquantia*,720-net-phy-add-aqr-phys.patch}
