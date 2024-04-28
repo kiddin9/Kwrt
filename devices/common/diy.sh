@@ -2,7 +2,7 @@
 #=================================================
 shopt -s extglob
 
-sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;master' feeds.conf.default
+sed -i '$a src-git xywrt https://github.com/xywrt/openwrt-packages.git;master' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
 sed -i "s?targets/%S/packages?targets/%S/\$(LINUX_VERSION)?" include/feeds.mk
@@ -10,7 +10,7 @@ sed -i "s?targets/%S/packages?targets/%S/\$(LINUX_VERSION)?" include/feeds.mk
 sed -i '/	refresh_config();/d' scripts/feeds
 
 ./scripts/feeds update -a
-./scripts/feeds install -a -p kiddin9 -f
+./scripts/feeds install -a -p xywrt -f
 ./scripts/feeds install -a
 
 echo "$(date +"%s")" >version.date
@@ -23,18 +23,18 @@ sed -i "s/procd-ujail//" include/target.mk
 
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
-status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/xywrt/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 echo "$status"
 while [[ "$status" == "in_progress" || "$status" == "queued" ]];do
 	echo "wait 5s"
 	sleep 5
-	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/xywrt/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 done
 
 
-mv -f feeds/kiddin9/r81* tmp/
+mv -f feeds/xywrt/r81* tmp/
 
-sed -i "s/192.168.1/10.0.0/" package/feeds/kiddin9/base-files/files/bin/config_generate
+sed -i "s/192.168.1/10.0.0/" package/feeds/xywrt/base-files/files/bin/config_generate
 sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
 
 #sed -i "/call Build\/check-size,\$\$(KERNEL_SIZE)/d" include/image.mk
@@ -58,7 +58,7 @@ rm -rf libs/libpfring
 git_clone_path master https://github.com/openwrt/packages libs/libpfring
 cd ../../
 
-rm -rf package/network/utils/xdp-tools package/feeds/kiddin9/quectel_MHI package/feeds/packages/v4l2loopback
+rm -rf package/network/utils/xdp-tools package/feeds/xywrt/quectel_MHI package/feeds/packages/v4l2loopback
 
 grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a48d0bdb77eb93f7fba6e055dace125c72755b6a.patch | patch -d './' -p1 --forward"
@@ -83,11 +83,11 @@ sed -i \
 	-e "s/+nginx\( \|$\)/+nginx-ssl\1/" \
 	-e 's/+python\( \|$\)/+python3/' \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
-	package/feeds/kiddin9/*/Makefile
+	package/feeds/xywrt/*/Makefile
 
 (
 if [ -f sdk.tar.xz ]; then
-	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/kiddin9/*/Makefile
+	sed -i 's,$(STAGING_DIR_HOST)/bin/upx,upx,' package/feeds/xywrt/*/Makefile
 	mkdir sdk
 	tar -xJf sdk.tar.xz -C sdk
 	cp -rf sdk/*/staging_dir/* ./staging_dir/
