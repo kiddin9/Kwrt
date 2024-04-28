@@ -194,7 +194,10 @@ jobs:
           /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
         cp -Rf ./diy/* ./ || true
-
+    - name: SSH connection to Actions
+      uses: xywrt/debugger-action@master
+      # if: contains(github.event.action, 'ssh')
+      
     - name: Apply patches
       run: |
         cd openwrt
@@ -248,10 +251,6 @@ jobs:
             rm -rf staging_dir/!(*${{ env.MTARGET }}*|host|hostpkg) build_dir/!(*${{ env.MTARGET }}*|host|hostpkg)
         fi
         df -hT
-
-    - name: SSH connection to Actions
-      uses: xywrt/debugger-action@master
-      if: contains(github.event.action, 'ssh')
 
     - name: Compile the firmware
       id: compile
