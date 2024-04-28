@@ -1,5 +1,5 @@
---- a/package/feeds/kiddin9/base-files/Makefile
-+++ b/package/feeds/kiddin9/base-files/Makefile
+--- a/package/feeds/xywrt/base-files/Makefile
++++ b/package/feeds/xywrt/base-files/Makefile
 @@ -205,6 +205,9 @@ define Package/base-files/install
  
  	$(if $(CONFIG_TARGET_PREINIT_DISABLE_FAILSAFE), \
@@ -11,8 +11,8 @@
  
  ifneq ($(DUMP),1)
 
---- a/package/feeds/kiddin9/base-files/files/etc/hotplug.d/net/00-sysctl
-+++ b/package/feeds/kiddin9/base-files/files/etc/hotplug.d/net/00-sysctl
+--- a/package/feeds/xywrt/base-files/files/etc/hotplug.d/net/00-sysctl
++++ b/package/feeds/xywrt/base-files/files/etc/hotplug.d/net/00-sysctl
 @@ -6,4 +6,6 @@ if [ "$ACTION" = add ]; then
  		sed -ne "/^[[:space:]]*net\..*\.$DEVICENAME\./p" "$CONF" | \
  			sysctl -e -p - | logger -t sysctl

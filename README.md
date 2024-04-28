@@ -5,19 +5,19 @@ X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、R5C、R6S、NEO3, 斐讯 
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
-[4]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/pulls
+[4]: https://github.com/xywrt/OpenWrt_x86-r2s-r4s/pulls
 [5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg
-[6]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/issues/new
+[6]: https://github.com/xywrt/OpenWrt_x86-r2s-r4s/issues/new
 [7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
-[8]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/releases
+[8]: https://github.com/xywrt/OpenWrt_x86-r2s-r4s/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
 [11]: https://t.me/opwrt
-[12]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/actions/workflows/Openwrt-AutoBuild.yml/badge.svg
-[13]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/actions
+[12]: https://github.com/xywrt/OpenWrt_x86-r2s-r4s/actions/workflows/Openwrt-AutoBuild.yml/badge.svg
+[13]: https://github.com/xywrt/OpenWrt_x86-r2s-r4s/actions
 
 [![license][1]][2]
-[![GitHub Stars](https://img.shields.io/github/stars/kiddin9/OpenWrt_x86-r2s-r4s.svg?style=flat-square&label=Stars)](https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/kiddin9/OpenWrt_x86-r2s-r4s.svg?style=flat-square&label=Forks)](https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/fork)
+[![GitHub Stars](https://img.shields.io/github/stars/xywrt/OpenWrt_x86-r2s-r4s.svg?style=flat-square&label=Stars)](https://github.com/xywrt/OpenWrt_x86-r2s-r4s/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/xywrt/OpenWrt_x86-r2s-r4s.svg?style=flat-square&label=Forks)](https://github.com/xywrt/OpenWrt_x86-r2s-r4s/fork)
 [![PRs Welcome][3]][4]
 [![Issue Welcome][5]][6]
 [![AutoBuild][12]][13]
@@ -98,7 +98,7 @@ X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、R5C、R6S、NEO3, 斐讯 
 
 + 云编译需要 [在此](https://github.com/settings/tokens) 创建个token,然后在此仓库Settings->Secrets中添加个名字为REPO_TOKEN的Secret,填入token值,否者无法触发编译。
 
-+ 在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.有 [安全隐患](https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/issues/23)。
++ 在仓库Settings->Secrets中分别添加 PPPOE_USERNAME, PPPOE_PASSWD 可设置默认拨号账号密码.有 [安全隐患](https://github.com/xywrt/OpenWrt_x86-r2s-r4s/issues/23)。
 
 + 在仓库Settings->Secrets中添加 SCKEY 可通过[Server酱](http://sc.ftqq.com) 推送编译结果到微信。
 
@@ -111,9 +111,9 @@ X86/64, 友善 NanoPi、R2S、R4S、R4SE、R5S、R2C、R5C、R6S、NEO3, 斐讯 
 其他插件请自行在 后台->软件包 中安装,系统升级不会丢失插件.每次系统升级完成连接网络后,会自动安装所有已自选安装的插件。
 
 ## 5. **系统截图展示**
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/1.png)
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/3.png)
-![](https://github.com/kiddin9/luci-theme-edge/raw/master/Screenshots/8.png)
+![](https://github.com/xywrt/luci-theme-edge/raw/master/Screenshots/1.png)
+![](https://github.com/xywrt/luci-theme-edge/raw/master/Screenshots/3.png)
+![](https://github.com/xywrt/luci-theme-edge/raw/master/Screenshots/8.png)
 
 
 ------
@@ -124,7 +124,7 @@ Build OpenWrt using GitHub Actions
 ## Usage
 
 - Sign up for [GitHub Actions](https://github.com/features/actions/signup)
-- Fork [this GitHub repository](https://github.com/kiddin9/OpenWrt)
+- Fork [this GitHub repository](https://github.com/xywrt/OpenWrt)
 - click the `Star` button, and the build will starts automatically.Progress can be viewed on the Actions page.
 - When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
 

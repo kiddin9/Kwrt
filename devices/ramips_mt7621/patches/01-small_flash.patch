@@ -1,9 +1,9 @@
 From f4b61c1960aa885d7de2953a36d9efacbf6e5406 Mon Sep 17 00:00:00 2001
-From: kiddin9 <48883331+kiddin9@users.noreply.github.com>
+From: xywrt <48883331+xywrt@users.noreply.github.com>
 Date: Sat, 27 May 2023 03:53:49 +0800
 Subject: [PATCH] Update mt7621.mk
 
-Signed-off-by: kiddin9 <48883331+kiddin9@users.noreply.github.com>
+Signed-off-by: xywrt <48883331+xywrt@users.noreply.github.com>
 ---
  target/linux/ramips/image/mt7621.mk | 18 +++++++++---------
  1 file changed, 9 insertions(+), 9 deletions(-)

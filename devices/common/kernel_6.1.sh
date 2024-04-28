@@ -38,7 +38,7 @@ git_clone_path master https://github.com/openwrt/packages net/jool
 git_clone_path master https://github.com/openwrt/packages  kernel
 cd ../../
 
-rm -rf package/feeds/kiddin9/quectel_Gobinet package/feeds/kiddin9/fibocom_MHI package/feeds/packages/libpfring
+rm -rf package/feeds/xywrt/quectel_Gobinet package/feeds/xywrt/fibocom_MHI package/feeds/packages/libpfring
 
 sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
 

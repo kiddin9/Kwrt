@@ -22,7 +22,7 @@ rm -rf target/linux/generic/hack-6.6/{410-block-fit-partition-parser.patch,724-n
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
-mv -f tmp/r8125 feeds/kiddin9/
+mv -f tmp/r8125 feeds/xywrt/
 
 rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update
 

@@ -1,9 +1,9 @@
 From 467ef0219a65a3dd63ce27f41e54f09bf1f2ad64 Mon Sep 17 00:00:00 2001
-From: kiddin9 <48883331+kiddin9@users.noreply.github.com>
+From: xywrt <48883331+xywrt@users.noreply.github.com>
 Date: Mon, 4 Mar 2024 08:01:42 +0800
 Subject: [PATCH] Update image.mk
 
-Signed-off-by: kiddin9 <48883331+kiddin9@users.noreply.github.com>
+Signed-off-by: xywrt <48883331+xywrt@users.noreply.github.com>
 ---
  include/image.mk | 43 +++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 43 insertions(+)
