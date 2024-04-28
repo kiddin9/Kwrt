@@ -196,7 +196,7 @@ jobs:
         cp -Rf ./diy/* ./ || true
     - name: SSH connection to Actions
       uses: xywrt/debugger-action@master
-      # if: contains(github.event.action, 'ssh')
+      if: contains(github.event.action, 'ssh')
       
     - name: Apply patches
       run: |
