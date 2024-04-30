@@ -64,17 +64,6 @@ index 0000000000000..759baae3aeb18
 +			};
 +};
 
---- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -134,6 +134,7 @@ platform_do_upgrade() {
- 	tplink,tl-xdr4288|\
- 	tplink,tl-xdr6086|\
- 	tplink,tl-xdr6088|\
-+ 	xiaomi,redmi-router-ax6000|\
- 	xiaomi,mi-router-ax3000t-ubootmod|\
- 	xiaomi,mi-router-wr30u-ubootmod)
- 		CI_KERNPART="fit"
-
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
 @@ -26,6 +26,7 @@ xiaomi,mi-router-wr30u-ubootmod)

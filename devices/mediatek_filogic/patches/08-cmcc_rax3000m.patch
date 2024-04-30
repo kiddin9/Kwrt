@@ -71,3 +71,14 @@
  	acer,predator-w6|\
  	glinet,gl-mt2500|\
  	glinet,gl-mt6000|\
+
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+@@ -31,6 +31,7 @@ case "$FIRMWARE" in
+ 			;;
+ 		esac
+ 		;;
++	cmcc,rax3000m-emmc|\
+ 	ubnt,unifi-6-plus)
+ 		caldata_extract_mmc "factory" 0x0 0x1000
+ 		;;
