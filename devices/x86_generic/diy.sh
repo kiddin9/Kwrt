@@ -4,9 +4,7 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 #bash $SHELL_FOLDER/../common/kernel_6.1.sh
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/files
-
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/patches-5.15
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/files target/linux/x86/patches-5.15
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/x86/base-files/etc/board.d/02_network -o target/linux/x86/base-files/etc/board.d/02_network
 

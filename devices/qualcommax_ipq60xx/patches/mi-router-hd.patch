@@ -1,0 +1,708 @@
+diff --git a/package/boot/uboot-envtools/files/ipq806x b/package/boot/uboot-envtools/files/ipq806x
+index 443a0e13d40de..d43c6d32e909b 100644
+--- a/package/boot/uboot-envtools/files/ipq806x
++++ b/package/boot/uboot-envtools/files/ipq806x
+@@ -56,6 +56,10 @@ qcom,ipq8064-ap148|\
+ qcom,ipq8064-db149)
+ 	ubootenv_add_uci_config $(ubootenv_mtdinfo)
+ 	;;
++xiaomi,mi-router-hd)
++	ubootenv_add_uci_config "/dev/mtd9" "0x0" "0x10000" "0x20000"
++	ubootenv_add_uci_sys_config "/dev/mtd12" "0x0" "0x10000" "0x20000"
++	;;
+ ubnt,unifi-ac-hd|\
+ zyxel,nbg6817)
+ 	ubootenv_add_uci_config "/dev/mtdblock9" "0x0" "0x10000" "0x10000"
+@@ -63,6 +67,6 @@ zyxel,nbg6817)
+ esac
+ 
+ config_load ubootenv
+-config_foreach ubootenv_add_app_config ubootenv
++config_foreach ubootenv_add_app_config
+ 
+ exit 0
+diff --git a/target/linux/ipq806x/base-files/etc/board.d/02_network b/target/linux/ipq806x/base-files/etc/board.d/02_network
+index a408fc14ac133..4993321296463 100644
+--- a/target/linux/ipq806x/base-files/etc/board.d/02_network
++++ b/target/linux/ipq806x/base-files/etc/board.d/02_network
+@@ -66,6 +66,13 @@ ipq806x_setup_interfaces()
+ 	meraki,mr52)
+ 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
+ 		;;
++	xiaomi,mi-router-hd)
++		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
++		ucidef_set_network_device_conduit "lan1" "eth1"
++		ucidef_set_network_device_conduit "lan2" "eth1"
++		ucidef_set_network_device_conduit "lan3" "eth1"
++		ucidef_set_network_device_conduit "wan" "eth0"
++	;;
+ 	*)
+ 		echo "Unsupported hardware. Network interfaces not intialized"
+ 		;;
+diff --git a/target/linux/ipq806x/base-files/etc/board.d/05_compat-version b/target/linux/ipq806x/base-files/etc/board.d/05_compat-version
+index caf65b96d20cf..f6ab9b882eee1 100644
+--- a/target/linux/ipq806x/base-files/etc/board.d/05_compat-version
++++ b/target/linux/ipq806x/base-files/etc/board.d/05_compat-version
+@@ -32,7 +32,8 @@ case "$(board_name)" in
+ 	tplink,vr2600v |\
+ 	zyxel,nbg6817 |\
+ 	asus,onhub |\
+-	tplink,onhub)
++	tplink,onhub|\
++	xiaomi,mi-router-hd)
+ 		ucidef_set_compat_version "1.1"
+ 		;;
+ 	linksys,ea7500-v1 |\
+diff --git a/target/linux/ipq806x/base-files/etc/init.d/bootcount b/target/linux/ipq806x/base-files/etc/init.d/bootcount
+index ef3c6894e44ad..e07b8eae8ce34 100755
+--- a/target/linux/ipq806x/base-files/etc/init.d/bootcount
++++ b/target/linux/ipq806x/base-files/etc/init.d/bootcount
+@@ -19,5 +19,13 @@ boot() {
+ 	linksys,ea8500)
+ 		mtd resetbc s_env || true
+ 		;;
++	xiaomi,mi-router-hd)
++		local boot_wait=$( fw_printenv boot_wait | cut -d = -f 2 )
++		[ "$boot_wait" != "on" ] && fw_setenv boot_wait on
++		local bootdelay=$( fw_printenv bootdelay | cut -d = -f 2 )
++		[ "$bootdelay" != "3" ] && fw_setenv bootdelay 3
++		local uart_en=$( fw_printenv uart_en | cut -d = -f 2 )
++		[ "$uart_en" != "1" ] && fw_setenv uart_en 1
++		;;
+ 	esac
+ }
+diff --git a/target/linux/ipq806x/base-files/etc/init.d/hwmon_fancontrol b/target/linux/ipq806x/base-files/etc/init.d/hwmon_fancontrol
+new file mode 100644
+index 0000000000000..9b5017888aa1a
+--- /dev/null
++++ b/target/linux/ipq806x/base-files/etc/init.d/hwmon_fancontrol
+@@ -0,0 +1,20 @@
++#!/bin/sh /etc/rc.common
++
++START=98
++
++boot() {
++	local path_to_hwmon
++	# configuring onboard temp/fan controller to run the fan on its own
++	# for more information, please read https://www.kernel.org/doc/Documentation/hwmon/sysfs-interface
++
++	case $(board_name) in
++	xiaomi,mi-router-hd)
++		path_to_hwmon="$( grep -l emc230 /sys/class/hwmon/hwmon*/name )"
++		if [ -n "$path_to_hwmon" ]; then
++			path_to_hwmon=$( dirname "$path_to_hwmon" 2>/dev/null )
++			# Set FAN speed to 80%
++			echo "204" > "$path_to_hwmon/pwm1"
++		fi
++		;;
++	esac
++}
+diff --git a/target/linux/ipq806x/base-files/lib/upgrade/platform.sh b/target/linux/ipq806x/base-files/lib/upgrade/platform.sh
+index b3a615a511b6b..e13b2fa2212af 100644
+--- a/target/linux/ipq806x/base-files/lib/upgrade/platform.sh
++++ b/target/linux/ipq806x/base-files/lib/upgrade/platform.sh
+@@ -22,7 +22,8 @@ platform_do_upgrade() {
+ 	netgear,xr500 |\
+ 	nokia,ac400i |\
+ 	qcom,ipq8064-ap148 |\
+-	qcom,ipq8064-ap161)
++	qcom,ipq8064-ap161 |\
++	xiaomi,mi-router-hd)
+ 		nand_do_upgrade "$1"
+ 		;;
+ 	asrock,g10)
+diff --git a/target/linux/ipq806x/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq8064-mi-router-hd.dts b/target/linux/ipq806x/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq8064-mi-router-hd.dts
+new file mode 100644
+index 0000000000000..dbddabea49792
+--- /dev/null
++++ b/target/linux/ipq806x/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq8064-mi-router-hd.dts
+@@ -0,0 +1,555 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++
++#include "qcom-ipq8064-v2.0-smb208.dtsi"
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
++
++/ {
++	model = "Xiaomi Mi Router HD (R3D)";
++	compatible = "xiaomi,mi-router-hd", "qcom,ipq8064";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x42000000 0x1e000000>;
++	};
++
++	reserved-memory {
++		ramoops@42100000 {
++			compatible = "ramoops";
++			reg = <0x42100000 0x40000>;
++			record-size = <0x4000>;
++			console-size = <0x4000>;
++			ftrace-size = <0x4000>;
++			pmsg-size = <0x4000>;
++		};
++	};
++
++	aliases {
++		label-mac-device = &gmac1;
++
++		mdio-gpio0 = &mdio0;
++
++		led-boot = &led_status_yellow;
++		led-failsafe = &led_status_red;
++		led-running = &led_status_blue;
++		led-upgrade = &led_status_yellow;
++	};
++
++	chosen {
++		bootargs = "rootfstype=squashfs noinitrd";
++	};
++
++	keys {
++		compatible = "gpio-keys";
++		pinctrl-0 = <&button_pins>;
++		pinctrl-names = "default";
++
++		reset {
++			label = "reset";
++			gpios = <&qcom_pinmux 16 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_RESTART>;
++			debounce-interval = <60>;
++			wakeup-source;
++		};
++
++		power {
++			label = "power";
++			gpios = <&qcom_pinmux 68 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			debounce-interval = <60>;
++			wakeup-source;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&led_pins>;
++		pinctrl-names = "default";
++
++		led_status_red: led_status_red {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_RED>;
++			gpios = <&qcom_pinmux 7 GPIO_ACTIVE_HIGH>;
++		};
++
++		led_status_blue: led_status_blue {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_BLUE>;
++			gpios = <&qcom_pinmux 8 GPIO_ACTIVE_HIGH>;
++		};
++
++		led_status_yellow: led_status_yellow {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_YELLOW>;
++			gpios = <&qcom_pinmux 9 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	i2c_gpio_0 {  /* GSBI1 */
++		compatible = "i2c-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = <&i2c1_pins>;
++		pinctrl-names = "default";
++		sda-gpios = <&qcom_pinmux 53 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&qcom_pinmux 54 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		i2c-gpio,delay-us = <5>;
++
++		fan@2f {
++			compatible = "microchip,emc2305";
++			reg = <0x2f>;
++			emc2305,pwm-channel = <0>;
++			emc2305,pwm-min = <0>;
++			emc2305,pwm-max = <255>;
++		};
++	};
++
++	i2c_gpio_1 {  /* GSBI2 */
++		compatible = "i2c-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = <&i2c2_pins>;
++		pinctrl-names = "default";
++		sda-gpios = <&qcom_pinmux 24 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&qcom_pinmux 25 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		i2c-gpio,delay-us = <5>;
++
++		temp-sensor@48 {
++			compatible = "ti,tmp75";
++			reg = <0x48>;
++			#thermal-sensor-cells = <0>;
++			status = "okay";
++		};
++	};
++};
++
++&CPU_SPC {
++	status = "disabled";
++};
++
++&adm_dma {
++	status = "okay";
++};
++
++&qcom_pinmux {
++	i2c1_pins: i2c1_pins {  /* GSBI1 - EMC2301 */
++		mux {
++			pins = "gpio53", "gpio54";
++			function = "gsbi1";
++			drive-strength = <12>;
++			bias-none;
++			input;
++		};
++	};
++
++	i2c2_pins: i2c2_pins {  /* GSBI2 - TMP75 */
++		mux {
++			pins = "gpio24", "gpio25";
++			function = "gsbi2";
++			drive-strength = <12>;
++			bias-none;
++			input;
++		};
++	};
++
++	button_pins: button_pins {
++		mux {
++			pins = "gpio16", "gpio68";
++			function = "gpio";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++	};
++
++	led_pins: led_pins {
++		mux {
++			pins = "gpio7", "gpio8", "gpio9";
++			function = "gpio";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++	};
++
++	usb_pwr_en_pins: usb_pwr_en_pins {
++		mux {
++			pins = "gpio56";
++			function = "gpio";
++			drive-strength = <12>;
++			bias-pull-up;
++			output-high;
++		};
++	};
++};
++
++&sata_phy {
++	status = "okay";
++};
++
++&sata {
++	status = "okay";
++};
++
++&hs_phy_0 {
++	status = "okay";
++};
++
++&ss_phy_0 {
++	status = "okay";
++};
++
++&usb3_0 {
++	status = "okay";
++};
++
++&hs_phy_1 {
++	status = "okay";
++};
++
++&ss_phy_1 {
++	status = "okay";
++};
++
++&usb3_1 {
++	status = "okay";
++	pinctrl-0 = <&usb_pwr_en_pins>;
++	pinctrl-names = "default";
++};
++
++&pcie0 {
++	status = "okay";
++	reset-gpios = <&qcom_pinmux 3 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&pcie0_pins>;
++	pinctrl-names = "default";
++
++	bridge@0,0 {
++		reg = <0x00000000 0 0 0 0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		ranges;
++
++		wifi@1,0 {
++			compatible = "pci168c,0046";
++			reg = <0x00010000 0 0 0 0>;
++
++			nvmem-cells = <&precal_art_1000>, <&macaddr_art_1006>;
++			nvmem-cell-names = "pre-calibration", "mac-address";
++		};
++	};
++};
++
++&pcie1 {
++	status = "okay";
++	reset-gpios = <&qcom_pinmux 48 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&pcie1_pins>;
++	pinctrl-names = "default";
++	max-link-speed = <1>;
++
++	bridge@0,0 {
++		reg = <0x00000000 0 0 0 0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		ranges;
++
++		wifi@1,0 {
++			compatible = "pci168c,0040";
++			reg = <0x00010000 0 0 0 0>;
++
++			nvmem-cells = <&precal_art_5000>, <&macaddr_art_5006>;
++			nvmem-cell-names = "pre-calibration", "mac-address";
++		};
++	};  
++};
++
++&nand {
++	status = "okay";
++
++	nand@0 {
++		reg = <0>;
++		compatible = "qcom,nandcs";
++
++		nand-bus-width = <8>;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++
++		nand-is-boot-medium;
++		qcom,boot-partitions = <0 0xf0000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "SBL1";
++				reg = <0x0 0x40000>;
++				read-only;
++			};
++
++			partition@40000 {
++				label = "MIBIB";
++				reg = <0x40000 0x80000>;
++				read-only;
++			};
++
++			partition@c0000 {
++				label = "SBL2";
++				reg = <0xc0000 0x80000>;
++				read-only;
++			};
++
++			partition@140000 {
++				label = "SBL3";
++				reg = <0x140000 0x80000>;
++				read-only;
++			};
++
++			partition@1c0000 {
++				label = "DDRCONFIG";
++				reg = <0x1c0000 0x80000>;
++				read-only;
++			};
++
++			partition@240000 {
++				label = "SSD";
++				reg = <0x240000 0x80000>;
++				read-only;
++			};
++
++			partition@2c0000 {
++				label = "TZ";
++				reg = <0x2c0000 0x80000>;
++				read-only;
++			};
++
++			partition@340000 {
++				label = "RPM";
++				reg = <0x340000 0x80000>;
++				read-only;
++			};
++
++			partition@3c0000 {
++				label = "APPSBL";
++				reg = <0x3c0000 0x100000>;
++				read-only;
++			};
++
++			partition@4c0000 {
++				label = "APPSBLENV";
++				reg = <0x4c0000 0x80000>;
++			};
++
++			art: partition@540000 {
++				label = "ART";
++				reg = <0x540000 0x80000>;
++				read-only;
++
++				nvmem-layout {
++					compatible = "fixed-layout";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					macaddr_art_0: macaddr@0 {  /* WAN (label) */
++						compatible = "mac-base";
++						reg = <0x0 0x6>;
++						#nvmem-cell-cells = <1>;
++					};
++
++					macaddr_art_6: macaddr@6 {  /* LAN */
++						reg = <0x6 0x6>;
++					};
++
++					macaddr_art_1006: macaddr@1006 {  /* WiFi 2g */
++						reg = <0x1006 0x6>;
++					};
++
++					macaddr_art_5006: macaddr@5006 {  /* WiFi 5g */
++						reg = <0x5006 0x6>;
++					};
++
++					precal_art_1000: precal@1000 {
++						reg = <0x1000 0x2f20>;
++					};
++
++					precal_art_5000: precal@5000 {
++						reg = <0x5000 0x2f20>;
++					};
++				};
++			};
++
++			partition@5c0000 {
++				label = "BOOTCONFIG";
++				reg = <0x5c0000 0x40000>;
++				read-only;
++			};
++
++			partition@600000 {
++				label = "bdata";
++				reg = <0x600000 0x80000>;
++			};
++
++			partition@680000 {
++				label = "crash";
++				reg = <0x680000 0x80000>;
++				read-only;
++			};
++
++			partition@700000 {
++				label = "crash_syslog";
++				reg = <0x700000 0x80000>;
++				read-only;
++			};
++
++			partition@780000 {
++				label = "rsvd";
++				reg = <0x780000 0x80000>;
++				read-only;
++			};
++
++			partition@800000 {
++				label = "kernel_dup";
++				reg = <0x800000 0x400000>;
++			};
++
++			partition@c00000 {
++				label = "kernel";
++				reg = <0xc00000 0x400000>;
++			};
++
++			partition@1000000 {
++				label = "ubi";
++				reg = <0x1000000 0xf000000>;
++			};
++		};
++	};
++};
++
++&mdio0 {
++	status = "okay";
++
++	pinctrl-0 = <&mdio0_pins>;
++	pinctrl-names = "default";
++
++	switch@10 {
++		compatible = "qca,qca8337";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				label = "cpu";
++				ethernet = <&gmac1>;
++				phy-mode = "rgmii";
++				tx-internal-delay-ps = <1000>;
++				rx-internal-delay-ps = <1000>;
++
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "lan3";
++				phy-mode = "internal";
++				phy-handle = <&phy_port1>;
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "lan2";
++				phy-mode = "internal";
++				phy-handle = <&phy_port2>;
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "lan1";
++				phy-mode = "internal";
++				phy-handle = <&phy_port3>;
++			};
++
++			port@5 {
++				reg = <5>;
++				label = "wan";
++				phy-mode = "internal";
++				phy-handle = <&phy_port5>;
++			};
++
++			port@6 {
++				reg = <6>;
++				label = "cpu";
++				ethernet = <&gmac2>;
++				phy-mode = "sgmii";
++				qca,sgmii-enable-pll;
++
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++		};
++
++		mdio {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			phy_port1: phy@0 {
++				reg = <0>;
++			};
++
++			phy_port2: phy@1 {
++				reg = <1>;
++			};
++
++			phy_port3: phy@2 {
++				reg = <2>;
++			};
++
++			phy_port4: phy@3 {
++				reg = <3>;
++			};
++
++			phy_port5: phy@4 {
++				reg = <4>;
++			};
++		};
++	};
++};
++
++&gmac1 {
++	status = "okay";
++	phy-mode = "rgmii";
++	qcom,id = <1>;
++
++	pinctrl-0 = <&rgmii2_pins>;
++	pinctrl-names = "default";
++
++	nvmem-cells = <&macaddr_art_0 0>;
++	nvmem-cell-names = "mac-address";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
++
++&gmac2 {
++	status = "okay";
++	phy-mode = "sgmii";
++	qcom,id = <2>;
++
++	nvmem-cells = <&macaddr_art_6 0>;
++	nvmem-cell-names = "mac-address";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
+diff --git a/target/linux/ipq806x/image/generic.mk b/target/linux/ipq806x/image/generic.mk
+index 98e74e5b114c2..8f4ef5b7baec6 100644
+--- a/target/linux/ipq806x/image/generic.mk
++++ b/target/linux/ipq806x/image/generic.mk
+@@ -547,6 +547,29 @@ define Device/ubnt_unifi-ac-hd
+ endef
+ TARGET_DEVICES += ubnt_unifi-ac-hd
+ 
++define Device/xiaomi_mi-router-hd
++	$(call Device/LegacyImage)
++	$(Device/dsa-migration)
++	DEVICE_VENDOR := Xiaomi
++	DEVICE_MODEL := Mi Router HD (R3D)
++	SOC := qcom-ipq8064
++	BLOCKSIZE := 128k
++	PAGESIZE := 2048
++	KERNEL_SIZE := 4096k
++	IMAGE_SIZE := 86016k
++	BOARD_NAME := mi-router-hd
++	SUPPORTED_DEVICES += xiaomi,r3d
++	UBINIZE_OPTS := -E 5
++	IMAGES += factory.bin
++	IMAGE/factory.bin := append-kernel | pad-to $$$$(KERNEL_SIZE) | \
++		append-ubi | pad-to $$$$(BLOCKSIZE) | check-size
++	DEVICE_PACKAGES := kmod-i2c-gpio kmod-thermal kmod-hwmon-lm75 \
++		kmod-hwmon-emc2305 hwmon-drivetemp kmod-usb-storage-uas \
++		kmod-ramoops \
++		ath10k-firmware-qca9984-ct ath10k-firmware-qca99x0-ct
++endef
++TARGET_DEVICES += xiaomi_mi-router-hd
++
+ define Device/zyxel_nbg6817
+ 	$(Device/dsa-migration)
+ 	DEVICE_VENDOR := ZyXEL

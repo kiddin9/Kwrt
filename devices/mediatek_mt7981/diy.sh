@@ -11,10 +11,7 @@ rm -rf devices/common/patches/{rootfstargz.patch,kernel_version.patch,seccomp.pa
 #sed -i "/KernelPackage,sound-soc-core/d" package/kernel/linux/modules/sound.mk
 #sed -i "/KernelPackage,multimedia-input/d" package/kernel/linux/modules/video.mk
 
-git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt toolchain/musl
-git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt package/utils/e2fsprogs
-git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt package/utils/ucode
-git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt package/libs/libselinux
+git_clone_path openwrt-23.05 https://github.com/openwrt/openwrt toolchain/musl package/utils/e2fsprogs package/utils/ucode package/libs/libselinux
 #ln -sf $(pwd)/feeds/luci/modules/luci-base package/feeds/kiddin9/
 
 sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2099-12-06/" package/network/config/netifd/Makefile

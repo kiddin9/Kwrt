@@ -39,7 +39,7 @@
  	echo
  	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
  	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
-+	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-4a-gigabit-v2|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_jcg_y2|DEVICE_glinet_gl-mt300a|DEVICE_glinet_gl-mt750|DEVICE_hiwifi_hc5661|DEVICE_hiwifi_hc5761|DEVICE_hiwifi_hc5861|DEVICE_lenovo_newifi-y1|DEVICE_lenovo_newifi-y1s|DEVICE_xiaomi_miwifi-mini|DEVICE_youku_yk-l1c|DEVICE_jdcloud_luban|DEVICE_zte_e8820v2) || "$(TARGETID)" == "ramips/mt76x8" ]]; then \
++	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-4a-gigabit-v2|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_jcg_y2|DEVICE_glinet_gl-mt300a|DEVICE_glinet_gl-mt750|DEVICE_hiwifi_hc5661|DEVICE_hiwifi_hc5761|DEVICE_hiwifi_hc5861|DEVICE_lenovo_newifi-y1|DEVICE_lenovo_newifi-y1s|DEVICE_xiaomi_miwifi-mini|DEVICE_youku_yk-l1c|DEVICE_ht-jsh_0211|DEVICE_jdcloud_luban|DEVICE_zte_e8820v2) || "$(TARGETID)" == "ramips/mt76x8" ]]; then \
 +		echo "src/gz openwrt_smflash https://dl.openwrt.ai/packages/small_flash" >>$(TOPDIR)/repositories.conf; \
 +	else \
 +		sed -i "/smflash/d" $(TOPDIR)/repositories.conf; \
