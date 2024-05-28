@@ -91,20 +91,21 @@ diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/
 index 62b7a209ed4059..cefe2ac853899c 100755
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -83,11 +83,7 @@ platform_do_upgrade() {
+@@ -84,12 +84,8 @@ platform_do_upgrade() {
  	bananapi,bpi-r3-mini|\
  	bananapi,bpi-r4|\
  	bananapi,bpi-r4-poe|\
--	jdcloud,re-cp-03|\
+-	mediatek,mt7988a-rfb|\
+ 	jdcloud,re-cp-03|\
 -	tplink,tl-xdr4288|\
 -	tplink,tl-xdr6086|\
 -	tplink,tl-xdr6088|\
 -	xiaomi,redmi-router-ax6000-ubootmod)
-+	jdcloud,re-cp-03)
++	mediatek,mt7988a-rfb)
  		[ -e /dev/fit0 ] && fitblk /dev/fit0
  		[ -e /dev/fitrw ] && fitblk /dev/fitrw
  		bootdev="$(fitblk_get_bootdev)"
-@@ -145,7 +141,11 @@ platform_do_upgrade() {
+@@ -147,7 +143,11 @@ platform_do_upgrade() {
  		CI_UBIPART="ubi0"
  		nand_do_upgrade "$1"
  		;;
