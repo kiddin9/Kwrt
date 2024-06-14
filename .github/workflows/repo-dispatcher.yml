@@ -122,11 +122,6 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
-          -d '{"event_type": "mediatek_mt7981 ${{ github.event.inputs.param }}", "client_payload": {"target": "mediatek_mt7981"}}'
-          curl \
-          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
           -d '{"event_type": "ipq50xx_arm ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq50xx_arm"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
@@ -162,7 +157,7 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
-          -d '{"event_type": "meson_meson8b ${{ github.event.inputs.param }}", "client_payload": {"target": "meson_meson8b"}}'
+          -d '{"event_type": "amlogic_meson8b ${{ github.event.inputs.param }}", "client_payload": {"target": "amlogic_meson8b"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \

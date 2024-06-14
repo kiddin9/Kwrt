@@ -1,3 +1,36 @@
+--- a/include/image.mk
++++ b/include/image.mk
+@@ -761,6 +761,7 @@ define Device/DumpInfo
+ Target-Profile: DEVICE_$(1)
+ Target-Profile-Name: $(DEVICE_DISPLAY)
+ Target-Profile-Packages: $(DEVICE_PACKAGES)
++Target-Profile-ImageSize: $(IMAGE_SIZE)
+ Target-Profile-hasImageMetadata: $(if $(foreach image,$(IMAGES),$(findstring append-metadata,$(IMAGE/$(image)))),1,0)
+ Target-Profile-SupportedDevices: $(SUPPORTED_DEVICES)
+ $(if $(BROKEN),Target-Profile-Broken: $(BROKEN))
+
+--- a/scripts/target-metadata.pl
++++ b/scripts/target-metadata.pl
+@@ -437,6 +437,7 @@ ()
+ 		print "PROFILE_NAMES = ".join(" ", @profile_ids_unique)."\n";
+ 		foreach my $profile (@{$cur->{profiles}}) {
+ 			print $profile->{id}.'_NAME:='.$profile->{name}."\n";
++			print $profile->{id}.'_IMAGE_SIZE:='.$profile->{image_size}."\n";
+ 			print $profile->{id}.'_HAS_IMAGE_METADATA:='.$profile->{has_image_metadata}."\n";
+ 			if (defined($profile->{supported_devices}) and @{$profile->{supported_devices}} > 0) {
+ 				print $profile->{id}.'_SUPPORTED_DEVICES:='.join(' ', @{$profile->{supported_devices}})."\n";
+
+--- a/scripts/metadata.pm
++++ b/scripts/metadata.pm
+@@ -150,6 +150,7 @@ sub parse_target_metadata($) {
+ 			push @{$target->{profiles}}, $profile;
+ 		};
+ 		/^Target-Profile-Name:\s*(.+)\s*$/ and $profile->{name} = $1;
++		/^Target-Profile-ImageSize:\s*(.*)\s*/ and $profile->{image_size} = $1;
+ 		/^Target-Profile-hasImageMetadata:\s*(\d+)\s*$/ and $profile->{has_image_metadata} = $1;
+ 		/^Target-Profile-SupportedDevices:\s*(.+)\s*$/ and $profile->{supported_devices} = [ split(/\s+/, $1) ];
+ 		/^Target-Profile-Priority:\s*(\d+)\s*$/ and do {
+
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
 @@ -38,13 +38,15 @@ $(BIN_DIR)/$(IB_NAME).tar.xz: clean
@@ -22,10 +55,22 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -135,17 +135,32 @@ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(fi
+@@ -131,21 +131,47 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+ # "-pkgname" in the package list means remove "pkgname" from the package list
+ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
+ BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
++IMAGE_SIZE:="$(shell echo $$(echo $($(USER_PROFILE)_IMAGE_SIZE) | cut -d k -f1))"
++BUILD_PACKAGES:=$(shell if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" && $(IMAGE_SIZE) -lt 20480 ]]; then \
++echo "$(BUILD_PACKAGES) -coremark -htop -bash -openssh-sftp-server "; \
++else \
++echo "$(BUILD_PACKAGES)"; \
++fi \
++)
+ BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
+-	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
 +	[ "$(DATE)" ] && DATE="$(DATE)" || DATE="`date +'%m.%d.%Y'`"; \
 +	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
 +	echo -e " \
@@ -34,15 +79,19 @@
 +	sed -i \"s/OpenWrt .* by/OpenWrt $$DATE by/\" /etc/banner \n \
 +	echo \"$$DATE\" >/etc/openwrt_version \n \
 +	"> $(USER_FILES)/etc/uci-defaults/99-version; \
- 	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
++	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'; \
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
  	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
  	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
-+	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-4a-gigabit-v2|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_jcg_y2|DEVICE_glinet_gl-mt300a|DEVICE_glinet_gl-mt750|DEVICE_hiwifi_hc5661|DEVICE_hiwifi_hc5761|DEVICE_hiwifi_hc5861|DEVICE_lenovo_newifi-y1|DEVICE_lenovo_newifi-y1s|DEVICE_xiaomi_miwifi-mini|DEVICE_youku_yk-l1c|DEVICE_ht-jsh_0211|DEVICE_jdcloud_luban|DEVICE_zte_e8820v2) || "$(TARGETID)" == "ramips/mt76x8" ]]; then \
-+		echo "src/gz openwrt_smflash https://dl.openwrt.ai/packages/small_flash" >>$(TOPDIR)/repositories.conf; \
++	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" ]]; then \
++	if [[ $(IMAGE_SIZE) -lt 20480 ]]; then \
++		if [[ ! "`grep "small_flash" $(TOPDIR)/repositories.conf`" ]]; then \
++			echo "`grep openwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf; \
++		fi \
 +	else \
-+		sed -i "/smflash/d" $(TOPDIR)/repositories.conf; \
++		sed -i "/small_flash/d" $(TOPDIR)/repositories.conf; \
++	fi \
 +	fi
  	$(MAKE) package_reload
  	$(MAKE) package_install
@@ -55,7 +104,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -186,7 +201,17 @@ package_install: FORCE
+@@ -186,7 +212,17 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
@@ -68,18 +117,18 @@
 +	if [[ "`echo "$(BUILD_PACKAGES)" | grep "usb"`" ]]; then \
 +		packages+="automount "; \
 +	fi; \
-+	$(OPKG) install --force-overwrite --force-checksum --force-depends $(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en; \
++	$(OPKG) install $(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en; \
 +	$(OPKG) install $$packages || true
-+	$(OPKG) install --force-overwrite --force-checksum --force-depends --force-maintainer --force-reinstall my-default-settings
++	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
  	@echo
-@@ -200,12 +225,15 @@ prepare_rootfs: FORCE
+@@ -200,12 +236,15 @@ prepare_rootfs: FORCE
  		) \
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
-+	if [[ "$(USER_PROFILE)" =~ (DEVICE_phicomm_k2p|DEVICE_asus_rt-n56u-b1|DEVICE_thunder_timecloud|DEVICE_youku_yk-l2|DEVICE_youhua_wr1200js|DEVICE_oraybox_x3a|DEVICE_netgear_wndr3700-v5|DEVICE_xiaomi_mi-router-4a-gigabit|DEVICE_xiaomi_mi-router-3g-v2|DEVICE_jcg_y2|DEVICE_glinet_gl-mt300a|DEVICE_glinet_gl-mt750|DEVICE_hiwifi_hc5661|DEVICE_hiwifi_hc5761|DEVICE_hiwifi_hc5861|DEVICE_lenovo_newifi-y1|DEVICE_lenovo_newifi-y1s|DEVICE_xiaomi_miwifi-mini|DEVICE_youku_yk-l1c|DEVICE_jdcloud_luban) || "$(TARGETID)" == "ramips/mt76x8" ]]; then \
-+		echo "src/gz openwrt_smflash https://dl.openwrt.ai/packages/mipsel_24kc/small_flash" >>$(BUILD_DIR)/root-ramips/etc/opkg/distfeeds.conf; \
++	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" && $(IMAGE_SIZE) -lt 20480 ]]; then \
++		echo "`grep openwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf; \
 +	fi
  
  build_image: FORCE

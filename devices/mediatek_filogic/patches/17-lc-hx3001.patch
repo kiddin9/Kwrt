@@ -306,7 +306,7 @@ index 83428f0d981e7..6d2e9d713be02 100644
 +  DEVICE_MODEL := LC-HX3001
 +  DEVICE_DTS := mt7981b-imou-lc-hx3001
 +  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
 +  SUPPORTED_DEVICES += imou,lc-hx3001
 +  UBINIZE_OPTS := -E 5
 +  BLOCKSIZE := 128k
@@ -328,7 +328,7 @@ index 83428f0d981e7..6d2e9d713be02 100644
 +  DEVICE_MODEL := KOMI A31
 +  DEVICE_DTS := mt7981b-konka-komi-a31
 +  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
 +  SUPPORTED_DEVICES := konka,komi-a31
 +  UBINIZE_OPTS := -E 5
 +  BLOCKSIZE := 128k

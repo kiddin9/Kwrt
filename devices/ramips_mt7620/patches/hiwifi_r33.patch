@@ -13,7 +13,6 @@ Subject: [PATCH] ramips: MT7620 add Support HiWiFi R33(C312B B52)
  .../mt7620/base-files/lib/upgrade/platform.sh |   3 +
  7 files changed, 318 insertions(+)
  create mode 100644 target/linux/ramips/dts/mt7620a_hiwifi_r33.dts
- create mode 100644 target/linux/ramips/mt7620/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
 
 diff --git a/target/linux/generic/files/drivers/net/phy/rtl8367b.c b/target/linux/generic/files/drivers/net/phy/rtl8367b.c
 index 3599791a517b..6297e07628ba 100644
@@ -366,8 +365,7 @@ index 00ffb1b5420c..5f4e7268e8a9 100644
  	iodata,wn-ac1167gr|\
  	iodata,wn-ac733gr3)
  		wan_mac=$(mtd_get_mac_ascii u-boot-env wanaddr)
-diff --git a/target/linux/ramips/mt7620/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac b/target/linux/ramips/mt7620/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
-index aa0ad99158271..c7b818a0af7c0 100644
+
 --- a/target/linux/ramips/mt7620/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
 +++ b/target/linux/ramips/mt7620/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
 @@ -23,4 +23,11 @@ case "$board" in

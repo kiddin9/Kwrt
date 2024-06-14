@@ -79,7 +79,7 @@ jobs:
             echo "MTARGET=arm_cortex-a7" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} == "meson_meson8b" ]]; then
+        elif [[ ${{matrix.target}} == "amlogic_meson8b" ]]; then
             echo "MTARGET=arm_cortex-a5_vfpv4" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "bcm53xx" ]]; then
             echo "MTARGET=arm_cortex-a9" >> $GITHUB_ENV
@@ -219,7 +219,7 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        if [[ ! "${{matrix.target}}" =~ (armsr_armv8|bcm27xx_*|rockchip_*|sunxi_*|x86_*|meson_meson8b) ]]; then
+        if [[ ! "${{matrix.target}}" =~ (armsr_armv8|bcm27xx_*|rockchip_*|sunxi_*|x86_*) ]]; then
         sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
         sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
         make defconfig

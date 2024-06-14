@@ -1,6 +1,6 @@
---- a/target/linux/meson/image/Makefile
-+++ b/target/linux/meson/image/Makefile
-@@ -46,7 +46,8 @@ endef
+--- a/target/linux/amlogic/image/meson8b.mk
++++ b/target/linux/amlogic/image/meson8b.mk
+@@ -11,7 +11,8 @@ endef
  
  define Device/thunder-onecloud
    DEVICE_DTS := meson8b-onecloud
@@ -10,14 +10,19 @@
    KERNEL_LOADADDR := 0x00208000
    IMAGE/emmc.img := boot-script onecloud | emmc-common $$(DEVICE_NAME)
  endef
-@@ -54,4 +55,10 @@ ifeq ($(SUBTARGET),meson8b)
-   TARGET_DEVICES += thunder-onecloud
- endif
+
+--- a/target/linux/amlogic/image/Makefile
++++ b/target/linux/amlogic/image/Makefile
+@@ -88,4 +88,12 @@ endef
+ 
+ include $(SUBTARGET).mk
  
 +define Image/Build
++  if [ "$(PROFILE_SANITIZED)" == "thunder-onecloud" ]; then \
 +  export BIN_DIR=$(BIN_DIR); \
 +  cd /data/packit/openwrt-onecloud || true; \
-+  . ~/packit/packit_onecloud1.sh || true;
++  . ~/packit/packit_onecloud1.sh || true; \
++  fi
 +endef
 +
  $(eval $(call BuildImage))

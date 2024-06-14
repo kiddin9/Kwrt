@@ -344,7 +344,7 @@ index 95aee51b689..7f28be90a7b 100644
 +  DEVICE_MODEL := ASR3000
 +  DEVICE_DTS := mt7981b-abt-asr3000
 +  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
 +  UBINIZE_OPTS := -E 5
 +  BLOCKSIZE := 128k
 +  PAGESIZE := 2048

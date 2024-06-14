@@ -296,7 +296,7 @@ index 6976a399e86dc..83428f0d981e7 100644
 +  DEVICE_MODEL := A10
 +  DEVICE_DTS := mt7981b-cmcc-a10
 +  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
 +  UBINIZE_OPTS := -E 5
 +  BLOCKSIZE := 128k
 +  PAGESIZE := 2048

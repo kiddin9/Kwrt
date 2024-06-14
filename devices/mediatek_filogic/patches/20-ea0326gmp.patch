@@ -1,119 +1,47 @@
-diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-index 7f75de8b3b961c..38aa621ea23867 100644
---- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-@@ -54,6 +54,11 @@ netgear,wax220)
- 	ucidef_set_led_netdev "wlan2g" "WLAN2G" "blue:wlan2g" "phy0-ap0"
- 	ucidef_set_led_netdev "wlan5g" "WLAN5G" "blue:wlan5g" "phy1-ap0"
- 	;;
-+nokia,ea0326gmp)
-+	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1" "link"
-+	ucidef_set_led_netdev "lan" "LAN" "green:lan" "br-lan" "link"
-+	ucidef_set_led_netdev "wlan" "WLAN" "green:wlan" "phy1-ap0" "link"
-+	;;
- openembed,som7981)
- 	ucidef_set_led_netdev "lanact" "LANACT" "green:lan" "eth1" "rx tx"
- 	ucidef_set_led_netdev "lanlink" "LANLINK" "amber:lan" "eth1" "link"
-diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index c9fd8d96e69a1f..051db89275e2f0 100644
---- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -46,6 +46,7 @@ mediatek_setup_interfaces()
- 		;;
- 	cmcc,rax3000m|\
- 	h3c,magic-nx30-pro|\
-+	nokia,ea0326gmp|\
- 	zbtlink,zbt-z8103ax)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
- 		;;
-diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-index 62860390ebb2e6..928750e6473fc4 100644
---- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-+++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -116,6 +116,11 @@ case "$board" in
- 		[ "$PHYNBR" = "0" ] && macaddr_add $hw_mac_addr 2 > /sys${DEVPATH}/macaddress
- 		[ "$PHYNBR" = "1" ] && macaddr_add $hw_mac_addr 3 > /sys${DEVPATH}/macaddress
- 		;;
-+	nokia,ea0326gmp)
-+		addr=$(cat /sys/class/net/eth0/address)
-+		[ "$PHYNBR" = "0" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
-+		[ "$PHYNBR" = "1" ] && macaddr_add $addr 2 > /sys${DEVPATH}/macaddress
-+		;;
- 	openembed,som7981)
- 		[ "$PHYNBR" = "1" ] && cat /sys/class/net/eth0/address > /sys${DEVPATH}/macaddress
- 		;;
-diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-index ee0e8b62d752db..62b7a209ed4059 100755
---- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -145,6 +145,12 @@ platform_do_upgrade() {
- 		CI_UBIPART="ubi0"
- 		nand_do_upgrade "$1"
- 		;;
-+	nokia,ea0326gmp)
-+		[ -e /dev/fit0 ] && fitblk /dev/fit0
-+		[ -e /dev/fitrw ] && fitblk /dev/fitrw
-+		CI_KERNPART="fit"
-+		nand_do_upgrade "$1"
-+		;;
- 	ubnt,unifi-6-plus)
- 		CI_KERNPART="kernel0"
- 		EMMC_ROOT_DEV="$(cmdline_get_var root)"
-diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
-index f99a73ac74c887..e8abed768fd97f 100644
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -881,6 +881,23 @@ define Device/netgear_wax220
- endef
- TARGET_DEVICES += netgear_wax220
- 
-+define Device/nokia_ea0326gmp
-+  DEVICE_VENDOR := Nokia
-+  DEVICE_MODEL := EA0326GMP
-+  DEVICE_DTS := mt7981b-nokia-ea0326gmp
-+  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
-+  UBINIZE_OPTS := -E 5
-+  BLOCKSIZE := 128k
-+  PAGESIZE := 2048
-+  KERNEL_IN_UBI := 1
+@@ -961,17 +961,10 @@ define Device/nokia_ea0326gmp
+   BLOCKSIZE := 128k
+   PAGESIZE := 2048
+   KERNEL_IN_UBI := 1
+-  UBOOTENV_IN_UBI := 1
+-  IMAGES := sysupgrade.itb
+-  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+-  KERNEL := kernel-bin | gzip
+-  KERNEL_INITRAMFS := kernel-bin | lzma | \
+-        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+-  IMAGE/sysupgrade.itb := append-kernel | \
+-        fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | append-metadata
+-  ARTIFACTS := preloader.bin bl31-uboot.fip
+-  ARTIFACT/preloader.bin := mt7981-bl2 spim-nand-ddr3
+-  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot nokia_ea0326gmp
 +  IMAGE_SIZE := 112640k
 +  IMAGES += factory.bin
 +  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-+endef
-+TARGET_DEVICES += nokia_ea0326gmp
+ endef
+ TARGET_DEVICES += nokia_ea0326gmp
+ 
+
+--- a/target/linux/mediatek/dts/mt7981b-nokia-ea0326gmp.dts
++++ b/target/linux/mediatek/dts/mt7981b-nokia-ea0326gmp.dts
+@@ -164,6 +164,10 @@
+ 		spi-tx-bus-width = <4>;
+ 		spi-rx-bus-width = <4>;
+ 
++		mediatek,nmbm;
++		mediatek,bmt-max-ratio = <1>;
++		mediatek,bmt-max-reserved-blocks = <64>;
 +
- define Device/openembed_som7981
-   DEVICE_VENDOR := OpenEmbed
-   DEVICE_MODEL := SOM7981
-diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-index 62b7a209ed4059..cefe2ac853899c 100755
---- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-+++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -83,11 +83,7 @@ platform_do_upgrade() {
- 	bananapi,bpi-r3-mini|\
- 	bananapi,bpi-r4|\
- 	bananapi,bpi-r4-poe|\
--	jdcloud,re-cp-03|\
--	tplink,tl-xdr4288|\
--	tplink,tl-xdr6086|\
--	tplink,tl-xdr6088|\
--	xiaomi,redmi-router-ax6000-ubootmod)
-+	jdcloud,re-cp-03)
- 		[ -e /dev/fit0 ] && fitblk /dev/fit0
- 		[ -e /dev/fitrw ] && fitblk /dev/fitrw
- 		bootdev="$(fitblk_get_bootdev)"
-@@ -145,7 +141,11 @@ platform_do_upgrade() {
- 		CI_UBIPART="ubi0"
- 		nand_do_upgrade "$1"
- 		;;
--	nokia,ea0326gmp)
-+	nokia,ea0326gmp|\
-+	tplink,tl-xdr4288|\
-+	tplink,tl-xdr6086|\
-+	tplink,tl-xdr6088|\
-+	xiaomi,redmi-router-ax6000-ubootmod)
- 		[ -e /dev/fit0 ] && fitblk /dev/fit0
- 		[ -e /dev/fitrw ] && fitblk /dev/fitrw
- 		CI_KERNPART="fit"
+ 		partitions {
+ 			compatible = "fixed-partitions";
+ 			#address-cells = <1>;
+@@ -223,7 +227,7 @@
+ 			partition@980000 {
+ 				compatible = "linux,ubi";
+ 				label = "ubi";
+-				reg = <0x980000 0x7680000>;
++				reg = <0x980000 0x6e00000>;
+ 
+ 				volumes {
+ 					ubi_rootdisk: ubi-volume-fit {

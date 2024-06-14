@@ -1,0 +1,101 @@
+From 985af21123a02ff764156aafff2be4e9cc6e640e Mon Sep 17 00:00:00 2001
+From: Sheng Huang <shenghuang147@gmail.com>
+Date: Mon, 6 May 2024 13:51:27 +0800
+Subject: [PATCH] ramips: add support for JDCloud RE-CP-02
+
+- Soc: MediaTek MT7621AT
+- RAM: 512 MB (DDR3)
+- Flash: 16 MB (SPI NOR)
+- WiFi: MediaTek MT7905DAN, MediaTek MT7975DN
+- Ethernet: 1 WAN, 3 LAN (Gigabit)
+- Buttons: Reset, Joylink
+- LEDs: (red, blue, green), routed to one indicator in the top of the
+  device
+- Power: DC 12V 1A tip positive
+- 1 TF Card Slot
+
+The pins for the serial console are already labeled on the board
+J4(V, R, T, G). Serial settings: 3.3V, 115200
+
+MAC addresses:
+
+|         | MAC               | Algorithm |
+| ------- | ----------------- | --------- |
+| label   | dc:d8:xx:xx:xx:01 | label     |
+| LAN     | dc:d8:xx:xx:xx:01 | label     |
+| WAN     | dc:d8:xx:xx:xx:02 | label+1   |
+| WLAN 2g | dc:d8:xx:xx:xx:03 | label+2   |
+| WLAN 5g | de:d8:xx:xx:xx:04 | label+3   |
+
+1. rename the
+   openwrt-ramips-mt7621-jdcloud_re-cp-02-squashfs-sysupgrade.bin
+   to JDCOS.bin
+
+2. start a TFTP server from IP address 192.168.68.10 and serve the
+   image named JDCOS.bin
+
+3. connect your device to the LAN port
+
+4. power up the router and press any key on the console to interrupt
+   the boot process.
+
+5. enter the following commands on the router console
+
+   1. setenv bootcount 6
+
+   2. saveenv
+
+   3. reset
+
+      > NOTE: wait for the restart, it will automatically fetch the
+      > image named JDCOS.bin from the TFTP server and write it into
+      > the flash. After the writing is completed, the router will be
+      > automatically restarted.
+
+Unable to recognize large-capacity TF card, see #14042. But the patch
+https://github.com/openwrt/openwrt/issues/14042#issuecomment-1910769942
+works
+
+Co-Authored-By: Jianti Chen <clbcjt@outlook.com>
+Signed-off-by: Sheng Huang <shenghuang147@gmail.com>
+---
+ .../ramips/dts/mt7621_jdcloud_re-cp-02.dts    | 186 ++++++++++++++++++
+ target/linux/ramips/image/mt7621.mk           |   9 +
+ .../mt7621/base-files/etc/init.d/bootcount    |   3 +
+ 3 files changed, 198 insertions(+)
+ create mode 100644 target/linux/ramips/dts/mt7621_jdcloud_re-cp-02.dts
+
+diff --git a/target/linux/ramips/image/mt7621.mk b/target/linux/ramips/image/mt7621.mk
+index 4c6b7057d5a93..cbaf6a9c59941 100644
+--- a/target/linux/ramips/image/mt7621.mk
++++ b/target/linux/ramips/image/mt7621.mk
+@@ -1534,6 +1534,15 @@ define Device/jcg_y2
+ endef
+ TARGET_DEVICES += jcg_y2
+ 
++define Device/jdcloud_re-cp-02
++  $(Device/dsa-migration)
++  IMAGE_SIZE := 16000k
++  DEVICE_VENDOR := JD-Cloud
++  DEVICE_MODEL := RE-CP-02
++  DEVICE_PACKAGES := kmod-mt7915-firmware kmod-sdhci-mt7620
++endef
++TARGET_DEVICES += jdcloud_re-cp-02
++
+ define Device/keenetic_kn-3010
+   $(Device/dsa-migration)
+   $(Device/uimage-lzma-loader)
+diff --git a/target/linux/ramips/mt7621/base-files/etc/init.d/bootcount b/target/linux/ramips/mt7621/base-files/etc/init.d/bootcount
+index c558247341374..06846cd4ca40f 100755
+--- a/target/linux/ramips/mt7621/base-files/etc/init.d/bootcount
++++ b/target/linux/ramips/mt7621/base-files/etc/init.d/bootcount
+@@ -15,6 +15,9 @@ boot() {
+ 			$((0xff)) ]] || printf '\xff' | dd of=/dev/mtdblock3 \
+ 			count=1 bs=1 seek=$((0x20001))
+ 		;;
++	jdcloud,re-cp-02)
++		echo -e "bootcount 0\nbootlimit 5\nupgrade_available 1"  | /usr/sbin/fw_setenv -s -
++		;;
+ 	linksys,e5600|\
+ 	linksys,ea6350-v4|\
+ 	linksys,ea7300-v1|\
