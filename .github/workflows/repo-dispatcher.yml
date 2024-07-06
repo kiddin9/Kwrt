@@ -142,7 +142,7 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
-          -d '{"event_type": "qualcommax_ipq807x ${{ github.event.inputs.param }}", "client_payload": {"target": "qualcommax_ipq807x"}}'
+          -d '{"event_type": "ipq807x_generic ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq807x_generic"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \

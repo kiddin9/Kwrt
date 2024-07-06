@@ -8,7 +8,6 @@ Just ask the vendor for firmware.
 Signed-off-by: Tianling Shen <cnsztl@immortalwrt.org>
 ---
  package/boot/uboot-rockchip/Makefile          |  24 -
- .../patches/900-arm-add-dts-files.patch       |   5 +-
  .../arch/arm/dts/rk3568-opc-h66k-u-boot.dtsi  |  21 -
  .../src/arch/arm/dts/rk3568-opc-h66k.dts      |  17 -
  .../src/arch/arm/dts/rk3568-opc-h66k.dtsi     | 619 -----------------
