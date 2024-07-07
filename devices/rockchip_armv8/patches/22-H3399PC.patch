@@ -97,7 +97,7 @@ index 7eb99ade652..92ede0f46e6 100644
 +  SOC := rk3399
 +  UBOOT_DEVICE_NAME := rongpin-king3399-rk3399
 +  BOOT_FLOW := pine64-bin
-+  DEVICE_PACKAGES := kmod-r8169 -urngd kmod-brcmfmac cypress-firmware-4356-sdio rongpin-king3399-firmware wpad-basic-mbedtls
++  DEVICE_PACKAGES := kmod-r8168 -urngd kmod-brcmfmac cypress-firmware-4356-sdio rongpin-king3399-firmware wpad-basic-mbedtls
 +endef
 +TARGET_DEVICES += rongpin_king3399
 +
@@ -118,7 +118,7 @@ index 7eb99ade652..92ede0f46e6 100644
 +  SOC := rk3399
 +  UBOOT_DEVICE_NAME := sharevdi-h3399pc-rk3399
 +  BOOT_FLOW := pine64-bin
-+  DEVICE_PACKAGES := kmod-r8169 -urngd
++  DEVICE_PACKAGES := kmod-r8168 -urngd
 +endef
 +TARGET_DEVICES += sharevdi_h3399pc
 +
@@ -144,21 +144,3 @@ index 231bca2b544..441ce2f4e59 100644
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-hugsun-x99.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge-captain.dtb
-diff --git a/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch b/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
-index ac01f8bb352..6f08c2d1190 100644
---- a/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
-+++ b/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
-@@ -1,10 +1,12 @@
- --- a/arch/arm/dts/Makefile
- +++ b/arch/arm/dts/Makefile
--@@ -148,6 +148,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
-+@@ -148,6 +148,9 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
-  	rk3399-firefly.dtb \
-  	rk3399-gru-bob.dtb \
-  	rk3399-gru-kevin.dtb \
- +	rk3399-guangmiao-g4c.dtb \
-++	rk3399-h3399pc.dtb \
-++	rk3399-mpc1903.dtb \
-  	rk3399-khadas-edge.dtb \
-  	rk3399-khadas-edge-captain.dtb \
-  	rk3399-khadas-edge-v.dtb \

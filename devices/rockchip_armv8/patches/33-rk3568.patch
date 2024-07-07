@@ -184,24 +184,3 @@ index 231bca2b544..0c4b2c55d9a 100644
  xunlong,orangepi-r1-plus|\
  xunlong,orangepi-r1-plus-lts)
  	set_interface_core 2 "eth0"
-
---- a/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
-+++ b/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
-@@ -18,7 +18,7 @@
-  	rk3399-orangepi.dtb \
-  	rk3399-pinebook-pro.dtb \
-  	rk3399-pinephone-pro.dtb \
--@@ -182,12 +184,20 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
-+@@ -182,12 +184,22 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
-  	rk3566-soquartz-model-a.dtb \
-  	rk3568-bpi-r2-pro.dtb \
-  	rk3568-evb.dtb \
-@@ -26,6 +26,8 @@
- +	rk3568-fastrhino-r68s.dtb \
-  	rk3568-generic.dtb \
-  	rk3568-lubancat-2.dtb \
-++	rk3568-lyt-t68m.dtb \
-++	rk3568-xgp.dtb \
- +	rk3568-mrkaio-m68s.dtb \
-  	rk3568-nanopi-r5c.dtb \
-  	rk3568-nanopi-r5s.dtb \
