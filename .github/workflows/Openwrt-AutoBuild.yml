@@ -69,15 +69,13 @@ jobs:
         elif [ ${{matrix.target}} == "x86_generic" ]; then
             echo "ARCH=linux/amd32" >> $GITHUB_ENV
             echo "MTARGET=x86_generic" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armsr_armv8|qualcommax_ipq807x|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|qualcommax_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
+        elif [[ ${{matrix.target}} =~ (armsr_armv8|ipq807x_generic|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|qualcommax_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "ath79_nand" ]]; then
             echo "MTARGET=mips_24kc" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} == "ipq50xx_arm" ]]; then
-            echo "MTARGET=arm_cortex-a7" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7) ]]; then
+        elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7|ipq50xx_arm) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "amlogic_meson8b" ]]; then
             echo "MTARGET=arm_cortex-a5_vfpv4" >> $GITHUB_ENV
@@ -117,7 +115,7 @@ jobs:
         sudo -E apt-get -qq install build-essential clang llvm flex g++ gawk gcc-multilib gettext \
         git libncurses5-dev libssl-dev python3-distutils python3-pyelftools python3-setuptools \
         libpython3-dev rsync unzip zlib1g-dev swig aria2 jq subversion qemu-utils ccache rename \
-        libelf-dev device-tree-compiler libgnutls28-dev coccinelle libgmp3-dev libmpc-dev libfuse-dev
+        libelf-dev device-tree-compiler libgnutls28-dev coccinelle libgmp3-dev libmpc-dev libfuse-dev gcc-multilib
         sudo -E apt-get -qq purge azure-cli ghc* zulu* firefox powershell openjdk* dotnet* google* mysql* php* android*
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq autoremove --purge
@@ -203,8 +201,8 @@ jobs:
           if [ -n "$(ls -A devices/${{matrix.target}}/*.bin.patch 2>/dev/null)" ]; then
             git apply devices/${{matrix.target}}/patches/*.bin.patch
           fi
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 -E --forward"
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 -E --forward"
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 --forward"
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 --forward"
         sed -i '$a  \
         CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
         CONFIG_CPU_FREQ_GOV_USERSPACE=y \

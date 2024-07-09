@@ -83,7 +83,7 @@ index f15f8f26b..19d1eba72 100644
 +  SOC := rk3399
 +  UBOOT_DEVICE_NAME := rockchip-pico3399-rk3399
 +  IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-bin | gzip | append-metadata
-+  DEVICE_PACKAGES := kmod-r8169 kmod-r8125 kmod-nvme -urngd
++  DEVICE_PACKAGES := kmod-r8168 kmod-r8125 kmod-nvme -urngd
 +endef
 +TARGET_DEVICES += rockchip_pico3399
 +

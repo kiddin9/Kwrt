@@ -42,25 +42,39 @@
 
 --- a/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
 +++ b/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
-@@ -16,7 +16,7 @@
+@@ -1,10 +1,12 @@
+ --- a/arch/arm/dts/Makefile
+ +++ b/arch/arm/dts/Makefile
+-@@ -148,6 +148,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
++@@ -148,6 +148,9 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
+  	rk3399-firefly.dtb \
+  	rk3399-gru-bob.dtb \
+  	rk3399-gru-kevin.dtb \
+ +	rk3399-guangmiao-g4c.dtb \
+++	rk3399-h3399pc.dtb \
+++	rk3399-mpc1903.dtb \
+  	rk3399-khadas-edge.dtb \
+  	rk3399-khadas-edge-captain.dtb \
+  	rk3399-khadas-edge-v.dtb \
+@@ -16,12 +18,17 @@
   	rk3399-orangepi.dtb \
   	rk3399-pinebook-pro.dtb \
   	rk3399-pinephone-pro.dtb \
 -@@ -182,12 +184,17 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
-+@@ -182,12 +184,20 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
++@@ -182,12 +184,22 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
   	rk3566-soquartz-model-a.dtb \
   	rk3568-bpi-r2-pro.dtb \
   	rk3568-evb.dtb \
-@@ -27,6 +27,9 @@
-  	rk3568-nanopi-r5c.dtb \
-  	rk3568-nanopi-r5s.dtb \
-  	rk3568-odroid-m1.dtb \
+ +	rk3568-fastrhino-r66s.dtb \
+ +	rk3568-fastrhino-r68s.dtb \
+++	rk3568-lyt-t68m.dtb \
+++	rk3568-xgp.dtb \
 ++	rk3568-opc-h66k.dtb \
 ++	rk3568-opc-h68k.dtb \
 ++	rk3568-opc-h69k.dtb \
- +	rk3568-photonicat.dtb \
-  	rk3568-radxa-e25.dtb \
- +	rk3568-roc-pc.dtb \
+  	rk3568-generic.dtb \
+  	rk3568-lubancat-2.dtb \
+ +	rk3568-mrkaio-m68s.dtb \
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
