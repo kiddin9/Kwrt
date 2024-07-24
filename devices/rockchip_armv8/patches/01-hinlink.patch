@@ -42,25 +42,24 @@
 
 --- a/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
 +++ b/package/boot/uboot-rockchip/patches/900-arm-add-dts-files.patch
-@@ -16,7 +16,7 @@
-  	rk3399-orangepi.dtb \
-  	rk3399-pinebook-pro.dtb \
-  	rk3399-pinephone-pro.dtb \
--@@ -182,12 +184,17 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
-+@@ -182,12 +184,20 @@ dtb-$(CONFIG_ROCKCHIP_RK3568) += \
-  	rk3566-soquartz-model-a.dtb \
-  	rk3568-bpi-r2-pro.dtb \
-  	rk3568-evb.dtb \
-@@ -27,6 +27,9 @@
-  	rk3568-nanopi-r5c.dtb \
-  	rk3568-nanopi-r5s.dtb \
-  	rk3568-odroid-m1.dtb \
+@@ -1,6 +1,6 @@
+ --- a/arch/arm/dts/Makefile
+ +++ b/arch/arm/dts/Makefile
+-@@ -96,6 +96,19 @@ dtb-$(CONFIG_ROCKCHIP_RK3368) += \
++@@ -96,6 +96,22 @@ dtb-$(CONFIG_ROCKCHIP_RK3368) += \
+  	rk3368-geekbox.dtb \
+  	rk3368-px5-evb.dtb \
+  
+@@ -10,6 +10,9 @@
+ +
+ +dtb-$(CONFIG_ROCKCHIP_RK3568) += \
+ +	rk3568-mrkaio-m68s.dtb \
 ++	rk3568-opc-h66k.dtb \
 ++	rk3568-opc-h68k.dtb \
 ++	rk3568-opc-h69k.dtb \
- +	rk3568-photonicat.dtb \
-  	rk3568-radxa-e25.dtb \
- +	rk3568-roc-pc.dtb \
+ +	rk3568-photonicat.dtb
+ +
+ +dtb-$(CONFIG_ROCKCHIP_RK3588) += \
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
@@ -125,25 +124,3 @@
  	set_interface_core 8 "eth3"
  	;;
  esac
-
---- a/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
-+++ b/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
-@@ -16,7 +16,7 @@
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-r4s-enterprise.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
--@@ -90,9 +92,11 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-bp
-+@@ -90,9 +92,14 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-bp
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-evb1-v10.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r66s.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r68s.dtb
-@@ -24,6 +24,9 @@
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-lubancat-2.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5c.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5s.dtb
-++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-opc-h66k.dtb
-++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-opc-h68k.dtb
-++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-opc-h69k.dtb
- +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-photonicat.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-odroid-m1.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-radxa-e25.dtb

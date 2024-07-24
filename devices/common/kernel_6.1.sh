@@ -2,41 +2,42 @@
 
 shopt -s extglob
 
-rm -rf target/linux package/kernel package/boot package/firmware package/network/config/wifi-scripts
+rm -rf target/linux package/kernel package/boot package/firmware
 
 mkdir new; cp -rf .git new/.git
 cd new
 git reset --hard origin/master
 
-cp -rf --parents target/linux package/kernel package/boot package/firmware include/kernel* package/network/config/wifi-scripts config/Config-images.in include/image*.mk include/trusted-firmware-a.mk scripts/ubinize-image.sh package/utils/bcm27xx-utils package/devel/perf ../
+cp -rf --parents target/linux package/kernel package/boot package/firmware include/kernel* config/Config-images.in config/Config-kernel.in include/image*.mk include/trusted-firmware-a.mk scripts/ubinize-image.sh package/utils/bcm27xx-utils package/devel/perf ../
 cd -
 
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
 #sed -i "s/\$(PKG_VERSION)-\$(PKG_RELEASE)/\$(PKG_VERSION)-r\$(PKG_RELEASE)/" include/package-defaults.mk
 
-cp -rf devices/common/patches/rootfstargz.patch.b devices/common/patches/rootfstargz.patch
-cp -rf devices/common/patches/kernel6.1.patch.b devices/common/patches/kernel6.1.patch
+cp -rf devices/common/patches/rootfstargz.patch.main devices/common/patches/rootfstargz.patch
+cp -rf devices/common/patches/qca-ssdk.patch.main devices/common/patches/qca-ssdk.patch
+cp -rf devices/common/patches/ebpf.patch.main devices/common/patches/ebpf.patch
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.1
 
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.1/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-6.1/613-netfilter_optional_tcp_window_check.patch
+wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.1/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.1/
 
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -P package/kernel/linux/modules/
 
 rm -rf target/linux/generic/hack-6.1/{410-block-fit-partition-parser.patch,724-net-phy-aquantia*,720-net-phy-add-aqr-phys.patch}
 
-curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/main/include/u-boot.mk -o include/u-boot.mk
+wget -N https://raw.githubusercontent.com/openwrt/openwrt/main/include/u-boot.mk -P include/
 
 mkdir package/kernel/mt76/patches
-curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
+wget -N https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -P package/kernel/mt76/patches/
 
 cd feeds/packages
-rm -rf libs/!(pcre) net/coova-chilli net/xtables-addons net/jool kernel
-git_clone_path master https://github.com/openwrt/packages libs net/coova-chilli net/xtables-addons net/jool kernel
+rm -rf kernel libs/xr_usb_serial_common net/xtables-addons
+git_clone_path master https://github.com/openwrt/packages kernel libs/xr_usb_serial_common net/xtables-addons
 cd ../../
 
-rm -rf package/feeds/kiddin9/quectel_Gobinet package/feeds/kiddin9/fibocom_MHI package/feeds/packages/libpfring
+wget -N https://raw.githubusercontent.com/openwrt/packages/master/net/coova-chilli/patches/011-kernel517.patch -P package/feeds/packages/coova-chilli/patches/
 
 sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
 

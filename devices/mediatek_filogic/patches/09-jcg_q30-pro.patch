@@ -27,7 +27,7 @@
 
 --- a/target/linux/mediatek/dts/mt7981b-jcg-q30-pro.dts
 +++ b/target/linux/mediatek/dts/mt7981b-jcg-q30-pro.dts
-@@ -98,6 +98,10 @@
+@@ -101,6 +101,10 @@
  		spi-tx-bus-width = <4>;
  		spi-rx-bus-width = <4>;
  
@@ -38,3 +38,17 @@
  		partitions {
  			compatible = "fixed-partitions";
  			#address-cells = <1>;
+@@ -140,12 +144,11 @@
+ 			partition@380000 {
+ 				label = "fip";
+ 				reg = <0x0380000 0x0200000>;
+-				read-only;
+ 			};
+ 
+ 			partition@580000 {
+ 				label = "ubi";
+-				reg = <0x0580000 0x7000000>;
++				reg = <0x0580000 0x6e80000>;
+ 			};
+ 		};
+ 	};

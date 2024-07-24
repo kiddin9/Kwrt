@@ -1,365 +1,52 @@
-From 02f7ea25d6612180b3a97b688d6e69cfe7af2f0d Mon Sep 17 00:00:00 2001
-From: Tianling Shen <cnsztl@immortalwrt.org>
-Date: Thu, 19 Oct 2023 15:14:45 +0800
-Subject: [PATCH] mediatek: add ABT ASR3000 support
-
-Signed-off-by: Tianling Shen <cnsztl@immortalwrt.org>
----
- .../dts/mt7981b-abt-asr3000.dts      | 267 ++++++++++++++++++
- .../filogic/base-files/etc/board.d/01_leds    |   5 +
- .../filogic/base-files/etc/board.d/02_network |  17 +-
- .../etc/hotplug.d/ieee80211/11_fix_wifi_mac   |   5 +
- target/linux/mediatek/image/filogic.mk        |  21 ++
- 5 files changed, 307 insertions(+), 8 deletions(-)
- create mode 100644 target/linux/mediatek/dts/mt7981b-abt-asr3000.dts
-
-diff --git a/target/linux/mediatek/dts/mt7981b-abt-asr3000.dts b/target/linux/mediatek/dts/mt7981b-abt-asr3000.dts
-new file mode 100644
-index 00000000000..605721f2d08
---- /dev/null
+--- a/target/linux/mediatek/dts/mt7981b-abt-asr3000.dts
 +++ b/target/linux/mediatek/dts/mt7981b-abt-asr3000.dts
-@@ -0,0 +1,268 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright (C) 2023 Tianling Shen <cnsztl@immortalwrt.org>
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+#include "mt7981.dtsi"
-+
-+/ {
-+	model = "ABT ASR3000 (custom U-Boot layout)";
-+	compatible = "abt,asr3000", "mediatek,mt7981";
-+
-+	aliases {
-+		led-boot = &mesh_led;
-+		led-failsafe = &mesh_led;
-+		led-upgrade = &mesh_led;
-+		serial0 = &uart0;
-+		label-mac-device = &gmac1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0 0x40000000 0 0x10000000>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		button-reset {
-+			label = "reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button-mesh {
-+			label = "mesh";
-+			linux,code = <BTN_9>;
-+			linux,input-type = <EV_SW>;
-+			gpios = <&pio 0 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		led-0 {
-+			label = "red:wan";
-+			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led-1 {
-+			label = "green:wan";
-+			gpios = <&pio 8 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		mesh_led: led-2 {
-+			label = "green:mesh";
-+			gpios = <&pio 15 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-3 {
-+			label = "green:wlan2g";
-+			gpios = <&pio 34 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led-4 {
-+			label = "green:wlan5g";
-+			gpios = <&pio 35 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&eth {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mdio_pins>;
-+
-+	status = "okay";
-+
-+	gmac0: mac@0 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <0>;
-+		phy-mode = "2500base-x";
-+
-+		nvmem-cells = <&macaddr_art_0 0>;
-+		nvmem-cell-names = "mac-address";
-+
-+		fixed-link {
-+			speed = <2500>;
-+			full-duplex;
-+			pause;
-+		};
-+	};
-+
-+	gmac1: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-mode = "gmii";
-+		phy-handle = <&int_gbe_phy>;
-+
-+		nvmem-cells = <&macaddr_art_0 0>;
-+		nvmem-cell-names = "mac-address";
-+	};
-+};
-+
-+&mdio_bus {
-+	switch: switch@0 {
-+		compatible = "mediatek,mt7531";
-+		reg = <31>;
-+		reset-gpios = <&pio 39 GPIO_ACTIVE_HIGH>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_flash_pins>;
-+	status = "okay";
-+
-+	spi_nand: flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spi-nand";
-+		reg = <0>;
-+		spi-max-frequency = <52000000>;
-+
-+		spi-cal-enable;
-+		spi-cal-mode = "read-data";
-+		spi-cal-datalen = <7>;
-+		spi-cal-data = /bits/ 8 <0x53 0x50 0x49 0x4E 0x41 0x4E 0x44>;
-+		spi-cal-addrlen = <5>;
-+		spi-cal-addr = /bits/ 32 <0x0 0x0 0x0 0x0 0x0>;
-+
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
+@@ -155,6 +155,10 @@
+ 		spi-tx-bus-width = <4>;
+ 		spi-rx-bus-width = <4>;
+ 
 +		mediatek,nmbm;
 +		mediatek,bmt-max-ratio = <1>;
 +		mediatek,bmt-max-reserved-blocks = <64>;
 +
-+		partitions: partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "BL2";
-+				reg = <0x00000 0x100000>;
-+				read-only;
-+			};
-+
-+			partition@100000 {
-+				label = "u-boot-env";
-+				reg = <0x100000 0x80000>;
-+			};
-+
-+			partition@180000 {
-+				label = "art";
-+				reg = <0x180000 0x100000>;
-+				read-only;
-+
-+				compatible = "nvmem-cells";
-+				nvmem-layout {
-+					compatible = "fixed-layout";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					macaddr_art_0: macaddr@0 {
-+						compatible = "mac-base";
-+						reg = <0x0 0x6>;
-+						#nvmem-cell-cells = <1>;
-+					};
-+				};
-+			};
-+
-+			factory: partition@280000 {
-+				label = "Factory";
-+				reg = <0x280000 0x100000>;
-+			};
-+
-+			partition@380000 {
-+				label = "FIP";
-+				reg = <0x380000 0x200000>;
-+			};
-+
-+			partition@580000 {
-+				label = "ubi";
+ 		partitions {
+ 			compatible = "fixed-partitions";
+ 			#address-cells = <1>;
+@@ -208,13 +212,12 @@
+ 			partition@380000 {
+ 				label = "fip";
+ 				reg = <0x380000 0x200000>;
+-				read-only;
+ 			};
+ 
+ 			partition@580000 {
+ 				compatible = "linux,ubi";
+ 				label = "ubi";
+-				reg = <0x580000 0x7a80000>;
 +				reg = <0x580000 0x6e80000>;
-+			};
-+		};
-+	};
-+};
-+
-+&switch {
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			label = "lan1";
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			label = "lan2";
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+			label = "lan3";
-+		};
-+
-+		port@6 {
-+			reg = <6>;
-+			ethernet = <&gmac0>;
-+			phy-mode = "2500base-x";
-+
-+			fixed-link {
-+				speed = <2500>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+	};
-+};
-+
-+&pio {
-+	spi0_flash_pins: spi0-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0", "spi0_wp_hold";
-+		};
-+
-+		conf-pu {
-+			pins = "SPI0_CS", "SPI0_HOLD", "SPI0_WP";
-+			drive-strength = <MTK_DRIVE_8mA>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
-+		};
-+
-+		conf-pd {
-+			pins = "SPI0_CLK", "SPI0_MOSI", "SPI0_MISO";
-+			drive-strength = <MTK_DRIVE_8mA>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&wifi {
-+	status = "okay";
-+
-+	mediatek,mtd-eeprom = <&factory 0x0>;
-+};
-diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index 8e4fd8003c168..c21f23d4587f2 100644
---- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -41,6 +41,7 @@ mediatek_setup_interfaces()
- 	bananapi,bpi-r4)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 eth1" "wan eth2"
- 		;;
-+	abt,asr3000|\
- 	cmcc,rax3000m*|\
- 	h3c,magic-nx30-pro|\
- 	zbtlink,zbt-z8103ax)
-diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-index 3d625a820d6..9290afe4c31 100644
---- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-@@ -6,6 +6,11 @@ board=$(board_name)
- board_config_update
  
- case $board in
-+abt,asr3000)
-+	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1"
-+	ucidef_set_led_netdev "wlan2g" "WLAN2G" "green:wlan2g" "phy0-ap0"
-+	ucidef_set_led_netdev "wlan5g" "WLAN5G" "green:wlan5g" "phy1-ap0"
-+	;;
- confiabits,mt7981)
- 	ucidef_set_led_netdev "lan1" "lan1" "blue:lan-1" "lan1" "link tx rx"
- 	ucidef_set_led_netdev "lan2" "lan2" "blue:lan-2" "lan2" "link tx rx"
-diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-index 6a513c74fb9..f586edf525f 100644
---- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-+++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -10,6 +10,11 @@ PHYNBR=${DEVPATH##*/phy}
- board=$(board_name)
- 
- case "$board" in
-+	abt,asr3000)
-+		addr=$(get_mac_label)
-+		[ "$PHYNBR" = "0" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
-+		[ "$PHYNBR" = "1" ] && macaddr_setbit_la $(macaddr_add $addr 1) > /sys${DEVPATH}/macaddress
-+		;;
- 	acer,predator-w6)
- 		key_path="/var/qcidata/data"
- 		[ "$PHYNBR" = "0" ] && cat $key_path/2gMAC > /sys${DEVPATH}/macaddress
-diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
-index 95aee51b689..7f28be90a7b 100644
+ 				volumes {
+ 					ubi_rootdisk: ubi-volume-fit {
+
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -105,6 +105,27 @@ define Build/cetron-header
- 	rm $@.tmp
- endef
- 
-+define Device/abt_asr3000
-+  DEVICE_VENDOR := ABT
-+  DEVICE_MODEL := ASR3000
-+  DEVICE_DTS := mt7981b-abt-asr3000
-+  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
-+  UBINIZE_OPTS := -E 5
-+  BLOCKSIZE := 128k
-+  PAGESIZE := 2048
-+  IMAGE_SIZE := 113152k
-+  KERNEL_IN_UBI := 1
+@@ -115,17 +115,10 @@ define Device/abt_asr3000
+   BLOCKSIZE := 128k
+   PAGESIZE := 2048
+   KERNEL_IN_UBI := 1
+-  UBOOTENV_IN_UBI := 1
+-  IMAGES := sysupgrade.itb
+-  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+-  KERNEL := kernel-bin | gzip
+-  KERNEL_INITRAMFS := kernel-bin | lzma | \
+-        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+-  IMAGE/sysupgrade.itb := append-kernel | \
+-        fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | append-metadata
+-  ARTIFACTS := preloader.bin bl31-uboot.fip
+-  ARTIFACT/preloader.bin := mt7981-bl2 spim-nand-ddr3
+-  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot abt_asr3000
++  IMAGE_SIZE := 114816k
 +  IMAGES += factory.bin
 +  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-+  KERNEL = kernel-bin | lzma | \
-+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
-+  KERNEL_INITRAMFS = kernel-bin | lzma | \
-+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd
-+endef
-+TARGET_DEVICES += abt_asr3000
-+
- define Device/asus_tuf-ax4200
-   DEVICE_VENDOR := ASUS
-   DEVICE_MODEL := TUF-AX4200
+ endef
+ TARGET_DEVICES += abt_asr3000

@@ -708,7 +708,7 @@
 +};
 --- /dev/null
 +++ b/configs/rocktech-mpc1903-rk3399_defconfig
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,73 @@
 +CONFIG_ARM=y
 +CONFIG_SKIP_LOWLEVEL_INIT=y
 +CONFIG_COUNTER_FREQUENCY=24000000
@@ -745,6 +745,7 @@
 +# CONFIG_CMD_SETEXPR is not set
 +CONFIG_CMD_TIME=y
 +CONFIG_SPL_OF_CONTROL=y
++# CONFIG_OF_UPSTREAM is not set
 +CONFIG_OF_SPL_REMOVE_PROPS="pinctrl-0 pinctrl-names clock-names interrupt-parent assigned-clocks assigned-clock-rates assigned-clock-parents"
 +CONFIG_ENV_IS_IN_MMC=y
 +CONFIG_SYS_RELOC_GD_ENV_ADDR=y

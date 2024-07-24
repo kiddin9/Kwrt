@@ -1,0 +1,69 @@
+--- a/config/Config-kernel.in
++++ b/config/Config-kernel.in
+@@ -364,6 +364,7 @@ config KERNEL_DEBUG_INFO
+ config KERNEL_DEBUG_INFO_BTF
+ 
+ 	bool "Enable additional BTF type information"
++	default y if (TARGET_armsr || TARGET_bcm27xx || TARGET_ipq806x_chromium || TARGET_ipq807x || TARGET_mediatek_filogic || TARGET_mvebu_cortexa53 || TARGET_mvebu_cortexa72 || TARGET_rockchip || TARGET_sunxi || TARGET_x86_64)
+ 	depends on !HOST_OS_MACOS
+ 	depends on KERNEL_DEBUG_INFO && !KERNEL_DEBUG_INFO_REDUCED
+ 	select DWARVES
+@@ -374,9 +375,20 @@ config KERNEL_DEBUG_INFO_BTF
+ 
+ 	  Required to run BPF CO-RE applications.
+ 
++config KERNEL_MODULE_ALLOW_BTF_MISMATCH
++	bool "Allow loading modules with non-matching BTF type info"
++	depends on KERNEL_DEBUG_INFO_BTF
++	default y
++	help
++	  For modules whose split BTF does not match vmlinux, load without
++	  BTF rather than refusing to load. The default behavior with
++	  module BTF enabled is to reject modules with such mismatches;
++	  this option will still load module BTF where possible but ignore
++	  it when a mismatch is found.
++
+ config KERNEL_DEBUG_INFO_REDUCED
+ 	bool "Reduce debugging information"
+-	default y
++	default y if !(TARGET_armsr || TARGET_bcm27xx || TARGET_ipq806x_chromium || TARGET_ipq807x || TARGET_mediatek_filogic || TARGET_mvebu_cortexa53 || TARGET_mvebu_cortexa72 || TARGET_rockchip || TARGET_sunxi || TARGET_x86_64)
+ 	depends on KERNEL_DEBUG_INFO
+ 	help
+ 	  If you say Y here gcc is instructed to generate less debugging
+@@ -464,17 +476,28 @@ config KERNEL_KPROBE_EVENTS
+ config KERNEL_BPF_EVENTS
+ 	bool "Compile the kernel with BPF event support"
+ 	select KERNEL_KPROBES
++	default y if KERNEL_DEBUG_INFO_BTF
+ 	help
+ 	  Allows to attach BPF programs to kprobe, uprobe and tracepoint events.
+ 	  This is required to use BPF maps of type BPF_MAP_TYPE_PERF_EVENT_ARRAY
+ 	  for sending data from BPF programs to user-space for post-processing
+ 	  or logging.
+ 
++config KERNEL_PROBE_EVENTS_BTF_ARGS
++	bool
++	depends on KERNEL_KPROBE_EVENTS && KERNEL_DEBUG_INFO_BTF
++	default n
++
+ config KERNEL_BPF_KPROBE_OVERRIDE
+ 	bool
+ 	depends on KERNEL_KPROBES
+ 	default n
+ 
++config KERNEL_BPF_STREAM_PARSER
++	bool "Allow a TCP stream parser to be used with BPF_MAP_TYPE_SOCKMAP"
++	depends on KERNEL_CGROUP_BPF
++	default y if KERNEL_DEBUG_INFO_BTF
++
+ config KERNEL_AIO
+ 	bool "Compile the kernel with asynchronous IO support"
+ 	default y if !SMALL_FLASH
+@@ -1100,6 +1123,7 @@ config KERNEL_NET_L3_MASTER_DEV
+ 
+ config KERNEL_XDP_SOCKETS
+ 	bool "XDP sockets support"
++	default y if KERNEL_DEBUG_INFO_BTF
+ 	help
+ 	  XDP sockets allows a channel between XDP programs and
+ 	  userspace applications.

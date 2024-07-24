@@ -13,19 +13,19 @@
 
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -8,7 +8,7 @@ rockchip_setup_interfaces()
- 
+@@ -9,7 +9,7 @@ rockchip_setup_interfaces()
  	case "$board" in
  	ariaboard,photonicat|\
+ 	armsom,sige7|\
 -	ezpro,mrkaio-m68s|\
 +	ezpro,mrkaio-m68s*|\
  	firefly,rk3568-roc-pc|\
  	friendlyarm,nanopi-r2c|\
  	friendlyarm,nanopi-r2c-plus|\
-@@ -54,7 +54,7 @@ rockchip_setup_macs()
- 	local label_mac=""
+@@ -59,7 +59,7 @@ rockchip_setup_macs()
  
  	case "$board" in
+ 	armsom,sige7|\
 -	ezpro,mrkaio-m68s|\
 +	ezpro,mrkaio-m68s*|\
  	friendlyarm,nanopc-t6|\
@@ -51,20 +51,3 @@
  define Device/firefly_roc-rk3328-cc
    DEVICE_VENDOR := Firefly
    DEVICE_MODEL := ROC-RK3328-CC
-
---- a/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
-+++ b/target/linux/rockchip/patches-6.6/900-arm64-boot-add-dts-files.patch
-@@ -19,11 +19,12 @@
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-r4s-enterprise.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
--@@ -90,9 +92,19 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-bp
-+@@ -90,9 +92,20 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-bp
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-evb1-v10.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r66s.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r68s.dtb
- +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-mrkaio-m68s.dtb
-++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-mrkaio-m68s-plus.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-lubancat-2.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5c.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5s.dtb

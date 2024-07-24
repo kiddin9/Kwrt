@@ -1,14 +1,14 @@
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -41,7 +41,7 @@ mediatek_setup_interfaces()
- 	bananapi,bpi-r4)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 eth1" "wan eth2"
+@@ -12,7 +12,7 @@ mediatek_setup_interfaces()
+ 		ucidef_set_interface_lan "eth0" "dhcp"
  		;;
+ 	abt,asr3000|\
 -	cmcc,rax3000m|\
 +	cmcc,rax3000m*|\
  	h3c,magic-nx30-pro|\
+ 	nokia,ea0326gmp|\
  	zbtlink,zbt-z8103ax)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
 
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
@@ -71,14 +71,3 @@
  	acer,predator-w6|\
  	glinet,gl-mt2500|\
  	glinet,gl-mt6000|\
-
---- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-+++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-@@ -31,6 +31,7 @@ case "$FIRMWARE" in
- 			;;
- 		esac
- 		;;
-+	cmcc,rax3000m-emmc|\
- 	ubnt,unifi-6-plus)
- 		caldata_extract_mmc "factory" 0x0 0x1000
- 		;;

@@ -25,7 +25,7 @@ env:
 
 jobs:
   build:
-    runs-on: Ubuntu-22.04
+    runs-on: ubuntu-latest
     
     name: Build ${{matrix.target}}
     strategy:
@@ -69,15 +69,13 @@ jobs:
         elif [ ${{matrix.target}} == "x86_generic" ]; then
             echo "ARCH=linux/amd32" >> $GITHUB_ENV
             echo "MTARGET=x86_generic" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armsr_armv8|qualcommax_ipq807x|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|qualcommax_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
+        elif [[ ${{matrix.target}} =~ (armsr_armv8|ipq807x_generic|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|qualcommax_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "ath79_nand" ]]; then
             echo "MTARGET=mips_24kc" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} == "ipq50xx_arm" ]]; then
-            echo "MTARGET=arm_cortex-a7" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7) ]]; then
+        elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7|ipq50xx_arm) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "amlogic_meson8b" ]]; then
             echo "MTARGET=arm_cortex-a5_vfpv4" >> $GITHUB_ENV
@@ -116,8 +114,9 @@ jobs:
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install build-essential clang llvm flex g++ gawk gcc-multilib gettext \
         git libncurses5-dev libssl-dev python3-distutils python3-pyelftools python3-setuptools \
-        libpython3-dev rsync unzip zlib1g-dev swig aria2 jq subversion qemu-utils ccache rename \
-        libelf-dev device-tree-compiler libgnutls28-dev coccinelle libgmp3-dev libmpc-dev libfuse-dev
+        python3-dev python3-pip rsync unzip zlib1g-dev swig aria2 jq subversion qemu-utils ccache rename \
+        libelf-dev device-tree-compiler libgnutls28-dev coccinelle libgmp3-dev libmpc-dev libfuse-dev gcc-multilib
+        pip3 install --user -U pylibfdt
         sudo -E apt-get -qq purge azure-cli ghc* zulu* firefox powershell openjdk* dotnet* google* mysql* php* android*
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq autoremove --purge
@@ -139,7 +138,7 @@ jobs:
         REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
            -H "Authorization: Bearer ${{ secrets.TOKEN_KIDDIN9 }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v23 | tail -n 1)"
-        REPO_BRANCH="openwrt-23.05"
+        #REPO_BRANCH="openwrt-23.05"
         #echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/`echo $REPO_BRANCH  | cut -d . -f 1,2 | sed -e 's/^v//'`\"">>devices/common/.config
         echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/23.05\"">>devices/common/.config
         if [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
@@ -163,19 +162,21 @@ jobs:
     - name: Load custom configuration
       run: |
         function git_clone_path() {
-          branch="$1" rurl="$2" localdir="gitemp" mv="$3"
+          trap 'rm -rf "$tmpdir"' EXIT
+          branch="$1" rurl="$2" mv="$3"
           [[ "$mv" != "mv" ]] && shift 2 || shift 3
-          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
+          rootdir="$PWD"
+          tmpdir="$(mktemp -d)" || exit 1
+          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $tmpdir
           if [ "$?" != 0 ]; then
             echo "error on $rurl"
-            return 0
+            exit 1
           fi
-          cd $localdir
+          cd $tmpdir
           git sparse-checkout init --cone
           git sparse-checkout set $@
-          [[ "$mv" != "mv" ]] && cp -rn ./* ../ || mv -n $@/* ../$@/
-          cd ..
-          rm -rf gitemp
+          [[ "$mv" != "mv" ]] && cp -rn ./* $rootdir/ || mv -n $@/* $rootdir/$@/
+          cd $rootdir
           }
         export -f git_clone_path
         cp -rf devices/common/. openwrt/
@@ -203,8 +204,8 @@ jobs:
           if [ -n "$(ls -A devices/${{matrix.target}}/*.bin.patch 2>/dev/null)" ]; then
             git apply devices/${{matrix.target}}/patches/*.bin.patch
           fi
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 -E --forward"
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 -E --forward"
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 --forward"
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 --forward"
         sed -i '$a  \
         CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
         CONFIG_CPU_FREQ_GOV_USERSPACE=y \
