@@ -13,8 +13,11 @@ git_clone_path master https://github.com/immortalwrt/immortalwrt package/boot ta
 git_clone_path master https://github.com/immortalwrt/immortalwrt mv target/linux/generic
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.6
+rm -rf target/linux/generic/hack-6.6/767-net-phy-realtek*
 
 wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.6/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.6/
+
+wget -N https://github.com/istoreos/istoreos/raw/istoreos-22.03/target/linux/rockchip/patches-5.10/304-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.6/
 
 wget -N https://github.com/immortalwrt/immortalwrt/raw/master/include/kernel-6.6 -P include/
 
