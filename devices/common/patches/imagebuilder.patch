@@ -76,7 +76,7 @@
 +	echo -e " \
 +	sed -i \"s/[0-9]\+.[0-9]\+.[0-9]\{4\}/$$DATE/\" /etc/openwrt_release \n \
 +	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(ROOTFS_PARTSIZE)'/\" /etc/openwrt_release \n \
-+	sed -i \"s/OpenWrt .* by/OpenWrt $$DATE by/\" /etc/banner \n \
++	sed -i \"s/KWrt .* by/Kwrt $$DATE by/\" /etc/banner \n \
 +	echo \"$$DATE\" >/etc/openwrt_version \n \
 +	"> $(USER_FILES)/etc/uci-defaults/99-version; \
 +	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'; \
@@ -87,7 +87,7 @@
 +	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" ]]; then \
 +	if [[ $(IMAGE_SIZE) -lt 20480 ]]; then \
 +		if [[ ! "`grep "small_flash" $(TOPDIR)/repositories.conf`" ]]; then \
-+			echo "`grep openwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf; \
++			echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf; \
 +		fi \
 +	else \
 +		sed -i "/small_flash/d" $(TOPDIR)/repositories.conf; \
@@ -128,7 +128,7 @@
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
 +	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" && $(IMAGE_SIZE) -lt 20480 ]]; then \
-+		echo "`grep openwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf; \
++		echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf; \
 +	fi
  
  build_image: FORCE
