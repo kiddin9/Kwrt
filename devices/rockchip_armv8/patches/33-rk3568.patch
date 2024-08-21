@@ -33,7 +33,7 @@
  endef
  
 +define U-Boot/panther-x2-rk3566
-+  $(U-Boot/Default/rk3566)
++  $(U-Boot/rk3566/Default)
 +  NAME:=Panther X2
 +  BUILD_DEVICES:= \
 +    panther_x2

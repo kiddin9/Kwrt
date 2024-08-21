@@ -3,7 +3,7 @@ index 096692f4214..54df60aa350 100644
 --- a/package/boot/uboot-rockchip/Makefile
 +++ b/package/boot/uboot-rockchip/Makefile
 @@ -51,7 +51,8 @@ define U-Boot/nanopi-r2s-rk3328
-   $(U-Boot/Default/rk3328)
+   $(U-Boot/rk3328/Default)
    NAME:=NanoPi R2S
    BUILD_DEVICES:= \
 -    friendlyarm_nanopi-r2s
@@ -17,21 +17,21 @@ index 096692f4214..54df60aa350 100644
  endef
  
 +define U-Boot/rongpin-king3399-rk3399
-+  $(U-Boot/Default/rk3399)
++  $(U-Boot/rk3399/Default)
 +  NAME:=Rongpin King3399
 +  BUILD_DEVICES:= \
 +    rongpin_king3399
 +endef
 +
 +define U-Boot/rocktech-mpc1903-rk3399
-+  $(U-Boot/Default/rk3399)
++  $(U-Boot/rk3399/Default)
 +  NAME:=Rocktech MPC1903
 +  BUILD_DEVICES:= \
 +    rocktech_mpc1903
 +endef
 +
 +define U-Boot/sharevdi-h3399pc-rk3399
-+  $(U-Boot/Default/rk3399)
++  $(U-Boot/rk3399/Default)
 +  NAME:=SHAREVDI H3399PC
 +  BUILD_DEVICES:= \
 +    sharevdi_h3399pc
