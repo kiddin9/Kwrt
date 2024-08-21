@@ -11,6 +11,8 @@ git_clone_path master https://github.com/coolsnowwolf/lede target/linux/qualcomm
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/qualcommax/files/arch/arm64/boot/dts/qcom
 
+git_clone_path ipq60xx-devel_nss https://github.com/JiaY-shi/openwrt mv target/linux/qualcommax/patches-6.6
+
 wget -N https://github.com/coolsnowwolf/lede/raw/master/target/linux/qualcommax/image/ipq60xx.mk -P target/linux/qualcommax/image/
 
 sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/qualcommax/Makefile
