@@ -10,5 +10,5 @@ git_clone_path master https://github.com/coolsnowwolf/lede target/linux/amlogic 
 
 sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/amlogic/image/meson8b.mk
 
-
+rm -rf package/kernel/r8125 package/kernel/r8126 package/kernel/r8168
 
