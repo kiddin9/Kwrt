@@ -11,7 +11,7 @@ git_clone_path master https://github.com/coolsnowwolf/lede target/linux/qualcomm
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic
 
-wget -N https://github.com/immortalwrt/immortalwrt/raw/master/include/kernel-6.1 -P include/
+wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.1 -P include/
 
 sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/qualcommax/Makefile
 
