@@ -3,13 +3,15 @@
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/boot package/feeds/kiddin9/accel-ppp package/devel/perf package/devel/kselftests-bpf package/feeds/routing/batman-adv package/kernel/ksmbd
+rm -rf package/boot package/feeds/kiddin9/accel-ppp package/devel/perf package/devel/kselftests-bpf package/feeds/routing/batman-adv
 
 rm -rf target/linux/generic/!(*-5.15) target/linux/rockchip package/kernel devices/common/patches/usb-audio.patch
 
 git_clone_path master https://github.com/coolsnowwolf/lede package/boot target/linux/rockchip package/kernel
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic
+
+rm -rf  package/kernel/ksmbd
 
 wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-5.10 -P include/
 wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.1 -P include/
