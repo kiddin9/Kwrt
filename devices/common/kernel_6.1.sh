@@ -29,7 +29,6 @@ rm -rf target/linux/generic/hack-6.1/{410-block-fit-partition-parser.patch,724-n
 
 wget -N https://raw.githubusercontent.com/openwrt/openwrt/main/include/u-boot.mk -P include/
 
-mkdir package/kernel/mt76/patches
 wget -N https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -P package/kernel/mt76/patches/
 
 cd feeds/packages
@@ -44,3 +43,5 @@ sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
 sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
 
 sed -i "s/no-lto,/no-lto no-mold,/" include/package.mk
+
+sed -i "s/OpenWrt/KWrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in config/Config-images.in Config.in include/u-boot.mk include/version.mk package/network/config/wifi-scripts/files/lib/wifi/mac80211.sh || true

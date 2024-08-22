@@ -6,28 +6,28 @@
  endef
 +
 +define U-Boot/opc-h66k-rk3568
-+  $(U-Boot/Default/rk3568)
++  $(U-Boot/rk3568/Default)
 +  NAME:=OPC-H66K
 +  BUILD_DEVICES:= \
 +    hinlink_opc-h66k
 +endef
  
 +define U-Boot/opc-h68k-rk3568
-+  $(U-Boot/Default/rk3568)
++  $(U-Boot/rk3568/Default)
 +  NAME:=OPC-H68K
 +  BUILD_DEVICES:= \
 +    hinlink_opc-h68k
 +endef
 +
 +define U-Boot/opc-h69k-rk3568
-+  $(U-Boot/Default/rk3568)
++  $(U-Boot/rk3568/Default)
 +  NAME:=OPC-H69K
 +  BUILD_DEVICES:= \
 +    hinlink_opc-h69k
 +endef
 +
  define U-Boot/photonicat-rk3568
-   $(U-Boot/Default/rk3568)
+   $(U-Boot/rk3568/Default)
    NAME:=Photonicat
 @@ -335,6 +356,9 @@
    mrkaio-m68s-rk3568 \

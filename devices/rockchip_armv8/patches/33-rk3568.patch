@@ -33,7 +33,7 @@
  endef
  
 +define U-Boot/panther-x2-rk3566
-+  $(U-Boot/Default/rk3566)
++  $(U-Boot/rk3566/Default)
 +  NAME:=Panther X2
 +  BUILD_DEVICES:= \
 +    panther_x2
@@ -42,7 +42,7 @@
 +
  # RK3568 boards
  
- define U-Boot/Default/rk3568
+ define U-Boot/rk3568/Default
 @@ -188,6 +195,27 @@
    DEPENDS:=+PACKAGE_u-boot-$(1):trusted-firmware-a-rk3568
    ATF:=$(RK3568_ATF)
@@ -50,21 +50,21 @@
 +endef
 +
 +define U-Boot/lyt-t68m-rk3568
-+  $(U-Boot/Default/rk3568)
++  $(U-Boot/rk3568/Default)
 +  NAME:=LYT T68M
 +  BUILD_DEVICES:= \
 +    lyt_t68m
 +endef
 +
 +define U-Boot/nlnet-xgp-rk3568
-+  $(U-Boot/Default/rk3568)
++  $(U-Boot/rk3568/Default)
 +  NAME:=NLnet XGP Board
 +  BUILD_DEVICES:= \
 +    nlnet_xgp
 +endef
 +
 +define U-Boot/seewo-sv21-rk3568
-+  $(U-Boot/Default/rk3568)
++  $(U-Boot/rk3568/Default)
 +  NAME:=Seewo sv21-rk3568
 +  BUILD_DEVICES:= \
 +    seewo_sv21-rk3568
