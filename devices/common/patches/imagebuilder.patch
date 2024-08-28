@@ -55,17 +55,25 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -131,21 +131,47 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+@@ -131,11 +131,34 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
  # "-pkgname" in the package list means remove "pkgname" from the package list
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
-+IMAGE_SIZE:="$(shell echo $$(echo $($(USER_PROFILE)_IMAGE_SIZE) | cut -d k -f1))"
-+BUILD_PACKAGES:=$(shell if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" && $(IMAGE_SIZE) -lt 20480 ]]; then \
-+echo "$(BUILD_PACKAGES) -coremark -htop -bash -openssh-sftp-server "; \
-+else \
-+echo "$(BUILD_PACKAGES)"; \
-+fi \
-+)
++IMAGE_SIZE_VALUE := $(shell echo $($(USER_PROFILE)_IMAGE_SIZE) | sed 's/k$$//')
++ifeq ($(shell test $(IMAGE_SIZE_VALUE) -lt 20480 && echo true),true)
++    SMALL_FLASH := true
++endif
++ifneq ($(findstring usb,$(BUILD_PACKAGES)),)
++    BUILD_PACKAGES += automount luci-app-diskman
++endif
++ifeq ($(SMALL_FLASH),true)
++    BUILD_PACKAGES += -coremark -htop -bash -openssh-sftp-server -luci-app-diskman
++	ifeq ($(shell grep -q small_flash $(TOPDIR)/repositories.conf || echo "not_found"),not_found)
++        $(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf)
++    endif
++else
++    $(shell sed -i "/small_flash/d" $(TOPDIR)/repositories.conf)
++endif
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
@@ -83,19 +91,7 @@
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
  	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
- 	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
-+	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" ]]; then \
-+	if [[ $(IMAGE_SIZE) -lt 20480 ]]; then \
-+		if [[ ! "`grep "small_flash" $(TOPDIR)/repositories.conf`" ]]; then \
-+			echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf; \
-+		fi \
-+	else \
-+		sed -i "/small_flash/d" $(TOPDIR)/repositories.conf; \
-+	fi \
-+	fi
- 	$(MAKE) package_reload
- 	$(MAKE) package_install
- 	$(MAKE) -s prepare_rootfs
+@@ -146,6 +169,8 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
  	$(MAKE) -s checksum
@@ -104,7 +100,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -186,7 +212,17 @@ package_install: FORCE
+@@ -186,7 +211,13 @@ package_install: FORCE
  	@echo Installing packages...
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
@@ -114,22 +110,18 @@
 +			packages+="luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn "; \
 +		fi \
 +	done; \
-+	if [[ "`echo "$(BUILD_PACKAGES)" | grep "usb"`" ]]; then \
-+		packages+="automount "; \
-+	fi; \
-+	$(OPKG) install $(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en; \
-+	$(OPKG) install $$packages || true
++	$(OPKG) install $(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en $$packages; \
 +	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
  	@echo
-@@ -200,12 +236,15 @@ prepare_rootfs: FORCE
+@@ -200,12 +231,15 @@ prepare_rootfs: FORCE
  		) \
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
-+	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" && $(IMAGE_SIZE) -lt 20480 ]]; then \
-+		echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf; \
-+	fi
++	$(if $(SMALL_FLASH), \
++			$(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf) \
++	)
  
  build_image: FORCE
  	@echo
