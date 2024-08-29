@@ -105,7 +105,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -184,9 +214,12 @@ package_list: FORCE
+@@ -184,9 +214,15 @@ package_list: FORCE
  package_install: FORCE
  	@echo
  	@echo Installing packages...
@@ -114,7 +114,10 @@
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
 +	$(OPKG) install $(BUILD_PACKAGES) || true
-+	find $(USER_FILES) -name "*.ipk" -print0 | xargs -0 -I{} sh -c '$(OPKG) install "{}"' || true
++	find $(USER_FILES) -name "*.ipk" -print0 | \
++	while IFS= read -r -d '' ipk; do \
++      $(OPKG) install "$$ipk" && rm -f "$$ipk" || true; \
++	done; \
 +	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
