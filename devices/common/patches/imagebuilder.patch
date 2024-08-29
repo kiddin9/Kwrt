@@ -113,7 +113,7 @@
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
-+	$(OPKG) install $(BUILD_PACKAGES) || true
++	$(OPKG) install $(BUILD_PACKAGES) luci-i18n-base-zh-cn || true
 +	find $(USER_FILES) -name "*.ipk" -print0 | \
 +	while IFS= read -r -d '' ipk; do \
 +      $(OPKG) install "$$ipk" && rm -f "$$ipk" || true; \
