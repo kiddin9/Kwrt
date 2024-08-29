@@ -114,7 +114,7 @@
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
 +	$(OPKG) install $(BUILD_PACKAGES) || true
-+	find $(USER_FILES) -name "*.ipk" -print0 | xargs -0 -I{} sh -c '$(OPKG) install "{}"'
++	find $(USER_FILES) -name "*.ipk" -print0 | xargs -0 -I{} sh -c '$(OPKG) install "{}"' || true
 +	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
