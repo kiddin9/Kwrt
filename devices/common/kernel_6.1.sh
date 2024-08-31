@@ -2,7 +2,7 @@
 
 shopt -s extglob
 
-rm -rf target/linux package/kernel package/boot package/firmware
+rm -rf target/linux package/kernel package/boot package/firmware devices/common/patches/mac80211.patch
 
 mkdir new; cp -rf .git new/.git
 cd new
@@ -44,4 +44,4 @@ sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/
 
 sed -i "s/no-lto,/no-lto no-mold,/" include/package.mk
 
-sed -i "s/OpenWrt/KWrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in config/Config-images.in Config.in include/u-boot.mk include/version.mk package/network/config/wifi-scripts/files/lib/wifi/mac80211.sh || true
+sed -i "s/OpenWrt/Kwrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in config/Config-images.in Config.in include/u-boot.mk include/version.mk package/network/config/wifi-scripts/files/lib/wifi/mac80211.sh || true
