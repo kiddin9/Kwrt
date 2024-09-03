@@ -10,19 +10,3 @@
    KERNEL_LOADADDR := 0x00208000
    IMAGE/emmc.img := boot-script onecloud | emmc-common $$(DEVICE_NAME)
  endef
-
---- a/target/linux/amlogic/image/Makefile
-+++ b/target/linux/amlogic/image/Makefile
-@@ -88,4 +88,12 @@ endef
- 
- include $(SUBTARGET).mk
- 
-+define Image/Build
-+  if [ "$(PROFILE_SANITIZED)" == "thunder-onecloud" ]; then \
-+  export BIN_DIR=$(BIN_DIR); \
-+  cd /data/packit/openwrt-onecloud || true; \
-+  . ~/packit/packit_onecloud1.sh || true; \
-+  fi
-+endef
-+
- $(eval $(call BuildImage))
