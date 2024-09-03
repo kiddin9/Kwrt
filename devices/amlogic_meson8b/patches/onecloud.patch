@@ -1,6 +1,6 @@
---- a/target/linux/amlogic/image/meson8b.mk
-+++ b/target/linux/amlogic/image/meson8b.mk
-@@ -11,7 +11,8 @@ endef
+--- a/target/linux/amlogic/image/Makefile
++++ b/target/linux/amlogic/image/Makefile
+@@ -49,7 +49,8 @@ endef
  
  define Device/thunder-onecloud
    DEVICE_DTS := meson8b-onecloud
@@ -8,5 +8,5 @@
 +  DEVICE_TITLE := OneCloud 玩客云
 +  DEVICE_PACKAGES += kmod-usb-net-rtl8152
    KERNEL_LOADADDR := 0x00208000
-   IMAGE/emmc.img := boot-script onecloud | emmc-common $$(DEVICE_NAME)
+   IMAGE/emmc_burn.img := boot-script onecloud | emmc-common $$(DEVICE_NAME)
  endef

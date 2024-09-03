@@ -10,7 +10,7 @@ rm -rf package/kernel/mac80211
 
 git_clone_path c640f7b93736621b4d56627e4f6ab824093f9c3d https://github.com/openwrt/openwrt package/kernel/mac80211
 
-git_clone_path main https://github.com/shiyu1314/openwrt-onecloud kernel/6.1/amlogic && mv -f kernel/6.1/amlogic openwrt/target/linux/
+git_clone_path main https://github.com/shiyu1314/openwrt-onecloud kernel/6.1/amlogic && mv -f kernel/6.1/amlogic target/linux/
 
 sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/amlogic/image/meson8b.mk
 
