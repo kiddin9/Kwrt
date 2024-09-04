@@ -55,7 +55,7 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -131,11 +131,39 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+@@ -131,10 +131,38 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
  # "-pkgname" in the package list means remove "pkgname" from the package list
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
@@ -83,19 +83,17 @@
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
--	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
 +	[ "$(DATE)" ] && DATE="$(DATE)" || DATE="`date +'%m.%d.%Y'`"; \
 +	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
 +	echo -e " \
 +	sed -i \"s/[0-9]\+.[0-9]\+.[0-9]\{4\}/$$DATE/\" /etc/openwrt_release \n \
 +	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(ROOTFS_PARTSIZE)'/\" /etc/openwrt_release \n \
-+	sed -i \"s/Kwrt .* by/Kwrt $$DATE by/\" /etc/banner \n \
++	sed -i \"s/KWrt .* by/Kwrt $$DATE by/\" /etc/banner \n \
 +	echo \"$$DATE\" >/etc/openwrt_version \n \
 +	"> $(USER_FILES)/etc/uci-defaults/99-version; \
-+	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'; \
+ 	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
- 	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
 @@ -146,6 +174,8 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
@@ -105,7 +103,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -184,9 +214,15 @@ package_list: FORCE
+@@ -184,9 +214,17 @@ package_list: FORCE
  package_install: FORCE
  	@echo
  	@echo Installing packages...
@@ -114,15 +112,17 @@
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
 +	$(OPKG) install $(BUILD_PACKAGES) luci-i18n-base-zh-cn || true
++	$(if $(USER_FILES), \
 +	find $(USER_FILES) -name "*.ipk" -print0 | \
 +	while IFS= read -r -d '' ipk; do \
 +      $(OPKG) install "$$ipk" && rm -f "$$ipk" || true; \
 +	done; \
++	)
 +	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
  	@echo
-@@ -200,12 +233,15 @@ prepare_rootfs: FORCE
+@@ -200,12 +238,15 @@ prepare_rootfs: FORCE
  		) \
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
