@@ -80,7 +80,7 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -131,10 +131,38 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+@@ -131,10 +131,41 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
  # "-pkgname" in the package list means remove "pkgname" from the package list
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
@@ -104,22 +104,25 @@
 +define add_zh_cn_packages
 +$(eval BUILD_PACKAGES += $(foreach pkg,$(BUILD_PACKAGES),$(if $(and $(filter luci-app-%,$(pkg)),$(shell $(OPKG) list | grep -q "^luci-i18n-$(patsubst luci-app-%,%,$(pkg))-zh-cn" && echo 1)),luci-i18n-$(patsubst luci-app-%,%,$(pkg))-zh-cn)))
 +endef
++define UpdateVersionInfo
++	@DATE="$${DATE:-$$(date +'%m.%d.%Y')}"; \
++	mkdir -p $(USER_FILES)/etc/uci-defaults; \
++	echo ' \
++		sed -i "s/[0-9]\+.[0-9]\+.[0-9]\{4\}/'"$$DATE"'/" /etc/openwrt_release; \
++		sed -i "s/DISTRIB_ID=.*/DISTRIB_ID='"'"'$(ROOTFS_PARTSIZE)'"'"'/" /etc/openwrt_release; \
++		sed -i "s/Kwrt .* by/Kwrt '"$$DATE"' by/" /etc/banner; \
++		echo "'"$$DATE"'" > /etc/openwrt_version; \
++	' > $(USER_FILES)/etc/uci-defaults/99-version
++endef
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
  _call_image: staging_dir/host/.prereq-build
-+	[ "$(DATE)" ] && DATE="$(DATE)" || DATE="`date +'%m.%d.%Y'`"; \
-+	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
-+	echo -e " \
-+	sed -i \"s/[0-9]\+.[0-9]\+.[0-9]\{4\}/$$DATE/\" /etc/openwrt_release \n \
-+	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(ROOTFS_PARTSIZE)'/\" /etc/openwrt_release \n \
-+	sed -i \"s/KWrt .* by/Kwrt $$DATE by/\" /etc/banner \n \
-+	echo \"$$DATE\" >/etc/openwrt_version \n \
-+	"> $(USER_FILES)/etc/uci-defaults/99-version; \
++	$(call UpdateVersionInfo)
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
-@@ -146,6 +174,8 @@ _call_image: staging_dir/host/.prereq-build
+@@ -146,6 +177,8 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
  	$(MAKE) -s checksum
@@ -128,7 +131,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -184,9 +214,17 @@ package_list: FORCE
+@@ -184,9 +217,17 @@ package_list: FORCE
  package_install: FORCE
  	@echo
  	@echo Installing packages...
@@ -147,7 +150,7 @@
  
  prepare_rootfs: FORCE
  	@echo
-@@ -200,12 +238,15 @@ prepare_rootfs: FORCE
+@@ -200,12 +241,15 @@ prepare_rootfs: FORCE
  		) \
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
