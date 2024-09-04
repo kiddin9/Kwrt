@@ -27,7 +27,7 @@ env:
 
 jobs:
   build:
-    runs-on: Ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -37,7 +37,7 @@ jobs:
       if: contains(github.event.inputs.param, 'cw')
       with:
         workflow_id: all
-        access_token: ${{ github.token }}
+        access_token: ${{ secrets.TOKEN_KIDDIN9 }}
 
     - name: Load Settings.ini
       run: |
