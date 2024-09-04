@@ -4,14 +4,14 @@
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-r4s-enterprise.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
--@@ -90,19 +92,24 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-bp
-+@@ -90,19 +92,33 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-bp
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-evb1-v10.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r66s.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r68s.dtb
-@@ -25,6 +25,15 @@
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5c.dtb
+-@@ -89,18 +91,22 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-so
++@@ -89,18 +91,31 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-so
+  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-soquartz-model-a.dtb
+  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-box-demo.dtb
+  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-lubancat-1.dtb
+@@ -31,6 +31,15 @@
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5s.dtb
+  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-odroid-m1.dtb
  +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-photonicat.dtb
 ++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-opc-h66k.dtb
 ++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-opc-h68k.dtb
@@ -22,9 +22,9 @@
 ++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-xgp.dtb
 ++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-xgp-v3.dtb
 ++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-mrkaio-m68s-plus.dtb
-  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-odroid-m1.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-radxa-e25.dtb
   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-roc-pc.dtb
+  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-rock-3a.dtb
 
 --- a/package/boot/uboot-rockchip/Makefile
 +++ b/package/boot/uboot-rockchip/Makefile
