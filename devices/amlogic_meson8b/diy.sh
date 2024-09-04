@@ -14,6 +14,6 @@ git_clone_path main https://github.com/shiyu1314/openwrt-onecloud kernel/6.1/aml
 
 sed -i "s/CPU_SUBTYPE:=neon-vfpv4/CPU_SUBTYPE:=vfpv4/" target/linux/amlogic/meson8b/target.mk
 
-sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/amlogic/image/meson8b.mk
+sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/amlogic/image/Makefile
 
 
