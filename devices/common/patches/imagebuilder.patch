@@ -1,5 +1,30 @@
 --- a/include/image.mk
 +++ b/include/image.mk
+@@ -504,7 +504,6 @@ define Device/Check
+   endif
+ endef
+ 
+-ifndef IB
+ define Device/Build/initramfs
+   $(call Device/Export,$(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE),$(1))
+   $$(_TARGET): $$(if $$(KERNEL_INITRAMFS),$(BIN_DIR)/$$(KERNEL_INITRAMFS_IMAGE) \
+@@ -557,7 +556,6 @@ define Device/Build/initramfs
+ 	SUPPORTED_DEVICES="$$(SUPPORTED_DEVICES)" \
+ 	$(TOPDIR)/scripts/json_add_image_info.py $$@
+ endef
+-endif
+ 
+ define Device/Build/compile
+   $$(_COMPILE_TARGET): $(KDIR)/$(1)
+@@ -623,7 +621,7 @@ define Device/Build/kernel
+ endef
+ 
+ define Device/Build/image
+-  GZ_SUFFIX := $(if $(filter %dtb %gz,$(2)),,$(if $(and $(findstring ext4,$(1)),$(CONFIG_TARGET_IMAGES_GZIP)),.gz))
++  GZ_SUFFIX := $(if $(filter %dtb %gz,$(2)),,$(if $(and $(findstring ext4,$(1)),$(findstring img,$(2)),$(CONFIG_TARGET_IMAGES_GZIP)),.gz))
+   $$(_TARGET): $(if $(CONFIG_JSON_OVERVIEW_IMAGE_INFO), \
+ 	  $(BUILD_DIR)/json_info_files/$(call DEVICE_IMG_NAME,$(1),$(2)).json, \
+ 	  $(BIN_DIR)/$(call DEVICE_IMG_NAME,$(1),$(2))$$(GZ_SUFFIX))
 @@ -761,6 +761,7 @@ define Device/DumpInfo
  Target-Profile: DEVICE_$(1)
  Target-Profile-Name: $(DEVICE_DISPLAY)
