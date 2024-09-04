@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Build OpenWrt
+name: Build AX1800Pro
 
 on: 
   workflow_dispatch:
