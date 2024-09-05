@@ -27,15 +27,6 @@
 
 --- a/target/linux/mediatek/dts/mt7981b-jcg-q30-pro.dts
 +++ b/target/linux/mediatek/dts/mt7981b-jcg-q30-pro.dts
-@@ -21,8 +21,6 @@
- 	};
- 
- 	chosen {
--		bootargs-append = " root=/dev/fit0 rootwait";
--		rootdisk = <&ubi_rootdisk>;
- 		stdout-path = "serial0:115200n8";
- 	};
- 
 @@ -103,6 +101,10 @@
  		spi-tx-bus-width = <4>;
  		spi-rx-bus-width = <4>;
