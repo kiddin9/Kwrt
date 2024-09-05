@@ -3,7 +3,7 @@
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/boot package/feeds/kiddin9/accel-ppp package/devel/perf package/devel/kselftests-bpf package/feeds/routing/batman-adv
+rm -rf package/boot package/devel/perf package/devel/kselftests-bpf package/feeds/routing/batman-adv
 
 rm -rf target/linux/generic/!(*-5.15) target/linux/rockchip package/kernel devices/common/patches/usb-audio.patch
 
