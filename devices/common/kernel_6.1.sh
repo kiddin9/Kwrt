@@ -30,7 +30,7 @@ rm -rf target/linux/generic/hack-6.1/{410-block-fit-partition-parser.patch,724-n
 wget -N https://raw.githubusercontent.com/openwrt/openwrt/main/include/u-boot.mk -P include/
 
 wget -N https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -P package/kernel/mt76/patches/
-
+wget -N https://raw.githubusercontent.com/openwrt/openwrt/main/package/system/fstools/Makefile -P package/system/fstools/
 cd feeds/packages
 rm -rf kernel libs/xr_usb_serial_common net/xtables-addons
 git_clone_path master https://github.com/openwrt/packages kernel libs/xr_usb_serial_common net/xtables-addons
