@@ -1,5 +1,30 @@
 --- a/include/image.mk
 +++ b/include/image.mk
+@@ -504,7 +504,6 @@ define Device/Check
+   endif
+ endef
+ 
+-ifndef IB
+ define Device/Build/initramfs
+   $(call Device/Export,$(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE),$(1))
+   $$(_TARGET): $$(if $$(KERNEL_INITRAMFS),$(BIN_DIR)/$$(KERNEL_INITRAMFS_IMAGE) \
+@@ -557,7 +556,6 @@ define Device/Build/initramfs
+ 	SUPPORTED_DEVICES="$$(SUPPORTED_DEVICES)" \
+ 	$(TOPDIR)/scripts/json_add_image_info.py $$@
+ endef
+-endif
+ 
+ define Device/Build/compile
+   $$(_COMPILE_TARGET): $(KDIR)/$(1)
+@@ -623,7 +621,7 @@ define Device/Build/kernel
+ endef
+ 
+ define Device/Build/image
+-  GZ_SUFFIX := $(if $(filter %dtb %gz,$(2)),,$(if $(and $(findstring ext4,$(1)),$(CONFIG_TARGET_IMAGES_GZIP)),.gz))
++  GZ_SUFFIX := $(if $(filter %dtb %gz,$(2)),,$(if $(and $(findstring ext4,$(1)),$(findstring img,$(2)),$(CONFIG_TARGET_IMAGES_GZIP)),.gz))
+   $$(_TARGET): $(if $(CONFIG_JSON_OVERVIEW_IMAGE_INFO), \
+ 	  $(BUILD_DIR)/json_info_files/$(call DEVICE_IMG_NAME,$(1),$(2)).json, \
+ 	  $(BIN_DIR)/$(call DEVICE_IMG_NAME,$(1),$(2))$$(GZ_SUFFIX))
 @@ -761,6 +761,7 @@ define Device/DumpInfo
  Target-Profile: DEVICE_$(1)
  Target-Profile-Name: $(DEVICE_DISPLAY)
@@ -55,47 +80,34 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -131,21 +131,47 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+@@ -131,6 +131,26 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
  # "-pkgname" in the package list means remove "pkgname" from the package list
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
-+IMAGE_SIZE:="$(shell echo $$(echo $($(USER_PROFILE)_IMAGE_SIZE) | cut -d k -f1))"
-+BUILD_PACKAGES:=$(shell if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" && $(IMAGE_SIZE) -lt 20480 ]]; then \
-+echo "$(BUILD_PACKAGES) -coremark -htop -bash -openssh-sftp-server "; \
-+else \
-+echo "$(BUILD_PACKAGES)"; \
-+fi \
-+)
++IMAGE_SIZE_VALUE := $(shell echo $($(USER_PROFILE)_IMAGE_SIZE) | sed 's/k$$//')
++ifdef IMAGE_SIZE_VALUE
++  ifeq ($(shell test $(IMAGE_SIZE_VALUE) -lt 20480 && echo true),true)
++    SMALL_FLASH := true
++  endif
++endif
++ifneq ($(findstring usb,$(BUILD_PACKAGES)),)
++    BUILD_PACKAGES += automount luci-app-diskman
++endif
++ifeq ($(SMALL_FLASH),true)
++    BUILD_PACKAGES += -coremark -htop -bash -openssh-sftp-server -luci-app-diskman
++	ifeq ($(shell grep -q small_flash $(TOPDIR)/repositories.conf || echo "not_found"),not_found)
++        $(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf)
++    endif
++else
++    $(shell sed -i "/small_flash/d" $(TOPDIR)/repositories.conf)
++endif
++define add_zh_cn_packages
++$(eval BUILD_PACKAGES += $(foreach pkg,$(BUILD_PACKAGES),$(if $(and $(filter luci-app-%,$(pkg)),$(shell $(OPKG) list | grep -q "^luci-i18n-$(patsubst luci-app-%,%,$(pkg))-zh-cn" && echo 1)),luci-i18n-$(patsubst luci-app-%,%,$(pkg))-zh-cn)))
++endef
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
- _call_image: staging_dir/host/.prereq-build
--	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
-+	[ "$(DATE)" ] && DATE="$(DATE)" || DATE="`date +'%m.%d.%Y'`"; \
-+	mkdir -p $(USER_FILES)/etc/uci-defaults || true; \
-+	echo -e " \
-+	sed -i \"s/[0-9]\+.[0-9]\+.[0-9]\{4\}/$$DATE/\" /etc/openwrt_release \n \
-+	sed -i \"s/DISTRIB_ID=.*/DISTRIB_ID='$(ROOTFS_PARTSIZE)'/\" /etc/openwrt_release \n \
-+	sed -i \"s/KWrt .* by/Kwrt $$DATE by/\" /etc/banner \n \
-+	echo \"$$DATE\" >/etc/openwrt_version \n \
-+	"> $(USER_FILES)/etc/uci-defaults/99-version; \
-+	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'; \
- 	echo 'Packages: $(BUILD_PACKAGES)'
- 	echo
- 	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
- 	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
-+	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" ]]; then \
-+	if [[ $(IMAGE_SIZE) -lt 20480 ]]; then \
-+		if [[ ! "`grep "small_flash" $(TOPDIR)/repositories.conf`" ]]; then \
-+			echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf; \
-+		fi \
-+	else \
-+		sed -i "/small_flash/d" $(TOPDIR)/repositories.conf; \
-+	fi \
-+	fi
- 	$(MAKE) package_reload
- 	$(MAKE) package_install
- 	$(MAKE) -s prepare_rootfs
+@@ -146,6 +166,8 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
  	$(MAKE) -s checksum
@@ -104,32 +116,32 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -186,7 +212,17 @@ package_install: FORCE
+@@ -184,9 +206,17 @@ package_list: FORCE
+ package_install: FORCE
+ 	@echo
  	@echo Installing packages...
++	$(eval $(call add_zh_cn_packages))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
  	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 -	$(OPKG) install $(BUILD_PACKAGES)
-+	for p in $(BUILD_PACKAGES); do \
-+		if [[ $$p == luci-app-* && "`$(OPKG) list | grep luci-i18n-\`echo $$p | cut -d - -f 3-\`-zh-cn`" ]]; then \
-+			packages+="luci-i18n-`echo $$p | cut -d - -f 3-`-zh-cn "; \
-+		fi \
++	$(OPKG) install $(BUILD_PACKAGES) luci-i18n-base-zh-cn || true
++	$(if $(USER_FILES), \
++	find $(USER_FILES) -name "*.ipk" -print0 | \
++	while IFS= read -r -d '' ipk; do \
++      $(OPKG) install "$$ipk" && rm -f "$$ipk" || true; \
 +	done; \
-+	if [[ "`echo "$(BUILD_PACKAGES)" | grep "usb"`" ]]; then \
-+		packages+="automount "; \
-+	fi; \
-+	$(OPKG) install $(BUILD_PACKAGES) luci-i18n-base-zh-cn luci-i18n-base-en; \
-+	$(OPKG) install $$packages || true
++	)
 +	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
  
  prepare_rootfs: FORCE
  	@echo
-@@ -200,12 +236,15 @@ prepare_rootfs: FORCE
+@@ -200,12 +230,15 @@ prepare_rootfs: FORCE
  		) \
  	)
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
-+	if [[ "$(IMAGE_SIZE)" && ! "`echo "$(IMAGE_SIZE)" | grep "m"`" && $(IMAGE_SIZE) -lt 20480 ]]; then \
-+		echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf; \
-+	fi
++	$(if $(SMALL_FLASH), \
++			$(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf) \
++	)
  
  build_image: FORCE
  	@echo
