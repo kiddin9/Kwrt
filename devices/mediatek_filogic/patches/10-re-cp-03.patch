@@ -31,3 +31,21 @@
  endef
  TARGET_DEVICES += jdcloud_re-cp-03
  
+
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+@@ -51,6 +51,14 @@ case "$FIRMWARE" in
+ 		;;
+ 	esac
+ 	;;
++"mediatek/mt7986_eeprom_mt7976_dual.bin")
++	case "$board" in
++	glinet,gl-mt6000|\
++	jdcloud,re-cp-03)
++		caldata_extract_mmc "factory" 0x0 0x1000
++		;;
++	esac
++	;;
+ *)
+ 	exit 1
+ 	;;
