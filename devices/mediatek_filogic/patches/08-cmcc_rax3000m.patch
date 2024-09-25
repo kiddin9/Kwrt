@@ -1,19 +1,21 @@
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -12,7 +12,7 @@ mediatek_setup_interfaces()
+@@ -12,7 +12,8 @@ mediatek_setup_interfaces()
  		ucidef_set_interface_lan "eth0" "dhcp"
  		;;
  	abt,asr3000|\
 -	cmcc,rax3000m|\
 +	cmcc,rax3000m*|\
++	cmcc,xr30*|\
  	h3c,magic-nx30-pro|\
  	nokia,ea0326gmp|\
  	zbtlink,zbt-z8103ax)
-@@ -137,6 +137,11 @@ mediatek_setup_macs()
+@@ -137,6 +137,12 @@ mediatek_setup_macs()
  	bananapi,bpi-r4)
  		wan_mac=$(macaddr_add $(cat /sys/class/net/eth0/address) 1)
  		;;
-+	cmcc,rax3000m-emmc)
++	cmcc,rax3000m-emmc|\
++	cmcc,xr30-emmc)
 +		wan_mac=$(mmc_get_mac_binary factory 0x2a)
 +		lan_mac=$(mmc_get_mac_binary factory 0x24)
 +		label_mac=$wan_mac
@@ -24,18 +26,19 @@
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-@@ -24,6 +24,7 @@ case "$FIRMWARE" in
+@@ -24,6 +24,8 @@ case "$FIRMWARE" in
  	;;
  "mediatek/mt7981_eeprom_mt7976_dbdc.bin")
  	case "$board" in
 +	cmcc,rax3000m-emmc|\
++	cmcc,xr30-emmc|\
  	ubnt,unifi-6-plus)
  		caldata_extract_mmc "factory" 0x0 0x1000
  		;;
 
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -280,7 +280,38 @@ define Device/cmcc_rax3000m
+@@ -280,7 +280,64 @@ define Device/cmcc_rax3000m
    ARTIFACT/nand-preloader.bin := mt7981-bl2 spim-nand-ddr4
    ARTIFACT/nand-bl31-uboot.fip := mt7981-bl31-uboot cmcc_rax3000m-nand
  endef
@@ -66,31 +69,59 @@
 +  DEVICE_DTS_DIR := ../dts
 +  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
 +	e2fsprogs f2fsck mkf2fs losetup kmod-fs-f2fs kmod-mmc
-+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
-+  KERNEL_INITRAMFS := kernel-bin | lzma | \
-+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 +endef
 +TARGET_DEVICES += cmcc_rax3000m-emmc
++
++define Device/cmcc_xr30
++  DEVICE_VENDOR := CMCC
++  DEVICE_MODEL := XR30 NAND
++  DEVICE_DTS := mt7981b-cmcc-xr30
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
++	e2fsprogs f2fsck mkf2fs
++  UBINIZE_OPTS := -E 5
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  IMAGE_SIZE := 116736k
++  KERNEL_IN_UBI := 1
++  IMAGES += factory.bin
++  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += cmcc_xr30
++
++define Device/cmcc_xr30-emmc
++  DEVICE_VENDOR := CMCC
++  DEVICE_MODEL := XR30 eMMC (RAX3000Z增强版)
++  DEVICE_DTS := mt7981b-cmcc-xr30-emmc
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
++	e2fsprogs f2fsck mkf2fs losetup kmod-fs-f2fs kmod-mmc
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += cmcc_xr30-emmc
  
  define Device/confiabits_mt7981
    DEVICE_VENDOR := Confiabits
 
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -112,6 +112,7 @@ platform_do_upgrade() {
+@@ -112,6 +112,8 @@ platform_do_upgrade() {
  	yuncore,ax835)
  		default_do_upgrade "$1"
  		;;
 +	cmcc,rax3000m-emmc|\
++	cmcc,xr30-emmc|\
  	glinet,gl-mt2500|\
  	glinet,gl-mt6000|\
  	glinet,gl-x3000|\
-@@ -201,6 +202,7 @@ platform_copy_config() {
+@@ -201,6 +202,8 @@ platform_copy_config() {
  		fi
  		;;
  	acer,predator-w6|\
 +	cmcc,rax3000m-emmc|\
++	cmcc,xr30-emmc|\
  	glinet,gl-mt2500|\
  	glinet,gl-mt6000|\
  	glinet,gl-x3000|\

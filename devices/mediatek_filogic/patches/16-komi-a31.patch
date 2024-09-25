@@ -272,9 +272,9 @@ index b5e5eca6afd12..33e52743d5bfe 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -40,6 +40,8 @@
- 		;;
  	abt,asr3000|\
  	cmcc,rax3000m*|\
+ 	cmcc,xr30*|\
 +	konka,komi-a31|\
 +	imou,lc-hx3001|\
  	h3c,magic-nx30-pro|\

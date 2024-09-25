@@ -1,1 +1,1 @@
-Kernel等部分源码来源 https://github.com/immortalwrt/immortalwrt 感谢
+Kernel等部分源码来源 https://github.com/coolsnowwolf/lede 感谢

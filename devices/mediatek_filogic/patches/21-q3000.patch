@@ -7,7 +7,7 @@
 +define Device/ikuai_q3000
 +  DEVICE_VENDOR := iKuai
 +  DEVICE_MODEL := Q3000
-+  DEVICE_DTS := mt7981-ikuai-q3000
++  DEVICE_DTS := mt7981b-ikuai-q3000
 +  DEVICE_DTS_DIR := ../dts
 +  SUPPORTED_DEVICES := ikuai,q3000
 +  UBINIZE_OPTS := -E 5
