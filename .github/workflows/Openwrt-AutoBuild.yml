@@ -242,12 +242,9 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        if [[ ! "${{matrix.target}}" =~ (armsr_armv8|bcm27xx_*|rockchip_armv8|sunxi_*|x86_*) ]]; then
+        if [[ ! "${{matrix.target}}" =~ (amlogic_*|armsr_armv8|bcm27xx_*|rockchip_armv8|sunxi_*|x86_*) ]]; then
         sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
         sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
-        if [[ "${{matrix.target}}" =~ (amlogic_*|rockchip_rk35xx) ]]; then 
-            sed -i "s/CONFIG_PACKAGE_kmod-\(.*u|.*-usb\)=n/CONFIG_PACKAGE_kmod-\1=m/g" .config
-        fi
         if [[ "${{matrix.target}}" == "rockchip_rk35xx" ]]; then 
             sed -n '/# Video Support/,/# end of Video Support/p' .config | sed -e 's/=m/=n/' >>.config
         fi
