@@ -38,13 +38,14 @@
 
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -143,6 +143,15 @@ define Device/friendlyarm_nanopi-r2s
+@@ -143,6 +143,16 @@ define Device/friendlyarm_nanopi-r2s
  endef
  TARGET_DEVICES += friendlyarm_nanopi-r2s
  
 +define Device/friendlyarm_nanopi-r3s
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPi R3S
++  SOC := rk3328
 +  UBOOT_DEVICE_NAME := nanopi-r2s-rk3328
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
