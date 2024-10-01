@@ -15,7 +15,7 @@ git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/gener
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.6
 rm -rf target/linux/generic/hack-6.6/767-net-phy-realtek*
 
-wget -N https://github.com/istoreos/istoreos/raw/istoreos-22.03/target/linux/rockchip/patches-5.10/304-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.6/
+wget -N https://github.com/istoreos/istoreos/raw/istoreos-22.03/target/linux/rockchip/patches-5.10/305-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.6/
 
 wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.6 -P include/
 
