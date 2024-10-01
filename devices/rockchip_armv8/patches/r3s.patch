@@ -26,7 +26,7 @@
  	set_interface_core 2 "eth0"
  	set_interface_core 4 "eth1" "xhci-hcd:usb3"
  	;;
-+friendlyelec,nanopi-r3s)
++friendlyarm,nanopi-r3s)
 +	set_interface_core 4 "eth0"
 +	echo b > /sys/class/net/eth0/queues/rx-0/rps_cpus
 +	set_interface_core 2 "eth1"
