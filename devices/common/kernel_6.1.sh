@@ -18,6 +18,7 @@ sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-de
 cp -rf devices/common/patches/rootfstargz.patch.main devices/common/patches/rootfstargz.patch
 cp -rf devices/common/patches/qca-ssdk.patch.main devices/common/patches/qca-ssdk.patch
 cp -rf devices/common/patches/ebpf.patch.main devices/common/patches/ebpf.patch
+cp -rf devices/common/patches/nonshared.patch.main devices/common/patches/nonshared.patch
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.1
 
