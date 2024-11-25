@@ -3,7 +3,7 @@
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-bash $SHELL_FOLDER/../common/kernel_6.6.sh
+#bash $SHELL_FOLDER/../common/kernel_6.6.sh
 
 sed -i '/bootargs-.* = " root=\/dev\/fit0 rootwait";/d' target/linux/mediatek/dts/*
 

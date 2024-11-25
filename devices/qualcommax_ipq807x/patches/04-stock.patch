@@ -1,33 +1,3 @@
---- a/target/linux/qualcommax/image/ipq807x.mk
-+++ b/target/linux/qualcommax/image/ipq807x.mk
-@@ -256,12 +256,7 @@ define Device/xiaomi_ax3600
- 	PAGESIZE := 2048
- 	DEVICE_DTS_CONFIG := config@ac04
- 	SOC := ipq8071
--	KERNEL_SIZE := 36608k
- 	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax3600 kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9887-ct
--ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
--	ARTIFACTS := initramfs-factory.ubi
--	ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-uImage.itb | ubinize-kernel
--endif
- endef
- TARGET_DEVICES += xiaomi_ax3600
- 
-@@ -274,13 +269,8 @@ define Device/xiaomi_ax9000
- 	PAGESIZE := 2048
- 	DEVICE_DTS_CONFIG := config@hk14
- 	SOC := ipq8072
--	KERNEL_SIZE := 57344k
- 	DEVICE_PACKAGES := ipq-wifi-xiaomi_ax9000 kmod-ath11k-pci ath11k-firmware-qcn9074 \
- 		kmod-ath10k-ct ath10k-firmware-qca9887-ct
--ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
--	ARTIFACTS := initramfs-factory.ubi
--	ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-uImage.itb | ubinize-kernel
--endif
- endef
- TARGET_DEVICES += xiaomi_ax9000
- 
-
 --- a/target/linux/qualcommax/ipq807x/base-files/etc/init.d/bootcount
 +++ b/target/linux/qualcommax/ipq807x/base-files/etc/init.d/bootcount
 @@ -9,5 +9,13 @@ boot() {
@@ -91,3 +61,26 @@
  		;;
  	*)
 
+--- /dev/null
++++ b/target/linux/qualcommax/ipq807x/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
+@@ -0,0 +1,20 @@
++#!/bin/sh
++
++[ -e /lib/firmware/$FIRMWARE ] && exit 0
++
++. /lib/functions/caldata.sh
++
++board=$(board_name)
++
++case "$FIRMWARE" in
++"ath10k/cal-pci-0000:01:00.0.bin")
++	case "$board" in
++	xiaomi,ax3600)
++		caldata_extract "0:art" 0x33000 0x844
++		;;
++	esac
++	;;
++*)
++	exit 1
++	;;
++esac

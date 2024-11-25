@@ -50,7 +50,7 @@
 +  if [ "$(PROFILE_SANITIZED)" == "box" ]; then \
 +  	export BIN_DIR=$(BIN_DIR); \
 +  	export DATE=$(DATE); \
-+  	export MORE=$(MORE); \
++  	export MORE="$(MORE)"; \
 +	export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
 +  	cd /data/packit/amlogic-s9xxx-openwrt; \
 +  	. ~/packit/packit_amlogic.sh; \

@@ -276,7 +276,7 @@ diff --git a/target/linux/ramips/mt7620/base-files/etc/board.d/02_network b/targ
 index f7bc41669f80..e252b6e04611 100644
 --- a/target/linux/ramips/mt7620/base-files/etc/board.d/02_network
 +++ b/target/linux/ramips/mt7620/base-files/etc/board.d/02_network
-@@ -240,6 +240,10 @@ ramips_setup_interfaces()
+@@ -278,6 +278,10 @@ ramips_setup_interfaces()
  		ucidef_add_switch "switch0" \
  			"0:lan" "1:lan" "4:wan" "6@eth0"
  		;;
@@ -287,17 +287,17 @@ index f7bc41669f80..e252b6e04611 100644
  	zbtlink,zbt-we1026-5g-16m)
  		ucidef_add_switch "switch0" \
  			"0:lan" "6t@eth0"
-@@ -384,6 +388,10 @@ ramips_setup_macs()
- 		wan_mac=$(mtd_get_mac_binary factory 0x2e)
- 		label_mac=$(mtd_get_mac_binary factory 0x8004)
+@@ -434,6 +438,10 @@ ramips_setup_macs()
+ 	tplink,ec220-g5-v2)
+ 		wan_mac=$(macaddr_add "$(mtd_get_mac_binary rom 0xf100)" 1)
  		;;
 +	xiaomi,miwifi-r3)
 +		wan_mac=$(mtd_get_mac_binary factory 0x28)
 +		lan_mac=$(macaddr_setbit_la "$wan_mac")
 +		;;
+ 	wavlink,wl-wn531g3|\
+ 	wavlink,wl-wn531g3-a2|\
  	zbtlink,zbt-we1026-5g-16m)
- 		label_mac=$(mtd_get_mac_binary factory 0x4)
- 		;;
 diff --git a/target/linux/ramips/mt7620/base-files/lib/upgrade/platform.sh b/target/linux/ramips/mt7620/base-files/lib/upgrade/platform.sh
 index 9f71dc918e50..5519312289fa 100755
 --- a/target/linux/ramips/mt7620/base-files/lib/upgrade/platform.sh

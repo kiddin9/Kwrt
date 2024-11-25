@@ -1,14 +1,14 @@
 --- a/feeds/luci/luci.mk
 +++ b/feeds/luci/luci.mk
-@@ -82,7 +82,7 @@ define findrev
+@@ -84,7 +84,7 @@ define findrev
        set -- $$(git log -1 --format="%ct %h" --abbrev=7 -- $(if $(1),. ':(exclude)po',po)); \
        if [ -n "$$1" ]; then
          secs="$$(($$1 % 86400))"; \
 -        yday="$$(date --utc --date="@$$1" "+%y.%j")"; \
 +        yday="$$(date --utc --date="@$$(($$1 + 365*24*60*60))" "+%y.%j")"; \
-         printf 'git-%s.%05d-%s' "$$yday" "$$secs" "$$2"; \
+         printf '%s.%05d~%s' "$$yday" "$$secs" "$$2"; \
        else \
-         echo "unknown"; \
+         echo "0"; \
 @@ -207,9 +207,20 @@ define Package/$(PKG_NAME)/install
  	$(call Build/Install/Default)
  	$(CP) $(PKG_INSTALL_DIR)/* $(1)/

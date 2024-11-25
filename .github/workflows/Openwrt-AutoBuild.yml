@@ -69,13 +69,13 @@ jobs:
         elif [ ${{matrix.target}} == "x86_generic" ]; then
             echo "ARCH=linux/amd32" >> $GITHUB_ENV
             echo "MTARGET=x86_generic" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armsr_armv8|ipq807x_generic|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|qualcommax_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
+        elif [[ ${{matrix.target}} =~ (armsr_armv8|qualcommax_ipq807x|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|qualcommax_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "ath79_nand" ]]; then
             echo "MTARGET=mips_24kc" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7|ipq50xx_arm) ]]; then
+        elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709|sunxi_cortexa7|qualcommax_ipq50xx) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "amlogic_meson8b" ]]; then
             echo "MTARGET=arm_cortex-a5_vfpv4" >> $GITHUB_ENV
@@ -98,8 +98,9 @@ jobs:
 
     - name: Trigger Packages Update
       continue-on-error: true
+      if: contains(github.event.action, 'pkg')
       run: |
-        status=$(curl -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }} -s "https://api.github.com/repos/kiddin9/kwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+        status=$(curl -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" -s "https://api.github.com/repos/kiddin9/kwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
         if [[ "$status" == "completed" ]]; then
           curl -X POST https://api.github.com/repos/kiddin9/kwrt-packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
@@ -153,19 +154,25 @@ jobs:
         if [[ $(( ($(date +%s) - $(date -d "$TAG_DATE" +%s)) / 86400 )) -lt 30 ]]; then
         REPO_BRANCH="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[].name' | grep v23 | head -n 1)"
         else
-        REPO_BRANCH="openwrt-23.05"
+        REPO_BRANCH="openwrt-24.10"
         fi
-        #echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/`echo $REPO_BRANCH  | cut -d . -f 1,2 | sed -e 's/^v//'`\"">>devices/common/.config
-        echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/23.05\"">>devices/common/.config
+        #echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/releases/`echo $REPO_BRANCH  | cut -d . -f 1,2 | sed -e 's/^v//'`\"">>devices/common/.config
+        echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/releases/24.10\"">>devices/common/.config
         if [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
             git clone $REPO_URL -b $REPO_BRANCH openwrt
         elif [[ ! "${{ env.REPO_BRANCH }}" ]]; then
             git clone $REPO_URL openwrt
         else
-            git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt
-            echo "git clone $REPO_URL -b ${{ env.REPO_BRANCH }} openwrt"
+            REPO_BRANCH="${{env.REPO_BRANCH}}"
+            if [[ ${#REPO_BRANCH} -lt 10 ]]; then
+                git clone $REPO_URL -b ${REPO_BRANCH} openwrt
+            else
+                git clone $REPO_URL openwrt
+                cd openwrt
+                git checkout ${REPO_BRANCH}
+            fi
         fi
-    
+
     - name: Free up disk space
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -251,13 +258,6 @@ jobs:
         make defconfig
         fi
         cat .config
-
-    - name: Download package
-      id: package
-      run: |
-        cd openwrt
-        make download -j$(($(nproc)+1)) &
-        sleep 5
 
     - name: Cache
       uses: stupidloud/cachewrtbuild@main
