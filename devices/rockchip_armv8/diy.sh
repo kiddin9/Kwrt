@@ -7,7 +7,15 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 rm -rf package/boot target/linux/rockchip linux/generic
 
-git_clone_path master https://github.com/coolsnowwolf/lede package/boot target/linux/rockchip linux/generic
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip linux/generic
+
+git_clone_path c74ed3282cf0aabd550203f0e500c0f4dcd2a872 https://github.com/coolsnowwolf/lede package/boot
+
+rm -rf  package/boot/uboot-rk35xx
+
+git_clone_path master https://github.com/coolsnowwolf/lede package/boot/uboot-rk35xx
+
+rm -rf package/boot/uboot-rk35xx/patches/001-cmd-fix_source.patch
 
 wget -N https://github.com/istoreos/istoreos/raw/istoreos-22.03/target/linux/rockchip/patches-5.10/305-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.6/
 wget -N https://github.com/openwrt/openwrt/raw/refs/heads/openwrt-24.10/target/linux/rockchip/Makefile -P target/linux/rockchip/
@@ -15,8 +23,6 @@ wget -N https://github.com/openwrt/openwrt/raw/refs/heads/openwrt-24.10/target/l
 wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.6 -P include/
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
-
-rm -rf package/boot/uboot-rk35xx/patches/001-cmd-fix_source.patch
 
 #sed -i -e "s/configs\/dilusense-\(.*-.*_defconfig\)/configs\/\1/" \
 #	   -e "s/configs\/sharevdi-\(.*-.*_defconfig\)/configs\/\1/" \

@@ -1,6 +1,6 @@
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -64,28 +64,17 @@ platform_do_upgrade() {
+@@ -64,27 +64,15 @@ platform_do_upgrade() {
  	local board=$(board_name)
  
  	case "$board" in
@@ -10,6 +10,7 @@
  	bananapi,bpi-r4|\
  	bananapi,bpi-r4-poe|\
 -	cmcc,rax3000m|\
+ 	gatonetworks,gdsp|\
 -	h3c,magic-nx30-pro|\
 -	jcg,q30-pro|\
 -	jdcloud,re-cp-03|\
@@ -19,13 +20,19 @@
  	openwrt,one|\
 -	netcore,n60|\
 -	qihoo,360t7|\
- 	tplink,tl-xdr4288|\
- 	tplink,tl-xdr6086|\
- 	tplink,tl-xdr6088|\
- 	tplink,tl-xtr8488|\
--	xiaomi,mi-router-ax3000t-ubootmod|\
--	xiaomi,redmi-router-ax6000-ubootmod|\
--	xiaomi,mi-router-wr30u-ubootmod|\
- 	zyxel,ex5601-t0-ubootmod)
- 		fit_do_upgrade "$1"
+ 	routerich,ax3000-ubootmod|\
+-	tplink,tl-xdr4288|\
+-	tplink,tl-xdr6086|\
+-	tplink,tl-xdr6088|\
+-	tplink,tl-xtr8488|\
+ 	xiaomi,mi-router-ax3000t-ubootmod|\
+ 	xiaomi,redmi-router-ax6000-ubootmod|\
+ 	xiaomi,mi-router-wr30u-ubootmod|\
+@@ -149,7 +137,6 @@ platform_do_upgrade() {
+ 			;;
+ 		esac
  		;;
+-	xiaomi,mi-router-ax3000t|\
+ 	xiaomi,mi-router-wr30u-stock|\
+ 	xiaomi,redmi-router-ax6000-stock)
+ 		CI_KERN_UBIPART=ubi_kernel

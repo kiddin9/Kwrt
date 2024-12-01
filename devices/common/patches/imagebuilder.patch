@@ -138,7 +138,7 @@
 +      $(OPKG) install "$$ipk" && rm -f "$$ipk" || true; \
 +	done; \
 +	)
-+	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
++	$(OPKG) install --force-maintainer --force-reinstall my-default-settings 2>/dev/null
  else
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/libc-*.apk $(PACKAGE_DIR)/libc-*.apk))
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/kernel-*.apk $(PACKAGE_DIR)/kernel-*.apk))

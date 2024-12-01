@@ -10,7 +10,6 @@ sed -i '/bootargs-.* = " root=\/dev\/fit0 rootwait";/d' target/linux/mediatek/dt
 sed -i "s/-stock//g" package/boot/uboot-envtools/files/mediatek_filogic
 sed -i "s/-stock//g" target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
 sed -i "s/-stock//g" target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-sed -i "s/-stock//g" target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 sed -i "s/-stock//g" target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface
 
 sed -i "s/openwrt-mediatek-filogic/kwrt-mediatek-filogic/g" target/linux/mediatek/image/filogic.mk
