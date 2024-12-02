@@ -1,0 +1,327 @@
+From 9385022b129b05d1196357638b044711cbc6a253 Mon Sep 17 00:00:00 2001
+From: Bohdan Chubuk <chbgdn@gmail.com>
+Date: Mon, 11 Nov 2024 01:57:31 +0200
+Subject: [PATCH] generic: mtd: spinand: add support for FORESEE F35SQA002G
+
+Add support for FORESEE F35SQA002G SPI NAND.
+Datasheet:
+  https://www.longsys.com/uploads/LM-00006FORESEEF35SQA002GDatasheet_1650183701.pdf
+
+Refresh all affected patch with make target/linux/refresh.
+
+Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Bohdan Chubuk <chbgdn@gmail.com>
+---
+ ...d-add-support-for-FORESEE-F35SQA002G.patch | 146 ++++++++++++++++++
+ ...flip_threshold-to-75-of-ECC-strength.patch |   2 +-
+ ...nd-Add-support-for-Etron-EM73D044VCx.patch |   8 +-
+ .../330-snand-mtk-bmt-support.patch           |   6 +-
+ ...Add-support-for-the-Fidelix-FM35X1GA.patch |  12 +-
+ ...and-Add-calibration-support-for-spin.patch |   4 +-
+ ...nor-Add-calibration-support-for-spi-.patch |   2 +-
+ 7 files changed, 163 insertions(+), 17 deletions(-)
+ create mode 100644 target/linux/generic/backport-6.6/411-v6.7-mtd-spinand-add-support-for-FORESEE-F35SQA002G.patch
+
+diff --git a/target/linux/generic/backport-6.6/411-v6.7-mtd-spinand-add-support-for-FORESEE-F35SQA002G.patch b/target/linux/generic/backport-6.6/411-v6.7-mtd-spinand-add-support-for-FORESEE-F35SQA002G.patch
+new file mode 100644
+index 0000000000000..90672b99797c3
+--- /dev/null
++++ b/target/linux/generic/backport-6.6/411-v6.7-mtd-spinand-add-support-for-FORESEE-F35SQA002G.patch
+@@ -0,0 +1,146 @@
++From 49c8e854869d673df8452f24dfa8989cd0f615a8 Mon Sep 17 00:00:00 2001
++From: Martin Kurbanov <mmkurbanov@salutedevices.com>
++Date: Mon, 2 Oct 2023 17:04:58 +0300
++Subject: [PATCH] mtd: spinand: add support for FORESEE F35SQA002G
++
++Add support for FORESEE F35SQA002G SPI NAND.
++Datasheet:
++  https://www.longsys.com/uploads/LM-00006FORESEEF35SQA002GDatasheet_1650183701.pdf
++
++Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
++Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
++Link: https://lore.kernel.org/linux-mtd/20231002140458.147605-1-mmkurbanov@salutedevices.com
++---
++ drivers/mtd/nand/spi/Makefile  |  2 +-
++ drivers/mtd/nand/spi/core.c    |  1 +
++ drivers/mtd/nand/spi/foresee.c | 95 ++++++++++++++++++++++++++++++++++
++ include/linux/mtd/spinand.h    |  1 +
++ 4 files changed, 98 insertions(+), 1 deletion(-)
++ create mode 100644 drivers/mtd/nand/spi/foresee.c
++
++--- a/drivers/mtd/nand/spi/Makefile
+++++ b/drivers/mtd/nand/spi/Makefile
++@@ -1,4 +1,4 @@
++ # SPDX-License-Identifier: GPL-2.0
++-spinand-objs := core.o alliancememory.o ato.o esmt.o gigadevice.o macronix.o
+++spinand-objs := core.o alliancememory.o ato.o esmt.o foresee.o gigadevice.o macronix.o
++ spinand-objs += micron.o paragon.o toshiba.o winbond.o xtx.o
++ obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
++--- a/drivers/mtd/nand/spi/core.c
+++++ b/drivers/mtd/nand/spi/core.c
++@@ -940,6 +940,7 @@ static const struct spinand_manufacturer
++ 	&alliancememory_spinand_manufacturer,
++ 	&ato_spinand_manufacturer,
++ 	&esmt_c8_spinand_manufacturer,
+++	&foresee_spinand_manufacturer,
++ 	&gigadevice_spinand_manufacturer,
++ 	&macronix_spinand_manufacturer,
++ 	&micron_spinand_manufacturer,
++--- /dev/null
+++++ b/drivers/mtd/nand/spi/foresee.c
++@@ -0,0 +1,95 @@
+++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+++/*
+++ * Copyright (c) 2023, SberDevices. All Rights Reserved.
+++ *
+++ * Author: Martin Kurbanov <mmkurbanov@salutedevices.com>
+++ */
+++
+++#include <linux/device.h>
+++#include <linux/kernel.h>
+++#include <linux/mtd/spinand.h>
+++
+++#define SPINAND_MFR_FORESEE		0xCD
+++
+++static SPINAND_OP_VARIANTS(read_cache_variants,
+++		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
+++		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
+++		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+++		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
+++
+++static SPINAND_OP_VARIANTS(write_cache_variants,
+++		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
+++		SPINAND_PROG_LOAD(true, 0, NULL, 0));
+++
+++static SPINAND_OP_VARIANTS(update_cache_variants,
+++		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
+++		SPINAND_PROG_LOAD(false, 0, NULL, 0));
+++
+++static int f35sqa002g_ooblayout_ecc(struct mtd_info *mtd, int section,
+++				    struct mtd_oob_region *region)
+++{
+++	return -ERANGE;
+++}
+++
+++static int f35sqa002g_ooblayout_free(struct mtd_info *mtd, int section,
+++				     struct mtd_oob_region *region)
+++{
+++	if (section)
+++		return -ERANGE;
+++
+++	/* Reserve 2 bytes for the BBM. */
+++	region->offset = 2;
+++	region->length = 62;
+++
+++	return 0;
+++}
+++
+++static const struct mtd_ooblayout_ops f35sqa002g_ooblayout = {
+++	.ecc = f35sqa002g_ooblayout_ecc,
+++	.free = f35sqa002g_ooblayout_free,
+++};
+++
+++static int f35sqa002g_ecc_get_status(struct spinand_device *spinand, u8 status)
+++{
+++	struct nand_device *nand = spinand_to_nand(spinand);
+++
+++	switch (status & STATUS_ECC_MASK) {
+++	case STATUS_ECC_NO_BITFLIPS:
+++		return 0;
+++
+++	case STATUS_ECC_HAS_BITFLIPS:
+++		return nanddev_get_ecc_conf(nand)->strength;
+++
+++	default:
+++		break;
+++	}
+++
+++	/* More than 1-bit error was detected in one or more sectors and
+++	 * cannot be corrected.
+++	 */
+++	return -EBADMSG;
+++}
+++
+++static const struct spinand_info foresee_spinand_table[] = {
+++	SPINAND_INFO("F35SQA002G",
+++		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x72, 0x72),
+++		     NAND_MEMORG(1, 2048, 64, 64, 2048, 40, 1, 1, 1),
+++		     NAND_ECCREQ(1, 512),
+++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
+++					      &write_cache_variants,
+++					      &update_cache_variants),
+++		     SPINAND_HAS_QE_BIT,
+++		     SPINAND_ECCINFO(&f35sqa002g_ooblayout,
+++				     f35sqa002g_ecc_get_status)),
+++};
+++
+++static const struct spinand_manufacturer_ops foresee_spinand_manuf_ops = {
+++};
+++
+++const struct spinand_manufacturer foresee_spinand_manufacturer = {
+++	.id = SPINAND_MFR_FORESEE,
+++	.name = "FORESEE",
+++	.chips = foresee_spinand_table,
+++	.nchips = ARRAY_SIZE(foresee_spinand_table),
+++	.ops = &foresee_spinand_manuf_ops,
+++};
++--- a/include/linux/mtd/spinand.h
+++++ b/include/linux/mtd/spinand.h
++@@ -263,6 +263,7 @@ struct spinand_manufacturer {
++ extern const struct spinand_manufacturer alliancememory_spinand_manufacturer;
++ extern const struct spinand_manufacturer ato_spinand_manufacturer;
++ extern const struct spinand_manufacturer esmt_c8_spinand_manufacturer;
+++extern const struct spinand_manufacturer foresee_spinand_manufacturer;
++ extern const struct spinand_manufacturer gigadevice_spinand_manufacturer;
++ extern const struct spinand_manufacturer macronix_spinand_manufacturer;
++ extern const struct spinand_manufacturer micron_spinand_manufacturer;
+diff --git a/target/linux/generic/pending-6.6/410-mtd-spinand-set-bitflip_threshold-to-75-of-ECC-strength.patch b/target/linux/generic/pending-6.6/410-mtd-spinand-set-bitflip_threshold-to-75-of-ECC-strength.patch
+index aeac79c02383a..84c6c4ae13b85 100644
+--- a/target/linux/generic/pending-6.6/410-mtd-spinand-set-bitflip_threshold-to-75-of-ECC-strength.patch
++++ b/target/linux/generic/pending-6.6/410-mtd-spinand-set-bitflip_threshold-to-75-of-ECC-strength.patch
+@@ -53,7 +53,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/drivers/mtd/nand/spi/core.c
+ +++ b/drivers/mtd/nand/spi/core.c
+-@@ -1286,6 +1286,7 @@ static int spinand_init(struct spinand_d
++@@ -1287,6 +1287,7 @@ static int spinand_init(struct spinand_d
+  	/* Propagate ECC information to mtd_info */
+  	mtd->ecc_strength = nanddev_get_ecc_conf(nand)->strength;
+  	mtd->ecc_step_size = nanddev_get_ecc_conf(nand)->step_size;
+diff --git a/target/linux/generic/pending-6.6/487-mtd-spinand-Add-support-for-Etron-EM73D044VCx.patch b/target/linux/generic/pending-6.6/487-mtd-spinand-Add-support-for-Etron-EM73D044VCx.patch
+index 8fd136595262d..7a3a0f33adb74 100644
+--- a/target/linux/generic/pending-6.6/487-mtd-spinand-Add-support-for-Etron-EM73D044VCx.patch
++++ b/target/linux/generic/pending-6.6/487-mtd-spinand-Add-support-for-Etron-EM73D044VCx.patch
+@@ -42,9 +42,9 @@ Submitted-by: Daniel Danzberger <daniel@dd-wrt.com>
+ +++ b/drivers/mtd/nand/spi/Makefile
+ @@ -1,4 +1,4 @@
+  # SPDX-License-Identifier: GPL-2.0
+--spinand-objs := core.o alliancememory.o ato.o esmt.o gigadevice.o macronix.o
++-spinand-objs := core.o alliancememory.o ato.o esmt.o foresee.o gigadevice.o macronix.o
+ -spinand-objs += micron.o paragon.o toshiba.o winbond.o xtx.o
+-+spinand-objs := core.o alliancememory.o ato.o esmt.o etron.o gigadevice.o
+++spinand-objs := core.o alliancememory.o ato.o esmt.o etron.o foresee.o gigadevice.o
+ +spinand-objs += macronix.o micron.o paragon.o toshiba.o winbond.o xtx.o
+  obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
+ --- a/drivers/mtd/nand/spi/core.c
+@@ -54,9 +54,9 @@ Submitted-by: Daniel Danzberger <daniel@dd-wrt.com>
+  	&ato_spinand_manufacturer,
+  	&esmt_c8_spinand_manufacturer,
+ +	&etron_spinand_manufacturer,
++ 	&foresee_spinand_manufacturer,
+  	&gigadevice_spinand_manufacturer,
+  	&macronix_spinand_manufacturer,
+- 	&micron_spinand_manufacturer,
+ --- /dev/null
+ +++ b/drivers/mtd/nand/spi/etron.c
+ @@ -0,0 +1,98 @@
+@@ -165,6 +165,6 @@ Submitted-by: Daniel Danzberger <daniel@dd-wrt.com>
+  extern const struct spinand_manufacturer ato_spinand_manufacturer;
+  extern const struct spinand_manufacturer esmt_c8_spinand_manufacturer;
+ +extern const struct spinand_manufacturer etron_spinand_manufacturer;
++ extern const struct spinand_manufacturer foresee_spinand_manufacturer;
+  extern const struct spinand_manufacturer gigadevice_spinand_manufacturer;
+  extern const struct spinand_manufacturer macronix_spinand_manufacturer;
+- extern const struct spinand_manufacturer micron_spinand_manufacturer;
+diff --git a/target/linux/mediatek/patches-6.6/330-snand-mtk-bmt-support.patch b/target/linux/mediatek/patches-6.6/330-snand-mtk-bmt-support.patch
+index de8e8806433c6..939ec04855578 100644
+--- a/target/linux/mediatek/patches-6.6/330-snand-mtk-bmt-support.patch
++++ b/target/linux/mediatek/patches-6.6/330-snand-mtk-bmt-support.patch
+@@ -8,7 +8,7 @@
+  
+  static int spinand_read_reg_op(struct spinand_device *spinand, u8 reg, u8 *val)
+  {
+-@@ -1346,6 +1347,7 @@ static int spinand_probe(struct spi_mem
++@@ -1347,6 +1348,7 @@ static int spinand_probe(struct spi_mem
+  	if (ret)
+  		return ret;
+  
+@@ -16,7 +16,7 @@
+  	ret = mtd_device_register(mtd, NULL, 0);
+  	if (ret)
+  		goto err_spinand_cleanup;
+-@@ -1353,6 +1355,7 @@ static int spinand_probe(struct spi_mem
++@@ -1354,6 +1356,7 @@ static int spinand_probe(struct spi_mem
+  	return 0;
+  
+  err_spinand_cleanup:
+@@ -24,7 +24,7 @@
+  	spinand_cleanup(spinand);
+  
+  	return ret;
+-@@ -1371,6 +1374,7 @@ static int spinand_remove(struct spi_mem
++@@ -1372,6 +1375,7 @@ static int spinand_remove(struct spi_mem
+  	if (ret)
+  		return ret;
+  
+diff --git a/target/linux/mediatek/patches-6.6/340-mtd-spinand-Add-support-for-the-Fidelix-FM35X1GA.patch b/target/linux/mediatek/patches-6.6/340-mtd-spinand-Add-support-for-the-Fidelix-FM35X1GA.patch
+index 22408b9273dfc..e06e125c462e2 100644
+--- a/target/linux/mediatek/patches-6.6/340-mtd-spinand-Add-support-for-the-Fidelix-FM35X1GA.patch
++++ b/target/linux/mediatek/patches-6.6/340-mtd-spinand-Add-support-for-the-Fidelix-FM35X1GA.patch
+@@ -18,18 +18,18 @@ Signed-off-by: Davide Fioravanti <pantanastyle@gmail.com>
+ +++ b/drivers/mtd/nand/spi/Makefile
+ @@ -1,4 +1,4 @@
+  # SPDX-License-Identifier: GPL-2.0
+--spinand-objs := core.o alliancememory.o ato.o esmt.o etron.o gigadevice.o
+-+spinand-objs := core.o alliancememory.o ato.o esmt.o etron.o fidelix.o gigadevice.o
++-spinand-objs := core.o alliancememory.o ato.o esmt.o etron.o foresee.o gigadevice.o
+++spinand-objs := core.o alliancememory.o ato.o esmt.o etron.o fidelix.o foresee.o gigadevice.o
+  spinand-objs += macronix.o micron.o paragon.o toshiba.o winbond.o xtx.o
+  obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
+ --- a/drivers/mtd/nand/spi/core.c
+ +++ b/drivers/mtd/nand/spi/core.c
+-@@ -941,6 +941,7 @@ static const struct spinand_manufacturer
+- 	&alliancememory_spinand_manufacturer,
++@@ -942,6 +942,7 @@ static const struct spinand_manufacturer
+  	&ato_spinand_manufacturer,
+  	&esmt_c8_spinand_manufacturer,
+-+	&fidelix_spinand_manufacturer,
+  	&etron_spinand_manufacturer,
+++	&fidelix_spinand_manufacturer,
++ 	&foresee_spinand_manufacturer,
+  	&gigadevice_spinand_manufacturer,
+  	&macronix_spinand_manufacturer,
+ --- /dev/null
+@@ -118,6 +118,6 @@ Signed-off-by: Davide Fioravanti <pantanastyle@gmail.com>
+  extern const struct spinand_manufacturer esmt_c8_spinand_manufacturer;
+  extern const struct spinand_manufacturer etron_spinand_manufacturer;
+ +extern const struct spinand_manufacturer fidelix_spinand_manufacturer;
++ extern const struct spinand_manufacturer foresee_spinand_manufacturer;
+  extern const struct spinand_manufacturer gigadevice_spinand_manufacturer;
+  extern const struct spinand_manufacturer macronix_spinand_manufacturer;
+- extern const struct spinand_manufacturer micron_spinand_manufacturer;
+diff --git a/target/linux/mediatek/patches-6.6/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch b/target/linux/mediatek/patches-6.6/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch
+index bd8e738a37cc6..50149fd819608 100644
+--- a/target/linux/mediatek/patches-6.6/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch
++++ b/target/linux/mediatek/patches-6.6/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch
+@@ -11,7 +11,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+ 
+ --- a/drivers/mtd/nand/spi/core.c
+ +++ b/drivers/mtd/nand/spi/core.c
+-@@ -979,6 +979,56 @@ static int spinand_manufacturer_match(st
++@@ -980,6 +980,56 @@ static int spinand_manufacturer_match(st
+  	return -ENOTSUPP;
+  }
+  
+@@ -68,7 +68,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+  static int spinand_id_detect(struct spinand_device *spinand)
+  {
+  	u8 *id = spinand->id.data;
+-@@ -1229,6 +1279,10 @@ static int spinand_init(struct spinand_d
++@@ -1230,6 +1280,10 @@ static int spinand_init(struct spinand_d
+  	if (!spinand->scratchbuf)
+  		return -ENOMEM;
+  
+diff --git a/target/linux/mediatek/patches-6.6/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch b/target/linux/mediatek/patches-6.6/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch
+index 744042ae1aa56..27c5dfd5d66b6 100644
+--- a/target/linux/mediatek/patches-6.6/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch
++++ b/target/linux/mediatek/patches-6.6/436-drivers-mtd-spi-nor-Add-calibration-support-for-spi-.patch
+@@ -12,7 +12,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+ 
+ --- a/drivers/mtd/nand/spi/core.c
+ +++ b/drivers/mtd/nand/spi/core.c
+-@@ -1020,7 +1020,10 @@ int spinand_cal_read(void *priv, u32 *ad
++@@ -1021,7 +1021,10 @@ int spinand_cal_read(void *priv, u32 *ad
+  	if (ret)
+  		return ret;
+  

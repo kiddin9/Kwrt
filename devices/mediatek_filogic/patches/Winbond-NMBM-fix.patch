@@ -1,0 +1,33 @@
+From 0560802d2f5c2bb4346551950e806f77944cf419 Mon Sep 17 00:00:00 2001
+From: Mikhail Zhilkin <csharper2005@gmail.com>
+Date: Sun, 17 Nov 2024 16:30:31 +0000
+Subject: [PATCH] kernel: quick fix for nmbm with Winbond W25N01KV
+
+Fixes: https://github.com/openwrt/openwrt/issues/16972
+
+Signed-off-by: Mikhail Zhilkin <csharper2005@gmail.com>
+---
+ target/linux/generic/files/drivers/mtd/nand/mtk_bmt_nmbm.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/target/linux/generic/files/drivers/mtd/nand/mtk_bmt_nmbm.c b/target/linux/generic/files/drivers/mtd/nand/mtk_bmt_nmbm.c
+index a896e49ec04751..6ec9b388076dea 100644
+--- a/target/linux/generic/files/drivers/mtd/nand/mtk_bmt_nmbm.c
++++ b/target/linux/generic/files/drivers/mtd/nand/mtk_bmt_nmbm.c
+@@ -2197,10 +2197,15 @@ static int nmbm_attach(struct nmbm_instance *ni)
+ 		return -EINVAL;
+ 	}
+ 
++	nlog_info(ni, "ni->signature.spare_size: %u [0x%02x]\n",
++		ni->signature.spare_size, ni->signature.spare_size);
++	nlog_info(ni, "bmtd.mtd->oobsize: %u [0x%02x]\n",
++		bmtd.mtd->oobsize, bmtd.mtd->oobsize);
++
+ 	if (ni->signature.nand_size != bmtd.total_blks << bmtd.blk_shift ||
+ 	    ni->signature.block_size != bmtd.blk_size ||
+ 	    ni->signature.page_size != bmtd.pg_size ||
+-	    ni->signature.spare_size != bmtd.mtd->oobsize) {
++	    ni->signature.spare_size > bmtd.mtd->oobsize) {
+ 		nlog_err(ni, "NMBM configuration mismatch\n");
+ 		return -EINVAL;
+ 	}
