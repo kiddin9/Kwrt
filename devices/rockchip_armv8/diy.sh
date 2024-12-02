@@ -11,10 +11,6 @@ git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip
 
 git_clone_path c74ed3282cf0aabd550203f0e500c0f4dcd2a872 https://github.com/coolsnowwolf/lede package/boot
 
-rm -rf  package/boot/uboot-rk35xx
-
-git_clone_path master https://github.com/coolsnowwolf/lede package/boot/uboot-rk35xx
-
 rm -rf package/boot/uboot-rk35xx/patches/001-cmd-fix_source.patch
 
 wget -N https://github.com/istoreos/istoreos/raw/istoreos-22.03/target/linux/rockchip/patches-5.10/305-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.6/
