@@ -13,9 +13,9 @@ sed -i '/	refresh_config();/d' scripts/feeds
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 
-rm -rf package/base-files feeds/luci/modules/luci-base
+rm -rf package/base-files
 mv -f feeds/kiddin9/base-files package/
-mv -f feeds/kiddin9/luci-base package/feeds/luci/
+
 
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
