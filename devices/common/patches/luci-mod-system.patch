@@ -1,0 +1,21 @@
+--- a/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ b/package/feeds/luci/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+@@ -261,6 +261,7 @@ return view.extend({
+ 					body.push(E('p', {}, E('label', { 'class': 'btn' }, [
+ 						opts.backup_pkgs[0], ' ', _('Include in backup a list of current installed packages at /etc/backup/installed_packages.txt')
+ 					])));
++					opts.backup_pkgs[0].checked = true;
+ 				};
+ 
+ 				var cntbtn = E('button', {
+@@ -302,6 +303,10 @@ return view.extend({
+ 				opts.keep[0].addEventListener('change', function(ev) {
+ 					opts.skip_orig[0].disabled = !ev.target.checked;
+ 					opts.backup_pkgs[0].disabled = !ev.target.checked;
++					if (ev.target.checked == false){
++						opts.skip_orig[0].checked =false
++						opts.backup_pkgs[0].checked =false
++					}
+ 
+ 				});
+ 

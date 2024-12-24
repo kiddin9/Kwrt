@@ -1,0 +1,63 @@
+From 2d813c84eb52371ee7222c502b85867c8891aac5 Mon Sep 17 00:00:00 2001
+From: Bohdan Chubuk <chbgdn@gmail.com>
+Date: Mon, 11 Nov 2024 02:04:29 +0200
+Subject: [PATCH] generic: 6.6: mtd: spinand: add support for FORESEE
+ F35SQA001G
+
+Add support for FORESEE F35SQA001G SPI NAND.
+
+Similar to F35SQA002G, but differs in capacity.
+Datasheet:
+  -  https://cdn.ozdisan.com/ETicaret_Dosya/704795_871495.pdf
+
+Tested on Xiaomi AX3000T flashed with OpenWRT.
+
+Signed-off-by: Bohdan Chubuk <chbgdn@gmail.com>
+---
+ ...d-add-support-for-FORESEE-F35SQA001G.patch | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 target/linux/generic/pending-6.6/495-mtd-spinand-add-support-for-FORESEE-F35SQA001G.patch
+
+diff --git a/target/linux/generic/pending-6.6/495-mtd-spinand-add-support-for-FORESEE-F35SQA001G.patch b/target/linux/generic/pending-6.6/495-mtd-spinand-add-support-for-FORESEE-F35SQA001G.patch
+new file mode 100644
+index 0000000000000..8cf20332be348
+--- /dev/null
++++ b/target/linux/generic/pending-6.6/495-mtd-spinand-add-support-for-FORESEE-F35SQA001G.patch
+@@ -0,0 +1,37 @@
++From b763f9c21084aa01825e21759beeb357eea16a7f Mon Sep 17 00:00:00 2001
++From: Bohdan Chubuk <chbgdn@gmail.com>
++Date: Sun, 10 Nov 2024 22:47:08 +0200
++Subject: [PATCH] mtd: spinand: add support for FORESEE F35SQA001G
++
++Add support for FORESEE F35SQA001G SPI NAND.
++
++Similar to F35SQA002G, but differs in capacity.
++Datasheet:
++  -  https://cdn.ozdisan.com/ETicaret_Dosya/704795_871495.pdf
++
++Tested on Xiaomi AX3000T flashed with OpenWRT.
++
++Signed-off-by: Bohdan Chubuk <chbgdn@gmail.com>
++---
++ drivers/mtd/nand/spi/foresee.c | 10 ++++++++++
++ 1 file changed, 10 insertions(+)
++
++--- a/drivers/mtd/nand/spi/foresee.c
+++++ b/drivers/mtd/nand/spi/foresee.c
++@@ -81,6 +81,16 @@ static const struct spinand_info foresee
++ 		     SPINAND_HAS_QE_BIT,
++ 		     SPINAND_ECCINFO(&f35sqa002g_ooblayout,
++ 				     f35sqa002g_ecc_get_status)),
+++	SPINAND_INFO("F35SQA001G",
+++		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x71, 0x71),
+++		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
+++		     NAND_ECCREQ(1, 512),
+++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
+++					      &write_cache_variants,
+++					      &update_cache_variants),
+++		     SPINAND_HAS_QE_BIT,
+++		     SPINAND_ECCINFO(&f35sqa002g_ooblayout,
+++				     f35sqa002g_ecc_get_status)),
++ };
++ 
++ static const struct spinand_manufacturer_ops foresee_spinand_manuf_ops = {

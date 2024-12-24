@@ -1,0 +1,8 @@
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -1422,5 +1422,4 @@
+ 			 "package \"%s\" %s script returned status %d.\n",
+ 			 pkg->name, script, err);
+-		return err;
+ 	}
+ 

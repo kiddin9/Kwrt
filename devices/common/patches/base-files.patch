@@ -1,0 +1,64 @@
+--- a/package/base-files/files/etc/shinit
++++ b/package/base-files/files/etc/shinit
+@@ -2,6 +2,8 @@
+ [ -x /usr/bin/vim ] && alias vi=vim || alias vim=vi
+ 
+ alias ll='ls -alF --color=auto'
++alias reboot='(/bin/busybox reboot &);sleep 3;/bin/busybox reboot -f'
++PS1='\[\e[32m\][\[\e[m\]\[\e[31m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[m\]\[\e[32m\]\[\e[1;32m\]\@\[\e[36m\] \w\[\e[m\]\[\e[32m\]]\[\e[0m\] \$\[\e[m\] '
+ 
+ [ -z "$KSH_VERSION" -o \! -s /etc/mkshrc ] || . /etc/mkshrc
+
+--- a/package/base-files/files/sbin/sysupgrade
++++ b/package/base-files/files/sbin/sysupgrade
+@@ -277,13 +277,15 @@ create_backup_archive() {
+ 		# Part of archive with installed packages info
+ 		if [ $ret -eq 0 ]; then
+ 			if [ "$SAVE_INSTALLED_PKGS" -eq 1 ]; then
+-				# Format: pkg-name<TAB>{rom,overlay,unknown}
+-				# rom is used for pkgs in /rom, even if updated later
+-				tar_print_member "$INSTALLED_PACKAGES" "$(find /usr/lib/opkg/info -name "*.control" \( \
+-					\( -exec test -f /rom/{} \; -exec echo {} rom \; \) -o \
+-					\( -exec test -f /overlay/upper/{} \; -exec echo {} overlay \; \) -o \
+-					\( -exec echo {} unknown \; \) \
+-					\) | sed -e 's,.*/,,;s/\.control /\t/')" || ret=1
++				. /etc/profile.d/opkg.sh && opkg save
++				[ -f /rom/etc/uci-defaults/zz-asu-defaults ] && {
++				cp -f /rom/etc/uci-defaults/zz-asu-defaults /etc/uci-defaults/zz-asu-defaults
++				echo "/etc/uci-defaults/zz-asu-defaults" >> $CONFFILES
++				}
++			else
++				uci -q del opkg.auto
++				uci -q del opkg.custom
++				uci commit opkg
+ 			fi
+ 		fi
+ 
+
+--- a/package/base-files/files/etc/profile
++++ b/package/base-files/files/etc/profile
+@@ -22,7 +23,11 @@ esac
+ 
+ [ -n "$FAILSAFE" ] || {
+ 	for FILE in /etc/profile.d/*.sh; do
+-		[ -e "$FILE" ] && . "$FILE"
++		if [ "$FILE" == "/etc/profile.d/30-sysinfo.sh" ]; then
++		 [ "$(which bash)" ] && env -i bash "$FILE"
++		else
++		 [ -e "$FILE" ] && . "$FILE"
++		fi
+ 	done
+ 	unset FILE
+ }
+
+--- a/package/base-files/files/lib/preinit/02_sysinfo
++++ b/package/base-files/files/lib/preinit/02_sysinfo
+@@ -5,6 +5,7 @@ do_sysinfo_generic() {
+ 		echo "$(strings /proc/device-tree/compatible | head -1)" > /tmp/sysinfo/board_name
+ 	[ ! -e /tmp/sysinfo/model -a -e /proc/device-tree/model ] && \
+ 		echo "$(cat /proc/device-tree/model)" > /tmp/sysinfo/model
++	sed -i "s/friendlyelec/friendlyarm/" /tmp/sysinfo/board_name
+ }
+ 
+ boot_hook_add preinit_main do_sysinfo_generic
+

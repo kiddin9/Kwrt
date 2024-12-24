@@ -22,7 +22,7 @@
 
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -942,18 +942,10 @@ define Device/netcore_n60
+@@ -1096,18 +1096,11 @@ define Device/netcore_n60
    BLOCKSIZE := 128k
    PAGESIZE := 2048
    KERNEL_IN_UBI := 1
@@ -38,6 +38,7 @@
 -  ARTIFACTS := preloader.bin bl31-uboot.fip
 -  ARTIFACT/preloader.bin := mt7986-bl2 spim-nand-ddr3
 -  ARTIFACT/bl31-uboot.fip := mt7986-bl31-uboot netcore_n60
++  IMAGE_SIZE := 112640k
 +  IMAGES += factory.bin
 +  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata

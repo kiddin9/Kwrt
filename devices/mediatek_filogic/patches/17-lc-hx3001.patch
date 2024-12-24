@@ -273,9 +273,9 @@ index 0a1f642c70924..fda3d4b98d875 100644
 +konka,komi-a31)
 +         ucidef_set_led_netdev "eth1" "eth1" "blue:status" "eth1" "link"
 +	;;
- mercusys,mr90x-v1)
- 	ucidef_set_led_netdev "lan-0" "lan-0" "green:lan-0" "lan0" "link tx rx"
- 	ucidef_set_led_netdev "lan-1" "lan-1" "green:lan-1" "lan1" "link tx rx"
+ glinet,gl-x3000|\
+ glinet,gl-xe3000)
+ 	ucidef_set_led_default "power" "POWER" "green:power" "1"
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 index 61637e09c7f0e..4048eddadb45a 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network

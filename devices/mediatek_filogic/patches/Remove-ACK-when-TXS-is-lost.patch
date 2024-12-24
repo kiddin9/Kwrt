@@ -1,0 +1,43 @@
+From 09255a2b23bc65dc0629ef4688146c1b93bcf73a Mon Sep 17 00:00:00 2001
+From: developer <developer@mediatek.com>
+Date: Wed, 16 Oct 2024 08:47:21 +0800
+Subject: [PATCH] Remove ACK when TXS is lost.
+
+Change-Id: I3a8a3aee48a0d735932b07e804bc3592d724fcd8
+Reviewed-on: https://gerrit.mediatek.inc/c/openwrt/feeds/mtk_openwrt_feeds/+/9758591
+---
+ ...6-do-not-report-ACK-when-TXS-is-lost.patch | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 package/kernel/mt76/patches/0025-mtk-mt76-do-not-report-ACK-when-TXS-is-lost.patch
+
+diff --git a/package/kernel/mt76/patches/0025-mtk-mt76-do-not-report-ACK-when-TXS-is-lost.patch b/package/kernel/mt76/patches/0025-mtk-mt76-do-not-report-ACK-when-TXS-is-lost.patch
+new file mode 100644
+index 0000000000..281ba99193
+--- /dev/null
++++ b/package/kernel/mt76/patches/0025-mtk-mt76-do-not-report-ACK-when-TXS-is-lost.patch
+@@ -0,0 +1,22 @@
++From 4efdf548d28d3afbc367e2cbe365107db1869690 Mon Sep 17 00:00:00 2001
++From: Peter Chiu <chui-hao.chiu@mediatek.com>
++Date: Wed, 16 Oct 2024 08:41:49 +0800
++Subject: [PATCH] mtk: mt76: do not report ACK when TXS is lost
++
++Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
++---
++ tx.c | 3 ++-
++ 1 file changed, 2 insertions(+), 1 deletion(-)
++
++--- a/tx.c
+++++ b/tx.c
++@@ -100,7 +100,8 @@ __mt76_tx_status_skb_done(struct mt76_de
++ 		return;
++ 
++ 	/* Tx status can be unreliable. if it fails, mark the frame as ACKed */
++-	if (flags & MT_TX_CB_TXS_FAILED) {
+++	if ((flags & MT_TX_CB_TXS_FAILED) &&
+++	    (dev->drv->drv_flags & MT_DRV_SW_RX_AIRTIME)) { /* Only CE chips do so */
++ 		info->status.rates[0].count = 0;
++ 		info->status.rates[0].idx = -1;
++ 		info->flags |= IEEE80211_TX_STAT_ACK;
+-- 
+2.47.0
+

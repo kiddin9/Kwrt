@@ -1,0 +1,39 @@
+--- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
++++ b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js
+@@ -337,6 +337,25 @@ return view.extend({
+ 		s.tab('mxhosts', _('MX'));
+ 		s.tab('cnamehosts', _('CNAME'));
+ 		s.tab('pxe_tftp', _('PXE/TFTP'));
++		s.tab('custom_domain', _('Custom Redirect Domain'));
++
++		o = s.taboption('custom_domain', form.SectionValue, 'domain', form.GridSection, 'domain', null,
++			_('Define a custom domain name and the corresponding PTR record'));
++
++		ss = o.subsection;
++		ss.addremove = true;
++		ss.anonymous = true;
++
++		so = ss.option(form.Value, 'name', _('Domain Name'));
++		so.datatype = 'hostname';
++		so.rmempty  = false;
++
++		so = ss.option(form.Value, 'ip', _('<abbr title=\"Internet Protocol Version 4\">IPv4</abbr>-Address'));
++		so.datatype = 'or(ip4addr,"ignore")';
++		so.rmempty  = false;
++
++		so = ss.option(form.Value, 'comments', _('Comments'));
++		so.rmempty  = true;
+ 
+ 		s.taboption('filteropts', form.Flag, 'domainneeded',
+ 			_('Domain required'),
+@@ -347,6 +366,10 @@ return view.extend({
+ 			_('Authoritative'),
+ 			_('This is the only DHCP server in the local network.'));
+ 
++		s.taboption('general', form.Flag, 'dns_redirect',
++			_('DNS redirect'),
++			_('Force redirect all local DNS queries to DNSMasq, a.k.a. DNS Hijacking.'));
++
+ 		o = s.taboption('general', form.Value, 'local',
+ 			_('Resolve these locally'),
+ 			_('Never forward these matching domains or subdomains; resolve from DHCP or hosts files only.'));

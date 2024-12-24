@@ -1,0 +1,187 @@
+--- a/package/feeds/luci/luci-base/root/usr/share/rpcd/ucode/luci
++++ b/package/feeds/luci/luci-base/root/usr/share/rpcd/ucode/luci
+@@ -192,6 +192,7 @@ const methods = {
+ 
+ 	getFeatures: {
+ 		call: function() {
++			let kernel_version = popen('echo -n `uname -r`').read('all');
+ 			let result = {
+ 				firewall:   access('/sbin/fw3') == true,
+ 				firewall4:  access('/sbin/fw4') == true,
+@@ -199,6 +200,7 @@ const methods = {
+ 				bonding:    access('/sys/module/bonding'),
+ 				mii_tool:   access('/usr/sbin/mii-tool'),
+ 				offloading: access('/sys/module/xt_FLOWOFFLOAD/refcnt') == true || access('/sys/module/nft_flow_offload/refcnt') == true,
++				fullcone:   access(`/lib/modules/${kernel_version}/xt_FULLCONENAT.ko`) == true || access(`/lib/modules/${kernel_version}/nft_fullcone.ko`) == true,
+ 				br2684ctl:  access('/usr/sbin/br2684ctl') == true,
+ 				swconfig:   access('/sbin/swconfig') == true,
+ 				odhcpd:     access('/usr/sbin/odhcpd') == true,
+@@ -538,6 +540,99 @@ const methods = {
+ 		call: function() {
+ 			return { result: process_list() };
+ 		}
++	},
++
++	getCPUBench: {
++		call: function() {
++			return { cpubench: readfile('/etc/bench.log') || '' };
++		}
++	},
++
++	getCPUInfo: {
++		call: function() {
++			if (!access('/sbin/cpuinfo'))
++				return {};
++
++			const fd = popen('/sbin/cpuinfo');
++			if (fd) {
++				let cpuinfo = fd.read('all');
++				fd.close();
++
++				return { cpuinfo: cpuinfo };
++			} else {
++				return { cpuinfo: error() };
++			}
++		}
++	},
++
++	getCPUUsage: {
++		call: function() {
++			const fd = popen('top -n1 | awk \'/^CPU/ {printf("%d%", 100 - $8)}\'');
++			if (fd) {
++				let cpuusage = fd.read('all');
++				fd.close();
++
++				return { cpuusage: cpuusage };
++			} else {
++				return { cpuusage: error() };
++			}
++		}
++	},
++
++	getETHInfo: {
++		call: function() {
++			if (!access('/sbin/ethinfo'))
++				return {};
++
++			const fd = popen('/sbin/ethinfo');
++			if (fd) {
++				let ethinfo = fd.read('all');
++				if (!ethinfo)
++					ethinfo = '{}';
++				ethinfo = json(ethinfo);
++				fd.close();
++
++				return { ethinfo: ethinfo };
++			} else {
++				return { ethinfo: error() };
++			}
++		}
++	},
++
++	getTempInfo: {
++		call: function() {
++			if (!access('/sbin/tempinfo'))
++				return {};
++
++			const fd = popen('/sbin/tempinfo');
++			if (fd) {
++				let tempinfo = fd.read('all');
++				fd.close();
++
++				return { tempinfo: tempinfo };
++			} else {
++				return { tempinfo: error() };
++			}
++		}
++	},
++
++	getOnlineUsers: {
++		call: function() {
++			const fd = open('/proc/net/arp', 'r');
++			if (fd) {
++				let onlineusers = 0;
++
++				for (let line = fd.read('line'); length(line); line = fd.read('line'))
++					if (match(trim(line), /^.*(0x2).*(br-lan)$/))
++						onlineusers++;
++
++				fd.close();
++
++				return { onlineusers: onlineusers };
++			} else {
++				return { onlineusers: error() };
++			}
++		}
+ 	}
+ };
+ 
+
+--- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
++++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
+@@ -4376,4 +4376,10 @@ WifiNetwork = baseclass.extend(/** @lends LuCI.network.WifiNetwork.prototype */
+ 	}
+ });
+ 
++setTimeout(function(){
++try{
++  document.getElementsByClassName('cbi-button-apply')[0].children[3].children[0].value='1'
++}catch(err) {
++}},1000)
++
+ return Network;
+
+--- a/package/feeds/luci/luci-base/ucode/dispatcher.uc
++++ b/package/feeds/luci/luci-base/ucode/dispatcher.uc
+@@ -939,7 +939,12 @@ dispatch = function(_http, path) {
+ 				let cookie_name = (http.getenv('HTTPS') == 'on') ? 'sysauth_https' : 'sysauth_http',
+ 				    cookie_secure = (http.getenv('HTTPS') == 'on') ? '; secure' : '';
+ 
+-				http.header('Set-Cookie', `${cookie_name}=${session.sid}; path=${build_url()}; SameSite=strict; HttpOnly${cookie_secure}`);
++				let cookie_p = uci.get('wizard', 'default', 'cookie_p');
++				if (cookie_p == '0') {
++					http.header('Set-Cookie', `${cookie_name}=${session.sid}; path=${build_url()}; SameSite=strict; HttpOnly${cookie_secure}`);
++				} else {
++					http.header('Set-Cookie', `${cookie_name}=${session.sid}; Max-Age=2147483647; path=${build_url()}; SameSite=strict; HttpOnly${cookie_secure}`);
++				}
+ 				http.redirect(build_url(...resolved.ctx.request_path));
+ 
+ 				return;
+
+--- a/package/feeds/luci/luci-base/root/www/index.html
++++ b/package/feeds/luci/luci-base/root/www/index.html
+@@ -15,6 +15,5 @@
+ 		</style>
+ 	</head>
+ 	<body>
+-		<a href="cgi-bin/luci/">LuCI - Lua Configuration Interface</a>
+ 	</body>
+ </html>
+
+--- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/ui.js
++++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/ui.js
+@@ -3129,12 +3129,6 @@ var UIMenu = baseclass.singleton(/** @lends LuCI.ui.menu.prototype */ {
+ 
+ 				for (var i = 0; root != null && i < path.length; i++)
+ 					root = L.isObject(root.children) ? root.children[path[i]] : null;
+-
+-				if (root)
+-					subnode = Object.assign({}, subnode, {
+-						children: root.children,
+-						action: root.action
+-					});
+ 			}
+ 
+ 			children.push(subnode);
+
+--- a/package/feeds/luci/luci-base/root/etc/init.d/ucitrack
++++ b/package/feeds/luci/luci-base/root/etc/init.d/ucitrack
+@@ -8,7 +8,7 @@ register_init() {
+ 	local init="$2"
+ 	shift; shift
+ 
+-	if [ -x "$init" ] && "$init" enabled && ! grep -sqE 'USE_PROCD=.' "$init"; then
++	if [ -x "$init" ] && "$init" enabled && ! grep -sq 'procd_add_reload_trigger' "$init"; then
+ 		logger -t "ucitrack" "Setting up /etc/config/$config reload trigger for non-procd $init"
+ 		procd_add_config_trigger "config.change" "$config" "$init" "$@"
+ 	fi

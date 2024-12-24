@@ -1,0 +1,183 @@
+#!/bin/sh
+
+# UCI 配置操作函数
+config_get() { uci -q get "$1"; }
+config_set() { uci set "$1=$2"; }
+config_add_list() { uci add_list "$1=$2"; }
+config_delete() { uci -q delete "$1"; }
+config_commit() { uci commit "$1"; }
+
+# 检查列表是否包含元素
+list_contains() {
+    local value="$1"; shift
+    echo "$@" | grep -q -w "$value"
+}
+
+# 从列表中移除元素
+list_remove() {
+    local value="$1"
+    local list="$2"
+    echo "$list" | sed "s/\<$value\>//g" | xargs
+}
+
+# 更新 SSH 和 TTYD 配置
+update_ssh_ttyd() {
+    if [ "$(config_get "firewall.@defaults[0].ex_ssh")" = "1" ]; then
+        if [ -n "$(config_get "dropbear.@dropbear[0].GatewayPorts")" ]; then
+            config_set "dropbear.@dropbear[0].GatewayPorts" "on"
+            config_commit "dropbear"
+            service dropbear reload &
+        fi
+        if command -v ttyd >/dev/null 2>&1; then
+            [ "$(config_get "ttyd.@ttyd[0].interface")" != "@lan" ] && config_set "ttyd.@ttyd[0].interface" "@lan"
+            if [ "$(config_get "firewall.@defaults[0].family")" = "ipv4" ]; then
+                config_set "ttyd.@ttyd[0].ipv6" "0"
+            else
+                config_set "ttyd.@ttyd[0].ipv6" "1"
+            fi
+            config_commit "ttyd"
+            service ttyd reload &
+        fi
+    fi
+}
+
+# 更新防火墙规则
+update_firewall_rule() {
+    local port="$1"
+    local is_backend_port="$2"
+    local rule="firewall.ex_$port"
+    local family=$(config_get "firewall.@defaults[0].family")
+    local proto=$(config_get "firewall.@defaults[0].proto")
+
+    config_set "$rule" "rule"
+    config_set "$rule.name" "ex_$port"
+    config_set "$rule.src" "wan"
+    config_set "$rule.dest_port" "$port"
+    config_set "$rule.target" "ACCEPT"
+
+    [ "$family" = "ipv4" ] && config_set "$rule.family" "ipv4" || config_set "$rule.family" "ipv6"
+
+    if [ "$is_backend_port" = "1" ]; then
+        config_add_list "$rule.proto" "tcp"
+    else
+        case "$proto" in
+            udp) config_add_list "$rule.proto" "udp" ;;
+            tudp)
+                config_add_list "$rule.proto" "tcp"
+                config_add_list "$rule.proto" "udp"
+                ;;
+            *)  config_add_list "$rule.proto" "tcp" ;;
+        esac
+    fi
+}
+
+# 删除所有以前生成的 config rule
+remove_all_ex_rules() {
+    local rules=$(uci show firewall | grep "\.name='ex_" | cut -d. -f2)
+    for rule in $rules; do
+        config_delete "firewall.$rule"
+    done
+}
+
+# 更新 export 配置
+update_export() {
+    local export=$(config_get "firewall.@defaults[0].export")
+    local ex_ssh=$(config_get "firewall.@defaults[0].ex_ssh")
+    local sshport=$(config_get "dropbear.@dropbear[0].Port")
+    
+    # 处理 SSH 端口
+    if [ "$ex_ssh" = "1" ]; then
+        if ! list_contains "$sshport" $export; then
+            export="$export $sshport"
+        fi
+    else
+        export=$(list_remove "$sshport" "$export")
+    fi
+    
+    config_set "firewall.@defaults[0].export" "$export"
+    
+    remove_all_ex_rules
+    
+    # 添加新的规则
+    for port in $export; do
+        update_firewall_rule "$port" "0"
+    done
+}
+
+# 更新 uhttpd 配置
+update_uhttpd() {
+    local backend_port="$1"
+    local old_backend_port="$2"
+    local use_https=$(config_get "uhttpd.main.redirect_https")
+
+    uci -q del_list uhttpd.main.listen_http="0.0.0.0:$old_backend_port"
+    uci -q del_list uhttpd.main.listen_http="[::]:$old_backend_port"
+    uci -q del_list uhttpd.main.listen_https="0.0.0.0:$old_backend_port"
+    uci -q del_list uhttpd.main.listen_https="[::]:$old_backend_port"
+
+    if [ -n "$backend_port" ]; then
+        if [ "$use_https" = "1" ]; then
+            config_add_list "uhttpd.main.listen_https" "0.0.0.0:$backend_port"
+            config_add_list "uhttpd.main.listen_https" "[::]:$backend_port"
+        else
+            config_add_list "uhttpd.main.listen_http" "0.0.0.0:$backend_port"
+            config_add_list "uhttpd.main.listen_http" "[::]:$backend_port"
+        fi
+    fi
+    config_commit "uhttpd"
+}
+
+# 更新 nginx 配置
+update_nginx() {
+    local backend_port="$1"
+    local old_backend_port="$2"
+    local use_https=$(uci show nginx | grep -q "_redirect2ssl" && echo "1" || echo "0")
+
+    config_delete "nginx.ex_$old_backend_port"
+
+    if [ -n "$backend_port" ]; then
+        config_set "nginx.ex_$backend_port" "server"
+        config_set "nginx.ex_$backend_port.server_name" "ex_$backend_port"
+        config_add_list "nginx.ex_$backend_port.include" "conf.d/*.locations"
+        config_set "nginx.ex_$backend_port.access_log" "off"
+        if [ "$use_https" = "1" ]; then
+            config_add_list "nginx.ex_$backend_port.listen" "$backend_port ssl"
+            config_add_list "nginx.ex_$backend_port.listen" "[::]:$backend_port ssl"
+            if [ ! "$(config_get "nginx.ex_$backend_port.ssl_certificate")" ]; then
+                config_set "nginx.ex_$backend_port.ssl_certificate" "/etc/nginx/conf.d/_lan.crt"
+                config_set "nginx.ex_$backend_port.ssl_certificate_key" "/etc/nginx/conf.d/_lan.key"
+            fi
+        else
+            config_add_list "nginx.ex_$backend_port.listen" "$backend_port"
+            config_add_list "nginx.ex_$backend_port.listen" "[::]:$backend_port"
+        fi
+    fi
+
+    config_commit "nginx"
+}
+
+# 主逻辑
+main() {
+    local backend_port=$(config_get "firewall.@defaults[0].backend_port")
+    local old_backend_port=$(config_get "firewall.@defaults[0].old_backend_port")
+
+    update_ssh_ttyd
+    update_export
+
+    if [ "$backend_port" != "$old_backend_port" ]; then
+        if pgrep nginx >/dev/null; then
+            update_nginx "$backend_port" "$old_backend_port"
+            /etc/init.d/nginx reload &
+        elif pgrep uhttpd >/dev/null; then
+            update_uhttpd "$backend_port" "$old_backend_port"
+            /etc/init.d/uhttpd reload &
+        fi
+        config_set "firewall.@defaults[0].old_backend_port" "$backend_port"
+    fi
+
+    [ -n "$backend_port" ] && update_firewall_rule "$backend_port" "1"
+
+    config_commit "firewall"
+}
+
+main

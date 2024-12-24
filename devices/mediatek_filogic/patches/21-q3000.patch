@@ -25,21 +25,20 @@
    DEVICE_VENDOR := IMOU
    DEVICE_MODEL := LC-HX3001
 
-
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-@@ -42,6 +42,11 @@ h3c,nx30pro)
- 	ucidef_set_led_default "green" "GREEN" "nx30pro:green" "1"
- 	ucidef_set_led_default "red" "RED" "nx30pro:red" "0"
+@@ -49,6 +49,11 @@ glinet,gl-xe3000)
+ 	ucidef_set_led_netdev "wlan2g" "WLAN2G" "green:wifi2g" "phy0-ap0"
+ 	ucidef_set_led_netdev "wlan5g" "WLAN5G" "green:wifi5g" "phy1-ap0"
  	;;
 +ikuai,q3000)
 +	ucidef_set_led_default "green" "GREEN" "q3000:green" "1"
 +	ucidef_set_led_default "blue" "BLUE" "q3000:blue" "0"
 +	ucidef_set_led_default "red" "RED" "q3000:red" "0"
 +	;;
- konka,komi-a31)
-         ucidef_set_led_netdev "blue" "BLUE" "blue:status" "eth1" "link"
- 	;;
+ mercusys,mr90x-v1|\
+ mercusys,mr90x-v1-ubi)
+ 	ucidef_set_led_netdev "lan-0" "lan-0" "green:lan-0" "lan0" "link tx rx"
 
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
@@ -59,6 +58,6 @@
 +		wan_mac=$(mtd_get_mac_binary $part_name 0x10048)
 +		lan_mac=$(macaddr_add $wan_mac 1)
 +		;;
- 	mercusys,mr90x-v1)
+ 	mercusys,mr90x-v1|\
+ 	tplink,re6000xd)
  		label_mac=$(get_mac_binary "/tmp/tp_data/default-mac" 0)
- 		lan_mac=$label_mac

@@ -1,0 +1,75 @@
+---  a/libopkg/opkg_download.c
++++  b/libopkg/opkg_download.c
+@@ -174,9 +174,9 @@
+ 		if (res) {
+ 			opkg_msg(ERROR,
+-				 "Failed to download %s, wget returned %d.\n",
++				 "下载失败 %s, wget returned %d.\n",
+ 				 src, res);
+ 			if (res == 4)
+ 				opkg_msg(ERROR,
+-					 "Check your network settings and connectivity.\n\n");
++					 "请检查网络设置, 确保本设备网络可用.\n\n");
+ 			free(tmp_file_location);
+ 			return -1;
+
+---  a/libopkg/opkg.c
++++  b/libopkg/opkg.c
+@@ -225,5 +225,5 @@
+ 	new = pkg_hash_fetch_best_installation_candidate_by_name(package_name);
+ 	if (!new) {
+-		opkg_msg(ERROR, "Couldn't find package %s\n", package_name);
++		opkg_msg(ERROR, "找不到软件包 %s\n", package_name);
+ 		return -1;
+ 	}
+@@ -242,5 +242,5 @@
+ 	if (unresolved) {
+ 		char **tmp = unresolved;
+-		opkg_msg(ERROR, "Couldn't satisfy the following dependencies"
++		opkg_msg(ERROR, "无法满足以下依赖"
+ 			 " for %s:\n", package_name);
+ 		while (*tmp) {
+@@ -271,5 +271,5 @@
+ 
+ 		if (pkg->src == NULL) {
+-			opkg_msg(ERROR, "Package %s not available from any "
++			opkg_msg(ERROR, "在以下仓库未找到可用的 %s 软件包"
+ 				 "configured src\n", package_name);
+ 			return -1;
+
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -222,6 +222,6 @@
+ 
+ 	if (pkg_size_kbs >= kbs_available) {
+-		opkg_msg(ERROR, "Only have %ldkb available on filesystem %s, "
+-			 "pkg %s needs %ld\n",
++		opkg_msg(ERROR, "剩余可用容量不足, 文件系统 %s 当前剩余 %ldkb 可用,"
++			 "软件包 %s 需要 %ld\n",
+ 			 kbs_available, root_dir, pkg->name, pkg_size_kbs);
+ 		return -1;
+@@ -1319,6 +1319,6 @@
+ 		}
+ 		if (err) {
+-			opkg_msg(ERROR, "Failed to download %s. "
+-				 "Perhaps you need to run 'opkg update'?\n",
++			opkg_msg(ERROR, "下载 %s 失败. "
++				 "请更新列表后重试\n",
+ 				 pkg->name);
+ 			return -1;
+
+--- a/libopkg/opkg_conf.c
++++ b/libopkg/opkg_conf.c
+@@ -497,10 +497,10 @@
+ 	lock_fd = creat(lock_file, S_IRUSR | S_IWUSR | S_IRGRP);
+ 	if (lock_fd == -1) {
+-		opkg_perror(ERROR, "Could not create lock file %s", lock_file);
++		opkg_perror(ERROR, "有任务在执行中, 请稍后再试.", lock_file);
+ 		goto err2;
+ 	}
+ 
+ 	if (lockf(lock_fd, F_TLOCK, (off_t) 0) == -1) {
+-		opkg_perror(ERROR, "Could not lock %s", lock_file);
++		opkg_perror(ERROR, "有任务在执行中, 请稍后再试.", lock_file);
+ 		if (close(lock_fd) == -1)
+ 			opkg_perror(ERROR, "Couldn't close descriptor %d (%s)",

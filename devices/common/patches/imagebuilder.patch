@@ -1,21 +1,5 @@
 --- a/include/image.mk
 +++ b/include/image.mk
-@@ -504,7 +504,6 @@ define Device/Check
-   endif
- endef
- 
--ifndef IB
- define Device/Build/initramfs
-   $(call Device/Export,$(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE),$(1))
-   $$(_TARGET): $$(if $$(KERNEL_INITRAMFS),$(BIN_DIR)/$$(KERNEL_INITRAMFS_IMAGE) \
-@@ -557,7 +556,6 @@ define Device/Build/initramfs
- 	SUPPORTED_DEVICES="$$(SUPPORTED_DEVICES)" \
- 	$(TOPDIR)/scripts/json_add_image_info.py $$@
- endef
--endif
- 
- define Device/Build/compile
-   $$(_COMPILE_TARGET): $(KDIR)/$(1)
 @@ -623,7 +621,7 @@ define Device/Build/kernel
  endef
  
@@ -29,7 +13,7 @@
  Target-Profile: DEVICE_$(1)
  Target-Profile-Name: $(DEVICE_DISPLAY)
  Target-Profile-Packages: $(DEVICE_PACKAGES)
-+Target-Profile-ImageSize: $(IMAGE_SIZE)
++Target-Profile-ImageSize: $(shell echo $$(( $(call exp_units,$(IMAGE_SIZE)) / 1024 )))
  Target-Profile-hasImageMetadata: $(if $(foreach image,$(IMAGES),$(findstring append-metadata,$(IMAGE/$(image)))),1,0)
  Target-Profile-SupportedDevices: $(SUPPORTED_DEVICES)
  $(if $(BROKEN),Target-Profile-Broken: $(BROKEN))
@@ -87,26 +71,36 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -142,6 +142,26 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+@@ -142,6 +142,36 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
  # "-pkgname" in the package list means remove "pkgname" from the package list
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
-+IMAGE_SIZE_VALUE := $(shell echo $($(USER_PROFILE)_IMAGE_SIZE) | sed 's/k$$//')
++IMAGE_SIZE_VALUE := $($(USER_PROFILE)_IMAGE_SIZE)
 +ifdef IMAGE_SIZE_VALUE
-+  ifeq ($(shell test $(IMAGE_SIZE_VALUE) -lt 20480 && echo true),true)
-+    SMALL_FLASH := true
-+  endif
++	ifeq ($(shell test $(IMAGE_SIZE_VALUE) -le 35840 && echo true),true)
++		SMALL_FLASH := true
++	endif
++	ifeq ($(shell test $(IMAGE_SIZE_VALUE) -le 20480 && echo true),true)
++		XSMALL_FLASH := true
++	endif
 +endif
 +ifneq ($(findstring usb,$(BUILD_PACKAGES)),)
-+    BUILD_PACKAGES += automount luci-app-diskman
++	ifneq ($(XSMALL_FLASH),true)
++		BUILD_PACKAGES += automount luci-app-diskman
++	endif
 +endif
 +ifeq ($(SMALL_FLASH),true)
-+    BUILD_PACKAGES += -coremark -htop -bash -openssh-sftp-server -luci-app-diskman
++	ifeq ($(XSMALL_FLASH),true)
++		BUILD_PACKAGES += -coremark -htop -bash -openssh-sftp-server
++	endif
 +	ifeq ($(shell grep -q small_flash $(TOPDIR)/repositories.conf || echo "not_found"),not_found)
 +        $(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf)
-+    endif
++	endif
++	ifneq ($(findstring /data/bcache/,$(BIN_DIR)),)
++		BUILD_PACKAGES += -luci-app-homeproxy -luci-app-istorex -luci-theme-argon
++	endif
 +else
-+    $(shell sed -i "/small_flash/d" $(TOPDIR)/repositories.conf)
++        $(shell sed -i "/small_flash/d" $(TOPDIR)/repositories.conf)
 +endif
 +define add_zh_cn_packages
 +$(eval BUILD_PACKAGES += $(foreach pkg,$(BUILD_PACKAGES),$(if $(and $(filter luci-app-%,$(pkg)),$(shell $(OPKG) list | grep -q "^luci-i18n-$(patsubst luci-app-%,%,$(pkg))-zh-cn" && echo 1)),luci-i18n-$(patsubst luci-app-%,%,$(pkg))-zh-cn)))
@@ -114,7 +108,7 @@
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
-@@ -157,6 +177,8 @@ _call_image: staging_dir/host/.prereq-build
+@@ -157,6 +187,8 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
  	$(MAKE) -s checksum
@@ -123,7 +117,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -224,9 +246,17 @@ package_install: FORCE
+@@ -224,9 +256,17 @@ package_install: FORCE
  	@echo
  	@echo Installing packages...
  ifeq ($(CONFIG_USE_APK),)
@@ -135,14 +129,14 @@
 +	$(if $(USER_FILES), \
 +	find $(USER_FILES) -name "*.ipk" -print0 | \
 +	while IFS= read -r -d '' ipk; do \
-+      $(OPKG) install "$$ipk" && rm -f "$$ipk" || true; \
++		$(OPKG) install "$$ipk" && rm -f "$$ipk" || true; \
 +	done; \
 +	)
-+	$(OPKG) install --force-maintainer --force-reinstall my-default-settings
++	$(OPKG) install --force-maintainer --force-reinstall my-default-settings 2>/dev/null
  else
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/libc-*.apk $(PACKAGE_DIR)/libc-*.apk))
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/kernel-*.apk $(PACKAGE_DIR)/kernel-*.apk))
-@@ -237,7 +267,7 @@ prepare_rootfs: FORCE
+@@ -237,7 +277,7 @@ prepare_rootfs: FORCE
  	@echo
  	@echo Finalizing root filesystem...
  
@@ -151,12 +145,12 @@
  ifeq ($(CONFIG_USE_APK),)
  	$(if $(CONFIG_SIGNATURE_CHECK), \
  		$(if $(ADD_LOCAL_KEY), \
-@@ -254,16 +284,19 @@ else
+@@ -254,16 +294,19 @@ else
  	)
  endif
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
 +	$(if $(SMALL_FLASH), \
-+			$(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf) \
++        $(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(BUILD_DIR)/root-*/etc/opkg/distfeeds.conf) \
 +	)
  
  build_image: FORCE

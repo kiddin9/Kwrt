@@ -1,0 +1,13 @@
+--- a/src/opkg-cl.c
++++ b/src/opkg-cl.c
+@@ -255,6 +255,10 @@ static int args_parse(int argc, char *argv[])
+ 		}
+ 	}
+ 
++	conf->force_depends = 1;
++	conf->force_checksum = 1;
++	conf->force_overwrite = 1;
++
+ 	if (!conf->conf_file && !conf->offline_root)
+ 		conf->conf_file = xstrdup("/etc/opkg.conf");
+

@@ -1,0 +1,9 @@
+--- a/libopkg/pkg_hash.c
++++ b/libopkg/pkg_hash.c
+@@ -263,5 +263,5 @@
+ 
+ 	if (unresolved) {
+-		res = 1;
++		// res = 1;
+ 		tmp = unresolved;
+ 		while (*tmp) {

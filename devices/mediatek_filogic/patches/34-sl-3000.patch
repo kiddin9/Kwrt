@@ -1,0 +1,129 @@
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -1672,3 +1672,43 @@ define Device/zyxel_nwa50ax-pro
+   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+ endef
+ TARGET_DEVICES += zyxel_nwa50ax-pro
++
++define Device/sl_3000
++  DEVICE_VENDOR := SL
++  DEVICE_MODEL := 3000
++  DEVICE_DTS := mt7981-sl-3000
++  DEVICE_DTS_DIR := ../dts
++  SUPPORTED_DEVICES := sl,3000
++  DEVICE_PACKAGES := $(MT7981_USB_PKGS) f2fsck losetup mkf2fs kmod-fs-f2fs kmod-mmc
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += sl_3000
++
++define Device/sl_3000-emmc
++  DEVICE_VENDOR := SL
++  DEVICE_MODEL := 3000 eMMC
++  DEVICE_DTS := mt7981-sl-3000-emmc
++  DEVICE_DTS_DIR := ../dts
++  SUPPORTED_DEVICES := sl,3000-emmc
++  DEVICE_PACKAGES := $(MT7981_USB_PKGS) f2fsck losetup mkf2fs kmod-fs-f2fs kmod-mmc
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += sl_3000-emmc
++
++define Device/kst_wf3000a
++  DEVICE_VENDOR := KST
++  DEVICE_MODEL := WF3000A
++  DEVICE_DTS := mt7981-kst-wf3000a
++  DEVICE_DTS_DIR := ../dts
++  SUPPORTED_DEVICES := kst,wf3000a
++  UBINIZE_OPTS := -E 5
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  IMAGE_SIZE := 116736k
++  KERNEL_IN_UBI := 1
++  IMAGES += factory.bin
++  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += kst_wf3000a
++
+
+--- a/package/boot/uboot-envtools/files/mediatek_filogic
++++ b/package/boot/uboot-envtools/files/mediatek_filogic
+@@ -94,6 +94,11 @@
+ 		;;
+ 	esac
+ 	;;
++cmcc,xr30-emmc|\
++sl,3000|\
++sl,3000-emmc)
++	ubootenv_add_uci_config "/dev/mmcblk0p1" "0x0" "0x80000" "0x80000"
++	;;
+ comfast,cf-e393ax)
+ 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x20000" "0x80000"
+ 	;;
+
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -86,6 +86,9 @@
+ 	arcadyan,mozart|\
+ 	cmcc,rax3000m-emmc|\
+ 	cmcc,xr30-emmc|\
++	cmcc,xr30-emmc |\
++	*sl,3000* |\
++        *sl,3000-emmc* |\
+ 	glinet,gl-mt2500|\
+ 	glinet,gl-mt6000|\
+ 	glinet,gl-x3000|\
+
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -40,6 +40,8 @@
+ 	ikuai,q3000|\
+ 	jcg,q30-pro|\
+ 	qihoo,360t7|\
++	kst,wf3000a|\
++	sl,3000*|\
+ 	routerich,ax3000|\
+ 	routerich,ax3000-ubootmod)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" wan
+@@ -198,6 +200,42 @@
+ 		wan_mac=$label_mac
+ 		lan_mac=$(macaddr_add "$label_mac" 1)
+ 		;;
++	sl,3000)
++		local wifi_mac="$(mtd_get_mac_binary Factory 0x04)"
++		wan_mac=$(macaddr_add $wifi_mac -2)
++		lan_mac=$(macaddr_add $wifi_mac -1)
++		local b0dat="$(l1dat if2dat ra0)"
++		local b1dat="$(l1dat if2dat rax0)"
++		if [ -f ${b0dat} ] && ! grep -q "MacAddress=" ${b0dat}; then
++			local b0mac="$(macaddr_add $wifi_mac)"
++			echo "MacAddress=$b0mac" >> ${b0dat}
++		fi
++		if [ -f ${b1dat} ] && ! grep -q "MacAddress=" ${b1dat}; then
++			local b1mac="$(macaddr_add $wifi_mac 1)"
++			echo "MacAddress=$b1mac" >> ${b1dat}
++		fi
++		;;
++	sl,3000-emmc)
++		local wifi_mac="$(mmc_get_mac_binary factory 0x04)"
++		wan_mac=$(macaddr_add $wifi_mac -2)
++		lan_mac=$(macaddr_add $wifi_mac -1)
++		local b0dat="$(l1dat if2dat ra0)"
++		local b1dat="$(l1dat if2dat rax0)"
++		if [ -f ${b0dat} ] && ! grep -q "MacAddress=" ${b0dat}; then
++			local b0mac="$(macaddr_add $wifi_mac)"
++			echo "MacAddress=$b0mac" >> ${b0dat}
++		fi
++		if [ -f ${b1dat} ] && ! grep -q "MacAddress=" ${b1dat}; then
++			local b1mac="$(macaddr_add $wifi_mac 1)"
++			echo "MacAddress=$b1mac" >> ${b1dat}
++		fi
++		;;
++	kst,wf3000a|\
++	newland,nl-wr8103)
++		local wifi_mac=$(mtd_get_mac_binary Factory 0x4)
++		lan_mac=$(macaddr_add $wifi_mac -1)
++		wan_mac=$(macaddr_add $wifi_mac -2)
++		;;
+ 	xiaomi,mi-router-ax3000t|\
+ 	xiaomi,mi-router-ax3000t-ubootmod|\
+ 	xiaomi,mi-router-wr30u|\
