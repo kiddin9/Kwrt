@@ -185,15 +185,3 @@
  		logger -t "ucitrack" "Setting up /etc/config/$config reload trigger for non-procd $init"
  		procd_add_config_trigger "config.change" "$config" "$init" "$@"
  	fi
-
---- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/uci.js
-+++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/uci.js
-@@ -637,7 +637,7 @@ return baseclass.extend(/** @lends LuCI.uci.prototype */ {
- 			}
- 
- 			/* only delete existing options */
--			if (v[conf]?.[sid].hasOwnProperty(opt)) {
-+			if (v[conf]?.[sid]?.hasOwnProperty(opt)) {
- 				d[conf] ??= { };
- 				d[conf][sid] ??= { };
- 
