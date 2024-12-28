@@ -5,15 +5,15 @@
 
 / {
 	model = "Cudy TR3000 (U-Boot mod)";
-	compatible = "cudy,tr3000-mod", "mediatek,mt7981";
+	compatible = "cudy,tr3000-mod", "mediatek,mt7981-spim-snand-rfb";
 };
 
 &spi0 {
 	flash@0 {
 		partitions {
-			partition@5c0000 {
+			partition@580000 {
 				label = "ubi";
-				reg = <0x5c0000 0x7000000>;
+				reg = <0x5C0000 0x7000000>;
 			};
 		};
 	};
