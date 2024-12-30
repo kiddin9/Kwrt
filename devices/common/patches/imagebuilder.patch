@@ -13,7 +13,7 @@
  	FILE_TYPE=$(word 1,$(subst ., ,$(2))) \
  	FILE_FILESYSTEM="$(1)" \
  	DEVICE_IMG_PREFIX="$(DEVICE_IMG_PREFIX)" \
-+	IMAGE_SIZE="$$(( $(call exp_units,$(IMAGE_SIZE)) / 1024 ))" \
++	IMAGE_SIZE="$(shell echo $$(($(call exp_units,$(IMAGE_SIZE)))))" \
  	DEVICE_VENDOR="$(DEVICE_VENDOR)" \
  	DEVICE_MODEL="$(DEVICE_MODEL)" \
  	DEVICE_VARIANT="$(DEVICE_VARIANT)" \
