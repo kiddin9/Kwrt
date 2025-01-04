@@ -1,28 +1,3 @@
---- a/include/image.mk
-+++ b/include/image.mk
-@@ -728,8 +769,10 @@ endef
- define Device
-   $(call Device/InitProfile,$(1))
-   $(call Device/Init,$(1))
-+  $(call Device/Init,$(PROFILE_SANITIZED))
-   $(call Device/Default,$(1))
-   $(call Device/$(1),$(1))
-+  $(call Device/$(PROFILE_SANITIZED),$(1))
-   $(call Device/Check,$(1))
-   $(call Device/$(if $(DUMP),Dump,Build),$(1))
- 
---- a/include/image.mk
-+++ b/include/image.mk
-@@ -599,7 +599,7 @@ define Device/Build/kernel
-   $$(_TARGET): $$(if $$(KERNEL_INSTALL),$(BIN_DIR)/$$(KERNEL_IMAGE))
-   $(call Device/Export,$$(KDIR_KERNEL_IMAGE),$(1))
-   $(BIN_DIR)/$$(KERNEL_IMAGE): $$(KDIR_KERNEL_IMAGE)
--	cp $$^ $$@
-+	cp $(KDIR)/generic-kernel.bin $$@
-   ifndef IB
-     ifdef CONFIG_IB
-       install: $$(KDIR_KERNEL_IMAGE)
-
 --- a/target/linux/armsr/image/Makefile
 +++ b/target/linux/armsr/image/Makefile
 @@ -81,10 +81,8 @@ define Device/efi-default
@@ -36,13 +11,16 @@
      IMAGES-y += combined.img
    endif
    ifeq ($(CONFIG_VMDK_IMAGES),y)
-@@ -116,4 +114,21 @@ define Device/generic
+@@ -116,4 +114,24 @@ define Device/generic
  endef
  TARGET_DEVICES += generic
  
 +define Device/box
 +  DEVICE_TITLE := 电视盒子全系列 / N1
 +  DEVICE_PACKAGES := perlbase-base perlbase-utf8 perlbase-time perlbase-xsloader perlbase-file btrfs-progs luci-app-amlogic kmod-brcmfmac wpad-basic-mbedtls iw fdisk lsblk automount
++  IMAGE/rootfs.tar.gz := append-rootfs | gzip
++  IMAGES := rootfs.tar.gz
++  KERNEL := kernel-bin
 +endef
 +TARGET_DEVICES += box
 +

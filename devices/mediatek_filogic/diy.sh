@@ -13,3 +13,4 @@ sed -i "s/-stock//g" target/linux/mediatek/filogic/base-files/etc/board.d/02_net
 sed -i "s/-stock//g" target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface
 
 sed -i "s/openwrt-mediatek-filogic/kwrt-mediatek-filogic/g" target/linux/mediatek/image/filogic.mk
+sed -i "s/ fitblk / /g" target/linux/mediatek/image/filogic.mk

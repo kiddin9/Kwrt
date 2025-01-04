@@ -4,10 +4,13 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/firmware package/boot/uboot-envtools target/linux/qualcommax
+rm -rf package/firmware package/boot/uboot-envtools package/kernel/mac80211 target/linux/qualcommax
 
-git_clone_path openwrt-24.10 https://github.com/LiBwrt-op/openwrt-6.x package/firmware package/boot/uboot-envtools target/linux/qualcommax
+git_clone_path openwrt-24.10 https://github.com/LiBwrt-op/openwrt-6.x package/firmware package/boot/uboot-envtools package/kernel/mac80211 target/linux/qualcommax
 
-wget -N https://github.com/openwrt/openwrt/raw/refs/heads/openwrt-24.10/target/linux/qualcommax/ipq60xx/target.mk -P target/linux/qualcommax/ipq60xx/
+git clone https://github.com/qosmio/nss-packages package/feeds/nss-packages
+git clone https://github.com/qosmio/sqm-scripts-nss package/feeds/sqm-scripts-nss
 
-rm -rf target/linux/qualcommax/patches-6.6/06*-qca-*.patch
+rm -rf feeds/kiddin9/shortcut-fe
+
+rm -rf target/linux/generic/pending-6.6/613-netfilter_optional_tcp_window_check.patch target/linux/generic/hack-6.6/{952-add-net-conntrack-events-support-multiple-registrant.patch,953-net-patch-linux-kernel-to-support-shortcut-fe.patch}

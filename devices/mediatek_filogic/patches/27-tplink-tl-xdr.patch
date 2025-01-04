@@ -1,39 +1,3 @@
---- a/target/linux/mediatek/dts/mt7986a-tplink-tl-xdr-common.dtsi
-+++ b/target/linux/mediatek/dts/mt7986a-tplink-tl-xdr-common.dtsi
-@@ -202,25 +202,25 @@
- 
- 			factory: partition@160000 {
- 				label = "factory";
--				reg = <0x160000 0x0060000>;
-+				reg = <0x160000 0x00a0000>;
- 				read-only;
- 			};
- 
--			partition@1c0000 {
-+			partition@200000 {
- 				label = "reserved";
--				reg = <0x1c0000 0x01c0000>;
-+				reg = <0x200000 0x0180000>;
- 				read-only;
- 			};
- 
- 			partition@380000 {
- 				label = "fip";
--				reg = <0x380000 0x0200000>;
--				read-only;
-+				reg = <0x380000 0x0180000>;
-+				// read-only;
- 			};
- 
--			partition@580000 {
-+			partition@500000 {
- 				compatible = "linux,ubi";
--				reg = <0x580000 0x7800000>;
-+				reg = <0x500000 0x7300000>;
- 				label = "ubi";
- 
- 				volumes {
-
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
 @@ -1130,23 +1130,13 @@ define Device/tplink_tl-xdr-common
@@ -48,7 +12,7 @@
 -        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
 -  IMAGE/sysupgrade.itb := append-kernel | \
 -        fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-with-rootfs | append-metadata
-   DEVICE_PACKAGES := fitblk kmod-usb3 kmod-mt7915e kmod-mt7986-firmware mt7986-wo-firmware
+   DEVICE_PACKAGES := kmod-usb3 kmod-mt7915e kmod-mt7986-firmware mt7986-wo-firmware
 -  ARTIFACTS := preloader.bin bl31-uboot.fip
 -  ARTIFACT/preloader.bin := mt7986-bl2 spim-nand-ddr3
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
