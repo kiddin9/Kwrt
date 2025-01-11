@@ -49,12 +49,12 @@
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -73,7 +73,7 @@ case "$board" in
- 		addr=$(mtd_get_mac_binary "Factory" 0x8000)
- 		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
- 		;;
+@@ -77,7 +77,7 @@ case "$board" in
+ 	cudy,ap3000-v1|\
+ 	cudy,m3000-v1|\
+ 	cudy,re3000-v1|\
 -	cudy,tr3000-v1|\
 +	cudy,tr3000*|\
- 	cudy,re3000-v1)
+ 	cudy,wr3000s-v1|\
+ 	cudy,wr3000-v1)
  		addr=$(mtd_get_mac_binary bdinfo 0xde00)
- 		[ "$PHYNBR" = "0" ] && echo "$addr" > /sys${DEVPATH}/macaddress

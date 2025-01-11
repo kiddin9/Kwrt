@@ -1,0 +1,12 @@
+--- a/include/host-build.mk
++++ b/include/host-build.mk
+@@ -61,7 +61,8 @@ HOST_CONFIGURE_VARS = \
+ 	CPPFLAGS="$(HOST_CPPFLAGS)" \
+ 	CXXFLAGS="$(HOST_CXXFLAGS)" \
+ 	LDFLAGS="$(HOST_LDFLAGS)" \
+-	CONFIG_SHELL="$(SHELL)"
++	CONFIG_SHELL="$(SHELL)" \
++	gl_cv_func_getcwd_path_max=yes
+ 
+ HOST_CONFIGURE_ARGS = \
+ 	--target=$(GNU_HOST_NAME) \

@@ -109,7 +109,7 @@ jobs:
         fi
 
     - name: Free disk space
-      uses: jlumbroso/free-disk-space@main
+      uses: coder-xiaomo/free-disk-space@main
       with:
         tool-cache: false
         android: true
@@ -129,10 +129,9 @@ jobs:
         python3-setuptools rsync swig unzip zlib1g-dev file wget \
         llvm python3-pyelftools libpython3-dev aria2 jq qemu-utils ccache rename \
         libelf-dev device-tree-compiler libgmp3-dev libmpc-dev libfuse-dev
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
-        sudo timedatectl set-timezone "$TZ"
+        sudo timedatectl set-timezone "Asia/Shanghai"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
 
@@ -152,8 +151,8 @@ jobs:
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", first: 4, orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {nodes {name target { ... on Tag {tagger {date}}}}}}}"}' https://api.github.com/graphql)"
         TAG_DATE="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[] | select(.name | startswith("v24")) | .target.tagger.date' | head -n 1)"
         if [[ $(( ($(date +%s) - $(date -d "$TAG_DATE" +%s)) / 86400 )) -lt 30 ]]; then
-        #REPO_BRANCH="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[].name' | grep v24 | head -n 1)"
-        REPO_BRANCH="openwrt-24.10"
+        REPO_BRANCH="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[].name' | grep v24 | head -n 1)"
+        #REPO_BRANCH="openwrt-24.10"
         else
         REPO_BRANCH="openwrt-24.10"
         fi
@@ -252,7 +251,7 @@ jobs:
         make defconfig
         if [[ ! "${{matrix.target}}" =~ (amlogic_*|armsr_armv8|bcm27xx_*|rockchip_armv8|sunxi_*|x86_*) ]]; then
         sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
-        sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
+        #sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
         if [[ "${{matrix.target}}" == "rockchip_rk35xx" ]]; then 
             sed -n '/# Video Support/,/# end of Video Support/p' .config | sed -e 's/=m/=n/' >>.config
         fi
