@@ -9,7 +9,17 @@
 name: Build OpenWrt
 
 on: 
-  repository_dispatch:
+  # push: 
+  #   branches:
+  #     - master
+  #schedule:
+  #  - cron: 30 18 * * *
+  workflow_dispatch:
+    inputs:
+      param:
+        description: 'parameter'
+        required: false
+        default: ''
 
 env:
   REPO_TOKEN: ${{ secrets.TOKEN_KIDDIN9 }}
