@@ -1,0 +1,85 @@
+--- a/package/boot/uboot-envtools/files/mediatek_filogic
++++ b/package/boot/uboot-envtools/files/mediatek_filogic
+@@ -57,7 +57,8 @@ acer,vero-w6m|\
+ glinet,gl-mt2500|\
+ glinet,gl-mt6000|\
+ glinet,gl-x3000|\
+-glinet,gl-xe3000)
++glinet,gl-xe3000|\
++huasifei,wh3000-emmc)
+ 	local envdev=$(find_mmc_part "u-boot-env")
+ 	ubootenv_add_uci_config "$envdev" "0x0" "0x80000"
+ 	;;
+
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
+@@ -49,6 +49,10 @@ glinet,gl-xe3000)
+ 	ucidef_set_led_netdev "wlan2g" "WLAN2G" "green:wifi2g" "phy0-ap0"
+ 	ucidef_set_led_netdev "wlan5g" "WLAN5G" "green:wifi5g" "phy1-ap0"
+ 	;;
++huasifei,wh3000-emmc)
++	ucidef_set_led_netdev "wan" "WAN" "red:wan" "eth1"
++	ucidef_set_led_netdev "wlan" "WLAN" "white:wlan" "phy1-ap0"
++	;;
+ ikuai,q3000)
+ 	ucidef_set_led_default "green" "GREEN" "q3000:green" "1"
+ 	ucidef_set_led_default "blue" "BLUE" "q3000:blue" "0"
+
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -70,7 +70,8 @@ mediatek_setup_interfaces()
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "sfp1 wan"
+ 		;;
+ 	bananapi,bpi-r3-mini|\
+-	edgecore,eap111)
++	edgecore,eap111|\
++	huasifei,wh3000-emmc)
+ 		ucidef_set_interfaces_lan_wan eth0 eth1
+ 		;;
+ 	bananapi,bpi-r4)
+
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -105,6 +105,7 @@ platform_do_upgrade() {
+ 	glinet,gl-mt6000|\
+ 	glinet,gl-x3000|\
+ 	glinet,gl-xe3000|\
++	huasifei,wh3000-emmc|\
+ 	smartrg,sdg-8612|\
+ 	smartrg,sdg-8614|\
+ 	smartrg,sdg-8622|\
+@@ -229,6 +230,7 @@ platform_copy_config() {
+ 	glinet,gl-mt6000|\
+ 	glinet,gl-x3000|\
+ 	glinet,gl-xe3000|\
++	huasifei,wh3000-emmc|\
+ 	jdcloud,re-cp-03|\
+ 	nradio,c8-668gl|\
+ 	smartrg,sdg-8612|\
+
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -954,6 +954,23 @@ define Device/h3c_magic-nx30-pro-nmbm
+ endef
+ TARGET_DEVICES += h3c_magic-nx30-pro-nmbm
+ 
++define Device/huasifei_wh3000-emmc
++  DEVICE_VENDOR := Huasifei
++  DEVICE_MODEL := WH3000 eMMC
++  DEVICE_ALT0_VENDOR := Fudy
++  DEVICE_ALT0_MODEL := MT3000
++  DEVICE_DTS := mt7981b-huasifei-wh3000-emmc
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware \
++	kmod-usb-net-cdc-mbim kmod-usb-net-qmi-wwan kmod-usb-serial-option \
++	kmod-usb3 automount f2fsck mkf2fs uqmi
++  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
++  KERNEL_INITRAMFS := kernel-bin | lzma | \
++	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += huasifei_wh3000-emmc
++
+ define Device/imou_lc-hx3001
+   DEVICE_VENDOR := Imou
+   DEVICE_MODEL := LC-HX3001

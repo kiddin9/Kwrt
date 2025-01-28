@@ -113,7 +113,7 @@
 +        $(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf)
 +	endif
 +	ifneq ($(findstring /data/bcache/,$(BIN_DIR)),)
-+		BUILD_PACKAGES += -luci-app-homeproxy -luci-app-istorex -luci-theme-argon -htop -bash -openssh-sftp-server -luci-ssl-nginx luci-ssl
++		BUILD_PACKAGES += -luci-app-homeproxy -luci-app-istorex -luci-theme-argon -htop -bash -openssh-sftp-server -luci-nginx luci-ssl
 +	endif
 +else
 +        $(shell sed -i "/small_flash/d" $(TOPDIR)/repositories.conf)
