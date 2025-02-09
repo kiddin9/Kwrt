@@ -165,7 +165,7 @@
  	shift; shift
  
 -	if [ -x "$init" ] && "$init" enabled && ! grep -sqE 'USE_PROCD=.' "$init"; then
-+	if [ -x "$init" ] && "$init" enabled && ! grep -sq 'procd_add_reload_trigger' "$init"; then
++	if [ -x "$init" ] && ! grep -sqE 'USE_PROCD=.' "$init"; then
  		logger -t "ucitrack" "Setting up /etc/config/$config reload trigger for non-procd $init"
  		procd_add_config_trigger "config.change" "$config" "$init" "$@"
  	fi
