@@ -1,9 +1,22 @@
 --- a/target/linux/qualcommax/image/ipq50xx.mk
 +++ b/target/linux/qualcommax/image/ipq50xx.mk
-@@ -30,3 +30,28 @@ define Device/linksys_mx5500
+@@ -30,3 +30,41 @@ define Device/linksys_mx5500
  					ipq-wifi-linksys_mx5500
  endef
  TARGET_DEVICES += linksys_mx5500
++
++define Device/cmcc_rax3000q
++  $(call Device/FitImage)
++  $(call Device/UbiFit)
++  SOC := ipq5018
++  DEVICE_VENDOR := CMCC
++  DEVICE_MODEL := RAX3000Q
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  DEVICE_DTS_CONFIG := config@mp02.1
++  DEVICE_PACKAGES := ath11k-firmware-qcn6122 ipq-wifi-cmcc_rax3000q
++endef
++TARGET_DEVICES += cmcc_rax3000q
 +
 +define Device/glinet_gl-b3000
 +  $(call Device/FitImage)
@@ -31,21 +44,22 @@
 +TARGET_DEVICES += jdcloud_re-cs-03
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
-++ b/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
-@@ -7,6 +7,10 @@ ipq50xx_setup_interfaces()
++++ b/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
+@@ -7,6 +7,11 @@ ipq50xx_setup_interfaces()
  {
  	local board="$1"
  	case $board in
 +		glinet,gl-b3000)
 +		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 +		;;
++		cmcc,rax3000q|\
 +		jdcloud,re-cs-03|\
  		linksys,mx2000|\
  		linksys,mx5500)
  			ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
-++ b/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
++++ b/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
 @@ -10,6 +10,14 @@ platform_check_image() {
  
  platform_do_upgrade() {
@@ -76,11 +90,12 @@
 +}
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
-++ b/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
-@@ -9,6 +9,15 @@ board=$(board_name)
++++ b/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
+@@ -9,6 +9,16 @@ board=$(board_name)
  case "$FIRMWARE" in
  "ath11k/IPQ5018/hw1.0/cal-ahb-c000000.wifi.bin")
  	case "$board" in
++	cmcc,rax3000q|\
 +	glinet,gl-b3000)
 +		caldata_extract "0:ART" 0x1000 0x20000
 +		addr=$(mtd_get_mac_binary "0:ART" 0x6)
@@ -93,10 +108,11 @@
  	linksys,mx2000|\
  	linksys,mx5500)
  		caldata_extract "0:ART" 0x1000 0x20000
-@@ -21,6 +30,15 @@ case "$FIRMWARE" in
+@@ -21,6 +30,16 @@ case "$FIRMWARE" in
  	;;
  "ath11k/QCN6122/hw1.0/cal-ahb-b00a040.wifi1.bin")
  	case "$board" in
++	cmcc,rax3000q|\
 +	glinet,gl-b3000)
 +		caldata_extract "0:ART" 0x26800 0x20000
 +		addr=$(mtd_get_mac_binary "0:ART" 0x6)
@@ -109,3 +125,22 @@
  	linksys,mx2000)
  		caldata_extract "0:ART" 0x26800 0x20000
  		label_mac=$(mtd_get_mac_ascii devinfo hw_mac_addr)
+
+--- a/package/firmware/ipq-wifi/Makefile
++++ b/package/firmware/ipq-wifi/Makefile
+@@ -32,6 +32,7 @@ ALLWIFIBOARDS:= \
+ 	asus_rt-ax89x \
+ 	buffalo_wxr-5950ax12 \
+ 	cambiumnetworks_xe34 \
++	cmcc_rax3000q \
+ 	cmcc_rm2-6 \
+ 	compex_wpq873 \
+ 	dynalink_dl-wrx36 \
+@@ -170,6 +171,7 @@ $(eval $(call generate-ipq-wifi-package,arcadyan_aw1000,Arcadyan AW1000))
+ $(eval $(call generate-ipq-wifi-package,asus_rt-ax89x,Asus RT-AX89X))
+ $(eval $(call generate-ipq-wifi-package,buffalo_wxr-5950ax12,Buffalo WXR-5950AX12))
+ $(eval $(call generate-ipq-wifi-package,cambiumnetworks_xe34,Cambium Networks XE3-4))
++$(eval $(call generate-ipq-wifi-package,cmcc_rax3000q,CMCC RAX3000Q))
+ $(eval $(call generate-ipq-wifi-package,cmcc_rm2-6,CMCC RM2-6))
+ $(eval $(call generate-ipq-wifi-package,compex_wpq873,Compex WPQ-873))
+ $(eval $(call generate-ipq-wifi-package,dynalink_dl-wrx36,Dynalink DL-WRX36))
