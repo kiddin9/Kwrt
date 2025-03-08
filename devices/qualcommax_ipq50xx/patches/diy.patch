@@ -1,10 +1,9 @@
 --- a/target/linux/qualcommax/image/ipq50xx.mk
 +++ b/target/linux/qualcommax/image/ipq50xx.mk
-@@ -30,3 +30,41 @@ define Device/linksys_mx5500
- 					ipq-wifi-linksys_mx5500
+@@ -41,6 +41,44 @@ define Device/linksys_mx5500
  endef
  TARGET_DEVICES += linksys_mx5500
-+
+ 
 +define Device/cmcc_rax3000q
 +  $(call Device/FitImage)
 +  $(call Device/UbiFit)
@@ -42,25 +41,29 @@
 +	DEVICE_DTS_CONFIG := config@mp03.5-c2
 +endef
 +TARGET_DEVICES += jdcloud_re-cs-03
++
+ define Device/linksys_spnmx56
+ 	$(call Device/linksys_ipq50xx_mx_base)
+ 	DEVICE_MODEL := SPNMX56
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
 +++ b/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
-@@ -7,6 +7,11 @@ ipq50xx_setup_interfaces()
- {
- 	local board="$1"
- 	case $board in
-+		glinet,gl-b3000)
+@@ -10,6 +10,11 @@ ipq50xx_setup_interfaces()
+ 	linksys,mr5500)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
+ 		;;
++	glinet,gl-b3000)
 +		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 +		;;
-+		cmcc,rax3000q|\
-+		jdcloud,re-cs-03|\
- 		linksys,mx2000|\
- 		linksys,mx5500)
- 			ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
++	cmcc,rax3000q|\
++	jdcloud,re-cs-03|\
+ 	linksys,mx2000|\
+ 	linksys,mx5500|\
+ 	linksys,spnmx56)
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
-@@ -10,6 +10,14 @@ platform_check_image() {
+@@ -71,6 +71,14 @@ platform_check_image() {
  
  platform_do_upgrade() {
  	case "$(board_name)" in
@@ -72,10 +75,10 @@
 +		CI_ROOTPART="rootfs"
 +		emmc_do_upgrade "$1"
 +		;;
+ 	linksys,mr5500|\
  	linksys,mx2000|\
- 	linksys,mx5500)
- 		platform_do_upgrade_linksys "$1"
-@@ -19,3 +27,12 @@ platform_do_upgrade() {
+ 	linksys,mx5500|\
+@@ -84,3 +92,12 @@ platform_do_upgrade() {
  		;;
  	esac
  }
@@ -105,10 +108,10 @@
 +	jdcloud,re-cs-03)
 +		caldata_extract_mmc "0:ART" 0x1000 0x20000
 +		;;
+ 	linksys,mr5500|\
  	linksys,mx2000|\
- 	linksys,mx5500)
- 		caldata_extract "0:ART" 0x1000 0x20000
-@@ -21,6 +30,16 @@ case "$FIRMWARE" in
+ 	linksys,mx5500|\
+@@ -23,6 +33,16 @@ case "$FIRMWARE" in
  	;;
  "ath11k/QCN6122/hw1.0/cal-ahb-b00a040.wifi1.bin")
  	case "$board" in

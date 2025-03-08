@@ -54,3 +54,24 @@ index 0000000000..2456fad245
 + 
 + 	/* TXRX read-mostly hotpath */
 + 	CACHELINE_ASSERT_GROUP_MEMBER(struct net_device, net_device_read_txrx, lstats);
+
+--- a/target/linux/qualcommax/image/ipq60xx.mk
++++ b/target/linux/qualcommax/image/ipq60xx.mk
+@@ -49,7 +49,7 @@ define Device/jdcloud_re-ss-01
+ 	$(call Device/FitImage)
+ 	$(call Device/EmmcImage)
+ 	DEVICE_VENDOR := JDCloud
+-	DEVICE_MODEL := RE-SS-01
++	DEVICE_MODEL := AX1800 Pro
+ 	DEVICE_DTS_CONFIG := config@cp03-c2
+ 	DEVICE_DTS := ipq6000-re-ss-01
+ 	SOC := ipq6000
+@@ -64,7 +64,7 @@ define Device/jdcloud_re-cs-02
+ 	$(call Device/FitImage)
+ 	$(call Device/EmmcImage)
+ 	DEVICE_VENDOR := JDCloud
+-	DEVICE_MODEL := RE-CS-02
++	DEVICE_MODEL := AX6600
+ 	DEVICE_DTS_CONFIG := config@cp03-c3
+ 	DEVICE_DTS := ipq6010-re-cs-02
+ 	SOC := ipq6010

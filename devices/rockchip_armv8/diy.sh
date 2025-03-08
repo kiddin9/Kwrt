@@ -18,8 +18,6 @@ wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/include/trust
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
-wget -N https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/16414.patch -P devices/common/patches/
-
 #sed -i -e "s/configs\/dilusense-\(.*-.*_defconfig\)/configs\/\1/" \
 #	   -e "s/configs\/sharevdi-\(.*-.*_defconfig\)/configs\/\1/" \
 #	   -e "s/configs\/rongpin-\(.*-.*_defconfig\)/configs\/\1/" \

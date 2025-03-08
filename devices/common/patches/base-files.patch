@@ -1,17 +1,3 @@
---- a/package/base-files/files/etc/rc.common
-+++ b/package/base-files/files/etc/rc.common
-@@ -28,7 +28,9 @@ restart() {
- }
- 
- boot() {
--	start "$@"
-+	name="$(basename "${initscript}")"
-+	name="${name##S[0-9][0-9]}"
-+	[[ "$(uci -q get $name.$name[0].enabled)" == 0 || "$(uci -q get $name.config.enabled)" == 0 || "$(uci -q get $name.$name.enabled)" == 0 || "$(uci -q get $name.main.enabled)" == 0 || "$(uci -q get $name.$name[0].enable)" == 0 || "$(uci -q get $name.config.enable)" == 0 || "$(uci -q get $name.$name.enable)" == 0 || "$(uci -q get $name.main.enable)" == 0 ]] || start "$@";
- }
- 
- shutdown() {
-
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
 @@ -395,7 +395,9 @@ default_postinst() {

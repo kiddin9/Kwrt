@@ -152,7 +152,7 @@ jobs:
         TAG_DATE="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[] | select(.name | startswith("v24")) | .target.tagger.date' | head -n 1)"
         if [[ $(( ($(date +%s) - $(date -d "$TAG_DATE" +%s)) / 86400 )) -lt 30 ]]; then
         REPO_BRANCH="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[].name' | grep v24 | head -n 1)"
-        #REPO_BRANCH="openwrt-24.10"
+        REPO_BRANCH="openwrt-24.10"
         else
         REPO_BRANCH="openwrt-24.10"
         fi
