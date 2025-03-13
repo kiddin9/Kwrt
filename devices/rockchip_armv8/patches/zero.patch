@@ -1,0 +1,39 @@
+--- a/target/linux/rockchip/image/armv8.mk
++++ b/target/linux/rockchip/image/armv8.mk
+@@ -264,6 +264,16 @@ define Device/friendlyarm_nanopi-r6s
+ endef
+ TARGET_DEVICES += friendlyarm_nanopi-r6s
+ 
++define Device/friendlyarm_nanopi-zero2
++  DEVICE_VENDOR := FriendlyARM
++  DEVICE_MODEL := NanoPi Zero2
++  SOC := rk3328
++  UBOOT_DEVICE_NAME := nanopi-r2s-rk3328
++  DEVICE_PACKAGES := -luci-app-gpsysupgrade kmod-gpio-button-hotplug kmod-usb-net-rtl8152
++  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
++endef
++TARGET_DEVICES += friendlyarm_nanopi-zero2
++
+ define Device/firefly_station-p2
+   DEVICE_VENDOR := Firefly
+   DEVICE_MODEL := Station P2
+
+--- a/target/linux/rockchip/image/Makefile
++++ b/target/linux/rockchip/image/Makefile
+@@ -79,4 +79,16 @@ endif
+ 
+ include $(SUBTARGET).mk
+ 
++define Image/Build
++	if [[ "$(PROFILE_SANITIZED)" == "friendlyarm_nanopi-zero2" ]]; then \
++		export IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))"; \
++		export BIN_DIR=$(BIN_DIR); \
++		export TOPDIR=$(TOPDIR); \
++		export MORE=$(MORE); \
++		export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
++		cd /data/packit/friendlywrt23-rk3528; \
++		. ~/packit/packit_nanopi.sh; \
++	fi
++endef
++
+ $(eval $(call BuildImage))
