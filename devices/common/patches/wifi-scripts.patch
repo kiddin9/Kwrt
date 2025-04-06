@@ -1,8 +1,11 @@
 --- a/package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
 +++ b/package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
-@@ -98,7 +98,7 @@ set ${s}.channel='${channel}'
+@@ -96,9 +96,9 @@ set ${s}.${id}
+ set ${s}.band='${band_name}'
+ set ${s}.channel='${channel}'
  set ${s}.htmode='${htmode}'
- set ${s}.country='${country || ''}'
+-set ${s}.country='${country || ''}'
++set ${s}.country='${country || "CN"}'
  set ${s}.num_global_macaddr='${num_global_macaddr || ''}'
 -set ${s}.disabled='${defaults ? 0 : 1}'
 +set ${s}.disabled='0'

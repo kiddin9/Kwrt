@@ -21,7 +21,7 @@
 @@ -42,6 +42,8 @@ mediatek_setup_interfaces()
  	jdcloud,re-cp-03|\
  	mediatek,mt7981-rfb|\
- 	netcore,n60|\
+ 	netcore,n60*|\
 +	nradio,c8-660|\
 +	nradio,c8-668gl|\
  	ruijie,rg-x60-pro|\
@@ -95,7 +95,7 @@
  glinet,gl-x3000|\
 -glinet,gl-xe3000)
 +glinet,gl-xe3000|\
-+huasifei,wh3000-emmc|\
++huasifei,wh3000|\
 +nradio,c8-668gl)
  	local envdev=$(find_mmc_part "u-boot-env")
  	ubootenv_add_uci_config "$envdev" "0x0" "0x80000"

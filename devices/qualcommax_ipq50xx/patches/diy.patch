@@ -1,6 +1,51 @@
+--- a/include/image-commands.mk
++++ b/include/image-commands.mk
+@@ -494,6 +494,26 @@ define Build/lzma-no-dict
+ 	@mv $@.new $@
+ endef
+ 
++define Build/gl-factory
++	$(eval GL_NAME := $(subst $(comma),_,$(word 1,$(SUPPORTED_DEVICES))))
++	$(eval GL_INCLUDE := $(STAGING_DIR)/usr/include/glinet-uboot-scr)
++	$(eval GL_SCRIPT := $(GL_INCLUDE)/$(GL_NAME).scr)
++	$(eval GL_IMGK := $(KDIR_TMP)/$(DEVICE_IMG_PREFIX)-squashfs-factory.img)
++	$(eval GL_ITS := $(KDIR_TMP)/$(GL_NAME).its)
++	$(if $(wildcard $(GL_INCLUDE)/*),$(CP) $(GL_INCLUDE)/* $(KDIR_TMP)/) \
++
++	$(TOPDIR)/scripts/mkits-glinet.sh \
++		$(if $(wildcard $(GL_SCRIPT)),-s $(GL_SCRIPT)) \
++		-f $(GL_IMGK) \
++		-o $(GL_ITS)
++
++	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage -f \
++		$(GL_ITS) \
++		$(GL_IMGK) \
++
++	$(RM) $(GL_ITS) $(GL_SCRIPT)
++endef
++
+ define Build/moxa-encode-fw
+ 	$(TOPDIR)/scripts/moxa-encode-fw.py \
+ 		--input $@ \
+
+--- a/package/boot/uboot-tools/uboot-envtools/files/qualcommax_ipq50xx
++++ b/package/boot/uboot-tools/uboot-envtools/files/qualcommax_ipq50xx
+@@ -8,6 +8,11 @@ touch /etc/config/ubootenv
+ board=$(board_name)
+ 
+ case "$board" in
++glinet,gl-b3000)
++	idx="$(find_mtd_index 0:APPSBLENV)"
++	[ -n "$idx" ] && \
++		ubootenv_add_uci_config "/dev/mtd$idx" "0x0" "0x40000" "0x20000" "2"
++	;;
+ linksys,mr5500|\
+ linksys,mx2000|\
+ linksys,mx5500|\
+
 --- a/target/linux/qualcommax/image/ipq50xx.mk
 +++ b/target/linux/qualcommax/image/ipq50xx.mk
-@@ -41,6 +41,44 @@ define Device/linksys_mx5500
+@@ -41,6 +41,54 @@ define Device/linksys_mx5500
  endef
  TARGET_DEVICES += linksys_mx5500
  
@@ -18,29 +63,39 @@
 +TARGET_DEVICES += cmcc_rax3000q
 +
 +define Device/glinet_gl-b3000
-+  $(call Device/FitImage)
-+  $(call Device/UbiFit)
-+  SOC := ipq5018
-+  DEVICE_VENDOR := GL.iNET
-+  DEVICE_MODEL := GL-B3000
-+  BLOCKSIZE := 128k
-+  PAGESIZE := 2048
-+  DEVICE_DTS_CONFIG := config@mp03.5-c1
-+  DEVICE_PACKAGES := ath11k-firmware-qcn6122 ipq-wifi-gl-b3000
++	$(call Device/FitImage)
++	$(call Device/UbiFit)
++	DEVICE_VENDOR := GL.iNET
++	DEVICE_MODEL := GL-B3000
++	SOC := ipq5018
++	KERNEL_LOADADDR := 0x41080000
++	BLOCKSIZE := 128k
++	PAGESIZE := 2048
++	NAND_SIZE := 128
++	DEVICE_DTS_CONFIG := config@mp03.5-c1
++	SUPPORTED_DEVICES += b3000
++	IMAGES := factory.img
++	IMAGE/factory.img := append-ubi | gl-factory --with-uboot-scr | append-metadata
++	DEVICE_PACKAGES := \
++		ath11k-firmware-qcn6122 \
++		ipq-wifi-glinet_gl-b3000 \
++		dumpimage
 +endef
 +TARGET_DEVICES += glinet_gl-b3000
 +
 +define Device/jdcloud_re-cs-03
-+	$(call Device/FitImage)
-+	$(call Device/EmmcImage)
-+	SOC := ipq5018
-+	BLOCKSIZE := 64k
-+	KERNEL_SIZE := 6144k
-+	DEVICE_VENDOR := JDCloud
-+	DEVICE_MODEL := AX3000
-+	DEVICE_DTS_CONFIG := config@mp03.5-c2
-+endef
-+TARGET_DEVICES += jdcloud_re-cs-03
++ 	$(call Device/FitImage)
++ 	$(call Device/EmmcImage)
++ 	DEVICE_VENDOR := JDCloud
++ 	DEVICE_MODEL := AX3000
++ 	BLOCKSIZE := 128k
++ 	KERNEL_SIZE := 6144k
++ 	SOC := ipq5018
++ 	DEVICE_DTS_CONFIG := config@mp03.5-c2
++ 	DEVICE_PACKAGES := ipq-wifi-jdcloud_re-cs-03
++ 	IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-rootfs | append-metadata
++ endef
++ TARGET_DEVICES += jdcloud_re-cs-03
 +
  define Device/linksys_spnmx56
  	$(call Device/linksys_ipq50xx_mx_base)
@@ -48,27 +103,176 @@
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
 +++ b/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
-@@ -10,6 +10,11 @@ ipq50xx_setup_interfaces()
- 	linksys,mr5500)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
- 		;;
+@@ -7,9 +7,14 @@ ipq50xx_setup_interfaces()
+ {
+ 	local board="$1"
+ 	case $board in
 +	glinet,gl-b3000)
 +		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 +		;;
+ 	linksys,mr5500)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
+ 		;;
 +	cmcc,rax3000q|\
 +	jdcloud,re-cs-03|\
  	linksys,mx2000|\
  	linksys,mx5500|\
  	linksys,spnmx56)
+@@ -18,9 +23,24 @@ ipq50xx_setup_interfaces()
+ 	esac
+ }
+ 
++ipq50xx_setup_macs()
++{
++	local board="$1"
++	local lan_mac=""
++
++	case "$board" in
++	glinet,gl-b3000)
++		lan_mac=$(macaddr_add $(get_mac_label_dt) 2)
++		;;
++	esac
++
++	[ -n "$lan_mac" ] && ucidef_set_interface_macaddr "lan" $lan_mac
++}
++
+ board_config_update
+ board=$(board_name)
+ ipq50xx_setup_interfaces $board
++ipq50xx_setup_macs $board
+ board_config_flush
+ 
+ exit 0
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
-@@ -71,6 +71,14 @@ platform_check_image() {
+@@ -1,7 +1,7 @@
+ PART_NAME=firmware
+ REQUIRE_IMAGE_METADATA=1
  
+-RAMFS_COPY_BIN='fw_printenv fw_setenv head'
++RAMFS_COPY_BIN='dumpimage fw_printenv fw_setenv head'
+ RAMFS_COPY_DATA='/etc/fw_env.config /var/lock/fw_printenv.lock'
+ 
+ remove_oem_ubi_volume() {
+@@ -69,8 +69,126 @@ platform_check_image() {
+ 	return 0;
+ }
+ 
++glinet_validate_firmware() {
++	local type='67'
++	local ubi_magic='55 42 49 23'
++	local img_magic='d0 0d fe ed'
++	local sys_magic='73 79 73 75'
++
++	# ubi type firmware
++	local is_ubi=$( hexdump -C -n 4 "$1" | grep "$ubi_magic" | wc -c )
++	if [ ${is_ubi} == ${type} ]; then
++		echo "ubi"
++		return
++	fi
++	# img type firmware
++	local is_fit=$( hexdump -C -n 4 "$1" | grep "$img_magic" | wc -c )
++	if [ ${is_fit} == ${type} ]; then
++		echo "fit"
++		return
++	fi
++	# sysupgrade-tar type firmware
++	local is_sys=$( hexdump -C -n 4 "$1" | grep "$sys_magic" | wc -c )
++	if [ ${is_sys} == ${type} ]; then
++		echo "sys"
++		return
++	fi
++	# Invalid firmware
++	echo "error"
++}
++
++glinet_do_fit_upgrade() {
++	echo -n "fit: Extract [ FIT IMAGE ] -x-x-> [ ubi.bin ] ... "
++	local ubi=/tmp/ubi.bin
++	local part=$(dumpimage -l /tmp/firmware.bin | grep -o "Image [0-9] (ubi)" | cut -f2 -d" ")
++
++	local ubibin=$( dumpimage -T flat_dt -p ${part} -o "$ubi"  $1 )
++	if [ -s "$ubi" ]; then
++		echo "[ OK ]"
++		local ubiMd5=$(cat $ubi | md5sum | cut -f1 -d" ")
++		local ubi_size=$( cat "$ubi" | wc -c )
++		echo -n "fit-copy: [ ubi.bin ] -c-c-> [ firmware.bin ] ... "
++		mv "$ubi" "$1"
++		local firmMd5=$(cat $1 | md5sum | cut -f1 -d" ")
++		local firm_size=$( cat $1 | wc -c )
++		if [ ${firm_size} -eq ${ubi_size} ] && [ "$ubiMd5" = "$firmMd5" ]; then
++			echo "[ OK ]"
++			echo "fit-copy: Copied "$firm_size" / "$ubi_size" bytes into firmware.bin"
++			echo "fit-copy: MD5 CHECK: [ OK ]"
++			echo "$ubiMd5 <=> $firmMd5"
++			echo "fit: Successfully Extracted UBI from FIT IMAGE"
++			echo "fit: Proceeding with sysupgrade .."
++			nand_do_upgrade "$1"
++			return
++		fi
++		echo "[ FAILED ] !!"
++		echo "fit-copy: Copied "$firm_size" / "$ubi_size" bytes into firmware.bin"
++		echo "ERROR: Failed to Copy UBI into firmware.bin !!"
++		echo "fit: Terminating sysupgrade .."
++		exit 1
++	fi
++	echo "[ FAILED ] !!"
++	echo "fit-extract: Failed to Create Temp File ubi.bin !!"
++	echo "ERROR: Failed to Extract UBI from FIT IMAGE !!"
++	echo "fit: Terminating sysupgrade .."
++	exit 1
++}
++
++glinet_do_ubi_upgrade() {
++	echo -n "ubi: Removing Metadata Trailer from the UBI Volume ... "
++
++	local metadata=$(fwtool -q -t -i /dev/null "$1")
++	if [ -s $1 ]; then
++		echo "[ OK ]"
++		echo "ubi-meta: Successfully Removed Metadata from UBI Volume"
++		echo "ubi: Proceeding with sysupgrade .."
++		nand_do_upgrade "$1"
++		return
++	fi
++	echo "[ FAILED ] !!"
++	echo "ubi-meta: Cannot remove Metadata, the Files is Empty !!"
++	echo "ERROR: Failed to Remove Metadata Trailer from UBI Volume !!"
++	echo "ubi: Terminating sysupgrade .."
++	exit 1
++}
++
  platform_do_upgrade() {
  	case "$(board_name)" in
-+ 	glinet,gl-b3000)
-+		nand_do_upgrade "$1"
++	glinet,gl-b3000)
++		CI_UBIPART="rootfs"
++		echo -n "Validating Firmware ... "
++		case $(glinet_validate_firmware $1) in
++		ubi)
++			echo "[ OK ]"
++			echo "ubi-main: Firmware is Valid: ubi"
++			echo "ubi-main: Upgrading Firmware via [ UBI BIN ]"
++			glinet_do_ubi_upgrade $1
++			;;
++		fit)
++			echo "[ OK ]"
++			echo "fit-main: Firmware is Valid: fit"
++			echo "fit-main: Upgrading Firmware via [ FIT IMAGE ]"
++			glinet_do_fit_upgrade $1
++			;;
++		sys)
++			echo "[ OK ]"
++			echo "sys-main: Firmware is Valid: sysupgrade-tar"
++			echo "sys-main: Upgrading Firmware via [ SYSUPGRADE-TAR ]"
++			nand_do_upgrade $1
++			;;
++		*)
++			echo "[ FAILED ] !!"
++			echo "main: Firmware Validation Failed !!"
++			echo "main: Terminating sysupgrade .."
++			exit 1
++			;;
++		esac
 +		;;
 +	jdcloud,re-cs-03)
 +		CI_KERNPART="0:HLOS"
@@ -78,7 +282,7 @@
  	linksys,mr5500|\
  	linksys,mx2000|\
  	linksys,mx5500|\
-@@ -84,3 +92,12 @@ platform_do_upgrade() {
+@@ -84,3 +202,12 @@ platform_do_upgrade() {
  		;;
  	esac
  }
@@ -94,15 +298,14 @@
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
 +++ b/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
-@@ -9,6 +9,16 @@ board=$(board_name)
+@@ -9,6 +9,15 @@ board=$(board_name)
  case "$FIRMWARE" in
  "ath11k/IPQ5018/hw1.0/cal-ahb-c000000.wifi.bin")
  	case "$board" in
 +	cmcc,rax3000q|\
 +	glinet,gl-b3000)
-+		caldata_extract "0:ART" 0x1000 0x20000
-+		addr=$(mtd_get_mac_binary "0:ART" 0x6)
-+		ath11k_patch_mac $(macaddr_add $addr 3) 0
++		caldata_extract "0:art" 0x1000 0x20000
++		ath11k_patch_mac $(macaddr_add $(get_mac_label_dt) 3) 0
 +		ath11k_set_macflag
 +		;;
 +	jdcloud,re-cs-03)
@@ -111,15 +314,14 @@
  	linksys,mr5500|\
  	linksys,mx2000|\
  	linksys,mx5500|\
-@@ -23,6 +33,16 @@ case "$FIRMWARE" in
+@@ -23,6 +33,15 @@ case "$FIRMWARE" in
  	;;
  "ath11k/QCN6122/hw1.0/cal-ahb-b00a040.wifi1.bin")
  	case "$board" in
 +	cmcc,rax3000q|\
 +	glinet,gl-b3000)
-+		caldata_extract "0:ART" 0x26800 0x20000
-+		addr=$(mtd_get_mac_binary "0:ART" 0x6)
-+		ath11k_patch_mac $(macaddr_add $addr 4) 0
++		caldata_extract "0:art" 0x26800 0x20000
++		ath11k_patch_mac $(macaddr_add $(get_mac_label_dt) 4) 0
 +		ath11k_set_macflag
 +		;;
 +	jdcloud,re-cs-03)
@@ -131,7 +333,7 @@
 
 --- a/package/firmware/ipq-wifi/Makefile
 +++ b/package/firmware/ipq-wifi/Makefile
-@@ -32,6 +32,7 @@ ALLWIFIBOARDS:= \
+@@ -33,6 +33,7 @@ ALLWIFIBOARDS:= \
  	asus_rt-ax89x \
  	buffalo_wxr-5950ax12 \
  	cambiumnetworks_xe34 \
@@ -139,7 +341,16 @@
  	cmcc_rm2-6 \
  	compex_wpq873 \
  	dynalink_dl-wrx36 \
-@@ -170,6 +171,7 @@ $(eval $(call generate-ipq-wifi-package,arcadyan_aw1000,Arcadyan AW1000))
+@@ -40,6 +41,8 @@ ALLWIFIBOARDS:= \
+ 	edimax_cax1800 \
+ 	glinet_gl-ax1800 \
+ 	glinet_gl-axt1800 \
++	glinet_gl-b3000 \
++	jdcloud_re-cs-03 \
+ 	linksys_homewrk \
+ 	linksys_mr5500 \
+ 	linksys_mr7350 \
+@@ -178,6 +181,7 @@ $(eval $(call generate-ipq-wifi-package,arcadyan_aw1000,Arcadyan AW1000))
  $(eval $(call generate-ipq-wifi-package,asus_rt-ax89x,Asus RT-AX89X))
  $(eval $(call generate-ipq-wifi-package,buffalo_wxr-5950ax12,Buffalo WXR-5950AX12))
  $(eval $(call generate-ipq-wifi-package,cambiumnetworks_xe34,Cambium Networks XE3-4))
@@ -147,3 +358,12 @@
  $(eval $(call generate-ipq-wifi-package,cmcc_rm2-6,CMCC RM2-6))
  $(eval $(call generate-ipq-wifi-package,compex_wpq873,Compex WPQ-873))
  $(eval $(call generate-ipq-wifi-package,dynalink_dl-wrx36,Dynalink DL-WRX36))
+@@ -185,6 +189,8 @@ $(eval $(call generate-ipq-wifi-package,edgecore_eap102,Edgecore EAP102))
+ $(eval $(call generate-ipq-wifi-package,edimax_cax1800,Edimax CAX1800))
+ $(eval $(call generate-ipq-wifi-package,glinet_gl-ax1800,GL.iNet GL-AX1800))
+ $(eval $(call generate-ipq-wifi-package,glinet_gl-axt1800,GL.iNet GL-AXT1800))
++$(eval $(call generate-ipq-wifi-package,glinet_gl-b3000,GL.iNET B3000))
++$(eval $(call generate-ipq-wifi-package,jdcloud_re-cs-03,JDCloud RE-CS-03))
+ $(eval $(call generate-ipq-wifi-package,linksys_homewrk,Linksys HomeWRK))
+ $(eval $(call generate-ipq-wifi-package,linksys_mr5500,Linksys MR5500))
+ $(eval $(call generate-ipq-wifi-package,linksys_mr7350,Linksys MR7350))

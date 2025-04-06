@@ -1,6 +1,6 @@
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
-@@ -395,7 +395,9 @@ default_postinst() {
+@@ -395,10 +395,13 @@ default_postinst() {
  			if [ "$PKG_UPGRADE" != "1" ]; then
  				"$i" enable
  			fi
@@ -10,6 +10,11 @@
 +			fi
  		fi
  	done
+ 
++	[ -x /etc/init.d/ucitrack ] && /etc/init.d/ucitrack reload
+ 	return $ret
+ }
+ 
 
 --- a/package/base-files/files/etc/shinit
 +++ b/package/base-files/files/etc/shinit

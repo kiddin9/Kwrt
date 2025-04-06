@@ -1,6 +1,6 @@
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -264,6 +264,16 @@ define Device/friendlyarm_nanopi-r6s
+@@ -264,6 +264,17 @@ define Device/friendlyarm_nanopi-r6s
  endef
  TARGET_DEVICES += friendlyarm_nanopi-r6s
  
@@ -9,6 +9,7 @@
 +  DEVICE_MODEL := NanoPi Zero2
 +  SOC := rk3328
 +  UBOOT_DEVICE_NAME := nanopi-r2s-rk3328
++  IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-bin | gzip | append-metadata
 +  DEVICE_PACKAGES := -luci-app-gpsysupgrade kmod-gpio-button-hotplug kmod-usb-net-rtl8152
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef

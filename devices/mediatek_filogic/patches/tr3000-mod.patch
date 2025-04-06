@@ -7,7 +7,7 @@
 +define Device/cudy_tr3000-mod
 +  DEVICE_VENDOR := Cudy
 +  DEVICE_MODEL := TR3000
-+  DEVICE_VARIANT := (U-Boot mod)
++  DEVICE_VARIANT := 112M
 +  DEVICE_DTS := mt7981b-cudy-tr3000-mod
 +  DEVICE_DTS_DIR := ../dts
 +  UBINIZE_OPTS := -E 5

@@ -28,6 +28,10 @@ wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/openwrt-24.10/
 wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/openwrt-24.10/package/network/utils/nftables/patches/001-drop-useless-file.patch -P package/network/utils/nftables/patches/
 wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/openwrt-24.10/package/libs/libnftnl/patches/001-libnftnl-add-fullcone-expression-support.patch -P package/libs/libnftnl/patches/
 wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/openwrt-24.10/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch -P package/firmware/wireless-regdb/patches/
+wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/master/config/Config-kernel.in -P config/
+
+rm -rf package/libs/openssl package/network/services/ppp
+git_clone_path openwrt-24.10 https://github.com/immortalwrt/immortalwrt package/libs/openssl package/network/services/ppp
 
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
@@ -54,6 +58,10 @@ wget -N https://raw.githubusercontent.com/openwrt/packages/master/lang/golang/go
 #sed -i "/call Build\/check-size,\$\$(KERNEL_SIZE)/d" include/image.mk
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic/hack-6.6
+
+rm -rf package/system/fstools
+git_clone_path master https://github.com/coolsnowwolf/lede package/system/fstools
+
 rm -rf target/linux/generic/hack-6.6/929-Revert-genetlink* target/linux/generic/hack-6.6/767-net-phy-realtek-add-led*
 wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.6/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.6/
 

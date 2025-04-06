@@ -6,7 +6,7 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 rm -rf package/boot/uboot-envtools package/firmware/ipq-wifi package/firmware/ath11k-firmware target/linux/qualcommax target/linux/generic package/kernel/mac80211 package/kernel/qca-ssdk package/kernel/qca-nss-dp
 
-git_clone_path main https://github.com/openwrt/openwrt target/linux/qualcommax target/linux/generic package/boot/uboot-envtools package/firmware/ipq-wifi package/firmware/ath11k-firmware package/kernel/mac80211 package/kernel/qca-ssdk package/kernel/qca-nss-dp
+git_clone_path main https://github.com/openwrt/openwrt target/linux/qualcommax target/linux/generic package/boot/uboot-tools package/firmware/ipq-wifi package/firmware/ath11k-firmware package/kernel/mac80211 package/kernel/qca-ssdk package/kernel/qca-nss-dp
 
 wget -N https://github.com/openwrt/openwrt/raw/main/include/kernel-6.6 -P include/
 

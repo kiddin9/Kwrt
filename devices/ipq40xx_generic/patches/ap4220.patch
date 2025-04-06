@@ -1,0 +1,164 @@
+From c3a7b6ab3825a9c6b1e69f1c5c5e8b59cf14b783 Mon Sep 17 00:00:00 2001
+From: Willem Lee <1980490718@qq.com>
+Date: Thu, 13 Mar 2025 01:48:31 +0800
+Subject: [PATCH] ipq40xx: add support for Alibaba AP4220
+
+Hardware specifications
+-------------
+- SoC       : Qualcomm IPQ4018
+- RAM       : 256 MiB DDR3
+- Flash     : 4 MiB SPI NOR (Winbond) + 128 MiB SPI NAND (Winbond)
+- WLAN      : IPQ4018 built-in
+  - 2.4 GHz : 2x2 MIMO WiFi4
+  - 5 GHz   : 2x2 MIMO WiFi5
+- Ethernet  : QCA8072 10/100/1000 Mbps 1x WAN (PoE); 1x LAN
+- USB       : 1x 2.0
+- UART      : 1x Rj45 port, 115200n8
+- Buttons   : 1x Reset
+- LEDs      : 1x Power (green)
+              1x WiFi 2.4 GHz (green)
+              1x WiFi 5 GHz (green)
+- Power     : 802.3at PoE
+
+Flash instructions
+-------------
+  1. Connect the router via serial port
+  2. Keep pressing "@" until uboot is interrupted
+  3. Download the initramfs image, rename it to
+     initramfs.bin, host it with tftp server
+  4. Run these commands:
+     "tftpboot initramfs.itb && bootm"
+  5. After openwrt boots up, use scp or luci
+     to upload sysupgrade.bin to upgrade.
+
+Signed-off-by: Willem Lee <1980490718@qq.com>
+---
+ package/boot/uboot-envtools/files/ipq40xx     |   1 +
+ package/firmware/ipq-wifi/Makefile            |   2 +
+ .../ipq40xx/base-files/etc/board.d/02_network |   6 +
+ .../etc/hotplug.d/firmware/11-ath10k-caldata  |   8 +
+ .../base-files/lib/upgrade/platform.sh        |   3 +-
+ .../arm/boot/dts/qcom/qcom-ipq4018-ap4220.dts | 369 ++++++++++++++++++
+ target/linux/ipq40xx/image/generic.mk         |  12 +
+ 7 files changed, 400 insertions(+), 1 deletion(-)
+ create mode 100644 target/linux/ipq40xx/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq4018-ap4220.dts
+
+diff --git a/package/boot/uboot-envtools/files/ipq40xx b/package/boot/uboot-envtools/files/ipq40xx
+index 717158b0425ea5..dfa22e4ed0e68e 100644
+--- a/package/boot/uboot-envtools/files/ipq40xx
++++ b/package/boot/uboot-envtools/files/ipq40xx
+@@ -32,6 +32,7 @@ ubootenv_mtdinfo () {
+ 
+ case "$board" in
+ alfa-network,ap120c-ac|\
++alibaba,ap4220|\
+ devolo,magic-2-wifi-next|\
+ edgecore,ecw5211|\
+ glinet,gl-a1300 |\
+diff --git a/package/firmware/ipq-wifi/Makefile b/package/firmware/ipq-wifi/Makefile
+index 07d5c90c441558..d8b6abbb3b087e 100644
+--- a/package/firmware/ipq-wifi/Makefile
++++ b/package/firmware/ipq-wifi/Makefile
+@@ -28,6 +28,7 @@ endef
+ 
+ ALLWIFIBOARDS:= \
+ 	8devices_mango \
++	alibaba_ap4220 \
+ 	arcadyan_aw1000 \
+ 	asus_rt-ax89x \
+ 	buffalo_wxr-5950ax12 \
+@@ -155,6 +156,7 @@ endef
+ #   board-<devicename>.<qca4019|qca9888|qca9889|qca9984|qca99x0|ipq8074>
+ 
+ $(eval $(call generate-ipq-wifi-package,8devices_mango,8devices Mango))
++$(eval $(call generate-ipq-wifi-package,alibaba_ap4220,Alibaba AP4220))
+ $(eval $(call generate-ipq-wifi-package,arcadyan_aw1000,Arcadyan AW1000))
+ $(eval $(call generate-ipq-wifi-package,asus_rt-ax89x,Asus RT-AX89X))
+ $(eval $(call generate-ipq-wifi-package,buffalo_wxr-5950ax12,Buffalo WXR-5950AX12))
+diff --git a/target/linux/ipq40xx/base-files/etc/board.d/02_network b/target/linux/ipq40xx/base-files/etc/board.d/02_network
+index 57dca0e1a2a93a..e26b4aed50b8d1 100644
+--- a/target/linux/ipq40xx/base-files/etc/board.d/02_network
++++ b/target/linux/ipq40xx/base-files/etc/board.d/02_network
+@@ -31,6 +31,7 @@ ipq40xx_setup_interfaces()
+ 		;;
+ 	8dev,jalapeno|\
+ 	alfa-network,ap120c-ac|\
++	alibaba,ap4220|\
+ 	asus,map-ac2200|\
+ 	cilab,meshpoint-one|\
+ 	edgecore,ecw5211|\
+@@ -171,6 +172,11 @@ ipq40xx_setup_macs()
+ 	8dev,habanero-dvk)
+ 		label_mac=$(mtd_get_mac_binary "ART" 0x1006)
+ 		;;
++	alibaba,ap4220)
++		wan_mac=$(mtd_get_mac_text product_info 0x40)
++		lan_mac=$(macaddr_add "$wan_mac" 1)
++		label_mac="$wan_mac"
++		;;
+ 	asus,rt-ac42u)
+ 		label_mac=$(mtd_get_mac_binary_ubi Factory 0x1006)
+ 		;;
+diff --git a/target/linux/ipq40xx/base-files/etc/hotplug.d/firmware/11-ath10k-caldata b/target/linux/ipq40xx/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
+index 4a1a0ff31118a3..b40f7a1ba6cc0b 100644
+--- a/target/linux/ipq40xx/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
++++ b/target/linux/ipq40xx/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
+@@ -57,6 +57,10 @@ case "$FIRMWARE" in
+ 	;;
+ "ath10k/pre-cal-ahb-a000000.wifi.bin")
+ 	case "$board" in
++	alibaba,ap4220)
++		caldata_extract "ART" 0x1000 0x2f20
++		ath10k_patch_mac $(macaddr_add "$(mtd_get_mac_text product_info 0x40)" 2)
++		;;
+ 	asus,map-ac2200|\
+ 	asus,rt-ac42u)
+ 		caldata_extract_ubi "Factory" 0x1000 0x2f20
+@@ -157,6 +161,10 @@ case "$FIRMWARE" in
+ 	;;
+ "ath10k/pre-cal-ahb-a800000.wifi.bin")
+ 	case "$board" in
++	alibaba,ap4220)
++		caldata_extract "ART" 0x5000 0x2f20
++		ath10k_patch_mac $(macaddr_add "$(mtd_get_mac_text product_info 0x40)" 3)
++		;;
+ 	asus,map-ac2200)
+ 		caldata_extract_ubi "Factory" 0x5000 0x2f20
+ 		;;
+diff --git a/target/linux/ipq40xx/base-files/lib/upgrade/platform.sh b/target/linux/ipq40xx/base-files/lib/upgrade/platform.sh
+index 53a95611487b50..a4e488ca09a028 100644
+--- a/target/linux/ipq40xx/base-files/lib/upgrade/platform.sh
++++ b/target/linux/ipq40xx/base-files/lib/upgrade/platform.sh
+@@ -134,7 +134,8 @@ platform_do_upgrade() {
+ 		CI_DATAPART="rootfs_data"
+ 		emmc_do_upgrade "$1"
+ 		;;
+-	alfa-network,ap120c-ac)
++	alfa-network,ap120c-ac|\
++	alibaba,ap4220)
+ 		part="$(awk -F 'ubi.mtd=' '{printf $2}' /proc/cmdline | sed -e 's/ .*$//')"
+ 		if [ "$part" = "rootfs1" ]; then
+ 			fw_setenv active 2 || exit 1
+diff --git a/target/linux/ipq40xx/image/generic.mk b/target/linux/ipq40xx/image/generic.mk
+index 393bb991f11e6a..59e9caec21793c 100644
+--- a/target/linux/ipq40xx/image/generic.mk
++++ b/target/linux/ipq40xx/image/generic.mk
+@@ -170,6 +170,18 @@ define Device/alfa-network_ap120c-ac
+ endef
+ TARGET_DEVICES += alfa-network_ap120c-ac
+ 
++define Device/alibaba_ap4220
++	$(call Device/FitImage)
++	$(call Device/UbiFit)
++	DEVICE_VENDOR := Alibaba
++	DEVICE_MODEL := AP4220
++	SOC := qcom-ipq4018
++	BLOCKSIZE := 128k
++	PAGESIZE := 2048
++	DEVICE_PACKAGES += ipq-wifi-alibaba_ap4220
++endef
++TARGET_DEVICES += alibaba_ap4220
++
+ define Device/aruba_glenmorangie
+ 	$(call Device/FitImageLzma)
+ 	DEVICE_VENDOR := Aruba
