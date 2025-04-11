@@ -1,6 +1,6 @@
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -64,29 +64,17 @@ platform_do_upgrade() {
+@@ -66,30 +66,18 @@ platform_do_upgrade() {
  	local board=$(board_name)
  
  	case "$board" in
@@ -18,6 +18,7 @@
  	mediatek,mt7981-rfb|\
  	mediatek,mt7988a-rfb|\
  	mercusys,mr90x-v1-ubi|\
+ 	netis,nx31|\
 -	nokia,ea0326gmp|\
  	openwrt,one|\
 -	netcore,n60|\
@@ -30,11 +31,17 @@
  	xiaomi,mi-router-ax3000t-ubootmod|\
  	xiaomi,redmi-router-ax6000-ubootmod|\
  	xiaomi,mi-router-wr30u-ubootmod|\
-@@ -150,7 +138,6 @@ platform_do_upgrade() {
+@@ -160,13 +148,6 @@ platform_do_upgrade() {
  			;;
  		esac
  		;;
 -	xiaomi,mi-router-ax3000t|\
- 	xiaomi,mi-router-wr30u|\
- 	xiaomi,redmi-router-ax6000)
- 		CI_KERN_UBIPART=ubi_kernel
+-	xiaomi,mi-router-wr30u|\
+-	xiaomi,redmi-router-ax6000)
+-		CI_KERN_UBIPART=ubi_kernel
+-		CI_ROOT_UBIPART=ubi
+-		nand_do_upgrade "$1"
+-		;;
+ 	*)
+ 		nand_do_upgrade "$1"
+ 		;;
