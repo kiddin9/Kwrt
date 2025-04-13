@@ -8,7 +8,7 @@
 #include <dt-bindings/leds/common.h>
 
 / {
-	model = "GL.iNet B3000, Inc. IPQ5018/AP-MP03.5-C1";
+	model = "GL.iNet GL-B3000";
 	compatible ="glinet,gl-b3000", "qcom,ipq5018";
 
 	aliases {

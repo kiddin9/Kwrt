@@ -5,7 +5,7 @@
  					o.rmempty = true;
  
 +					o = ss.taboption("advanced", form.Flag, 'mu_beamformer', _('MU-MIMO'));
-+					o.default = o.disabled;
++					o.default = '1';
 +
 +					o = ss.taboption('advanced', form.Flag, 'vendor_vht', _('Enable 256-QAM'), _('802.11n 2.4Ghz Only'));
 +					o.default = o.disabled;

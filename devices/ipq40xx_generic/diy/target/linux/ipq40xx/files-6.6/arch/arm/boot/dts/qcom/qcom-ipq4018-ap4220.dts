@@ -7,8 +7,8 @@
 #include <dt-bindings/soc/qcom,tcsr.h>
 
 / {
-	compatible = "alibaba,ap4220", "qcom,ipq4019";
-	model = "Alibaba AP4220";
+	compatible = "aliyun,ap4220", "qcom,ipq4019";
+	model = "Aliyun AP4220";
 
 	aliases {
 		label-mac-device = &gmac;
@@ -60,7 +60,6 @@
 
 	reg_usb: regulator-usb {
 		compatible = "regulator-fixed";
-		enable-active-low;
 		gpios = <&tlmm 1 GPIO_ACTIVE_LOW>;
 
 		regulator-max-microvolt = <5000000>;
@@ -197,8 +196,6 @@
 	};
 
 	spi-nand@1 {
-		status = "okay";
-
 		compatible = "spi-nand";
 		reg = <1>;
 		spi-max-frequency = <24000000>;
@@ -359,11 +356,11 @@
 &wifi0 {
 	status = "okay";
 
-	qcom,ath10k-calibration-variant = "Alibaba-AP4220";
+	qcom,ath10k-calibration-variant = "Aliyun-AP4220";
 };
 
 &wifi1 {
 	status = "okay";
 
-	qcom,ath10k-calibration-variant = "Alibaba-AP4220";
+	qcom,ath10k-calibration-variant = "Aliyun-AP4220";
 };

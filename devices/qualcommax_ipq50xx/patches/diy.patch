@@ -1,27 +1,25 @@
 --- a/include/image-commands.mk
 +++ b/include/image-commands.mk
-@@ -494,6 +494,26 @@ define Build/lzma-no-dict
+@@ -494,6 +494,24 @@ define Build/lzma-no-dict
  	@mv $@.new $@
  endef
  
 +define Build/gl-factory
 +	$(eval GL_NAME := $(subst $(comma),_,$(word 1,$(SUPPORTED_DEVICES))))
-+	$(eval GL_INCLUDE := $(STAGING_DIR)/usr/include/glinet-uboot-scr)
-+	$(eval GL_SCRIPT := $(GL_INCLUDE)/$(GL_NAME).scr)
 +	$(eval GL_IMGK := $(KDIR_TMP)/$(DEVICE_IMG_PREFIX)-squashfs-factory.img)
 +	$(eval GL_ITS := $(KDIR_TMP)/$(GL_NAME).its)
-+	$(if $(wildcard $(GL_INCLUDE)/*),$(CP) $(GL_INCLUDE)/* $(KDIR_TMP)/) \
++	$(if $(wildcard $(BOOT_SCRIPT)),$(CP) $(BOOT_SCRIPT) $(KDIR_TMP)/) \
 +
 +	$(TOPDIR)/scripts/mkits-glinet.sh \
-+		$(if $(wildcard $(GL_SCRIPT)),-s $(GL_SCRIPT)) \
++		$(if $(and $(wildcard $(BOOT_SCRIPT)),\
++		$(findstring --with-uboot-scr,$(word 1,$(1)))),\
++		-s $(BOOT_SCRIPT)) \
 +		-f $(GL_IMGK) \
-+		-o $(GL_ITS)
++		-o $(GL_ITS) \
 +
 +	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage -f \
 +		$(GL_ITS) \
-+		$(GL_IMGK) \
-+
-+	$(RM) $(GL_ITS) $(GL_SCRIPT)
++		$(GL_IMGK)
 +endef
 +
  define Build/moxa-encode-fw
@@ -45,7 +43,7 @@
 
 --- a/target/linux/qualcommax/image/ipq50xx.mk
 +++ b/target/linux/qualcommax/image/ipq50xx.mk
-@@ -41,6 +41,54 @@ define Device/linksys_mx5500
+@@ -41,6 +41,55 @@ define Device/linksys_mx5500
  endef
  TARGET_DEVICES += linksys_mx5500
  
@@ -74,6 +72,7 @@
 +	NAND_SIZE := 128
 +	DEVICE_DTS_CONFIG := config@mp03.5-c1
 +	SUPPORTED_DEVICES += b3000
++	BOOT_SCRIPT:= glinet_gl-b3000.scr
 +	IMAGES := factory.img
 +	IMAGE/factory.img := append-ubi | gl-factory --with-uboot-scr | append-metadata
 +	DEVICE_PACKAGES := \
@@ -146,7 +145,9 @@
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
-@@ -1,7 +1,7 @@
+@@ -1,7 +1,9 @@
++. /lib/upgrade/common.sh
++
  PART_NAME=firmware
  REQUIRE_IMAGE_METADATA=1
  
@@ -155,36 +156,15 @@
  RAMFS_COPY_DATA='/etc/fw_env.config /var/lock/fw_printenv.lock'
  
  remove_oem_ubi_volume() {
-@@ -69,8 +69,126 @@ platform_check_image() {
+@@ -69,8 +71,105 @@ platform_check_image() {
  	return 0;
  }
  
 +glinet_validate_firmware() {
-+	local type='67'
-+	local ubi_magic='55 42 49 23'
-+	local img_magic='d0 0d fe ed'
-+	local sys_magic='73 79 73 75'
++	local type=$(identify_magic_long $(get_magic_long $1))
++	if [ "$type" = "unknown 73797375" ]; then type="sys"; fi
 +
-+	# ubi type firmware
-+	local is_ubi=$( hexdump -C -n 4 "$1" | grep "$ubi_magic" | wc -c )
-+	if [ ${is_ubi} == ${type} ]; then
-+		echo "ubi"
-+		return
-+	fi
-+	# img type firmware
-+	local is_fit=$( hexdump -C -n 4 "$1" | grep "$img_magic" | wc -c )
-+	if [ ${is_fit} == ${type} ]; then
-+		echo "fit"
-+		return
-+	fi
-+	# sysupgrade-tar type firmware
-+	local is_sys=$( hexdump -C -n 4 "$1" | grep "$sys_magic" | wc -c )
-+	if [ ${is_sys} == ${type} ]; then
-+		echo "sys"
-+		return
-+	fi
-+	# Invalid firmware
-+	echo "error"
++	echo "$type"
 +}
 +
 +glinet_do_fit_upgrade() {
@@ -367,3 +347,106 @@
  $(eval $(call generate-ipq-wifi-package,linksys_homewrk,Linksys HomeWRK))
  $(eval $(call generate-ipq-wifi-package,linksys_mr5500,Linksys MR5500))
  $(eval $(call generate-ipq-wifi-package,linksys_mr7350,Linksys MR7350))
+diff --git a/scripts/mkits-glinet.sh b/scripts/mkits-glinet.sh
+new file mode 100755
+index 00000000000000..d91c7ef1f94090
+--- /dev/null
++++ b/scripts/mkits-glinet.sh
+@@ -0,0 +1,96 @@
++#!/bin/sh
++#
++# Licensed under the terms of the GNU GPL License version 2 or later.
++#
++# Author: Peter Tyser <ptyser@xes-inc.com>
++#
++# U-Boot firmware supports the booting of images in the Flattened Image
++# Tree (FIT) format.  The FIT format uses a device tree structure to
++# describe a kernel image, device tree blob, ramdisk, etc.  This script
++# creates an Image Tree Source (.its file) which can be passed to the
++# 'mkimage' utility to generate an Image Tree Blob (.itb file).  The .itb
++# file can then be booted by U-Boot (or other bootloaders which support
++# FIT images).  See doc/uImage.FIT/howto.txt in U-Boot source code for
++# additional information on FIT images.
++#
++# ^ Original mkits.sh ^
++################################################################################
++#
++# **This script is a Modified Version of mkits.sh**
++# It has been moddified to produce legacy MultiFit format its files
++# This script is used,in combination with the oem uboot "flash.scr",to enable uboot
++# in Openwrt for some new devices.
++#
++# At this time, this script is intended for use with the GL.iNet GL-B3000 device only.
++# If more devices that deploy this method are dicovered, this script can be easily updated
++# to accomidate support for these additional devices.
++
++usage() {
++	printf "\nUsage: %s -s script -f firmware -d desc -o output" "$(basename "$0")"
++	printf "\n\t-s ==> path to uboot flash script '</path/to/device_name>.scr'"
++	printf "\n\t-f ==> path to firmware file: </path/to/firmware> )'"
++	printf "\n\t-o ==> **Optional**, set the output file name 'Default: flash.its'\n\n"
++	exit 1
++}
++
++REFERENCE_CHAR='-'
++SCRIPTNUM=1
++FIRMNUM=1
++
++while getopts ":s:f:o:" OPTION
++do
++	case $OPTION in
++		s ) SCRIPT=$OPTARG;;
++		f ) FIRM=$OPTARG;;
++		o ) OUTPUT=$OPTARG;;
++		* ) echo "Invalid option passed to '$0' (options:$*)"
++		usage;;
++	esac
++done
++
++# Make sure user entered required parameter
++if [ -z "${FIRM}" ]; then usage; fi
++
++# use default if no output file name provided
++if [ -z "${OUTPUT}" ]; then OUTPUT="flash.its"; fi
++
++# create uboot script node
++if [ -n "${SCRIPT}" ]; then
++SCRIPT_NODE="
++		script {
++			description = \"GL.iNET UBOOT UPGRADE V2\";
++			data = /incbin/(\"$(basename ${SCRIPT})\");
++			type = \"script\";
++			arch = \"arm\";
++			os = \"linux\";
++			compression = \"none\";
++			hash${REFERENCE_CHAR}1 {
++				algo = \"crc32\";
++			};
++		};
++"
++fi
++
++# Create a default, fully populated DTS file
++DATA="/dts-v1/;
++/ {
++	description = \"Flashing nand 800 20000\";
++	#address-cells = <1>;
++	images {
++		${SCRIPT_NODE}
++		ubi {
++			description = \"$(basename ${FIRM})\";
++			data = /incbin/(\"$(basename ${FIRM})\");
++			type = \"firmware\";
++			arch = \"arm\";
++			os = \"linux\";
++			compression = \"none\";
++			hash${REFERENCE_CHAR}1 {
++				algo = \"crc32\";
++			};
++		};
++	};
++};"
++
++# Write .its file to disk
++echo "$DATA" > "${OUTPUT}"
+
