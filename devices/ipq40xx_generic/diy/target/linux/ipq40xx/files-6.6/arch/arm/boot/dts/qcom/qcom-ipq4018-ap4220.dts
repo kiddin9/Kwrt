@@ -206,18 +206,8 @@
 			#size-cells = <1>;
 
 			partition@0 {
-				label = "rootfs1";
-				reg = <0x0 0x3000000>;
-			};
-
-			partition@3000000 {
-				label = "rootfs2";
-				reg = <0x3000000 0x3000000>;
-			};
-
-			partition@6000000 {
-				label = "usrdata";
-				reg = <0x6000000 0x2000000>;
+				label = "rootfs";
+				reg = <0x0 0x08000000>;
 			};
 		};
 	};

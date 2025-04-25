@@ -16,11 +16,11 @@
 +
 +define Device/jdcloud_re-sp-01b
 +  $(Device/dsa-migration)
-+  $(Device/uimage-lzma-loader)
-+  IMAGE_SIZE := 32448k
++  IMAGE_SIZE := 27328k
 +  DEVICE_VENDOR := JDCloud
 +  DEVICE_MODEL := RE-SP-01B
-+  DEVICE_PACKAGES := kmod-fs-ext4 kmod-mt7603 kmod-mt7615e kmod-mt7615-firmware kmod-sdhci-mt7620 kmod-usb3
++  DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615-firmware \
++	kmod-sdhci-mt7620 kmod-usb3
 + endef
 + TARGET_DEVICES += jdcloud_re-sp-01b
 +
@@ -157,6 +157,18 @@
  	mikrotik,routerboard-m33g|\
  	mts,wg430223|\
  	oraybox,x3a|\
+@@ -279,6 +279,11 @@ ramips_setup_macs()
+ 		lan_mac=$(mtd_get_mac_ascii u-boot-env ethaddr)
+ 		wan_mac=$(macaddr_add "$lan_mac" 1)
+ 		;;
++	jdcloud,re-sp-01b)
++		lan_mac=$(mtd_get_mac_ascii config mac)
++		wan_mac=$lan_mac
++		label_mac=$lan_mac
++		;;
+ 	linksys,e5600|\
+ 	linksys,ea6350-v4|\
+ 	linksys,ea7300-v1|\
 
 --- a/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/ramips/mt7621/base-files/lib/upgrade/platform.sh
@@ -187,156 +199,17 @@
  	;;
  esac
 
---- /dev/null
-+++ b/target/linux/ramips/dts/mt7621_jdcloud_re-sp-01b.dts
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+
-+#include "mt7621.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	compatible = "jdcloud,re-sp-01b", "mediatek,mt7621-soc";
-+	model = "JDCloud RE-SP-01B";
-+
-+	aliases {
-+		led-boot = &led_red;
-+		led-failsafe = &led_red;
-+		led-running = &led_green;
-+		led-upgrade = &led_blue;
-+		label-mac-device = &gmac0;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200";
-+	};
-+
-+	keys {
-+		compatible = "gpio-keys";
-+
-+		reset {
-+			label = "reset";
-+			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_RESTART>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led_red: red {
-+			label = "red:sys";
-+			gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
-+			panic-indicator;
-+		};
-+
-+		led_green: green {
-+			label = "green:sys";
-+			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led_blue: blue {
-+			label = "blue:sys";
-+			gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&sdhci {
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "u-boot";
-+				reg = <0x0 0x30000>;
-+				read-only;
-+			};
-+
-+			config: partition@30000 {
-+				label = "config";
-+				reg = <0x30000 0x10000>;
-+				read-only;
-+			};
-+
-+			factory: partition@40000 {
-+				label = "factory";
-+				reg = <0x40000 0x10000>;
-+				read-only;
-+			};
-+
-+			partition@50000 {
-+				compatible = "denx,uimage";
-+				label = "firmware";
-+				reg = <0x50000 0x1fb0000>;
-+			};
-+		};
-+	};
-+};
-+
-+&gmac0 {
-+	mtd-mac-address-ascii = <&config 0x4429>;
-+};
-+
-+&switch0 {
-+	ports {
-+		port@0 {
-+			status = "okay";
-+			label = "wan";
-+		};
-+
-+		port@1 {
-+			status = "okay";
-+			label = "lan1";
-+		};
-+
-+		port@2 {
-+			status = "okay";
-+			label = "lan2";
-+		};
-+	};
-+};
-+
-+&pcie {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	wifi@0,0 {
-+		reg = <0x0000 0 0 0 0>;
-+		mtd-mac-address-ascii = <&config 0x4429>;
-+		mediatek,mtd-eeprom = <&factory 0x0>;
-+	};
-+};
-+
-+&pcie1 {
-+	wifi@0,0 {
-+		reg = <0x0000 0 0 0 0>;
-+		mtd-mac-address-ascii = <&config 0x4429>;
-+		mtd-mac-address-increment = <0x80>;
-+		mtd-mac-address-increment-byte = <3>;
-+		mediatek,mtd-eeprom = <&factory 0x8000>;
-+		ieee80211-freq-limit = <5000000 6000000>;
-+	};
-+};
-+
-+&state_default {
-+	gpio {
-+		groups = "uart2", "uart3", "wdt";
-+		function = "gpio";
-+	};
-+};
+--- a/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
++++ b/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
+@@ -126,6 +126,11 @@ case "$board" in
+ 		[ "$PHYNBR" = "1" ] && \
+ 			macaddr_setbit_la "$(mtd_get_mac_binary Factory 0x4)" > /sys${DEVPATH}/macaddress
+ 		;;
++	jdcloud,re-sp-01b)
++		hw_mac_addr=$(mtd_get_mac_ascii config mac)
++		[ "$PHYNBR" = "0" ] && echo $hw_mac_addr > /sys${DEVPATH}/macaddress
++		[ "$PHYNBR" = "1" ] && macaddr_add $hw_mac_addr 0x800000 > /sys${DEVPATH}/macaddress
++		;;
+ 	keenetic,kn-3510)
+ 		[ "$PHYNBR" = "1" ] && \
+ 			macaddr_setbit_la "$(mtd_get_mac_binary rf-eeprom 0x4)" > /sys${DEVPATH}/macaddress
