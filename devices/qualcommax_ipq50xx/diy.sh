@@ -11,5 +11,5 @@ git_clone_path main https://github.com/openwrt/openwrt target/linux/qualcommax t
 wget -N https://github.com/openwrt/openwrt/raw/main/target/linux/generic/kernel-6.6 -P include/
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic/hack-6.6
-rm -rf target/linux/generic/hack-6.6/{767-net-phy-realtek-add-led*,220-arm-gc_sections.patch,790-SFP-GE-T-ignore-TX_FAULT.patch}
+rm -rf target/linux/generic/hack-6.6/{767-net-phy-realtek-add-led*,220-arm-gc_sections.patch}
 wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.6/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.6/

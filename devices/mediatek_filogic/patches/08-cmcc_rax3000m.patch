@@ -26,13 +26,13 @@
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-@@ -24,6 +24,9 @@ case "$FIRMWARE" in
- 	;;
- "mediatek/mt7981_eeprom_mt7976_dbdc.bin")
- 	case "$board" in
+@@ -13,6 +13,9 @@ case "$FIRMWARE" in
+ 		ln -sf /tmp/tp_data/MT7981_EEPROM.bin \
+ 			/lib/firmware/$FIRMWARE
+ 		;;
 +	cmcc,rax3000m-emmc|\
 +	cmcc,xr30-emmc|\
-+	sl,3000-emmc |\
++	sl,3000-emmc|\
  	ubnt,unifi-6-plus)
  		caldata_extract_mmc "factory" 0x0 0x1000
  		;;

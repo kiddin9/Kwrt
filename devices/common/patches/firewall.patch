@@ -55,10 +55,17 @@
 
 --- a/package/feeds/luci/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
 +++ b/package/feeds/luci/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js
-@@ -63,6 +63,43 @@ return view.extend({
- 				o = s.option(form.Flag, 'fullcone6', _('Enable FullCone NAT6'));
- 		}
+@@ -58,6 +58,50 @@ return view.extend({
  
+ 		o = s.option(form.Flag, 'drop_invalid', _('Drop invalid packets'));
+ 
++		if (L.hasSystemFeature('fullcone')) {
++			o = s.option(form.Flag, 'fullcone', _('Enable FullCone NAT'));
++			if (fw4)
++				o = s.option(form.Flag, 'fullcone6', _('Enable FullCone NAT6'));
++				o.depends('fullcone', '1');
++		}
++
 +		o = s.option(form.Flag, 'expose_wan', _('Expose WAN'), _('Danger! Proceed at your own risk.'));
 +
 +		o = s.option(form.Value, 'export', _('Ports to Expose'), _('Multiple ports can be, separated by spaces, format: 80 81 82'));
