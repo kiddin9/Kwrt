@@ -10,51 +10,6 @@
    $(call AddDepends/crypto)
  endef
 
---- a/package/feeds/kiddin9/qca-nss-ecm/Makefile
-+++ b/package/feeds/kiddin9/qca-nss-ecm/Makefile
-@@ -119,10 +119,6 @@ ifneq ($(CONFIG_PACKAGE_kmod-nat46),)
- ECM_MAKE_OPTS+=ECM_INTERFACE_MAP_T_ENABLE=y
- endif
- 
--ifneq ($(CONFIG_PACKAGE_kmod-ipsec),)
--ECM_MAKE_OPTS+=ECM_INTERFACE_IPSEC_ENABLE=y
--endif
--
- ifneq ($(CONFIG_PACKAGE_kmod-pppoe),)
- ECM_MAKE_OPTS+=ECM_INTERFACE_PPPOE_ENABLE=y \
- 			   ECM_INTERFACE_PPTP_ENABLE=y \
-
---- a/package/feeds/kiddin9/qca-nss-drv/Makefile
-+++ b/package/feeds/kiddin9/qca-nss-drv/Makefile
-@@ -186,10 +186,8 @@ ifndef CONFIG_NSS_DRV_IGS_ENABLE
- endif
- 
- ifndef CONFIG_NSS_DRV_IPSEC_ENABLE
--ifndef CONFIG_PACKAGE_kmod-ipsec
-    DRV_MAKE_OPTS += NSS_DRV_IPSEC_ENABLE=n
- endif
--endif
- 
- ifndef CONFIG_NSS_DRV_IPV4_REASM_ENABLE
-    DRV_MAKE_OPTS += NSS_DRV_IPV4_REASM_ENABLE=n
-
-new file mode 100644
-index 0000000000..2456fad245
---- /dev/null
-+++ b/target/linux/qualcommax/patches-6.12/9999-fix-net_dev_struct_check.patch
-@@ -0,0 +1,11 @@
-+--- a/net/core/dev.c
-++++ b/net/core/dev.c
-+@@ -12105,7 +12105,7 @@ static void __init net_dev_struct_check(void)
-+ #ifdef CONFIG_NET_XGRESS
-+ 	CACHELINE_ASSERT_GROUP_MEMBER(struct net_device, net_device_read_tx, tcx_egress);
-+ #endif
-+-	CACHELINE_ASSERT_GROUP_SIZE(struct net_device, net_device_read_tx, 160);
-++	CACHELINE_ASSERT_GROUP_SIZE(struct net_device, net_device_read_tx, 256);
-+ 
-+ 	/* TXRX read-mostly hotpath */
-+ 	CACHELINE_ASSERT_GROUP_MEMBER(struct net_device, net_device_read_txrx, lstats);
-
 --- a/target/linux/qualcommax/image/ipq60xx.mk
 +++ b/target/linux/qualcommax/image/ipq60xx.mk
 @@ -236,7 +236,7 @@ define Device/jdcloud_re-ss-01
