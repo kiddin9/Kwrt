@@ -15,7 +15,7 @@ sed -i "/KERNEL_TESTING_PATCHVER/d" target/linux/qualcommax/Makefile
 
 make defconfig
 git_clone_path master https://github.com/coolsnowwolf/lede package/qca
-sed -i "/CONFIG_ALL_NONSHARED=y/d" .config
 sed -i "/ECM_INTERFACE_MAP_T_ENABLE/d"  package/qca/qca-nss-ecm/Makefile
+sed -i "/CONFIG_ALL_NONSHARED=y/d" .config
 
 
