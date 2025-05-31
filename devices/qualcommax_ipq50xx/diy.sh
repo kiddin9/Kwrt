@@ -7,6 +7,7 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 rm -rf package/boot package/kernel/qca* package/firmware/ipq-wifi package/firmware/ath11k-firmware target/linux/qualcommax target/linux/generic
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/qualcommax target/linux/generic package/boot package/qca package/firmware/ipq-wifi package/firmware/ath11k-firmware
+rm -rf package/qca/qca-nss-crypto
 
 wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.6 -P include/
 
