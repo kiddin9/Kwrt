@@ -13,3 +13,6 @@ wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.6 -P in
 
 sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/qualcommax/Makefile
 sed -i "/KERNEL_TESTING_PATCHVER/d" target/linux/qualcommax/Makefile
+
+sed -i "/ECM_INTERFACE_MAP_T_ENABLE/d"  package/qca/qca-nss-ecm/Makefile
+sed -i "/ECM_INTERFACE_OVPN_ENABLE/d"  package/qca/qca-nss-ecm/Makefile
