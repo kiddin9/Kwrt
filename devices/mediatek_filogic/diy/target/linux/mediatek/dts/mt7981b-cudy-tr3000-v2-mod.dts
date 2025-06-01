@@ -4,8 +4,8 @@
 #include "mt7981b-cudy-tr3000-v1.dts"
 
 / {
-	model = "Cudy TR3000 v1 112M";
-	compatible = "cudy,tr3000-mod", "mediatek,mt7981";
+	model = "Cudy TR3000 v2 256MB";
+	compatible = "cudy,tr3000-v2-mod", "mediatek,mt7981";
 };
 
 &spi0 {
@@ -13,9 +13,8 @@
 		partitions {
 			partition@5c0000 {
 				label = "ubi";
-				reg = <0x5c0000 0x7000000>;
+				reg = <0x5c0000 0xe280000>;
 			};
 		};
 	};
 };
-

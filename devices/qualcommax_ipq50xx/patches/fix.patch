@@ -1,0 +1,24 @@
+--- a/package/kernel/linux/modules/netdevices.mk
++++ b/package/kernel/linux/modules/netdevices.mk
+@@ -450,7 +450,7 @@ define KernelPackage/phy-realtek
+    KCONFIG:=CONFIG_REALTEK_PHY \
+     CONFIG_REALTEK_PHY_HWMON=y
+    DEPENDS:=+kmod-libphy +kmod-hwmon-core
+-   FILES:=$(LINUX_DIR)/drivers/net/phy/realtek/realtek.ko
++   FILES:=$(LINUX_DIR)/drivers/net/phy/realtek.ko
+    AUTOLOAD:=$(call AutoLoad,18,realtek,1)
+ endef
+
+--- a/package/kernel/linux/modules/netfilter.mk
++++ b/package/kernel/linux/modules/netfilter.mk
+@@ -330,7 +330,7 @@ define KernelPackage/ipt-ipopt
+   KCONFIG:=$(KCONFIG_IPT_IPOPT)
+   FILES:=$(foreach mod,$(IPT_IPOPT-m),$(LINUX_DIR)/net/$(mod).ko)
+   AUTOLOAD:=$(call AutoProbe,$(notdir $(IPT_IPOPT-m)))
+-  $(call AddDepends/ipt)
++  $(call AddDepends/ipt,+kmod-nf-conntrack)
+ endef
+ 
+ define KernelPackage/ipt-ipopt/description
+
+ 

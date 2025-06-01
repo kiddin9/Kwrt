@@ -288,3 +288,22 @@
  		network() {
  			return this.assert(this.apply('uciname') || this.apply('hostname') || this.apply('ip4addr') || this.apply('ip6addr'),
  				_('valid UCI identifier, hostname or IP address range'));
+
+--- a/package/feeds/luci/luci-base/root/usr/share/luci/menu.d/luci-base.json
++++ b/package/feeds/luci/luci-base/root/usr/share/luci/menu.d/luci-base.json
+@@ -50,6 +50,15 @@
+ 		}
+ 	},
+ 
++	"admin/nas": {
++		"title": "NAS",
++		"order": 60,
++		"action": {
++			"type": "firstchild",
++			"recurse": true
++		}
++	},
++
+ 	"admin/vpn": {
+ 		"title": "VPN",
+ 		"order": 70,

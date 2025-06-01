@@ -304,9 +304,16 @@ jobs:
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
 
+    - name: Upload firmware for artifact
+      uses: actions/upload-artifact@main
+      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
+      with:
+        name: ${{ env.VERSION }}_${{matrix.target}}
+        path: |
+          openwrt/bin/targets/
+
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
-      continue-on-error: true
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -316,14 +323,6 @@ jobs:
         REMOTE_PORT: ${{ secrets.SERVER_PORT }}
         REMOTE_USER: root
         TARGET: "/www/wwwroot/dl.openwrt.ai/releases/tmp/"
-
-    - name: Upload firmware for artifact
-      uses: actions/upload-artifact@main
-      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
-      with:
-        name: ${{ env.VERSION }}_${{matrix.target}}
-        path: |
-          openwrt/bin/targets/
 
     - name: Create release
       id: create_release
