@@ -291,13 +291,22 @@
 
 --- a/package/feeds/luci/luci-base/root/usr/share/luci/menu.d/luci-base.json
 +++ b/package/feeds/luci/luci-base/root/usr/share/luci/menu.d/luci-base.json
-@@ -50,6 +50,15 @@
+@@ -50,6 +50,24 @@
  		}
  	},
  
 +	"admin/nas": {
 +		"title": "NAS",
 +		"order": 60,
++		"action": {
++			"type": "firstchild",
++			"recurse": true
++		}
++	},
++
++	"admin/control": {
++		"title": "Control",
++		"order": 61,
 +		"action": {
 +			"type": "firstchild",
 +			"recurse": true

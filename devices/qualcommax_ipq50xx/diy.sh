@@ -4,7 +4,7 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/boot package/kernel/qca* package/firmware/ipq-wifi package/firmware/ath11k-firmware target/linux/qualcommax target/linux/generic
+rm -rf package/boot package/kernel/qca* package/firmware/ipq-wifi package/firmware/ath11k-firmware target/linux/qualcommax target/linux/generic package/devel/perf
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/qualcommax target/linux/generic package/boot package/qca package/firmware/ipq-wifi package/firmware/ath11k-firmware
 
