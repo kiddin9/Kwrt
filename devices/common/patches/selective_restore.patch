@@ -242,9 +242,9 @@ index 75817d178aea18..4a51304f771e20 100755
 --- a/package/base-files/files/sbin/sysupgrade
 +++ b/package/base-files/files/sbin/sysupgrade
 @@ -22,6 +22,8 @@ CONF_BACKUP_LIST=0
+ CONF_BACKUP_LIST=0
  CONF_BACKUP=
  CONF_RESTORE=
- USE_CURR_PART=0
 +CONF_SELECTIVE_RESTORE=
 +CONF_SELECTIVE_RESTORE_FILELIST=
  NEED_IMAGE=
