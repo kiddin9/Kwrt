@@ -112,7 +112,7 @@
 +	ifeq ($(shell grep -q small_flash $(TOPDIR)/repositories.conf || echo "not_found"),not_found)
 +        $(shell echo "`grep kwrt_kiddin9 $(TOPDIR)/repositories.conf | sed -e 's/kiddin9/small_flash/g'`" >>$(TOPDIR)/repositories.conf)
 +	endif
-+	ifneq ($(findstring /data/bcache/,$(BIN_DIR)),)
++	ifneq ($(findstring /www/wwwroot/,$(BIN_DIR)),)
 +		BUILD_PACKAGES += -luci-app-istorex -luci-theme-argon -htop -bash -openssh-sftp-server -luci-nginx luci-ssl
 +	endif
 +else
@@ -124,7 +124,7 @@
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
-@@ -155,7 +182,6 @@ _call_image: staging_dir/host/.prereq-build
+@@ -155,14 +182,16 @@ _call_image: staging_dir/host/.prereq-build
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
@@ -132,15 +132,17 @@
  	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
  	$(MAKE) package_reload
  	$(MAKE) package_install
-@@ -163,6 +189,7 @@ _call_image: staging_dir/host/.prereq-build
+ 	$(MAKE) -s prepare_rootfs
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
++	ifeq ($(findstring /www/wwwroot/,$(BIN_DIR)),)
  	$(MAKE) -s checksum
++	endif
 +	rm -rf $(KERNEL_BUILD_DIR)/tmp $(KERNEL_BUILD_DIR)/root.* $(TARGET_DIR) $(TARGET_DIR_ORIG)
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -230,9 +257,17 @@ package_install: FORCE
+@@ -230,9 +259,17 @@ package_install: FORCE
  	@echo
  	@echo Installing packages...
  ifeq ($(CONFIG_USE_APK),)
@@ -159,7 +161,7 @@
  else
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/libc-*.apk $(PACKAGE_DIR)/libc-*.apk))
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/kernel-*.apk $(PACKAGE_DIR)/kernel-*.apk))
-@@ -260,16 +295,19 @@ else
+@@ -260,16 +297,19 @@ else
  	)
  endif
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
