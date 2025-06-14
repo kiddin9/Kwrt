@@ -12,21 +12,21 @@
 
 --- a/target/linux/qualcommax/image/ipq60xx.mk
 +++ b/target/linux/qualcommax/image/ipq60xx.mk
-@@ -236,7 +236,7 @@ define Device/jdcloud_re-ss-01
+@@ -312,7 +312,7 @@ define Device/jdcloud_re-ss-01
  	$(call Device/FitImage)
  	$(call Device/EmmcImage)
  	DEVICE_VENDOR := JDCloud
 -	DEVICE_MODEL := RE-SS-01
 +	DEVICE_MODEL := AX1800 Pro
- 	BLOCKSIZE := 128k
  	KERNEL_SIZE := 6144k
+ 	BLOCKSIZE := 128k
  	SOC := ipq6000
-@@ -250,7 +250,7 @@ define Device/jdcloud_re-cs-02
+@@ -326,7 +326,7 @@ define Device/jdcloud_re-cs-02
  	$(call Device/FitImage)
  	$(call Device/EmmcImage)
  	DEVICE_VENDOR := JDCloud
 -	DEVICE_MODEL := RE-CS-02
 +	DEVICE_MODEL := AX6600
- 	BLOCKSIZE := 128k
  	KERNEL_SIZE := 6144k
+ 	BLOCKSIZE := 128k
  	SOC := ipq6010
