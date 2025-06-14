@@ -135,9 +135,9 @@
  	$(MAKE) -s prepare_rootfs
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
-+	ifeq ($(findstring /www/wwwroot/,$(BIN_DIR)),)
++ifeq ($(findstring /www/wwwroot/,$(BIN_DIR)),)
  	$(MAKE) -s checksum
-+	endif
++endif
 +	rm -rf $(KERNEL_BUILD_DIR)/tmp $(KERNEL_BUILD_DIR)/root.* $(TARGET_DIR) $(TARGET_DIR_ORIG)
  
  _call_manifest: FORCE
