@@ -30,3 +30,20 @@
  	KERNEL_SIZE := 6144k
  	BLOCKSIZE := 128k
  	SOC := ipq6010
+diff --git a/target/linux/qualcommax/patches-6.12/999-fix-netdev-cacheline-size.patch b/target/linux/qualcommax/patches-6.12/999-fix-netdev-cacheline-size.patch
+new file mode 100644
+index 00000000000000..1481f8844bf45e
+--- /dev/null
++++ b/target/linux/qualcommax/patches-6.12/999-fix-netdev-cacheline-size.patch
+@@ -0,0 +1,11 @@
++--- a/net/core/dev.c
+++++ b/net/core/dev.c
++@@ -12060,7 +12060,7 @@ static void __init net_dev_struct_check(void)
++ #ifdef CONFIG_NET_XGRESS
++ 	CACHELINE_ASSERT_GROUP_MEMBER(struct net_device, net_device_read_tx, tcx_egress);
++ #endif
++-	CACHELINE_ASSERT_GROUP_SIZE(struct net_device, net_device_read_tx, 160);
+++	CACHELINE_ASSERT_GROUP_SIZE(struct net_device, net_device_read_tx, 192);
++ 
++ 	/* TXRX read-mostly hotpath */
++ 	CACHELINE_ASSERT_GROUP_MEMBER(struct net_device, net_device_read_txrx, lstats);
