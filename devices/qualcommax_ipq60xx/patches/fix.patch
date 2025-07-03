@@ -1,32 +1,13 @@
---- a/package/kernel/linux/modules/crypto.mk
-+++ b/package/kernel/linux/modules/crypto.mk
-@@ -302,7 +302,7 @@ define KernelPackage/crypto-gf128
-   KCONFIG:= \
- 	CONFIG_CRYPTO_GF128MUL \
- 	CONFIG_CRYPTO_LIB_GF128MUL
--  FILES:=$(LINUX_DIR)/lib/crypto/gf128mul.ko
-+  FILES:=$(LINUX_DIR)/crypto/gf128mul.ko
-   AUTOLOAD:=$(call AutoLoad,09,gf128mul)
-   $(call AddDepends/crypto)
+--- a/package/kernel/linux/modules/netfilter.mk
++++ b/package/kernel/linux/modules/netfilter.mk
+@@ -330,7 +330,7 @@ define KernelPackage/ipt-ipopt
+   KCONFIG:=$(KCONFIG_IPT_IPOPT)
+   FILES:=$(foreach mod,$(IPT_IPOPT-m),$(LINUX_DIR)/net/$(mod).ko)
+   AUTOLOAD:=$(call AutoProbe,$(notdir $(IPT_IPOPT-m)))
+-  $(call AddDepends/ipt)
++  $(call AddDepends/ipt,+kmod-nf-conntrack)
  endef
+ 
+ define KernelPackage/ipt-ipopt/description
 
---- a/target/linux/qualcommax/image/ipq60xx.mk
-+++ b/target/linux/qualcommax/image/ipq60xx.mk
-@@ -236,7 +236,7 @@ define Device/jdcloud_re-ss-01
- 	$(call Device/FitImage)
- 	$(call Device/EmmcImage)
- 	DEVICE_VENDOR := JDCloud
--	DEVICE_MODEL := RE-SS-01
-+	DEVICE_MODEL := AX1800 Pro
- 	BLOCKSIZE := 128k
- 	KERNEL_SIZE := 6144k
- 	SOC := ipq6000
-@@ -250,7 +250,7 @@ define Device/jdcloud_re-cs-02
- 	$(call Device/FitImage)
- 	$(call Device/EmmcImage)
- 	DEVICE_VENDOR := JDCloud
--	DEVICE_MODEL := RE-CS-02
-+	DEVICE_MODEL := AX6600
- 	BLOCKSIZE := 128k
- 	KERNEL_SIZE := 6144k
- 	SOC := ipq6010
+ 
