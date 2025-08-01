@@ -20,3 +20,15 @@
  	BLOCKSIZE := 128k
  	PAGESIZE := 2048
  	SOC := ipq6000
+diff --git a/target/linux/qualcommax/files/arch/arm64/boot/dts/qcom/ipq6000-ax18.dts b/target/linux/qualcommax/files/arch/arm64/boot/dts/qcom/ipq6000-ax18.dts
+index e887ff87a..b539d8dbb 100644
+--- a/target/linux/qualcommax/files/arch/arm64/boot/dts/qcom/ipq6000-ax18.dts
++++ b/target/linux/qualcommax/files/arch/arm64/boot/dts/qcom/ipq6000-ax18.dts
+@@ -213,6 +213,6 @@
+ };
+ 
+ &wifi {
+-	status = "disabled";
++	status = "okay";
+ 	qcom,ath11k-fw-memory-mode = <2>;
+ };

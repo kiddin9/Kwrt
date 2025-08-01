@@ -271,12 +271,13 @@ diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/t
 index b5e5eca6afd12..33e52743d5bfe 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -40,6 +40,8 @@
+@@ -40,6 +40,9 @@
  	abt,asr3000|\
  	cmcc,rax3000m*|\
  	cmcc,xr30*|\
 +	konka,komi-a31|\
 +	imou,lc-hx3001|\
++	umi,uax3000e|\
  	h3c,magic-nx30-pro|\
  	zbtlink,zbt-z8103ax)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1

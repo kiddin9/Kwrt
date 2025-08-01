@@ -356,13 +356,11 @@ diff --git a/feeds/luci/modules/luci-mod-system/root/usr/share/luci/menu.d/luci-
 index ebae989d0e00..b4eba7862444 100644
 --- a/feeds/luci/modules/luci-mod-system/root/usr/share/luci/menu.d/luci-mod-system.json
 +++ b/feeds/luci/modules/luci-mod-system/root/usr/share/luci/menu.d/luci-mod-system.json
-@@ -98,6 +98,18 @@
+@@ -98,6 +98,16 @@
  		}
  	},
  
 +	"admin/system/crontabhelper": {
-+		"title": "Scheduled Tasks Helper",
-+		"order": 47,
 +		"action": {
 +			"type": "view",
 +			"path": "system/crontabhelper"
@@ -375,3 +373,14 @@ index ebae989d0e00..b4eba7862444 100644
  	"admin/system/mounts": {
  		"title": "Mount Points",
  		"order": 50,
+
+--- a/feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/crontab.js
++++ b/feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/crontab.js
+@@ -27,6 +27,7 @@ return view.extend({
+ 		return E([
+ 			E('h2', _('Scheduled Tasks')),
+ 			E('p', { 'class': 'cbi-section-descr' }, _('This is the system crontab in which scheduled tasks can be defined.')),
++			E('p', { 'class': 'cbi-section-descr' }, _('<a href="/cgi-bin/luci/admin/system/crontabhelper"> Scheduled Tasks Helper</a>')),
+ 			E('p', {}, E('textarea', { 'style': 'width:100%', 'rows': 25, 'disabled': isReadonlyView }, [ crontab != null ? crontab : '' ]))
+ 		]);
+ 	},

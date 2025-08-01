@@ -10,36 +10,28 @@
  	h3c,magic-nx30-pro|\
  	nokia,ea0326gmp|\
  	zbtlink,zbt-z8103ax)
-@@ -137,6 +137,12 @@ mediatek_setup_macs()
- 	bananapi,bpi-r4)
- 		wan_mac=$(macaddr_add $(cat /sys/class/net/eth0/address) 1)
- 		;;
-+	cmcc,rax3000m-emmc|\
-+	cmcc,xr30-emmc)
-+		wan_mac=$(mmc_get_mac_binary factory 0x2a)
-+		lan_mac=$(mmc_get_mac_binary factory 0x24)
-+		label_mac=$wan_mac
-+		;;
- 	h3c,magic-nx30-pro)
- 		wan_mac=$(mtd_get_mac_ascii pdt_data_1 ethaddr)
- 		lan_mac=$(macaddr_add "$wan_mac" 1)
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-@@ -13,6 +13,9 @@ case "$FIRMWARE" in
+@@ -13,9 +13,14 @@ case "$FIRMWARE" in
  		ln -sf /tmp/tp_data/MT7981_EEPROM.bin \
  			/lib/firmware/$FIRMWARE
  		;;
-+	cmcc,rax3000m-emmc|\
-+	cmcc,xr30-emmc|\
-+	sl,3000-emmc|\
++        sl,3000-emmc|\
++        umi,uax3000e|\
  	ubnt,unifi-6-plus)
  		caldata_extract_mmc "factory" 0x0 0x1000
  		;;
++        sl,3000)
++		caldata_extract_mtd "Factory" 0x0 0x1000
++		;;
+ 	esac
+ 	;;
+ "mediatek/mt7986_eeprom_mt7975_dual.bin")
 
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -280,7 +280,64 @@ define Device/cmcc_rax3000m
+@@ -280,7 +280,67 @@ define Device/cmcc_rax3000m
    ARTIFACT/nand-preloader.bin := mt7981-bl2 spim-nand-ddr4
    ARTIFACT/nand-bl31-uboot.fip := mt7981-bl31-uboot cmcc_rax3000m-nand
  endef
@@ -70,6 +62,9 @@
 +  DEVICE_DTS_DIR := ../dts
 +  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
 +	e2fsprogs f2fsck mkf2fs losetup kmod-fs-f2fs kmod-mmc
++  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
++  KERNEL_INITRAMFS := kernel-bin | lzma | \
++	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 +endef
 +TARGET_DEVICES += cmcc_rax3000m-emmc

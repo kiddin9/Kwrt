@@ -9,5 +9,3 @@
  endef
  
  define KernelPackage/ipt-ipopt/description
-
- 

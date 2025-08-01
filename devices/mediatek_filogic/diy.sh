@@ -5,7 +5,7 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 #bash $SHELL_FOLDER/../common/kernel_6.6.sh
 
-sed -i '/bootargs-.* = ".*root=\/dev\/fit0 rootwait";/d' target/linux/mediatek/dts/*
+sed -i -E -e 's/ ?root=\/dev\/fit0 rootwait//' -e "/rootdisk =/d" -e '/bootargs.* = ""/d' target/linux/mediatek/dts/*{qihoo-360t7,netcore-n60,h3c-magic-nx30-pro,jdcloud-re-cp-03,cmcc-rax3000m,jcg-q30-pro,tplink-tl-xdr*}.dts
 
 find target/linux/mediatek/filogic/base-files/ -type f -exec sed -i "s/-stock//g" {} \;
 find target/linux/mediatek/base-files/ -type f -exec sed -i "s/-stock//g" {} \;

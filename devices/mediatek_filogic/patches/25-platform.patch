@@ -1,6 +1,6 @@
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -66,30 +66,18 @@ platform_do_upgrade() {
+@@ -66,31 +66,19 @@ platform_do_upgrade() {
  	local board=$(board_name)
  
  	case "$board" in
@@ -11,6 +11,7 @@
  	bananapi,bpi-r4-poe|\
  	cmcc,a10-ubootmod|\
 -	cmcc,rax3000m|\
+ 	cudy,tr3000-v1-ubootmod|\
  	gatonetworks,gdsp|\
 -	h3c,magic-nx30-pro|\
 -	jcg,q30-pro|\
@@ -31,7 +32,7 @@
  	xiaomi,mi-router-ax3000t-ubootmod|\
  	xiaomi,redmi-router-ax6000-ubootmod|\
  	xiaomi,mi-router-wr30u-ubootmod|\
-@@ -160,13 +148,6 @@ platform_do_upgrade() {
+@@ -169,13 +157,6 @@ platform_do_upgrade() {
  			;;
  		esac
  		;;

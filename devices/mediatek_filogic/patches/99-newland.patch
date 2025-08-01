@@ -1,0 +1,105 @@
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -12,6 +12,7 @@ mediatek_setup_interfaces()
+ 	cmcc,rax3000m|\
+ 	h3c,magic-nx30-pro|\
+ 	netis,nx31|\
++	newland,nl-wr8103|\
+ 	nokia,ea0326gmp|\
+ 	mercusys,mr80x-v3|\
+ 	routerich,ax3000-v1|\
+@@ -190,6 +191,11 @@ mediatek_setup_macs()
+ 		lan_mac=$(mtd_get_mac_ascii u-boot-env mac)
+ 		label_mac=$lan_mac
+ 		;;
++	newland,nl-wr8103)
++ 		label_mac=$(mtd_get_mac_binary Factory 0x04)		
++ 		wan_mac=$(macaddr_add "$label_mac" -2)
++ 		lan_mac=$label_mac
++ 		;;
+ 	qihoo,360t7)
+ 		lan_mac=$(mtd_get_mac_ascii factory lanMac)
+ 		wan_mac=$(macaddr_add "$lan_mac" 1)
+
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+@@ -181,6 +181,26 @@ case "$board" in
+ 		[ "$PHYNBR" = "0" ] && echo "$addr" > /sys${DEVPATH}/macaddress
+ 		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
+ 		;;
++        sl,3000)
++		label_mac=$(mtd_get_mac_binary Factory 0x04)
++		[ "$PHYNBR" = "0" ] && macaddr_add $label_mac 1 > /sys${DEVPATH}/macaddress
++		[ "$PHYNBR" = "1" ] && macaddr_add $label_mac 2 > /sys${DEVPATH}/macaddress
++		;;
++        sl,3000-emmc)
++		label_mac=$(mmc_get_mac_binary factory 0x04)
++		[ "$PHYNBR" = "0" ] && macaddr_add $label_mac 1 > /sys${DEVPATH}/macaddress
++		[ "$PHYNBR" = "1" ] && macaddr_add $label_mac 2 > /sys${DEVPATH}/macaddress
++		;;
++        umi,uax3000e)
++		addr=$(mmc_get_mac_binary factory 0x24)
++		[ "$PHYNBR" = "0" ] && macaddr_add $addr > /sys${DEVPATH}/macaddress
++		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
++		;;
++        newland,nl-wr8103)
++		addr=$(mtd_get_mac_binary Factory 0x0A)
++		[ "$PHYNBR" = "0" ] && macaddr_add $addr > /sys${DEVPATH}/macaddress
++		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
++		;;
+ 	routerich,ax3000|\
+ 	routerich,ax3000-ubootmod|\
+ 	zbtlink,zbt-z8102ax|\
+
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -1426,6 +1426,38 @@ define Device/netis_nx31
+ endef
+ TARGET_DEVICES += netis_nx31
+ 
++define Device/newland_nl-wr8103
++  DEVICE_VENDOR := Newland
++  DEVICE_MODEL := NL-WR8103
++  DEVICE_DTS := mt7981b-newland-nl-wr8103
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
++  UBINIZE_OPTS := -E 5
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  IMAGE_SIZE := 116736k
++  KERNEL_IN_UBI := 1  
++  IMAGES += factory.bin
++  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += newland_nl-wr8103
++
++define Device/umi_uax3000e
++  DEVICE_VENDOR := UMI
++  DEVICE_MODEL := UAX3000E
++  DEVICE_DTS := mt7981b-umi-uax3000e
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware \
++	kmod-usb-net-cdc-mbim kmod-usb-net-qmi-wwan kmod-usb-serial-option \
++	kmod-usb3 blkid blockdev fdisk f2fsck mkf2fs kmod-mmc mmc-utils
++  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
++  KERNEL_INITRAMFS := kernel-bin | lzma | \
++	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += umi_uax3000e
++
+ define Device/nokia_ea0326gmp
+   DEVICE_VENDOR := Nokia
+   DEVICE_MODEL := EA0326GMP
+
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -113,6 +113,7 @@ platform_do_upgrade() {
+ 	smartrg,sdg-8632|\
+ 	smartrg,sdg-8733|\
+ 	smartrg,sdg-8733a|\
++	umi,uax3000e|\
+ 	smartrg,sdg-8734)
+ 		CI_KERNPART="kernel"
+ 		CI_ROOTPART="rootfs"

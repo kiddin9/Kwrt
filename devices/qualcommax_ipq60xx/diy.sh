@@ -4,9 +4,9 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/boot package/kernel/qca* package/firmware/ipq-wifi package/firmware/ath11k-firmware target/linux/qualcommax target/linux/generic package/devel/perf
+rm -rf package/boot package/kernel/qca* package/firmware/ipq-wifi target/linux/qualcommax target/linux/generic package/devel/perf
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/qualcommax target/linux/generic package/boot package/qca package/firmware/ipq-wifi package/firmware/ath11k-firmware
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/qualcommax target/linux/generic package/boot package/qca package/firmware/ipq-wifi
 
 wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.6 -P include/
 
@@ -17,5 +17,3 @@ target/linux/qualcommax/Makefile
 
 sed -i "/ECM_INTERFACE_MAP_T_ENABLE/d"  package/qca/qca-nss-ecm/Makefile
 
-make defconfig
-sed -i "s/\(CONFIG_PACKAGE_kmod-qca.*\)=m/\1=n/g" .config
