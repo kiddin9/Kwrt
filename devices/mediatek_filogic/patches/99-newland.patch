@@ -115,7 +115,6 @@
 +endef
 +TARGET_DEVICES += airpi_ap3000m
 +
-
  define Device/nokia_ea0326gmp
    DEVICE_VENDOR := Nokia
    DEVICE_MODEL := EA0326GMP
