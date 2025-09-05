@@ -1,13 +1,94 @@
---- a/package/kernel/linux/modules/netfilter.mk
-+++ b/package/kernel/linux/modules/netfilter.mk
-@@ -330,7 +330,7 @@ define KernelPackage/ipt-ipopt
-   KCONFIG:=$(KCONFIG_IPT_IPOPT)
-   FILES:=$(foreach mod,$(IPT_IPOPT-m),$(LINUX_DIR)/net/$(mod).ko)
-   AUTOLOAD:=$(call AutoProbe,$(notdir $(IPT_IPOPT-m)))
--  $(call AddDepends/ipt)
-+  $(call AddDepends/ipt,+kmod-nf-conntrack)
- endef
+--- a/include/target.mk
++++ b/include/target.mk
+@@ -155,11 +155,12 @@ ifeq ($(TARGET_BUILD),1)
+   endif
+ endif
  
- define KernelPackage/ipt-ipopt/description
++GENERIC_PLATFORM_DIR := $(TOPDIR)/target/linux/generic
++
+ ifneq ($(TARGET_BUILD)$(if $(DUMP),,1),)
+   include $(INCLUDE_DIR)/kernel-version.mk
+ endif
+ 
+-GENERIC_PLATFORM_DIR := $(TOPDIR)/target/linux/generic
+ GENERIC_BACKPORT_DIR := $(GENERIC_PLATFORM_DIR)/backport$(if $(wildcard $(GENERIC_PLATFORM_DIR)/backport-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
+ GENERIC_PATCH_DIR := $(GENERIC_PLATFORM_DIR)/pending$(if $(wildcard $(GENERIC_PLATFORM_DIR)/pending-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
+ GENERIC_HACK_DIR := $(GENERIC_PLATFORM_DIR)/hack$(if $(wildcard $(GENERIC_PLATFORM_DIR)/hack-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
+diff --git a/target/linux/qualcommax/patches-6.12/999-fix-netdev-cacheline-size.patch b/target/linux/qualcommax/patches-6.12/999-fix-netdev-cacheline-size.patch
+new file mode 100644
+index 00000000000000..1481f8844bf45e
+--- /dev/null
++++ b/target/linux/qualcommax/patches-6.12/999-fix-netdev-cacheline-size.patch
+@@ -0,0 +1,11 @@
++--- a/net/core/dev.c
+++++ b/net/core/dev.c
++@@ -12060,7 +12060,7 @@ static void __init net_dev_struct_check(void)
++ #ifdef CONFIG_NET_XGRESS
++ 	CACHELINE_ASSERT_GROUP_MEMBER(struct net_device, net_device_read_tx, tcx_egress);
++ #endif
++-	CACHELINE_ASSERT_GROUP_SIZE(struct net_device, net_device_read_tx, 160);
+++	CACHELINE_ASSERT_GROUP_SIZE(struct net_device, net_device_read_tx, 192);
++ 
++ 	/* TXRX read-mostly hotpath */
++ 	CACHELINE_ASSERT_GROUP_MEMBER(struct net_device, net_device_read_txrx, lstats);
 
+--- a/target/linux/qualcommax/image/ipq50xx.mk
++++ b/target/linux/qualcommax/image/ipq50xx.mk
+@@ -57,6 +57,18 @@ define Device/glinet_gl-b3000
+ endef
+ TARGET_DEVICES += glinet_gl-b3000
  
++define Device/jdcloud_re-cs-03
++	$(call Device/FitImage)
++	$(call Device/EmmcImage)
++	SOC := ipq5018
++	BLOCKSIZE := 64k
++	KERNEL_SIZE := 6144k
++	DEVICE_VENDOR := JDCloud
++	DEVICE_MODEL := AX3000
++	DEVICE_DTS_CONFIG := config@mp03.5-c2
++endef
++TARGET_DEVICES += jdcloud_re-cs-03
++
+ define Device/iodata_wn-dax3000gr
+ 	$(call Device/FitImageLzma)
+ 	DEVICE_VENDOR := I-O DATA
+
+--- a/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
++++ b/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
+@@ -15,6 +15,7 @@ ipq50xx_setup_interfaces()
+ 	glinet,gl-b3000)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
+ 		;;
++	jdcloud,re-cs-03|\
+ 	linksys,mx2000|\
+ 	linksys,mx5500|\
+ 	linksys,spnmx56|\
+
+--- a/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
++++ b/target/linux/qualcommax/ipq50xx/base-files/lib/upgrade/platform.sh
+@@ -120,6 +120,11 @@ platform_do_upgrade() {
+ 	glinet,gl-b3000)
+ 		glinet_do_upgrade "$1"
+ 		;;
++  	jdcloud,re-cs-03)
++		CI_KERNPART="0:HLOS"
++		CI_ROOTPART="rootfs"
++		emmc_do_upgrade "$1"
++		;;
+ 	linksys,mr5500|\
+ 	linksys,mx2000|\
+ 	linksys,mx5500|\
+@@ -157,3 +162,12 @@ platform_do_upgrade() {
+ 		;;
+ 	esac
+ }
++
++platform_copy_config() {
++	case "$(board_name)" in
++	jdcloud,re-cs-03)
++		emmc_copy_config
++		;;
++	esac
++	return 0;
++}

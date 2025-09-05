@@ -124,14 +124,7 @@
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
-@@ -155,14 +182,16 @@ _call_image: staging_dir/host/.prereq-build
- 	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
- 	echo 'Packages: $(BUILD_PACKAGES)'
- 	echo
--	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
- 	mkdir -p $(TARGET_DIR) $(BIN_DIR) $(TMP_DIR) $(DL_DIR)
- 	$(MAKE) package_reload
- 	$(MAKE) package_install
+@@ -162,7 +189,10 @@ _call_image: staging_dir/host/.prereq-build
  	$(MAKE) -s prepare_rootfs
  	$(MAKE) -s build_image
  	$(MAKE) -s json_overview_image_info
@@ -142,7 +135,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -230,9 +259,17 @@ package_install: FORCE
+@@ -230,9 +260,17 @@ package_install: FORCE
  	@echo
  	@echo Installing packages...
  ifeq ($(CONFIG_USE_APK),)
@@ -161,7 +154,7 @@
  else
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/libc-*.apk $(PACKAGE_DIR)/libc-*.apk))
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/kernel-*.apk $(PACKAGE_DIR)/kernel-*.apk))
-@@ -260,16 +297,19 @@ else
+@@ -260,16 +298,19 @@ else
  	)
  endif
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
