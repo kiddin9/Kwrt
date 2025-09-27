@@ -22,6 +22,6 @@ git clone https://github.com/qosmio/sqm-scripts-nss.git package/sqm-scripts-nss
 
 sed -i "/ECM_INTERFACE_RAWIP_ENABLE/d"  package/nss-packages/qca-nss-ecm/Makefile
 
-rm -rf feeds/kiddin9/{xtables-wgobfs,shortcut-fe} package/devel/perf package/feeds/packages/{ovpn-dco,xr_usb_serial_common,openvswitch,xtables-addons}
+rm -rf feeds/kiddin9/{xtables-wgobfs,shortcut-fe} package/devel/perf package/feeds/packages/{ovpn-dco,xr_usb_serial_common,openvswitch,xtables-addons} package/kernel/r8152
 
 sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" target/linux/qualcommax/Makefile
