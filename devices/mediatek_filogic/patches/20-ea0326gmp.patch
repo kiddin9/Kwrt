@@ -21,3 +21,40 @@
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
  endef
  TARGET_DEVICES += nokia_ea0326gmp
+
+--- a/target/linux/mediatek/dts/mt7981b-nokia-ea0326gmp.dts
++++ b/target/linux/mediatek/dts/mt7981b-nokia-ea0326gmp.dts
+@@ -20,7 +20,6 @@
+ 	};
+ 
+ 	chosen {
+-		rootdisk = <&ubi_rootdisk>;
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+@@ -164,6 +163,10 @@
+ 		spi-tx-bus-width = <4>;
+ 		spi-rx-bus-width = <4>;
+ 
++		mediatek,nmbm;
++		mediatek,bmt-max-ratio = <1>;
++		mediatek,bmt-max-reserved-blocks = <64>;
++
+ 		partitions {
+ 			compatible = "fixed-partitions";
+ 			#address-cells = <1>;
+@@ -223,13 +226,7 @@
+ 			partition@980000 {
+ 				compatible = "linux,ubi";
+ 				label = "ubi";
+-				reg = <0x980000 0x7680000>;
+-
+-				volumes {
+-					ubi_rootdisk: ubi-volume-fit {
+-						volname = "fit";
+-					};
+-				};
++				reg = <0x980000 0x6e00000>;
+ 			};
+ 		};
+ 	};

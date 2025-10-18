@@ -32,7 +32,7 @@
 +		export TOPDIR=$(TOPDIR); \
 +		export MORE=$(MORE); \
 +		export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
-+		cd /data/packit/friendlywrt23-rk3528; \
++		cd /data/packit/friendlywrt24-rk3528; \
 +		. ~/packit/packit_nanopi.sh; \
 +	fi
 +endef

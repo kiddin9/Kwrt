@@ -119,6 +119,26 @@
 
 --- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
 +++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
+@@ -2560,6 +2560,16 @@ Protocol = baseclass.extend(/** @lends LuCI.network.Protocol.prototype */ {
+ 		return (this._ubus('dynamic') == true);
+ 	},
+ 
++	/**
++	 * Checks whether this logical interface is pending.
++	 *
++	 * @returns {boolean}
++	 * returns `true` when the interface is pending or `false` when it is not.
++	 */
++	isPending: function() {
++		return (this._ubus('pending') == true);
++	},
++
+ 	/**
+ 	 * Checks whether this interface is an alias interface.
+ 	 *
+
+--- a/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
++++ b/package/feeds/luci/luci-base/htdocs/luci-static/resources/network.js
 @@ -4376,4 +4376,10 @@ WifiNetwork = baseclass.extend(/** @lends LuCI.network.WifiNetwork.prototype */
  	}
  });
