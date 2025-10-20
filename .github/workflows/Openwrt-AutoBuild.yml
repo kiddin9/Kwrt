@@ -232,6 +232,11 @@ jobs:
         echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
         echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
         echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
+        echo "---- .config ----------------------------------"
+        cat .config
+        echo "---- package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js -----"
+        cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+        echo "---- ----"
 
     - name: Apply patches
       run: |
