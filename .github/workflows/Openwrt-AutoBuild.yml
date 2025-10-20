@@ -228,6 +228,7 @@ jobs:
 
     - name: Load R3D configuration
       run: |
+        cd openwrt
         echo >> .config
         echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
         echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
