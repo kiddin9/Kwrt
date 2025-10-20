@@ -32,7 +32,7 @@ wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/openwrt-24.10/
 wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/openwrt-24.10/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch -P package/firmware/wireless-regdb/patches/
 wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/master/config/Config-kernel.in -P config/
 
-rm -rf package/libs/openssl package/network/services/ppp feeds/luci/modules/luci-mod-network
+rm -rf package/libs/openssl package/network/services/ppp # feeds/luci/modules/luci-mod-network
 git_clone_path openwrt-24.10 https://github.com/immortalwrt/immortalwrt package/libs/openssl package/network/services/ppp
 # git_clone_path separate-dhcp-dns https://github.com/Alphix/luci modules/luci-mod-network && mv modules/luci-mod-network feeds/luci/modules/
 
