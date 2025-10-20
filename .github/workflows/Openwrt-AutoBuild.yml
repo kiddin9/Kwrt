@@ -226,6 +226,13 @@ jobs:
         fi
         cp -Rf ./diy/* ./ || true
 
+    - name: Load R3D configuration
+      run: |
+        echo >> .config
+        echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
+        echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
+        echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
+
     - name: Apply patches
       run: |
         cd openwrt
