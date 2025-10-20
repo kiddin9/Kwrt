@@ -1,0 +1,70 @@
+#=================================================
+# https://github.com/P3TERX/Actions-OpenWrt
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: P3TERX
+# Blog: https://p3terx.com
+#=================================================
+
+name: Repo Dispatcher
+
+on: 
+  # push: 
+  #   branches:
+  #     - master
+  #schedule:
+  #  - cron: 30 18 * * *
+  workflow_dispatch:
+    inputs:
+      param:
+        description: 'parameter'
+        required: false
+        default: ''
+
+env:
+  TOKEN_KIDDIN9: ${{ secrets.TOKEN_KIDDIN9 }}
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: cancel running workflows
+      uses: styfle/cancel-workflow-action@main
+      if: contains(github.event.inputs.param, 'cw')
+      with:
+        workflow_id: all
+        access_token: ${{ secrets.TOKEN_KIDDIN9 }}
+
+    - name: Load Settings.ini
+      run: |
+        source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
+        if [ -f "devices/${{matrix.target}}/settings.ini" ]; then
+          source "${GITHUB_WORKSPACE}/devices/${{matrix.target}}/settings.ini"
+        fi
+        echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
+        echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
+
+    # - name: Trigger Packages Update
+    #   run: |
+    #     gitdate=$(curl -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" -s "https://api.github.com/repos/kiddin9/kwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
+    #     gitdate=$(date -d "$gitdate" +%s)
+    #     now=$(date -d "$(date)" +%s)
+    #     if [[ $(expr $gitdate + 120) < $now ]]; then
+    #     curl -X POST https://api.github.com/repos/kiddin9/kwrt-packages/dispatches \
+    #     -H "Accept: application/vnd.github.everest-preview+json" \
+    #     -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
+    #     --data '{"event_type": "update"}'
+    #     fi
+
+    - name: Trigger Compile
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
+          -d '{"event_type": "ipq806x_generic ${{ github.event.inputs.param }}", "client_payload": {"target": "ipq806x_generic"}}'
