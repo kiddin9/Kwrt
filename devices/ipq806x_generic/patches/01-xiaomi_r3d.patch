@@ -1054,7 +1054,7 @@ diff --git a/target/linux/ipq806x/image/generic.mk b/target/linux/ipq806x/image/
 index aac0a2c8fadfd..b437706cd445e 100644
 --- a/target/linux/ipq806x/image/generic.mk
 +++ b/target/linux/ipq806x/image/generic.mk
-@@ -471,6 +471,23 @@ define Device/ubnt_unifi-ac-hd
+@@ -566,6 +566,23 @@ define Device/ubnt_unifi-ac-hd
  endef
  TARGET_DEVICES += ubnt_unifi-ac-hd
  
