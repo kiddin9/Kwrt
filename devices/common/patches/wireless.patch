@@ -1,6 +1,6 @@
 --- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-@@ -1026,6 +1026,12 @@ return view.extend({
+@@ -1024,6 +1024,12 @@ return view.extend({
  					o.placeholder = 100;
  					o.rmempty = true;
  
