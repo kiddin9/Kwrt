@@ -234,6 +234,10 @@ jobs:
         echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
         echo "---- .config ----------------------------------"
         cat .config
+        echo "---- ls ----------------------------------"
+        ls
+        echo "---- ls package/feeds/luci ----------------------------------"
+        ls package/feeds/luci
         echo "---- package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js -----"
         cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
         echo "---- ----"
