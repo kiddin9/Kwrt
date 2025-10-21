@@ -253,9 +253,9 @@ jobs:
           find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "
             echo '===== 开始应用补丁: % ====='
             cat '%'  | patch -d './' -B --merge -p1 --forward
-            if [ $? -ne 0 ]; then
-              echo '===== 错误：补丁 % 应用失败( $? )！ ====='
-              exit $?
+            if [ \$? -ne 0 ]; then
+              echo '===== 错误：补丁 % 应用失败( \$? )！ ====='
+              exit \$?
             fi
           "
         echo '----- 1 -----'          
