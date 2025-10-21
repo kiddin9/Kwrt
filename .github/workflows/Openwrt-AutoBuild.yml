@@ -239,8 +239,6 @@ jobs:
         ls
         echo "---- ls package/feeds/luci ----------------------------------"
         ls package/feeds/luci
-        echo "---- package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js -----"
-        cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
         echo "---- ----"
 
     - name: Apply patches
@@ -251,15 +249,9 @@ jobs:
             git apply devices/${{matrix.target}}/patches/*.bin.patch
           fi
 
-          echo "---- ls devices/ipq806x_generic/patches/wireless.patch ----------------------------------"
-          cat devices/ipq806x_generic/patches/wireless.patch
-          echo "---- ----"
-
           find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 --forward"
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 --verbose --debug 2 --forward" | echo "--- 0 ---"
-        echo '----- 1 -----'          
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 --forward"
         sed -i '$a  \
-        echo '----- 2 -----'          
         CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
         CONFIG_CPU_FREQ_GOV_USERSPACE=y \
         CONFIG_CPU_FREQ_GOV_ONDEMAND=y \
