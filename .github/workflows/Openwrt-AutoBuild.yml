@@ -239,6 +239,10 @@ jobs:
         ls
         echo "---- ls package/feeds/luci ----------------------------------"
         ls package/feeds/luci
+        echo "---- cat devices/ipq806x_generic/patches/luci-dhcp.patch ----------------------------------"
+        cat devices/ipq806x_generic/patches/luci-dhcp.patch
+        echo "---- cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/dns.js -----"
+        cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/dns.js
         echo "---- ----"
 
     - name: Apply patches
@@ -250,16 +254,7 @@ jobs:
           fi
 
           find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 --forward"
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "
-            echo '===== 开始应用补丁: % ====='
-            cat '%'  | patch -d './' -B --merge -p1 --forward
-            ret=\$?
-            if [ \$ret -ne 0 ]; then
-              echo '===== 错误：补丁 % 应用失败( \$ret )！ ====='
-              exit \$ret
-            fi
-          "
-        echo '----- 1 -----'          
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c " cat '%'  | patch -d './' -B --merge -p1 --forward ; ret=\$? ; if [ \$ret -ne 0 ]; then echo \"===== error : { \$ret }. ===== \" ; fi ; exit \$ret "
         sed -i '$a  \
         CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
         CONFIG_CPU_FREQ_GOV_USERSPACE=y \
@@ -269,14 +264,11 @@ jobs:
         CONFIG_CRYPTO_CHACHA20POLY1305=y \
         CONFIG_FAT_DEFAULT_IOCHARSET="utf8" \
         ' `find target/linux -path "target/linux/*/config-*"`
-        echo '----- 3 -----'          
 
     - name: Defconfig
       run: |
-        echo '----- 4 -----'          
         cd openwrt
         make defconfig
-        echo '----- 5 -----'          
         if [[ ! "${{matrix.target}}" =~ (amlogic_*|armsr_armv8|bcm27xx_*|rockchip_armv8|sunxi_*|x86_*) ]]; then
         sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
         #sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
