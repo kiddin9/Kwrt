@@ -249,6 +249,8 @@ jobs:
             git apply devices/${{matrix.target}}/patches/*.bin.patch
           fi
 
+          echo "---- package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network ----------------------------------"
+          ls package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network
           echo "---- cat devices/ipq806x_generic/patches/luci-dhcp.patch ----------------------------------"
           cat devices/ipq806x_generic/patches/luci-dhcp.patch
           echo "---- cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/dns.js -----"
