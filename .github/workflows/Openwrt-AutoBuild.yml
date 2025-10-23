@@ -278,7 +278,9 @@ jobs:
         sed -i "s/CONFIG_TARGET_MULTI_PROFILE=y/CONFIG_TARGET_MULTI_PROFILE=n/" .config
         sed -i "s/CONFIG_TARGET_ALL_PROFILES=y/CONFIG_TARGET_ALL_PROFILES=n/" .config
         echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
-        echo "CONFIG_TARGET_PROFILE="xiaomi_r3d"" >> .config
+        echo "CONFIG_TARGET_PROFILE=\"xiaomi_r3d\"" >> .config
+        echo "CONFIG_TARGET_DEVICE_ipq806x_generic_DEVICE_xiaomi_r3d=y" >> .config
+        make defconfig
         echo "---- .config ----------------------------------"
         cat .config
         echo "---- ----"
