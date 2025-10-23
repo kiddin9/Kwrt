@@ -13,14 +13,14 @@
  	$(_SINGLE)$(SUBMAKE) -r json_overview_image_info
  	$(_SINGLE)$(SUBMAKE) -r checksum
 +  echo "---- 0 ----"
-+	cp -f $(BIN_DIR)/packages/Packages.manifest $(BIN_DIR)/
++  cp -f $(BIN_DIR)/packages/Packages.manifest $(BIN_DIR)/
 +  echo "---- 1 ----"
-+	rm -rf $(BIN_DIR)/$(LINUX_VERSION)
++  rm -rf $(BIN_DIR)/$(LINUX_VERSION)
 +  echo "---- 2 ----"
-+	mv -f $(BIN_DIR)/packages $(BIN_DIR)/$(LINUX_VERSION) 2>/dev/null
++  mv -f $(BIN_DIR)/packages $(BIN_DIR)/$(LINUX_VERSION) 2>/dev/null
 +  echo "---- 3 ----"
-+	mv -f $(BIN_DIR)/profiles.json $(BIN_DIR)/profiles.json.b 2>/dev/null
++  mv -f $(BIN_DIR)/profiles.json $(BIN_DIR)/profiles.json.b 2>/dev/null
 +  echo "---- 4 ----"
-ifneq ($(CONFIG_CCACHE),)
+ ifneq ($(CONFIG_CCACHE),)
  	$(STAGING_DIR_HOST)/bin/ccache -s
  endif
