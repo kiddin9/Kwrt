@@ -253,7 +253,7 @@ jobs:
         echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
         echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
         echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
-        echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
+        echo "CONFIG_TARGET_PROFILE=\"xiaomi_r3d\"" >> .config
         echo "---- .config ----------------------------------"
         cat .config
         echo "---- ----"
@@ -262,9 +262,6 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        echo "---- .config ----------------------------------"
-        cat .config
-        echo "---- ----"
         if [[ ! "${{matrix.target}}" =~ (amlogic_*|armsr_armv8|bcm27xx_*|rockchip_armv8|sunxi_*|x86_*) ]]; then
         sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
         #sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
@@ -274,6 +271,20 @@ jobs:
         make defconfig
         fi
         cat .config
+
+    # - name: Load R3D configuration
+    #   run: |
+    #     cd openwrt
+    #     # sed -i "s/CONFIG_TARGET_MULTI_PROFILE=y/CONFIG_TARGET_MULTI_PROFILE=n/" .config
+    #     # sed -i "s/CONFIG_TARGET_ALL_PROFILES=y/CONFIG_TARGET_ALL_PROFILES=n/" .config
+
+    #     echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
+    #     echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
+    #     echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
+    #     echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
+    #     echo "---- .config ----------------------------------"
+    #     cat .config
+    #     echo "---- ----"
 
     - name: Cache
       uses: stupidloud/cachewrtbuild@main
