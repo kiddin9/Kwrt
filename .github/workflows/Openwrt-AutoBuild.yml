@@ -252,6 +252,7 @@ jobs:
         echo >> .config
         echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
         echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
+        echo "CONFIG_TARGET_SINGLE_PROFILE=n" >> .config
         echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
         echo "---- .config ----------------------------------"
         cat .config
@@ -260,9 +261,6 @@ jobs:
     - name: Defconfig
       run: |
         cd openwrt
-        echo "---- .config ----------------------------------"
-        cat .config
-        echo "---- ----"
         make defconfig
         echo "---- .config ----------------------------------"
         cat .config
@@ -273,9 +271,6 @@ jobs:
         if [[ "${{matrix.target}}" == "rockchip_rk35xx" ]]; then 
             sed -n '/# Video Support/,/# end of Video Support/p' .config | sed -e 's/=m/=n/' >>.config
         fi
-        echo "---- .config ----------------------------------"
-        cat .config
-        echo "---- ----"
         make defconfig
         fi
         cat .config
