@@ -252,7 +252,7 @@ jobs:
         echo >> .config
         echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
         echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
-        echo "CONFIG_TARGET_SINGLE_PROFILE=n" >> .config
+        echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
         echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
         echo "---- .config ----------------------------------"
         cat .config
