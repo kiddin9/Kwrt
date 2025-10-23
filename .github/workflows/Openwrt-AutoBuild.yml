@@ -249,16 +249,8 @@ jobs:
             git apply devices/${{matrix.target}}/patches/*.bin.patch
           fi
 
-          echo "---- package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network ----------------------------------"
-          ls package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network
-          echo "---- cat devices/ipq806x_generic/patches/luci-dhcp.patch ----------------------------------"
-          cat devices/ipq806x_generic/patches/luci-dhcp.patch
-          echo "---- cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/dns.js -----"
-          cat package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/dns.js
-          echo "---- ----"
-
           find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 --forward"
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c " cat '%'  | patch -d './' -B --merge -p1 --forward ; ret=\$? ; if [ \$ret -ne 0 ]; then echo \"===== error : { \$ret }. ===== \" ; fi ; exit \$ret "
+          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c " cat '%'  | patch -d './' -B --merge -p1 --forward ; ret=\$? ; if [ \$ret -ne 0 ]; then echo \"===== error : { \$ret } - { % }. ===== \" ; fi ; exit \$ret "
         sed -i '$a  \
         CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
         CONFIG_CPU_FREQ_GOV_USERSPACE=y \
