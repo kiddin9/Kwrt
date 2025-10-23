@@ -246,17 +246,17 @@ jobs:
         CONFIG_FAT_DEFAULT_IOCHARSET="utf8" \
         ' `find target/linux -path "target/linux/*/config-*"`
 
-    - name: Load R3D configuration
-      run: |
-        cd openwrt
-        echo >> .config
-        echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
-        echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
-        echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
-        echo "CONFIG_TARGET_PROFILE=\"xiaomi_r3d\"" >> .config
-        echo "---- .config ----------------------------------"
-        cat .config
-        echo "---- ----"
+    # - name: Load R3D configuration
+    #   run: |
+    #     cd openwrt
+    #     echo >> .config
+    #     echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
+    #     echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
+    #     echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
+    #     echo "CONFIG_TARGET_PROFILE=\"xiaomi_r3d\"" >> .config
+    #     echo "---- .config ----------------------------------"
+    #     cat .config
+    #     echo "---- ----"
 
     - name: Defconfig
       run: |
@@ -272,19 +272,16 @@ jobs:
         fi
         cat .config
 
-    # - name: Load R3D configuration
-    #   run: |
-    #     cd openwrt
-    #     # sed -i "s/CONFIG_TARGET_MULTI_PROFILE=y/CONFIG_TARGET_MULTI_PROFILE=n/" .config
-    #     # sed -i "s/CONFIG_TARGET_ALL_PROFILES=y/CONFIG_TARGET_ALL_PROFILES=n/" .config
-
-    #     echo "CONFIG_TARGET_MULTI_PROFILE=n" >> .config
-    #     echo "CONFIG_TARGET_ALL_PROFILES=n" >> .config
-    #     echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
-    #     echo "CONFIG_TARGET_PROFILE="DEVICE_xiaomi_r3d"" >> .config
-    #     echo "---- .config ----------------------------------"
-    #     cat .config
-    #     echo "---- ----"
+    - name: Load R3D configuration
+      run: |
+        cd openwrt
+        sed -i "s/CONFIG_TARGET_MULTI_PROFILE=y/CONFIG_TARGET_MULTI_PROFILE=n/" .config
+        sed -i "s/CONFIG_TARGET_ALL_PROFILES=y/CONFIG_TARGET_ALL_PROFILES=n/" .config
+        echo "CONFIG_TARGET_SINGLE_PROFILE=y" >> .config
+        echo "CONFIG_TARGET_PROFILE="xiaomi_r3d"" >> .config
+        echo "---- .config ----------------------------------"
+        cat .config
+        echo "---- ----"
 
     - name: Cache
       uses: stupidloud/cachewrtbuild@main
