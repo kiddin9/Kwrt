@@ -19,6 +19,6 @@
 +		so = ss.option(form.Value, 'comments', _('Comments'));
 +		so.rmempty  = true;
 +
- 		var ipaddrs = {};
+ 		const ipaddrs = {};
  
  		Object.keys(hosts).forEach(function(mac) {

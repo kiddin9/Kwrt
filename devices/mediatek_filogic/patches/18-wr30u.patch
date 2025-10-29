@@ -1,6 +1,6 @@
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -1206,22 +1206,22 @@ endif
+@@ -1867,14 +1867,18 @@ endif
  endef
  TARGET_DEVICES += xiaomi_mi-router-ax3000t-ubootmod
  
@@ -20,10 +20,10 @@
 +  IMAGES += factory.bin
 +  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
    DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
--ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
--  ARTIFACTS := initramfs-factory.ubi
--  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-kernel.bin | ubinize-kernel
--endif
+ ifeq ($(IB),)
+ ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+@@ -1884,7 +1888,7 @@ endif
+ endif
    IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
  endef
 -TARGET_DEVICES += xiaomi_mi-router-wr30u-stock

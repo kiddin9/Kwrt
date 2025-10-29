@@ -2,13 +2,21 @@
 
 shopt -s extglob
 
-SHELL_FOLDER=$(dirname $(readlink -f "$0"))
+rm -rf package/kernel
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/backport-6.1 target/linux/generic/hack-6.1 target/linux/generic/pending-6.1 target/linux/amlogic package/boot/uboot-amlogic package/kernel
 
-#bash $SHELL_FOLDER/../common/kernel_6.1.sh
+rm -rf package/kernel/bpf-headers
+git_clone_path openwrt-24.10 https://github.com/openwrt/openwrt package/kernel/bpf-headers
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/amlogic package/boot/uboot-amlogic
+sed -i "s/autocore-arm/autocore/" target/linux/amlogic/Makefile
 
-sed -i "s/wpad-openssl/wpad-basic-mbedtls/" target/linux/amlogic/image/mesongx.mk
+wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/include/kernel-6.1 -P include/
+
+rm -rf feeds/routing/batman-adv package/kernel/rtw88-usb
+
+echo '
+CONFIG_BLK_DEV_INTEGRITY=n
+' >> target/linux/amlogic/mesongx/config-6.1
 
 
 
