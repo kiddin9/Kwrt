@@ -200,7 +200,117 @@
  
  function getUsers() {
      return fs.lines('/etc/passwd').then(function(lines) {
-@@ -645,6 +646,83 @@ var CBIGroupSelect = form.ListValue.extend({
+@@ -335,6 +336,109 @@ var CBIZoneForwards = form.DummyValue.extend({
+ 	},
+ });
+ 
++const CBIIPSelect = form.ListValue.extend({
++	__name__: 'CBI.IPSelect',
++
++	load(section_id) {
++		return network.getDevices().then(L.bind(function(devices) {
++			this.devices = devices;
++			return this.super('load', section_id);
++		}, this));
++	},
++
++	filter(section_id, value) {
++		return true;
++	},
++
++	renderIfaceBadge(device, ip) {
++		return E('div', {}, [
++			ip,
++			' ',
++			E('span', { 'class': 'ifacebadge', }, [ device.getName(),
++				E('img', {
++					'title': device.getI18n(),
++					'src': L.resource('icons/%s%s.svg'.format(device.getType(), device.isUp() ? '' : '_disabled'))
++				})
++			]),
++		]);
++	},
++
++	renderWidget(section_id, option_index, cfgvalue) {
++		let values = L.toArray((cfgvalue != null) ? cfgvalue : this.default);
++		const choices = {};
++		const checked = {};
++
++		for (const val of values)
++			checked[val] = true;
++
++		values = [];
++
++		if (!this.multiple && (this.rmempty || this.optional))
++			choices[''] = E('em', _('unspecified'));
++
++
++		for (const device of (this.devices || [])) {
++			const name = device.getName();
++
++			if (name == this.exclude || !this.filter(section_id, name))
++				continue;
++
++			if (name == 'loopback' && !this.loopback)
++				continue;
++
++			if (this.novirtual && device.isVirtual())
++				continue;
++
++			for (const ip of [...device.getIPAddrs(), ...device.getIP6Addrs()]) {
++				const iponly = ip.split('/')?.[0]
++				if (checked[iponly])
++					values.push(iponly);
++				choices[iponly] = this.renderIfaceBadge(device, iponly);
++			}
++		}
++
++		const widget = new ui.Dropdown(this.multiple ? values : values[0], choices, {
++			id: this.cbid(section_id),
++			sort: true,
++			multiple: this.multiple,
++			optional: this.optional || this.rmempty,
++			disabled: (this.readonly != null) ? this.readonly : this.map.readonly,
++			select_placeholder: E('em', _('unspecified')),
++			display_items: this.display_size || this.size || 2,
++			dropdown_items: this.dropdown_size || this.size || 5,
++			datatype: this.multiple ? 'list(ipaddr)' : 'ipaddr',
++			validate: L.bind(this.validate, this, section_id),
++			create: false,
++		});
++
++		return widget.render();
++	},
++
++	textvalue(section_id) {
++		const cfgvalue = this.cfgvalue(section_id);
++		const values = L.toArray((cfgvalue != null) ? cfgvalue : this.default);
++		const rv = E([]);
++
++		for (const device of (this.devices || [])) {
++			for (const ip of [...device.getIPAddrs(), ...device.getIP6Addrs()]) {
++				const iponly = ip.split('/')[0];
++				if (values.indexOf(iponly) === -1)
++					continue;
++
++				if (rv.childNodes.length)
++					rv.appendChild(document.createTextNode(' '));
++
++				rv.appendChild(this.renderIfaceBadge(device, iponly));
++			}
++		}
++
++		if (!rv.firstChild)
++			rv.appendChild(E('em', _('unspecified')));
++
++		return rv;
++	},
++});
++
+ var CBINetworkSelect = form.ListValue.extend({
+ 	__name__: 'CBI.NetworkSelect',
+ 
+@@ -645,12 +749,91 @@ var CBIGroupSelect = form.ListValue.extend({
  	},
  });
  
@@ -284,7 +394,9 @@
  
  return L.Class.extend({
  	ZoneSelect: CBIZoneSelect,
-@@ -653,4 +731,5 @@ return L.Class.extend({
+ 	ZoneForwards: CBIZoneForwards,
++	IPSelect: CBIIPSelect,
+ 	NetworkSelect: CBINetworkSelect,
  	DeviceSelect: CBIDeviceSelect,
  	UserSelect: CBIUserSelect,
  	GroupSelect: CBIGroupSelect,

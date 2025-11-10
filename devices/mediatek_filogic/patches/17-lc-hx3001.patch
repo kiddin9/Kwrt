@@ -261,7 +261,7 @@ diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds b/targ
 index 0a1f642c70924..fda3d4b98d875 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-@@ -20,6 +20,18 @@ confiabits,mt7981)
+@@ -20,6 +20,15 @@ confiabits,mt7981)
  cudy,wr3000-v1)
  	ucidef_set_led_netdev "wan" "wan" "blue:wan" "wan"
  	;;
@@ -273,9 +273,6 @@ index 0a1f642c70924..fda3d4b98d875 100644
 +	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1" "link"
 +	ucidef_set_led_netdev "lan" "LAN" "green:lan" "br-lan" "link"
 +	ucidef_set_led_netdev "wlan" "WLAN" "green:wlan" "phy1-ap0" "link"
-+	;;
-+konka,komi-a31)
-+         ucidef_set_led_netdev "eth1" "eth1" "blue:status" "eth1" "link"
 +	;;
  glinet,gl-x3000|\
  glinet,gl-xe3000)
@@ -301,7 +298,7 @@ diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/imag
 index 83428f0d981e7..6d2e9d713be02 100644
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -589,6 +589,69 @@ endif
+@@ -589,6 +589,45 @@ endif
  endef
  TARGET_DEVICES += h3c_magic-nx30-pro-nmbm
  
@@ -326,30 +323,6 @@ index 83428f0d981e7..6d2e9d713be02 100644
 +	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd
 +endef
 +TARGET_DEVICES += imou_lc-hx3001
-+
-+define Device/konka_komi-a31
-+  DEVICE_VENDOR := Konka
-+  DEVICE_MODEL := KOMI A31
-+  DEVICE_ALT0_VENDOR := E-Life
-+  DEVICE_ALT0_MODEL := ETR631-T
-+  DEVICE_ALT1_VENDOR := E-Life
-+  DEVICE_ALT1_MODEL := ETR635-U
-+  DEVICE_DTS := mt7981b-konka-komi-a31
-+  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
-+  UBINIZE_OPTS := -E 5
-+  BLOCKSIZE := 128k
-+  PAGESIZE := 2048
-+  IMAGE_SIZE := 114688k
-+  KERNEL_IN_UBI := 1
-+  KERNEL := kernel-bin | gzip
-+  KERNEL_INITRAMFS := kernel-bin | lzma | \
-+        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
-+  IMAGES += factory.bin
-+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
-+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-+endef
-+TARGET_DEVICES += konka_komi-a31
 +
 +define Device/comfast_cf-wr632ax
 +  DEVICE_VENDOR := COMFAST
