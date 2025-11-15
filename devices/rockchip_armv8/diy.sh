@@ -33,10 +33,4 @@ sed -i -e 's,wpad-openssl,wpad-basic-mbedtls,g' target/linux/rockchip/image/armv
 
 sed -i -e 's/6.12/6.6/' -e 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip luci-app-diskman/' -e 's/autocore-arm/autocore/' target/linux/rockchip/Makefile
 
-cp -Rf $SHELL_FOLDER/diy/* ./
-
 sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
-
-echo '
-CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-6.6

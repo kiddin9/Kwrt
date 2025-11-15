@@ -60,7 +60,7 @@
 
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
-@@ -366,6 +366,14 @@ define Device/hinlink_opc-ht2
+@@ -366,6 +366,15 @@ define Device/hinlink_opc-ht2
  endef
  TARGET_DEVICES += hinlink_opc-ht2
  
@@ -68,6 +68,7 @@
 +  DEVICE_VENDOR := LinkEase
 +  DEVICE_MODEL := EasePi R1
 +  SOC := rk3568
++  UBOOT_DEVICE_NAME := easepi-r1-rk3568
 +  DEVICE_PACKAGES := blkdiscard block-mount kmod-button-hotplug kmod-nvme kmod-r8169
 +endef
 +TARGET_DEVICES += linkease_easepi-r1
