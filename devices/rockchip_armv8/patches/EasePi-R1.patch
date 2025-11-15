@@ -1,0 +1,78 @@
+--- a/package/boot/uboot-rockchip/Makefile
++++ b/package/boot/uboot-rockchip/Makefile
+@@ -259,6 +259,13 @@ define U-Boot/bpi-r2-pro-rk3568
+     sinovoip_bpi-r2-pro
+ endef
+ 
++define U-Boot/easepi-r1-rk3568
++  $(U-Boot/rk3568/Default)
++  NAME:=LinkEase EasePi R1
++  BUILD_DEVICES:= \
++    linkease_easepi-r1
++endef
++
+ define U-Boot/fastrhino-r66s-rk3568
+   $(U-Boot/rk3568/Default)
+   NAME:=FastRhino R66S
+@@ -458,6 +465,7 @@ UBOOT_TARGETS := \
+   panther-x2-rk3566 \
+   rock-3c-rk3566 \
+   bpi-r2-pro-rk3568 \
++  easepi-r1-rk3568 \
+   generic-rk3568 \
+   fastrhino-r66s-rk3568 \
+   fastrhino-r68s-rk3568 \
+
+--- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
++++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
+@@ -67,6 +67,12 @@ rockchip_setup_interfaces()
+ 	friendlyarm,nanopi-r5s)
+ 		ucidef_set_interfaces_lan_wan 'eth1 eth2' 'eth0'
+ 		;;
++	linkease,easepi-r1)
++		ucidef_set_network_device_path eth2 'platform/3c0400000.pcie/pci0001:10/0001:10:00.0/0001:11:00.0'
++		ucidef_set_network_device_path eth3 'platform/3c0000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0'
++		ucidef_set_interfaces_lan_wan 'eth1 eth2 eth3' 'eth0'
++		ucidef_set_interfaces_lan_wan 'eth1 eth2 eth3' 'eth0'
++		;;
+ 	lyt,t68m)
+ 		ucidef_set_interfaces_lan_wan 'lan2 lan3 lan4' 'lan1'
+ 		;;
+@@ -131,6 +137,7 @@ rockchip_setup_macs()
+ 	hinlink,opc-h66k|\
+ 	hinlink,opc-h68k|\
+ 	hinlink,opc-h69k|\
++	linkease,easepi-r1|\
+ 	mmbox,anas3035|\
+ 	nlnet,xiguapi-v3|\
+ 	rocktech,mpc1903|\
+
+--- a/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
++++ b/target/linux/rockchip/armv8/base-files/etc/hotplug.d/net/40-net-smp-affinity
+@@ -40,6 +40,7 @@ widora,mangopi-m28k-pro)
+ 	;;
+ friendlyarm,nanopi-r3s|\
+ friendlyarm,nanopi-r5c|\
++linkease,easepi-r1|\
+ sinovoip,rk3568-bpi-r2pro)
+ 	set_interface_core 2 "eth0"
+ 	set_interface_core 4 "eth1"
+
+--- a/target/linux/rockchip/image/armv8.mk
++++ b/target/linux/rockchip/image/armv8.mk
+@@ -366,6 +366,14 @@ define Device/hinlink_opc-ht2
+ endef
+ TARGET_DEVICES += hinlink_opc-ht2
+ 
++define Device/linkease_easepi-r1
++  DEVICE_VENDOR := LinkEase
++  DEVICE_MODEL := EasePi R1
++  SOC := rk3568
++  DEVICE_PACKAGES := blkdiscard block-mount kmod-button-hotplug kmod-nvme kmod-r8169
++endef
++TARGET_DEVICES += linkease_easepi-r1
++
+ define Device/lyt_t68m
+   DEVICE_VENDOR := LYT
+   DEVICE_MODEL := T68M
+

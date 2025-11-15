@@ -43,10 +43,10 @@
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -123,6 +123,8 @@ case "$board" in
- 		[ "$PHYNBR" = "1" ] && macaddr_add $hw_mac_addr 3 > /sys${DEVPATH}/macaddress
+@@ -157,6 +157,8 @@ case "$board" in
+ 		[ "$PHYNBR" = "0" ] && echo "$addr_2g" > /sys${DEVPATH}/macaddress
+ 		[ "$PHYNBR" = "1" ] && echo "$addr_5g" > /sys${DEVPATH}/macaddress
  		;;
- 	konka,komi-a31|\
 +	nradio,c8-668gl|\
 +	nradio,c8-660|\
  	nokia,ea0326gmp)

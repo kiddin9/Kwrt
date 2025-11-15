@@ -56,10 +56,10 @@ index 00000000000000..1481f8844bf45e
 
 --- a/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
 +++ b/target/linux/qualcommax/ipq50xx/base-files/etc/board.d/02_network
-@@ -15,6 +15,7 @@ ipq50xx_setup_interfaces()
- 	glinet,gl-b3000)
+@@ -16,6 +16,7 @@ ipq50xx_setup_interfaces()
  		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
  		;;
+ 	cmcc,pz-l8|\
 +	jdcloud,re-cs-03|\
  	linksys,mx2000|\
  	linksys,mx5500|\

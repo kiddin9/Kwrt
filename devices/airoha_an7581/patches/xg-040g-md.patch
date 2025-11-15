@@ -1,0 +1,62 @@
+--- a/target/linux/airoha/image/an7581.mk
++++ b/target/linux/airoha/image/an7581.mk
+@@ -42,3 +42,25 @@ define Device/airoha_an7581-evb-emmc
+   ARTIFACTS := preloader.bin bl31-uboot.fip
+ endef
+ TARGET_DEVICES += airoha_an7581-evb-emmc
++
++define Device/bell_xg-040g-md
++  $(call Device/FitImageLzma)
++  DEVICE_VENDOR := Nokia Bell
++  DEVICE_MODEL := XG-040G-MD
++  DEVICE_DTS := an7581-xg-040g-md
++  DEVICE_DTS_CONFIG := config@1
++  KERNEL_LOADADDR := 0x80088000
++  UBINIZE_OPTS := -E 5
++  BLOCKSIZE := 128k
++  PAGESIZE := 2048
++  KERNEL_SIZE := 10240k
++  IMAGE_SIZE := 261120k
++  KERNEL_IN_UBI := 1
++  UBINIZE_OPTS := -m 2048 -p 128KiB -s 2048
++  DEVICE_PACKAGES := airoha-en7581-npu-firmware kmod-phy-airoha-en8811h kmod-i2c-an7581 kmod-input-gpio-keys-polled
++  IMAGES += factory.bin sysupgrade.bin
++  IMAGE/factory.bin := append-kernel | pad-to $$$$(KERNEL_SIZE) | append-ubi
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++  SOC := an7581
++endef
++TARGET_DEVICES += bell_xg-040g-md
+
+--- a/target/linux/airoha/an7581/base-files/etc/board.d/02_network
++++ b/target/linux/airoha/an7581/base-files/etc/board.d/02_network
+@@ -14,6 +14,9 @@ an7581_setup_interfaces()
+ 	airoha,an7581-evb)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "eth1"
+ 		;;
++	bell,xg-040g-md)
++		ucidef_set_interfaces_lan_wan "lan2 lan3 lan4" "eth1"
++		;;
+ 	*)
+ 		echo "Unsupported hardware. Network interfaces not initialized"
+ 		;;
+
+new file mode 100644
+index 00000000000000..556caa19fe6d14
+--- /dev/null
++++ b/target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh
+@@ -0,0 +1,15 @@
++REQUIRE_IMAGE_METADATA=1
++
++platform_do_upgrade() {
++    local board=$(board_name)
++
++    case "$board" in
++    *)
++        nand_do_upgrade "$1"
++        ;;
++    esac
++}
++
++platform_check_image() {
++    return 0
++}

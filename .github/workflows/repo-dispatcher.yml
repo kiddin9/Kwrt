@@ -193,3 +193,8 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
           -d '{"event_type": "amlogic_mesongx ${{ github.event.inputs.param }}", "client_payload": {"target": "amlogic_mesongx"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
+          -d '{"event_type": "airoha_an7581 ${{ github.event.inputs.param }}", "client_payload": {"target": "airoha_an7581"}}'

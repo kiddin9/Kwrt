@@ -1,6 +1,6 @@
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -66,31 +66,19 @@ platform_do_upgrade() {
+@@ -66,32 +66,19 @@ platform_do_upgrade() {
  	local board=$(board_name)
  
  	case "$board" in
@@ -16,6 +16,7 @@
 -	h3c,magic-nx30-pro|\
 -	jcg,q30-pro|\
 -	jdcloud,re-cp-03|\
+-	konka,komi-a31|\
  	mediatek,mt7981-rfb|\
  	mediatek,mt7988a-rfb|\
  	mercusys,mr90x-v1-ubi|\

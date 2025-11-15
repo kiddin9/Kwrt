@@ -1,0 +1,265 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+/dts-v1/;
+
+#include <dt-bindings/leds/common.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include "an7581.dtsi"
+
+/ {
+    model = "Nokia Bell XG-040G-MD";
+    compatible = "bell,xg-040g-md", "airoha,an7581";
+
+    efuse-banks {
+        compatible = "airoha,an7581-efuses";
+        #address-cells = <0x01>;
+        #size-cells = <0x00>;
+
+        bank@0 {
+            reg = <0x00>;
+        };
+
+        bank@1 {
+            reg = <0x01>;
+        };
+    };
+
+    aliases {
+        serial0 = &uart1;
+    };
+
+    chosen {
+        bootargs = "console=ttyS0,115200n8 loglevel=7  earlycon";
+        stdout-path = "serial0:115200n8";
+        bootargs-append = " ubi.mtd=rootfs,2048 rootfstype=squashfs loglevel=8 ubi.block=0,rootfs ro init=/etc/preinit";
+    };
+
+    memory@80000000 {
+        device_type = "memory";
+        reg = <0x0 0x80000000 0x2 0x00000000>;
+    };
+
+	leds {
+		compatible = "gpio-leds";
+
+		led-0 {
+			label = "pwr";
+			color = <0x01>;
+			function = "power";
+			gpios = <0x24 0x11 0x01>;
+			default-state = "on";
+		};
+
+		led-2 {
+			label = "pon";
+			color = <0x02>;
+			function = "status";
+			gpios = <0x24 0x13 0x01>;
+			default-state = "off";
+		};
+
+		led-3 {
+			label = "internet";
+			color = <0x02>;
+			function = "status";
+			gpios = <0x24 0x14 0x01>;
+			default-state = "on";
+		};
+	};
+};
+
+&en7581_pinctrl {
+    gpio-ranges = <&en7581_pinctrl 0 13 47>;
+
+    mdio_pins: mdio-pins {
+        mux {
+            function = "mdio";
+            groups = "mdio";
+        };
+
+        conf {
+            pins = "gpio2";
+            output-high;
+        };
+    };
+
+    pcie0_rst_pins: pcie0-rst-pins {
+        conf {
+            pins = "pcie_reset0";
+            drive-open-drain = <1>;
+        };
+    };
+
+    pcie1_rst_pins: pcie1-rst-pins {
+        conf {
+            pins = "pcie_reset1";
+            drive-open-drain = <1>;
+        };
+    };
+
+    gswp1_led0_pins: gswp1-led0-pins {
+        mux {
+            function = "phy1_led0";
+            pins = "gpio33";
+        };
+    };
+
+    gswp2_led0_pins: gswp2-led0-pins {
+        mux {
+            function = "phy2_led0";
+            pins = "gpio34";
+        };
+    };
+
+    gswp3_led0_pins: gswp3-led0-pins {
+        mux {
+            function = "phy3_led0";
+            pins = "gpio35";
+        };
+    };
+
+    gswp4_led0_pins: gswp4-led0-pins {
+        mux {
+            function = "phy4_led0";
+            pins = "gpio42";
+        };
+    };
+
+    pwm_gpio18_idx10_pins: pwm-gpio18-idx10-pins {
+        function = "pwm";
+        pins = "gpio18";
+        output-enable;
+    };
+};
+
+&snfi {
+	status = "okay";
+};
+
+
+&spi_nand {
+	#address-cells = <1>;
+	#size-cells = <1>;
+        partitions {
+        compatible = "fixed-partitions";
+		    #address-cells = <1>;
+		    #size-cells = <1>;
+
+            partition@0 {
+                label = "bootloader";
+                reg = <0x0  0x00080000>;
+                read-only;
+            };
+
+            partition@80000  {
+                label = "env";
+                reg = <0x00080000 0x00080000>;
+            };
+
+            partition@100000 {
+                label = "ubi";
+                reg = <0x00100000  0x00>;
+    		};
+     };
+};
+
+&i2c0 {
+    status = "okay";
+};
+
+&npu {
+	status = "okay";
+};
+
+&eth {
+	status = "okay";
+};
+
+&gdm1 {
+	status = "okay";
+};
+
+&gdm4 {
+	status = "okay";
+	phy-handle = <&phy15>;
+	phy-mode = "2500base-x";
+	label = "lan1";
+};
+
+&switch {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&mdio_pins>;
+
+	ports {
+		port@2 {
+			status = "okay";
+			label = "lan2";
+		};
+
+		port@3 {
+			status = "okay";
+			label = "lan3";
+		};
+
+		port@4 {
+			status = "okay";
+			label = "lan4";
+		};
+	};
+
+	mdio {
+		ethernet-phy@1 {
+			status = "okay";
+			pinctrl-names = "gbe-led";
+			pinctrl-0 = <&gswp2_led0_pins>;
+
+			leds {
+				gsw-phy1-led0@0 {
+					reg = <0x00>;
+					function = LED_FUNCTION_LAN;
+					status = "okay";
+					active-low;
+				};
+			};
+		};
+
+		ethernet-phy@2 {
+			status = "okay";
+			pinctrl-names = "gbe-led";
+			pinctrl-0 = <&gswp3_led0_pins>;
+
+			leds {
+				gsw-phy2-led0@0 {
+					reg = <0x00>;
+					function = LED_FUNCTION_LAN;
+					status = "okay";
+					active-low;
+				};
+			};
+		};
+
+		ethernet-phy@3 {
+			status = "okay";
+			pinctrl-names = "gbe-led";
+			pinctrl-0 = <&gswp4_led0_pins>;
+
+			leds {
+				gsw-phy3-led0@0 {
+					reg = <0x00>;
+					function = LED_FUNCTION_LAN;
+					status = "okay";
+					active-low;
+				};
+			};
+		};
+
+		phy15: ethernet-phy@f {
+			/* Airoha EN8811H */
+			compatible = "ethernet-phy-id03a2.a411", "ethernet-phy-ieee802.3-c45";
+			reg = <15>;
+            phy-mode = "2500base-x";
+			phandle = <0x38>;
+		};
+	};
+};
