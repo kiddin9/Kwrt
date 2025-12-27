@@ -273,7 +273,7 @@ jobs:
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-avr --timeout=600"
-        SSH_CMD_ARGS: "-o ServerAliveInterval=30 -o ServerAliveCountMax=10"
+        SSH_CMD_ARGS: "-o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o StrictHostKeyChecking=no"
         SOURCE: openwrt/bin/targets
         REMOTE_HOST: ${{ secrets.SERVER_HOST }}
         REMOTE_USER: ${{ secrets.SERVER_USERNAME }}
