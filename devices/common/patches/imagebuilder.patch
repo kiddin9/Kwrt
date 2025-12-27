@@ -140,8 +140,8 @@
  	@echo Installing packages...
  ifeq ($(CONFIG_USE_APK),)
 +	$(eval $(call add_zh_cn_packages))
- 	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
- 	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
+ 	$(OPKG) install $(wildcard $(PACKAGE_DIR)/libc_*.ipk)
+ 	$(OPKG) install $(wildcard $(PACKAGE_DIR)/kernel_*.ipk)
 -	$(OPKG) install $(BUILD_PACKAGES)
 +	$(OPKG) install --force-maintainer $(BUILD_PACKAGES) luci-i18n-base-zh-cn || true
 +	$(if $(USER_FILES), \

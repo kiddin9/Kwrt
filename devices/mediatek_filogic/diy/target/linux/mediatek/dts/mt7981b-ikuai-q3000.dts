@@ -1,5 +1,5 @@
 /dts-v1/;
-#include "mt7981.dtsi"
+#include "mt7981b.dtsi"
 / {
 	compatible = "ikuai,q3000", "mediatek,mt7981-spim-snand-rfb";
 	model = "q3000";

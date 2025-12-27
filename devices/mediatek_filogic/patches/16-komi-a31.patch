@@ -1,14 +1,14 @@
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -40,6 +40,8 @@
- 	abt,asr3000|\
+ 	buffalo,wsr-6000ax8|\
  	cmcc,rax3000m*|\
  	cmcc,xr30*|\
 +	imou,lc-hx3001|\
 +	umi,uax3000e|\
  	h3c,magic-nx30-pro|\
- 	zbtlink,zbt-z8103ax)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
+ 	imou,hx21|\
+ 	konka,komi-a31|\
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac

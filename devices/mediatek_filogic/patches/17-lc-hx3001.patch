@@ -24,7 +24,7 @@ index 0000000000000..857f2a534e112
 +#include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/input/input.h>
 +
-+#include "mt7981.dtsi"
++#include "mt7981b.dtsi"
 +
 +/ {
 +	model = "IMOU LC-HX3001 (uboot layout)";
@@ -261,14 +261,10 @@ diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds b/targ
 index 0a1f642c70924..fda3d4b98d875 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-@@ -20,6 +20,15 @@ confiabits,mt7981)
+@@ -20,6 +20,11 @@ confiabits,mt7981)
  cudy,wr3000-v1)
  	ucidef_set_led_netdev "wan" "wan" "blue:wan" "wan"
  	;;
-+comfast,cf-wr632ax)
-+	ucidef_set_led_default "wan" "WAN" "comfast:blue" "1"
-+	ucidef_add_led_link "wan" "eth0"
-+	;;
 +imou,lc-hx3001)
 +	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1" "link"
 +	ucidef_set_led_netdev "lan" "LAN" "green:lan" "br-lan" "link"
@@ -298,7 +294,7 @@ diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/imag
 index 83428f0d981e7..6d2e9d713be02 100644
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -589,6 +589,45 @@ endif
+@@ -589,6 +589,28 @@ endif
  endef
  TARGET_DEVICES += h3c_magic-nx30-pro-nmbm
  
@@ -323,23 +319,6 @@ index 83428f0d981e7..6d2e9d713be02 100644
 +	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd
 +endef
 +TARGET_DEVICES += imou_lc-hx3001
-+
-+define Device/comfast_cf-wr632ax
-+  DEVICE_VENDOR := COMFAST
-+  DEVICE_MODEL := CF-WR632AX
-+  DEVICE_DTS := mt7981b-comfast-cf-wr632ax
-+  DEVICE_DTS_DIR := ../dts
-+  SUPPORTED_DEVICES += comfast,cf-wr632ax
-+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware \
-+	kmod-hwmon-pwmfan kmod-usb3 automount
-+  UBINIZE_OPTS := -E 5
-+  BLOCKSIZE := 128k
-+  PAGESIZE := 2048
-+  IMAGE_SIZE := 116736k
-+  KERNEL_IN_UBI := 1
-+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-+endef
-+TARGET_DEVICES += comfast_cf-wr632ax
 +
  define Device/jcg_q30-pro
    DEVICE_VENDOR := JCG

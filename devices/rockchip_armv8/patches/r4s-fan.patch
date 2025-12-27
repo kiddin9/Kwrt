@@ -1,8 +1,8 @@
-diff --git a/target/linux/rockchip/patches-6.6/304-r4s-pwm-fan.patch b/target/linux/rockchip/patches-6.6/304-r4s-pwm-fan.patch
+diff --git a/target/linux/rockchip/patches-6.12/304-r4s-pwm-fan.patch b/target/linux/rockchip/patches-6.12/304-r4s-pwm-fan.patch
 new file mode 100644
 index 000000000000..546ca54589c2
 --- /dev/null
-+++ b/target/linux/rockchip/patches-6.6/304-r4s-pwm-fan.patch
++++ b/target/linux/rockchip/patches-6.12/304-r4s-pwm-fan.patch
 @@ -0,0 +1,55 @@
 +From 930d10b5a37004c428ad1c9747a1424e85567e3f Mon Sep 17 00:00:00 2001
 +From: jjm2473 <1129525450@qq.com>

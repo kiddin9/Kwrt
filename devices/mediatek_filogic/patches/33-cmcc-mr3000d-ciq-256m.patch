@@ -1,20 +1,5 @@
-From 208ce83ac5b5405c3e221c1c3d24cca4fab94f9e Mon Sep 17 00:00:00 2001
-From: Chen Minqiang <ptpt52@gmail.com>
-Date: Tue, 22 Oct 2024 07:32:00 +0800
-Subject: [PATCH] mediatek: init add cmcc-mr3000d-ciq-256m
-
----
- .../uboot-envtools/files/mediatek_filogic     |   1 +
- .../dts/mt7981b-cmcc-mr3000d-ciq-256m.dts     | 259 ++++++++++++++++++
- .../filogic/base-files/etc/board.d/02_network |   1 +
- .../base-files/lib/upgrade/platform.sh        |   1 +
- target/linux/mediatek/image/filogic.mk        |  28 ++
- 5 files changed, 290 insertions(+)
-
-diff --git a/package/boot/uboot-envtools/files/mediatek_filogic b/package/boot/uboot-envtools/files/mediatek_filogic
-index 4eeb2b0196c4d9..43cb3830e7ed4a 100644
---- a/package/boot/uboot-envtools/files/mediatek_filogic
-+++ b/package/boot/uboot-envtools/files/mediatek_filogic
+--- a/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
++++ b/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
 @@ -140,9 +140,12 @@
  zyxel,ex5700-telenor)
  	ubootenv_add_uci_config "/dev/ubootenv" "0x0" "0x4000" "0x4000" "1"
@@ -28,20 +13,18 @@ index 4eeb2b0196c4d9..43cb3830e7ed4a 100644
  config_foreach ubootenv_add_app_config
  
  exit 0
-diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index ccc988c3a8aad3..e9754ebc653756 100644
+
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -9,6 +9,7 @@
- 
  	case $board in
  	abt,asr3000|\
+ 	buffalo,wsr-6000ax8|\
 +	cmcc,mr3000d-ciq-256m|\
  	cmcc,rax3000m*|\
  	cmcc,xr30*|\
- 	konka,komi-a31|\
-diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-index f6fc3d52cef14e..07a0eca1ba65d0 100755
+ 	h3c,magic-nx30-pro|\
+
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 @@ -214,7 +214,19 @@

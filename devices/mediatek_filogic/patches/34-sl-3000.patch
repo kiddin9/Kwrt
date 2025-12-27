@@ -47,18 +47,18 @@
 
 --- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-@@ -107,6 +107,7 @@ platform_do_upgrade() {
+@@ -129,6 +129,7 @@ platform_do_upgrade() {
  	glinet,gl-xe3000|\
  	huasifei,wh3000|\
  	huasifei,wh3000-pro|\
-+ 	sl,3000*|\
++	sl,3000*|\
  	smartrg,sdg-8612|\
  	smartrg,sdg-8614|\
  	smartrg,sdg-8622|\
-@@ -234,6 +235,7 @@ platform_copy_config() {
- 	huasifei,wh3000|\
+@@ -350,6 +351,7 @@ platform_copy_config() {
  	huasifei,wh3000-pro|\
  	jdcloud,re-cp-03|\
+ 	nradio,c8-668gl|\
 +	sl,3000*|\
  	smartrg,sdg-8612|\
  	smartrg,sdg-8614|\

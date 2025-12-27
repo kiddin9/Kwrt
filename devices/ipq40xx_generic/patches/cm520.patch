@@ -1,5 +1,5 @@
---- a/target/linux/ipq40xx/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq4019-cm520-79f.dts
-+++ b/target/linux/ipq40xx/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq4019-cm520-79f.dts
+--- a/target/linux/ipq40xx/files-6.12/arch/arm/boot/dts/qcom/qcom-ipq4019-cm520-79f.dts
++++ b/target/linux/ipq40xx/files-6.12/arch/arm/boot/dts/qcom/qcom-ipq4019-cm520-79f.dts
 @@ -9,6 +9,10 @@
  	model = "MobiPromo CM520-79F";
  	compatible = "mobipromo,cm520-79f";

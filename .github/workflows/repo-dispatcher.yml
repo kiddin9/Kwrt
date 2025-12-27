@@ -198,3 +198,8 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
           -d '{"event_type": "airoha_an7581 ${{ github.event.inputs.param }}", "client_payload": {"target": "airoha_an7581"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
+          -d '{"event_type": "siflower_sf21 ${{ github.event.inputs.param }}", "client_payload": {"target": "siflower_sf21"}}'

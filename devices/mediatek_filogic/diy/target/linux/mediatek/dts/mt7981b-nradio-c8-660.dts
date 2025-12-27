@@ -1,6 +1,6 @@
 /dts-v1/;
 
-#include "mt7981.dtsi"
+#include "mt7981b.dtsi"
 
 / {
 	model = "NRadio C8-660";
@@ -126,7 +126,7 @@
 		compatible = "mediatek,mt7531";
 		reg = <31>;
 		dsa,member = <0 0>;
-		reset-gpios = <&pio 39 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&pio 39 GPIO_ACTIVE_LOW>;
 		interrupt-controller;
 		#interrupt-cells = <1>;
 		interrupt-parent = <&pio>;
