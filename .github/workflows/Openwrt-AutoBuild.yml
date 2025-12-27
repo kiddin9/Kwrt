@@ -276,8 +276,8 @@ jobs:
         SSH_CMD_ARGS: "-o ServerAliveInterval=30 -o ServerAliveCountMax=10"
         SOURCE: openwrt/bin/targets
         REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+        REMOTE_USER: ${{ secrets.SERVER_USERNAME }}
         REMOTE_PORT: ${{ secrets.SERVER_PORT }}
-        REMOTE_USER: root
         TARGET: "/www/wwwroot/dl.openwrt.ai/releases/tmp/"
 
     - name: Create release
