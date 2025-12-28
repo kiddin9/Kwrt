@@ -31,7 +31,7 @@ If you want to revert back to stock fw while on LEDE:
 
 Signed-off-by: Chen Minqiang <ptpt52@gmail.com>
 ---
- package/boot/uboot-envtools/files/ramips      |   1 +
+ package/boot/uboot-tools/uboot-envtools/files/ramips      |   1 +
  .../ramips/dts/mt7620a_xiaomi_miwifi-r3.dts   | 187 ++++++++++++++++++
  target/linux/ramips/image/mt7620.mk           |  17 ++
  .../mt7620/base-files/etc/board.d/02_network  |   8 +
@@ -39,10 +39,10 @@ Signed-off-by: Chen Minqiang <ptpt52@gmail.com>
  5 files changed, 220 insertions(+)
  create mode 100644 target/linux/ramips/dts/mt7620a_xiaomi_miwifi-r3.dts
 
-diff --git a/package/boot/uboot-envtools/files/ramips b/package/boot/uboot-envtools/files/ramips
+diff --git a/package/boot/uboot-tools/uboot-envtools/files/ramips b/package/boot/uboot-tools/uboot-envtools/files/ramips
 index 05ca7ffd12c8..6afc4470f7a7 100644
---- a/package/boot/uboot-envtools/files/ramips
-+++ b/package/boot/uboot-envtools/files/ramips
+--- a/package/boot/uboot-tools/uboot-envtools/files/ramips
++++ b/package/boot/uboot-tools/uboot-envtools/files/ramips
 @@ -79,6 +79,7 @@ xiaomi,mi-router-3g|\
  xiaomi,mi-router-3-pro|\
  xiaomi,mi-router-4|\

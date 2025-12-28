@@ -1,6 +1,6 @@
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -157,6 +157,65 @@ define Device/nand
+@@ -157,6 +157,55 @@ define Device/nand
    IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
  endef
  
@@ -13,16 +13,6 @@
 +  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
 +endef
 +TARGET_DEVICES += phicomm_k2p-32m
-+
-+define Device/jdcloud_re-sp-01b
-+  $(Device/dsa-migration)
-+  IMAGE_SIZE := 27328k
-+  DEVICE_VENDOR := JDCloud
-+  DEVICE_MODEL := RE-SP-01B
-+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615-firmware \
-+	kmod-sdhci-mt7620 kmod-usb3
-+ endef
-+ TARGET_DEVICES += jdcloud_re-sp-01b
 +
 +define Device/jdcloud_luban
 +  $(Device/dsa-migration)
@@ -185,8 +175,8 @@
  	zyxel,nwa50ax|\
  	zyxel,nwa55axe)
 
---- a/package/boot/uboot-envtools/files/ramips
-+++ b/package/boot/uboot-envtools/files/ramips
+--- a/package/boot/uboot-tools/uboot-envtools/files/ramips
++++ b/package/boot/uboot-tools/uboot-envtools/files/ramips
 @@ -73,9 +73,7 @@ zyxel,nr7101)
  		ubootenv_add_uci_config "/dev/mtd$idx" "0x0" "0x1000" "0x80000"
  	;;
@@ -198,18 +188,3 @@
  	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x10000" "0x20000"
  	;;
  esac
-
---- a/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
-+++ b/target/linux/ramips/mt7621/base-files/etc/hotplug.d/ieee80211/10_fix_wifi_mac
-@@ -126,6 +126,11 @@ case "$board" in
- 		[ "$PHYNBR" = "1" ] && \
- 			macaddr_setbit_la "$(mtd_get_mac_binary Factory 0x4)" > /sys${DEVPATH}/macaddress
- 		;;
-+	jdcloud,re-sp-01b)
-+		hw_mac_addr=$(mtd_get_mac_ascii config mac)
-+		[ "$PHYNBR" = "0" ] && echo $hw_mac_addr > /sys${DEVPATH}/macaddress
-+		[ "$PHYNBR" = "1" ] && macaddr_add $hw_mac_addr 0x800000 > /sys${DEVPATH}/macaddress
-+		;;
- 	keenetic,kn-3510)
- 		[ "$PHYNBR" = "1" ] && \
- 			macaddr_setbit_la "$(mtd_get_mac_binary rf-eeprom 0x4)" > /sys${DEVPATH}/macaddress

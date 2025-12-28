@@ -27,7 +27,7 @@ MAC addresses as verified by stock firmware:
 | WiFi 2g     | xx:xx:xx:xx:xx:B4 | 0x1006  | binary |
 | WiFi 5g     | xx:xx:xx:xx:xx:B5 | 0x5006  | binary |
 ---
- package/boot/uboot-envtools/files/ipq806x     |   6 +-
+ package/boot/uboot-tools/uboot-envtools/files/ipq806x     |   6 +-
  .../ipq806x/base-files/etc/board.d/02_network |   4 +
  .../etc/hotplug.d/firmware/11-ath10k-caldata  |   6 +
  .../ipq806x/base-files/etc/init.d/bootcount   |   8 +
@@ -37,12 +37,12 @@ MAC addresses as verified by stock firmware:
  target/linux/ipq806x/image/generic.mk         |  17 +
  8 files changed, 963 insertions(+), 1 deletion(-)
  create mode 100644 target/linux/ipq806x/base-files/lib/upgrade/xiaomi.sh
- create mode 100644 target/linux/ipq806x/files-6.6/arch/arm/boot/dts/qcom-ipq8064-r3d.dts
+ create mode 100644 target/linux/ipq806x/files-6.12/arch/arm/boot/dts/qcom-ipq8064-r3d.dts
 
-diff --git a/package/boot/uboot-envtools/files/ipq806x b/package/boot/uboot-envtools/files/ipq806x
+diff --git a/package/boot/uboot-tools/uboot-envtools/files/ipq806x b/package/boot/uboot-tools/uboot-envtools/files/ipq806x
 index 01a86c7b19fca..c0a781c1e21b4 100644
---- a/package/boot/uboot-envtools/files/ipq806x
-+++ b/package/boot/uboot-envtools/files/ipq806x
+--- a/package/boot/uboot-tools/uboot-envtools/files/ipq806x
++++ b/package/boot/uboot-tools/uboot-envtools/files/ipq806x
 @@ -52,6 +52,10 @@ qcom,ipq8064-ap148|\
  qcom,ipq8064-db149)
  	ubootenv_add_uci_config $(ubootenv_mtdinfo)
@@ -565,11 +565,11 @@ index 0000000000000..9246e8f867e3f
 +
 +	nand_do_upgrade "$XIAOMI_FW_FILE"
 +}
-diff --git a/target/linux/ipq806x/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq8064-r3d.dts b/target/linux/ipq806x/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq8064-r3d.dts
+diff --git a/target/linux/ipq806x/files-6.12/arch/arm/boot/dts/qcom/qcom-ipq8064-r3d.dts b/target/linux/ipq806x/files-6.12/arch/arm/boot/dts/qcom/qcom-ipq8064-r3d.dts
 new file mode 100644
 index 0000000000000..fd952d230c5da
 --- /dev/null
-+++ b/target/linux/ipq806x/files-6.6/arch/arm/boot/dts/qcom/qcom-ipq8064-r3d.dts
++++ b/target/linux/ipq806x/files-6.12/arch/arm/boot/dts/qcom/qcom-ipq8064-r3d.dts
 @@ -0,0 +1,479 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 +

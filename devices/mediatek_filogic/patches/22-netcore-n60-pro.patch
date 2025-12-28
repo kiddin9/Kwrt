@@ -1,66 +1,67 @@
---- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
-@@ -70,6 +70,11 @@ mercusys,mr90x-v1-ubi)
- netgear,wax220)
- 	ucidef_set_led_netdev "eth0" "LAN" "green:lan" "eth0"
- 	;;
-+netcore,n60-pro)
-+	ucidef_set_led_netdev "lan1" "LAN1" "mdio-bus:05:green:lan" "lan1" "link tx rx"
-+	ucidef_set_led_netdev "wanact" "WANACT" "mdio-bus:06:green:wan" "eth1" "tx rx"
-+	ucidef_set_led_netdev "wanlink" "WANLINK" "blue:wan" "eth1" "link"
-+	;;
- nokia,ea0326gmp)
- 	ucidef_set_led_netdev "wan" "WAN" "green:wan" "eth1" "link"
- 	ucidef_set_led_netdev "lan" "LAN" "green:lan" "br-lan" "link"
-
---- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -42,7 +42,7 @@ mediatek_setup_interfaces()
- 	asus,tuf-ax4200|\
- 	jdcloud,re-cp-03|\
- 	mediatek,mt7981-rfb|\
--	netcore,n60|\
-+	netcore,n60*|\
- 	ruijie,rg-x60-pro|\
- 	unielec,u7981-01*|\
- 	zbtlink,zbt-z8102ax|\
-
---- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-+++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -105,7 +105,8 @@ case "$board" in
- 		[ "$PHYNBR" = "1" ] && macaddr_add $addr 3 > /sys${DEVPATH}/macaddress
- 		;;
- 	jcg,q30-pro|\
--	netcore,n60)
-+	netcore,n60|\
-+	netcore,n60-pro)
- 		# Originally, phy1 is phy0 mac with LA bit set. However, this would conflict
- 		# addresses on multiple VIFs with the other radio. Use label mac to set LA bit.
- 		[ "$PHYNBR" = "1" ] && macaddr_setbit_la $(get_mac_label) > /sys${DEVPATH}/macaddress
-
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
-@@ -1203,6 +1203,23 @@ define Device/netcore_n60
- endef
- TARGET_DEVICES += netcore_n60
+@@ -900,7 +900,7 @@ endef
  
-+define Device/netcore_n60-pro
-+  DEVICE_VENDOR := Netcore
-+  DEVICE_MODEL := N60 Pro
-+  DEVICE_DTS := mt7986a-netcore-n60-pro
-+  DEVICE_DTS_DIR := ../dts
-+  UBINIZE_OPTS := -E 5
-+  BLOCKSIZE := 128k
-+  PAGESIZE := 2048
-+  KERNEL_IN_UBI := 1
-+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7986-firmware mt7986-wo-firmware kmod-usb3
+ define Device/comfast_cf-wr632ax
+   DEVICE_DTS := mt7981b-comfast-cf-wr632ax
+-  IMAGE_SIZE := 65536k
++  IMAGE_SIZE := 116736k
+   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+   SUPPORTED_DEVICES += cf-wr632ax
+   $(call Device/comfast_cf-wr632ax-common)
+@@ -2056,18 +2056,11 @@ define Device/netcore_n60-pro
+   BLOCKSIZE := 128k
+   PAGESIZE := 2048
+   KERNEL_IN_UBI := 1
+-  UBOOTENV_IN_UBI := 1
+-  IMAGES := sysupgrade.itb
+-  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+-  KERNEL := kernel-bin | gzip
+-  KERNEL_INITRAMFS := kernel-bin | lzma | \
+-	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+-  IMAGE/sysupgrade.itb := append-kernel | \
+-	fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | append-metadata
+   DEVICE_PACKAGES := kmod-mt7915e kmod-mt7986-firmware mt7986-wo-firmware kmod-usb3
+-  ARTIFACTS := preloader.bin bl31-uboot.fip
+-  ARTIFACT/preloader.bin := mt7986-bl2 spim-nand-ddr4
+-  ARTIFACT/bl31-uboot.fip := mt7986-bl31-uboot netcore_n60-pro
 +  IMAGE_SIZE := 112640k
 +  IMAGES += factory.bin
 +  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-+endef
-+TARGET_DEVICES += netcore_n60-pro
+ endef
+ TARGET_DEVICES += netcore_n60-pro
+ 
+
+--- a/target/linux/mediatek/dts/mt7986a-netcore-n60-pro.dts
++++ b/target/linux/mediatek/dts/mt7986a-netcore-n60-pro.dts
+@@ -242,6 +242,10 @@
+ 		spi-tx-bus-width = <4>;
+ 		spi-rx-bus-width = <4>;
+ 
++		mediatek,nmbm;
++		mediatek,bmt-max-ratio = <1>;
++		mediatek,bmt-max-reserved-blocks = <64>;
 +
- define Device/netgear_wax220
-   DEVICE_VENDOR := NETGEAR
-   DEVICE_MODEL := WAX220
+ 		partitions {
+ 			compatible = "fixed-partitions";
+ 			#address-cells = <1>;
+@@ -290,7 +294,7 @@
+ 
+ 			partition@580000 {
+ 				label = "ubi";
+-				reg = <0x0580000 0x7a80000>;
++				reg = <0x0580000 0x7280000>;
+ 				compatible = "linux,ubi";
+ 
+ 				volumes {
+
+--- a/target/linux/mediatek/dts/mt7981b-comfast-cf-wr632ax.dts
++++ b/target/linux/mediatek/dts/mt7981b-comfast-cf-wr632ax.dts
+@@ -14,5 +14,5 @@
+ };
+ 
+ &ubi {
+-	reg = <0x580000 0x4000000>;
++	reg = <0x580000 0x07200000>;
+ };

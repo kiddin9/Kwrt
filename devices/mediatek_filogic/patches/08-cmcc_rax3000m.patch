@@ -1,35 +1,15 @@
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -12,7 +12,8 @@ mediatek_setup_interfaces()
- 		ucidef_set_interface_lan "eth0" "dhcp"
  		;;
  	abt,asr3000|\
+ 	buffalo,wsr-6000ax8|\
 -	cmcc,rax3000m|\
 +	cmcc,rax3000m*|\
 +	cmcc,xr30*|\
  	h3c,magic-nx30-pro|\
- 	nokia,ea0326gmp|\
- 	zbtlink,zbt-z8103ax)
-
---- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-+++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-@@ -13,9 +13,16 @@ case "$FIRMWARE" in
- 		ln -sf /tmp/tp_data/MT7981_EEPROM.bin \
- 			/lib/firmware/$FIRMWARE
- 		;;
-+        sl,3000-emmc|\
-+        umi,uax3000e|\
-+        cmcc,rax3000m-emmc|\
-+        cmcc,xr30-emmc|\
- 	ubnt,unifi-6-plus)
- 		caldata_extract_mmc "factory" 0x0 0x1000
- 		;;
-+        sl,3000)
-+		caldata_extract_mtd "Factory" 0x0 0x1000
-+		;;
- 	esac
- 	;;
- "mediatek/mt7986_eeprom_mt7975_dual.bin")
+ 	imou,hx21|\
+ 	konka,komi-a31|\
 
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk

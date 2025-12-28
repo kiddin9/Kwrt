@@ -1,0 +1,11 @@
+--- a/package/kernel/linux/modules/netsupport.mk
++++ b/package/kernel/linux/modules/netsupport.mk
+@@ -64,7 +64,7 @@ define KernelPackage/bonding
+   SUBMENU:=$(NETWORK_SUPPORT_MENU)
+   TITLE:=Ethernet bonding driver
+   KCONFIG:=CONFIG_BONDING
+-  DEPENDS:=PACKAGE_kmod-tls:kmod-tls
++  DEPENDS:=+PACKAGE_kmod-tls:kmod-tls
+   FILES:=$(LINUX_DIR)/drivers/net/bonding/bonding.ko
+   AUTOLOAD:=$(call AutoLoad,40,bonding)
+   MODPARAMS.bonding:=max_bonds=0
