@@ -145,9 +145,9 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo mkdir -p -m 777 /mnt/openwrt/staging_dir /mnt/openwrt/build_dir
+        sudo mkdir -p -m 777 /mnt/openwrt/build_dir openwrt/staging_dir
         ln -sf /mnt/openwrt/build_dir openwrt/build_dir
-        ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
+        ln -sf openwrt/staging_dir /mnt/openwrt/staging_dir
 
     - name: Load custom configuration
       run: |
@@ -242,7 +242,7 @@ jobs:
         df -hT
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
-        make -j$(($(nproc)+1)) || (df -hT;log=$(mktemp);make V=s &>$log) || (tail -50 $log; curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage";df -hT;exit 1)
+        make -j$(($(nproc)+1)) || (df -hT;log=$(mktemp);make target/imagebuilder/install &>$log) || (tail -50 $log; curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage";df -hT;exit 1)
         rm -rf staging_dir/toolchain-*/bin/*openwrt-linux-musl-lto-dump
         rm -rf staging_dir/toolchain-*/initial
         df -hT
