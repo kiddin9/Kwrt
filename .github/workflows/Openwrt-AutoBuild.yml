@@ -120,7 +120,7 @@ jobs:
         TAG_DATE="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[] | select(.name | startswith("v25")) | .target.tagger.date' | head -n 1)"
         if [[ $(( ($(date +%s) - $(date -d "$TAG_DATE" +%s)) / 86400 )) -lt 15 ]]; then
         REPO_BRANCH="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[].name' | grep v25 | head -n 1)"
-        REPO_BRANCH="openwrt-25.12"
+        # REPO_BRANCH="openwrt-25.12"
         else
         REPO_BRANCH="openwrt-25.12"
         fi
@@ -145,7 +145,7 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo mkdir -p -m 777 /mnt/openwrt/dl /mnt/openwrt/staging_dir /mnt/openwrt/build_dir
+        sudo mkdir -p -m 777 /mnt/openwrt/staging_dir /mnt/openwrt/build_dir
         ln -sf /mnt/openwrt/build_dir openwrt/build_dir
         ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
 
@@ -216,7 +216,7 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        if [[ ! "${{matrix.target}}" =~ (amlogic_*|armsr_armv8|bcm27xx_*|rockchip_armv8|sunxi_*|x86_*|siflower_*) ]]; then
+        if [[ ! "${{matrix.target}}" =~ (amlogic_meson8b|armsr_armv8|bcm27xx_*|rockchip_armv8|sunxi_*|x86_*|siflower_*) ]]; then
         sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
         sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
         make defconfig
@@ -242,8 +242,7 @@ jobs:
         df -hT
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
-        make -j$(($(nproc)+1)) || make V=s &>build.log || (tail -50 build.log; curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage";df -hT;exit 1)
-        sed -i "s/# CONFIG_IB is not set/CONFIG_IB=y/" .config
+        make -j$(($(nproc)+1)) || (df -hT;log=$(mktemp);make V=s &>$log) || (tail -50 $log; curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage";df -hT;exit 1)
         rm -rf staging_dir/toolchain-*/bin/*openwrt-linux-musl-lto-dump
         rm -rf staging_dir/toolchain-*/initial
         df -hT
