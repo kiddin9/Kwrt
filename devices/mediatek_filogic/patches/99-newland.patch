@@ -23,20 +23,10 @@
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -181,6 +181,26 @@ case "$board" in
+@@ -181,6 +181,16 @@ case "$board" in
  		[ "$PHYNBR" = "0" ] && echo "$addr" > /sys${DEVPATH}/macaddress
  		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
  		;;
-+        sl,3000)
-+		label_mac=$(mtd_get_mac_binary Factory 0x04)
-+		[ "$PHYNBR" = "0" ] && macaddr_add $label_mac 1 > /sys${DEVPATH}/macaddress
-+		[ "$PHYNBR" = "1" ] && macaddr_add $label_mac 2 > /sys${DEVPATH}/macaddress
-+		;;
-+        sl,3000-emmc)
-+		label_mac=$(mmc_get_mac_binary factory 0x04)
-+		[ "$PHYNBR" = "0" ] && macaddr_add $label_mac 1 > /sys${DEVPATH}/macaddress
-+		[ "$PHYNBR" = "1" ] && macaddr_add $label_mac 2 > /sys${DEVPATH}/macaddress
-+		;;
 +        umi,uax3000e)
 +		addr=$(mmc_get_mac_binary factory 0x24)
 +		[ "$PHYNBR" = "0" ] && macaddr_add $addr > /sys${DEVPATH}/macaddress
