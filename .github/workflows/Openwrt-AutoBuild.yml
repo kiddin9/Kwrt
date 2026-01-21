@@ -118,9 +118,8 @@ jobs:
            -H "Authorization: Bearer ${{ secrets.TOKEN_KIDDIN9 }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", first: 4, orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {nodes {name target { ... on Tag {tagger {date}}}}}}}"}' https://api.github.com/graphql)"
         TAG_DATE="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[] | select(.name | startswith("v25")) | .target.tagger.date' | head -n 1)"
-        if [[ $(( ($(date +%s) - $(date -d "$TAG_DATE" +%s)) / 86400 )) -lt 15 ]]; then
+        if [[ $(( ($(date +%s) - $(date -d "$TAG_DATE" +%s)) / 86400 )) -lt 10 || "${{ contains(github.event.action, 'tags') }}" == "true" ]]; then
         REPO_BRANCH="$( echo ${TAG_INFO} | jq -r '.data.repository.refs.nodes[].name' | grep v25 | head -n 1)"
-        REPO_BRANCH="openwrt-25.12"
         else
         REPO_BRANCH="openwrt-25.12"
         fi
