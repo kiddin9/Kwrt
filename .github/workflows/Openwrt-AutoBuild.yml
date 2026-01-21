@@ -270,10 +270,9 @@ jobs:
       if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avr --timeout=600 --include=kwrt-imagebuilder-* --include=kwrt-*-initramfs*"
+        ARGS: "-avr --timeout=600 --include=kwrt-imagebuilder-* --include=kwrt-*-initramfs* --exclude=kwrt-*"
         SSH_CMD_ARGS: "-o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o StrictHostKeyChecking=no"
         SOURCE: openwrt/bin/targets
-        EXCLUDE: "kwrt-*"
         REMOTE_HOST: ${{ secrets.SERVER_HOST }}
         REMOTE_USER: ${{ secrets.SERVER_USERNAME }}
         REMOTE_PORT: ${{ secrets.SERVER_PORT }}
