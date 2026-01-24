@@ -24,14 +24,6 @@
 
 --- a/target/linux/mediatek/dts/mt7981b-nokia-ea0326gmp.dts
 +++ b/target/linux/mediatek/dts/mt7981b-nokia-ea0326gmp.dts
-@@ -20,7 +20,6 @@
- 	};
- 
- 	chosen {
--		rootdisk = <&ubi_rootdisk>;
- 		stdout-path = "serial0:115200n8";
- 	};
- 
 @@ -164,6 +163,10 @@
  		spi-tx-bus-width = <4>;
  		spi-rx-bus-width = <4>;

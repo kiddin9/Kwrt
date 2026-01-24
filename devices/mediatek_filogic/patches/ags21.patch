@@ -1,0 +1,93 @@
+From 8fec3866d2889ac72602b45adb2b793b10d8283b Mon Sep 17 00:00:00 2001
+From: dailook <1296762908@qq.com>
+Date: Sat, 17 Jan 2026 16:51:15 +0800
+Subject: [PATCH] =?UTF-8?q?=E5=90=8C=E6=AD=A5?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../uboot-envtools/files/mediatek_filogic     |   1 +
+ .../filogic/base-files/etc/board.d/01_leds    |   4 +
+ .../filogic/base-files/etc/board.d/02_network |   3 +
+ .../base-files/lib/upgrade/platform.sh        |  11 +-
+ target/linux/mediatek/image/filogic.mk        |  13 +
+ 16 files changed, 810 insertions(+), 5 deletions(-)
+
+diff --git a/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic b/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
+index e2e5224bf24..08dc5872698 100644
+--- a/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
++++ b/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
+@@ -63,6 +63,7 @@ zyxel,ex5601-t0-ubootmod)
+ acer,predator-w6|\
+ acer,predator-w6d|\
+ acer,vero-w6m|\
++aigo,ags21|\
+ glinet,gl-mt2500|\
+ glinet,gl-mt6000|\
+ glinet,gl-x3000|\
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
+index f79f66460d7..37bca90cfb8 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
+@@ -24,6 +24,10 @@ acer,predator-w6x-stock|\
+ acer,predator-w6x-ubootmod)
+ 	ucidef_set_led_netdev "wan" "wan" "rgb:status" "eth1"
+ 	;;
++aigo,ags21)
++	ucidef_set_led_netdev "internet" "INTERNET" "green:status" "eth1"
++	ucidef_set_led_netdev "wlan" "WLAN" "white:status" "phy1-ap0"
++	;;
+ asus,rt-ax52|\
+ asus,rt-ax57m|\
+ snr,snr-cpe-ax2)
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 2a618cbf6a0..7e647176b8a 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -34,6 +34,9 @@ mediatek_setup_interfaces()
+ 	acer,vero-w6m)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" internet
+ 		;;
++	aigo,ags21)
++		ucidef_set_interfaces_lan_wan "lan1 lan2" eth1
++		;;
+ 	arcadyan,mozart)
+ 		ucidef_set_interfaces_lan_wan "lan0 eth1" eth2
+ 		;;
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index 3c675478688..480a97d172a 100755
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -124,6 +124,7 @@ platform_do_upgrade() {
+ 	acer,predator-w6|\
+ 	acer,predator-w6d|\
+ 	acer,vero-w6m|\
++	aigo,ags21|\
+ 	airpi,ap3000m|\
+ 	arcadyan,mozart|\
+ 	glinet,gl-mt2500|\
+diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
+index f676b877c4a..f35d805242e 100644
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -189,6 +189,19 @@ define Device/acer_vero-w6m
+ endef
+ TARGET_DEVICES += acer_vero-w6m
+ 
++define Device/aigo_ags21
++  DEVICE_VENDOR := Aigo
++  DEVICE_MODEL := AGS21
++  DEVICE_DTS := mt7981b-aigo-ags21
++  DEVICE_DTS_DIR := ../dts
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware automount coremark blkid blockdev fdisk f2fsck mkf2fs kmod-mmc mmc-utils
++  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
++  KERNEL_INITRAMFS := kernel-bin | lzma | \
++	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
++  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++endef
++TARGET_DEVICES += aigo_ags21
++
+ define Device/adtran_smartrg
+   DEVICE_VENDOR := Adtran
+   DEVICE_DTS_DIR := ../dts

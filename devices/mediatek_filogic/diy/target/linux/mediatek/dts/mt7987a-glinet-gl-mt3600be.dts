@@ -1,0 +1,298 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Author: Developer X <dev@x-wrt.com>
+ */
+
+/dts-v1/;
+#include "mt7987a.dtsi"
+#include <dt-bindings/input/input.h>
+
+/ {
+	model = "GL.iNet GL-MT3600BE";
+	compatible = "glinet,gl-mt3600be", "mediatek,mt7987a", "mediatek,mt7987";
+
+	aliases {
+		label-mac-device = &gmac0;
+		led-boot = &led_power;
+		led-failsafe = &led_power;
+		led-running = &led_power;
+		led-upgrade = &led_power;
+	};
+
+	chosen {
+		bootargs = "console=ttyS0,115200n1 \
+			    earlycon=uart8250,mmio32,0x11000000 \
+			    pci=pcie_bus_perf";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			linux,code = <KEY_RESTART>;
+			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
+			debounce-interval = <10>;
+		};
+
+		switch {
+			label = "switch";
+			linux,code = <BTN_0>;
+			gpios = <&pio 3 GPIO_ACTIVE_HIGH>;
+			debounce-interval = <10>;
+			linux,input-type = <EV_SW>;
+		};
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+
+		led_power: led@0 {
+			label = "blue:run";
+			gpios = <&pio 48 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+		};
+
+		led@1 {
+			label = "white:system";
+			gpios = <&pio 49 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	gpio-export {
+		compatible = "gpio-export";
+
+		usb_power {
+			gpio-export,name = "usb_power";
+			gpio-export,output = <1>;
+			gpios = <&pio 14 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	fan_3v: regulator-fan-3p3v {
+		compatible = "regulator-fixed";
+		regulator-name = "fan";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&pio 6 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+};
+
+&spi1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&spic_pins>;
+	status = "okay";
+};
+
+&spi2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi2_flash_pins>;
+	status = "okay";
+
+	flash@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <52000000>;
+		spi-rx-bus-width = <4>;
+		spi-tx-bus-width = <4>;
+		mediatek,nmbm;
+		mediatek,bmt-max-ratio = <1>;
+		mediatek,bmt-max-reserved-blocks = <64>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0 {
+				label = "BL2";
+				reg = <0x00 0x100000>;
+				read-only;
+			};
+
+			partition@100000 {
+				label = "u-boot-env";
+				reg = <0x100000 0x80000>;
+			};
+
+			factory: partition@180000 {
+				label = "Factory";
+				reg = <0x180000 0x400000>;
+				read-only;
+
+				nvmem-layout {
+					compatible = "fixed-layout";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					macaddr_base: macaddr@4000 {
+						reg = <0x4000 0x6>;
+						compatible = "mac-base";
+						#nvmem-cell-cells = <1>;
+					};
+				};
+			};
+
+			partition@580000 {
+				label = "FIP";
+				reg = <0x580000 0x200000>;
+			};
+
+			partition@780000 {
+				label = "log";
+				reg = <0x780000 0x40000>;
+			};
+
+			partition@7C0000 {
+				label = "CFG";
+				reg = <0x7c0000 0x40000>;
+			};
+
+			partition@800000 {
+				label = "ubi";
+				reg = <0x800000 0x1d800000>;
+			};
+		};
+	};
+};
+
+&fan {
+	status = "okay";
+	pwms = <&pwm 1 50000 0>;
+	fan-supply = <&fan_3v>;
+	interrupt-parent = <&pio>;
+	interrupts = <5 IRQ_TYPE_EDGE_RISING>;
+	cooling-levels = <0 64 128 192 255>;
+};
+
+&gmac0 {
+	phy-mode = "2500base-x";
+	phy-handle = <&phy7>;
+	status = "okay";
+	nvmem-cells = <&macaddr_base 0>;
+	nvmem-cell-names = "mac-address";
+};
+
+&gmac1 {
+	mac-type = "xgdm";
+	phy-mode = "internal";
+	phy-handle = <&phy15>;
+	status = "okay";
+	nvmem-cells = <&macaddr_base 1>;
+	nvmem-cell-names = "mac-address";
+};
+
+&mdio {
+	reset-gpios = <&pio 0 GPIO_ACTIVE_LOW>;
+	reset-delay-us = <10000>;
+
+	phy7: phy@7 {
+		compatible = "ethernet-phy-ieee802.3-c45";
+		reg = <7>;
+		reset-assert-us = <100000>;
+		reset-deassert-us = <100000>;
+		reset-gpios = <&pio 42 GPIO_ACTIVE_LOW>;
+		interrupt-controller;
+		#interrupt-cells = <1>;
+		interrupt-parent = <&pio>;
+		interrupts = <41 IRQ_TYPE_LEVEL_LOW>;
+	};
+
+	phy15: phy@15 {
+		compatible = "ethernet-phy-ieee802.3-c45";
+		reg = <15>;
+		pinctrl-names = "i2p5gbe-led";
+		pinctrl-0 = <&i2p5gbe_led0_pins>;
+		phy-mode = "internal";
+	};
+};
+
+&pcie0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie0_pins>;
+	status = "okay";
+
+	slot0: pcie@0,0 {
+		reg = <0x0000 0 0 0 0>;
+		mt7996@0,0 {
+			compatible = "mediatek,mt76";
+			reg = <0x0000 0 0 0 0>;
+			device_type = "pci";
+			mediatek,mtd-eeprom = <&factory 0x0>;
+
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			ieee80211-freq-limit = <2400000 2500000>,
+					       <5170000 5835000>;
+
+			band@0 {
+				reg = <0>;
+				nvmem-cells = <&macaddr_base 2>;
+				nvmem-cell-names = "mac-address";
+			};
+
+			band@1 {
+				reg = <1>;
+				nvmem-cells = <&macaddr_base 3>;
+				nvmem-cell-names = "mac-address";
+			};
+		};
+	};
+};
+
+&pcie1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie1_pins>;
+	status = "disabled";
+};
+
+&pwm_pins {
+	mux {
+		function = "pwm";
+		groups = "pwm1_0";
+	};
+};
+
+&pwm {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pwm_pins>;
+	status = "okay";
+};
+
+&spi2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi2_flash_pins>;
+	status = "okay";
+};
+
+&ssusb {
+	status = "okay";
+};
+
+&tphyu3port0 {
+	status = "okay";
+};
+
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins>;
+	status = "okay";
+};
+
+&infra_bus_prot {
+	status = "okay";
+};
+
+&boottrap {
+	status = "okay";
+};
+
+&trng {
+	status = "okay";
+};
+
+&lvts {
+	status = "okay";
+};
