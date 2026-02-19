@@ -8,9 +8,9 @@
  	acer,predator-w6x-ubootmod|\
  	asus,zenwifi-bt8-ubootmod|\
  	bananapi,bpi-r3|\
-@@ -88,33 +87,20 @@ platform_do_upgrade() {
- 	bananapi,bpi-r4-poe|\
+@@ -88,34 +87,21 @@ platform_do_upgrade() {
  	bananapi,bpi-r4-lite|\
+ 	bazis,ax3000wm|\
  	cmcc,a10-ubootmod|\
 -	cmcc,rax3000m|\
  	comfast,cf-wr632ax-ubootmod|\
@@ -27,6 +27,7 @@
  	mercusys,mr90x-v1-ubi|\
  	netis,nx30v2|\
  	netis,nx31|\
+ 	netis,nx32u|\
 -	nokia,ea0326gmp|\
  	openwrt,one|\
 -	netcore,n60|\
