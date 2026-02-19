@@ -25,15 +25,15 @@
 
 --- a/package/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
 +++ b/package/feeds/luci/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
-@@ -3,7 +3,7 @@
- 		"description": "Grant access to realtime statistics",
- 		"read": {
+@@ -6,7 +6,7 @@
+ 				"/etc/services": [ "read" ]
+ 			},
  			"ubus": {
 -				"luci": [ "getConntrackList", "getRealtimeStats" ],
 +				"luci": [ "getConntrackList", "getRealtimeStats", "getCPUBench", "getCPUUsage", "getOnlineUsers" ],
+ 				"luci-rpc": [ "getHostHints", "getNetworkDevices", "getDHCPLeases" ],
  				"network.rrdns": [ "lookup" ]
  			}
- 		}
 
 --- a/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 +++ b/package/feeds/luci/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
