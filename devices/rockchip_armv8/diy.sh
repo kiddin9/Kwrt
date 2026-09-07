@@ -9,7 +9,7 @@ sed -i 's/Os/O2/g' include/target.mk
 
 rm -rf package/boot target/linux/rockchip
 
-git_clone_path d765b90d3fc2a812801a554aaa55cd6073642d00 https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot
 
 wget -N https://github.com/istoreos/istoreos/raw/refs/heads/istoreos-23.05/target/linux/rockchip/patches-5.15/305-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.12/
 
@@ -27,4 +27,6 @@ sed -i -e 's,wpad-openssl,wpad-basic-mbedtls,g' target/linux/rockchip/image/armv
 sed -i -e '/KERNEL_TESTING_PATCHVER/d' -e 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip luci-app-diskman/' -e 's/autocore-arm/autocore/' target/linux/rockchip/Makefile
 
 sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
+
+sed -i 's/6.18/6.12/' target/linux/rockchip/Makefile
 
