@@ -8,3 +8,15 @@
  		default y if TARGET_bcm27xx
  		default y if TARGET_imx_cortexa7
  		default y if TARGET_starfive
+
+--- a/target/linux/amlogic/base-files/etc/board.d/02_network
++++ b/target/linux/amlogic/base-files/etc/board.d/02_network
+@@ -12,7 +12,7 @@ amlogic_setup_interfaces()
+ 
+ 	case "$board" in
+ 	*)
+-		ucidef_set_interface_lan 'eth0' 'dhcp'
++		ucidef_set_interface_lan 'eth0'
+ 		;;
+ 	esac
+ }
