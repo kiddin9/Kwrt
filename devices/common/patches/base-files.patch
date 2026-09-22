@@ -1,3 +1,15 @@
+--- a/base-files/files/lib/upgrade/fwtool.sh
++++ b/base-files/files/lib/upgrade/fwtool.sh
+@@ -84,7 +84,7 @@ fwtool_check_image() {
+ 			# Step 3.
+ 			# here we must check if $dev == $oem to use this native compatability check
+ 			# so we add the check for [ "$dev" = "$oem" ]
+-			if (([ "${devicecompat#.*}" != "${imagecompat#.*}" ] || [ "$dev" = "$oem" ])) && [ "$SAVE_CONFIG" = "1" ]; then
++			if { [ "${devicecompat#.*}" != "${imagecompat#.*}" ] || [ -n "$oem" -a "$dev" = "$oem" ]; } && [ "$SAVE_CONFIG" = "1" ]; then
+ 				# Step 4.
+ 				# here we have to gaurd against the default case, oem may exsist and default will pass 
+ 				# the original check [ "${devicecompat#.*}" != "${imagecompat#.*}" ] so we must
+
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
 @@ -395,10 +395,13 @@ default_postinst() {
