@@ -1,5 +1,5 @@
---- a/base-files/files/lib/upgrade/fwtool.sh
-+++ b/base-files/files/lib/upgrade/fwtool.sh
+--- a/package/base-files/files/lib/upgrade/fwtool.sh
++++ b/package/base-files/files/lib/upgrade/fwtool.sh
 @@ -84,7 +84,7 @@ fwtool_check_image() {
  			# Step 3.
  			# here we must check if $dev == $oem to use this native compatability check
@@ -12,7 +12,7 @@
 
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
-@@ -395,10 +395,13 @@ default_postinst() {
+@@ -395,10 +395,12 @@ default_postinst() {
  			if [ "$PKG_UPGRADE" != "1" ]; then
  				"$i" enable
  			fi
@@ -22,10 +22,6 @@
 +			fi
  		fi
  	done
- 
-+	[ -x /etc/init.d/ucitrack ] && /etc/init.d/ucitrack reload
- 	return $ret
- }
  
 
 --- a/package/base-files/files/etc/shinit
