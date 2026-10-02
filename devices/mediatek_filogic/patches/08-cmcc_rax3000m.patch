@@ -26,8 +26,8 @@
 +	aigo,ags21)
 +		ucidef_set_interfaces_lan_wan "lan1 lan2" eth1
 +		;;
- 	arcadyan,mozart)
- 		ucidef_set_interfaces_lan_wan "lan0 eth1" eth2
+ 	airtel,aap4221zy)
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2" wan
  		;;
 @@ -46,7 +46,10 @@ mediatek_setup_interfaces()
  	asus,zenwifi-bt8|\

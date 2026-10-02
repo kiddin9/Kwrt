@@ -1,0 +1,11 @@
+--- a/proto.c
++++ b/proto.c
+@@ -426,6 +426,8 @@ proto_apply_static_ip_settings(struct interface *iface, struct blob_attr *attr)
+ 			error = "INVALID_NETMASK";
+ 			goto error;
+ 		}
++	} else if (iface && !strncmp(iface->name, "lan", 3)) {
++		netmask = 24;
+ 	}
+ 
+ 	if ((cur = tb[OPT_BROADCAST])) {
