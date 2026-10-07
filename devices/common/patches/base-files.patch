@@ -1,3 +1,17 @@
+--- a/package/base-files/files/etc/rc.common
++++ b/package/base-files/files/etc/rc.common
+@@ -1,6 +1,10 @@
+ #!/bin/sh
+ # Copyright (C) 2006-2012 OpenWrt.org
+ 
++if [ "$(cat /proc/$$/comm 2>/dev/null)" != "sh" ]; then
++	exec /bin/sh "$0" "$@"
++fi
++
+ . $IPKG_INSTROOT/lib/functions.sh
+ . $IPKG_INSTROOT/lib/functions/service.sh
+ 
+
 --- a/package/base-files/files/lib/upgrade/fwtool.sh
 +++ b/package/base-files/files/lib/upgrade/fwtool.sh
 @@ -84,7 +84,7 @@ fwtool_check_image() {
