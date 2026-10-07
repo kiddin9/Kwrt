@@ -1,11 +1,15 @@
 --- a/package/base-files/files/etc/rc.common
 +++ b/package/base-files/files/etc/rc.common
-@@ -1,6 +1,10 @@
+@@ -1,6 +1,14 @@
  #!/bin/sh
  # Copyright (C) 2006-2012 OpenWrt.org
  
-+if [ "$(cat /proc/$$/comm 2>/dev/null)" != "sh" ]; then
-+	exec /bin/sh "$0" "$@"
++if [ -r /proc/self/comm ]; then
++	read -r _comm < /proc/self/comm
++	case "$_comm" in
++		sh|ash) unset _comm ;;
++		*) exec /bin/sh "$0" "$@" ;;
++	esac
 +fi
 +
  . $IPKG_INSTROOT/lib/functions.sh
