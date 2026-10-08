@@ -30,12 +30,11 @@
 
 --- a/package/base-files/files/lib/functions.sh
 +++ b/package/base-files/files/lib/functions.sh
-@@ -390,6 +390,12 @@ default_postinst() {
+@@ -390,6 +390,11 @@ default_postinst() {
  		fi
  
  		rm -f /tmp/luci-indexcache.*
 +
-+		# 检测本次安装是否包含新的 rpcd ACL 文件，如果有则重载 rpcd
 +		if grep -qs '^/usr/share/rpcd/acl.d/' "$filelist"; then
 +			[ -x /etc/init.d/rpcd ] && /etc/init.d/rpcd reload
 +		fi
@@ -43,7 +42,7 @@
  	fi
  
  	if [ -f "$root/usr/lib/opkg/info/${pkgname}.postinst-pkg" ]; then
-@@ -404,8 +410,10 @@ default_postinst() {
+@@ -404,11 +409,16 @@ default_postinst() {
  		else
  			if [ "$PKG_UPGRADE" != "1" ]; then
  				"$i" enable
@@ -54,6 +53,12 @@
 -			"$i" start
  		fi
  	done
+ 
++	if grep -qs '^/usr/share/ucitrack/' "$filelist"; then
++		[ -x /etc/init.d/ucitrack ] && /etc/init.d/ucitrack reload
++	fi
+ 	return $ret
+ }
  
 
 --- a/package/base-files/files/etc/shinit
