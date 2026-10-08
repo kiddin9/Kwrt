@@ -74,11 +74,6 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
-          -d '{"event_type": "x86_generic ${{ github.event.inputs.param }}", "client_payload": {"target": "x86_generic"}}'
-          curl \
-          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
           -d '{"event_type": "rockchip_armv8 ${{ github.event.inputs.param }}", "client_payload": {"target": "rockchip_armv8"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
