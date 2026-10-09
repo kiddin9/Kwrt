@@ -1,20 +1,22 @@
 --- a/package/base-files/files/etc/rc.common
 +++ b/package/base-files/files/etc/rc.common
-@@ -1,6 +1,14 @@
- #!/bin/sh
- # Copyright (C) 2006-2012 OpenWrt.org
+@@ -186,5 +186,16 @@ extra_command "enabled" "Check if service is started on boot"
  
-+if [ -r /proc/self/comm ]; then
-+	read -r _comm < /proc/self/comm
-+	case "$_comm" in
-+		sh|ash) unset _comm ;;
-+		*) exec /bin/sh "$0" "$@" ;;
-+	esac
-+fi
+ ALL_COMMANDS="${ALL_COMMANDS} ${EXTRA_COMMANDS}"
+ ALL_HELP="${ALL_HELP}${EXTRA_HELP}"
 +
- . $IPKG_INSTROOT/lib/functions.sh
- . $IPKG_INSTROOT/lib/functions/service.sh
- 
++[ -z "$IPKG_INSTROOT" ] && [ -z "$USE_PROCD" ] && [ -r /proc/self/comm ] && {
++	case "$action" in
++		start|stop|restart|boot|reload)
++			read -r _c < /proc/self/comm
++			[ "$_c" != "sh" ] && exec /bin/sh "$0" "$initscript" "$action" "$@"
++			unset _c
++			;;
++	esac
++}
++
+ list_contains ALL_COMMANDS "$action" || action=help
+ $action "$@"
 
 --- a/package/base-files/files/lib/upgrade/fwtool.sh
 +++ b/package/base-files/files/lib/upgrade/fwtool.sh
