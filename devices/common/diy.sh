@@ -57,8 +57,6 @@ wget -N https://raw.githubusercontent.com/openwrt/packages/master/lang/golang/go
 
 #sed -i "/call Build\/check-size,\$\$(KERNEL_SIZE)/d" include/image.mk
 
-sed -i "/+= targz/d" include/image.mk
-
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic/hack-6.12
 
 rm -rf target/linux/generic/hack-6.12/767-net-phy-realtek-add-led*

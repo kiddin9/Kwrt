@@ -20,7 +20,6 @@
 
 <img src="assets/p5.png" alt="" width="800">
 
-<img src="assets/p6.png" alt="" width="800">
 
 ## Acknowledgments
 
