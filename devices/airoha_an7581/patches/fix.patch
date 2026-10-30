@@ -1,0 +1,15 @@
+--- a/target/linux/airoha/dts/an7581.dtsi
++++ b/target/linux/airoha/dts/an7581.dtsi
+@@ -10,6 +10,12 @@
+ #include <dt-bindings/leds/common.h>
+ #include <dt-bindings/thermal/thermal.h>
+ 
++#ifndef PHY_POL_NORMAL
++#define PHY_POL_NORMAL  0
++#define PHY_POL_INVERT  1
++#define PHY_POL_AUTO    2
++#endif
++
+ / {
+ 	interrupt-parent = <&gic>;
+ 	#address-cells = <2>;

@@ -12,9 +12,9 @@ wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/include/image-
 wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/config/Config-ipq.in -P config/
 wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/Config.in -P ./
 
-rm -rf feeds/kiddin9/shortcut-fe
+rm -rf feeds/kiddin9/shortcut-fe 
 
-git clone https://github.com/qosmio/nss-packages.git package/nss-packages
+git clone https://github.com/laipeng668/nss-packages.git -b NSS-LibWrt package/nss-packages
 git clone https://github.com/qosmio/sqm-scripts-nss.git package/sqm-scripts-nss
 
 sed -i "/ECM_INTERFACE_RAWIP_ENABLE/d"  package/nss-packages/qca-nss-ecm/Makefile
