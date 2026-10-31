@@ -1,15 +1,47 @@
---- a/target/linux/airoha/dts/an7581.dtsi
-+++ b/target/linux/airoha/dts/an7581.dtsi
-@@ -10,6 +10,12 @@
- #include <dt-bindings/leds/common.h>
- #include <dt-bindings/thermal/thermal.h>
+--- a/package/kernel/linux/modules/fs.mk
++++ b/package/kernel/linux/modules/fs.mk
+@@ -494,9 +494,11 @@ define KernelPackage/fs-nfs-common-rpcsec
+ 	+kmod-crypto-cbc \
+ 	+kmod-crypto-cts
+   KCONFIG:= \
++	CONFIG_CRYPTO_KRB5 \
+ 	CONFIG_SUNRPC_GSS \
+ 	CONFIG_RPCSEC_GSS_KRB5
+   FILES:= \
++	$(LINUX_DIR)/crypto/krb5/krb5.ko \
+ 	$(LINUX_DIR)/net/sunrpc/auth_gss/auth_rpcgss.ko \
+ 	$(LINUX_DIR)/net/sunrpc/auth_gss/rpcsec_gss_krb5.ko
+   AUTOLOAD:=$(call AutoLoad,31,auth_rpcgss rpcsec_gss_krb5)
+
+--- a/package/kernel/linux/modules/netdevices.mk
++++ b/package/kernel/linux/modules/netdevices.mk
+@@ -182,6 +182,20 @@ endef
  
-+#ifndef PHY_POL_NORMAL
-+#define PHY_POL_NORMAL  0
-+#define PHY_POL_INVERT  1
-+#define PHY_POL_AUTO    2
-+#endif
+ $(eval $(call KernelPackage,libeth))
+ 
++define KernelPackage/libeth-xdp
++  SUBMENU:=$(NETWORK_DEVICES_MENU)
++  TITLE:=Common Intel Ethernet XDP library
++  DEPENDS:=+kmod-libeth
++  KCONFIG:=CONFIG_LIBETH_XDP
++  HIDDEN:=1
++  FILES:=$(LINUX_DIR)/drivers/net/ethernet/intel/libeth/libeth_xdp.ko
++endef
 +
- / {
- 	interrupt-parent = <&gic>;
- 	#address-cells = <2>;
++define KernelPackage/libeth-xdp/description
++  Common Intel Ethernet XDP library
++endef
++
++$(eval $(call KernelPackage,libeth-xdp))
+ 
+ define KernelPackage/libphy
+   SUBMENU:=$(NETWORK_DEVICES_MENU)
+@@ -1539,7 +1553,7 @@ $(eval $(call KernelPackage,i40e))
+ define KernelPackage/ice
+   SUBMENU:=$(NETWORK_DEVICES_MENU)
+   TITLE:=Intel(R) Ethernet Controller E810 Series support
+-  DEPENDS:=@PCI_SUPPORT +kmod-ptp +kmod-hwmon-core +kmod-libie +kmod-libie-adminq +kmod-libie-fwlog
++  DEPENDS:=@PCI_SUPPORT +kmod-ptp +kmod-hwmon-core +kmod-libie +kmod-libie-adminq +kmod-libie-fwlog +kmod-libeth-xdp
+   KCONFIG:=CONFIG_ICE \
+     CONFIG_ICE_HWMON=y \
+     CONFIG_ICE_HWTS=n \
