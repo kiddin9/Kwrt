@@ -2,6 +2,8 @@
 #=================================================
 shopt -s extglob
 
+curl -sL "https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/26371.patch" | git apply
+
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/op-packages.git;main' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
@@ -59,7 +61,6 @@ wget -N https://raw.githubusercontent.com/openwrt/packages/master/lang/golang/go
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic/hack-6.12
 
-rm -rf target/linux/generic/hack-6.12/767-net-phy-realtek-add-led*
 wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.12/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.12/
 
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
@@ -83,4 +84,4 @@ sed -i "s/OpenWrt/Kwrt/g" package/base-files/files/bin/config_generate package/b
 
 sed -i -e "s/set \${s}.country='\${country || ''}'/set \${s}.country='\${country || \"CN\"}'/g" -e "s/set \${s}.disabled=.*/set \${s}.disabled='0'/" package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
 
-rm -rf package/feeds/packages/jool
+rm -rf package/feeds/packages/jool package/feeds/routing/batman-adv

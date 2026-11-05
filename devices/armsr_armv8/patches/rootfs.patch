@@ -38,7 +38,7 @@
 +  	export MORE="$(MORE)"; \
 +	export ROOTFS_PARTSIZE=$(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))); \
 +  	cd /data/packit/amlogic-s9xxx-openwrt; \
-+  	. ~/packit/packit_amlogic.sh; \
++  	. ~/packit/packit_amlogic.sh || true; \
 +  fi
 +endef
 +
