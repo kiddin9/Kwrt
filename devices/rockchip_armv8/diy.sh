@@ -9,7 +9,7 @@ sed -i 's/Os/O2/g' include/target.mk
 
 rm -rf package/boot target/linux/rockchip
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot package/firmware/pcat-firmware package/lean/pcat-manager
 
 wget -N https://github.com/istoreos/istoreos/raw/refs/heads/istoreos-23.05/target/linux/rockchip/patches-5.15/305-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.12/
 
@@ -19,7 +19,7 @@ wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/target/linux/
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
-rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update package/feeds/kiddin9/pcat-manager package/feeds/kiddin9/*_QMI_WWAN
+rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update package/feeds/kiddin9/*_QMI_WWAN
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 sed -i -e 's,wpad-openssl,wpad-basic-mbedtls,g' target/linux/rockchip/image/armv8.mk
