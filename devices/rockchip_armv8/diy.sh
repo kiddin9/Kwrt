@@ -19,6 +19,10 @@ wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/target/linux/
 
 wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/target/linux/generic/backport-6.12/180-v6.14-compiler.h-add-const_true.patch -P target/linux/generic/backport-6.12/
 
+wget -O target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3568-photonicat.dts https://github.com/SlAlot/ImmortalWrt_Photonicat1/raw/refs/heads/main/tests/fixtures/photonicat-before.dts
+
+wget -N https://github.com/SlAlot/ImmortalWrt_Photonicat1/raw/refs/heads/main/patches/rockchip/950-swrt-photonicat-keep-aux-power.patch -P target/linux/rockchip/patches-6.12/
+
 wget -N https://github.com/SlAlot/ImmortalWrt_Photonicat1/raw/refs/heads/main/patches/rockchip/990-photonicat-pm-add-driver.patch -P target/linux/rockchip/patches-6.12/
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
