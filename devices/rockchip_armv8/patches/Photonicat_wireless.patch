@@ -102,3 +102,36 @@ index 00000000000000..8ca8f3b55b6a6e
 + 	hi_addr = host_interest_item_address(HI_ITEM(hi_board_data));
 + 
 + 	ret = ath10k_hif_diag_read(ar, hi_addr, &addr, sizeof(addr));
+
+--- a/target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3568-photonicat.dts
++++ b/target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3568-photonicat.dts
+@@ -545,6 +545,29 @@
+ &uart4 {
+ 	dma-names = "tx", "rx";
+ 	status = "okay";
++
++	pcat-pm {
++		compatible = "photonicat-pm";
++		baudrate = <115200>;
++		pm-version = <1>;
++		power-gpio = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
++		force-poweroff-timeout = <60>;
++
++		charger {
++			monitored-battery = <&battery>;
++		};
++
++		fan {};
++	};
++};
++
++&gpio4 {
++	aux-pwren {
++		gpio-hog;
++		gpios = <RK_PD2 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "aux-pwren";
++	};
+ };
+ 
+ &usb_host0_ehci {
