@@ -1,76 +1,74 @@
-From 046aec0dccd90f5a156cb8e9725c121c81955dd3 Mon Sep 17 00:00:00 2001
-From: soap man <soapmans@icloud.com>
-Date: Fri, 7 Aug 2026 11:34:11 +0800
-Subject: [PATCH] mediatek: add support for Cudy TR3600 v1
+From caa2aae3d150d293c200ce23373d248a89dd7807 Mon Sep 17 00:00:00 2001
+From: Chukun Pan <amadeus@jmu.edu.cn>
+Date: Tue, 8 Sep 2026 18:16:01 +0800
+Subject: [PATCH 1/2] mediatek: add Cudy TR3600 v1 support
 
-This is the Linux 6.12 stable-branch backport of the Cudy TR3600 v1
-support proposed in PR #24581.
+Hardware specification:
+  SoC: MediaTek MT7987B 2x A53
+  Flash: ESMT F50L2G41XA 256MB
+  RAM: M16U4G16256A DDR4 512MB
+  Ethernet: 2x 2.5G LAN / WAN
+  WiFi: MT7990AN + MT7976CN
+  LED: Status (red / white)
+  Button: Reset, Mode
+  USB: 1x USB-A 3.0
+  Power: PD / 5V 3A
 
-Hardware specifications:
-The Cudy TR3600 v1 is based on the MediaTek MT7987B SoC with
-512 MiB DDR4 and an ESMT F50L2G41XA 2 Gbit (256 MiB) SPI-NAND.
-It has a MediaTek MT7990AN dual-band radio with 2x2 operation on
-2.4 GHz and 3x3 operation on 5 GHz, two 2.5GbE ports using the
-MT7987 integrated GMACs and a Realtek RTL8221B external PHY, one
-USB-A 3.0 port, one white and one blue status LED, reset and mode
-buttons, and a PWM fan controlled by GPIO6 and PWM1. The USB-C
-input supports 5 V/3 A, 9 V/2.2 A, or 12 V/1.6 A (USB-PD), with
-15 W maximum consumption. The SoC serial console is 115200 8N1 on
-serial0; the vendor development files do not document the physical
-UART header location or pad pinout, and UART is not required for
-installation.
+MAC addresses map:
+   LAN D4:xx:xx:xx:xx:C1
+   WAN D4:xx:xx:xx:xx:C2
+   2G  D4:xx:xx:xx:xx:C1
+   5G  D4:xx:xx:xx:xx:C3
 
 Flash instructions:
-From the stock Cudy web interface, upload
-cudy_tr3600-v1-sysupgrade_260715.bin from the official development
-files. After the intermediate firmware boots, upload the generated
-OpenWrt cudy-tr3600-v1 sysupgrade image from the OpenWrt upgrade
-page. This procedure does not require UART. Keep a stock firmware
-backup; the vendor recovery/dual-image revert procedure has not
-been validated by this change.
+  1. Update the intermediate firmware [1] on the upgrade page.
+  2. Upload sysupgrade.bin to perform the upgrade.
 
-The SPI-NAND layout follows the official Cudy R126 DTS and DTB:
-BL2, writable backup, Factory, bdinfo, FIP, and ubi. The 0x100000
-partition keeps the vendor's writable backup label.
+[1] https://www.cudy.com/cdn/shop/files/Develop_files_for_TR3600.zip
 
-MAC address layout:
-The base MAC is stored in bdinfo at offset 0xde00.
-LAN (eth1/gmac1): xx:xx:xx:xx:xx:xx, base + 0.
-WAN (eth0/gmac0): xx:xx:xx:xx:xx:xx, base + 1.
-2.4 GHz (band@0): xx:xx:xx:xx:xx:xx, base + 3.
-5 GHz (band@1): xx:xx:xx:xx:xx:xx, base + 2.
-
-The 2.4 GHz offset is intentionally distinct from LAN to avoid
-assigning the same MAC address to an Ethernet interface and a
-wireless interface. The 5 GHz offset follows the official R126
-mapping.
-
-The MT7990AN firmware package is selected because it matches the
-radio populated on this hardware; this is a hardware selection, not
-a Linux 6.12-specific adjustment. The DTS follows the official Cudy
-intermediate firmware, including the cudy,tr3600-v1 identity, MT7990
-calibration data, PWM1 fan output, white/blue status LEDs, and the
-R126 NAND layout. The generic wifi@0,0 node follows the OpenWrt DT
-binding convention.
-
-The preinit interface list includes cudy,tr3600-v1 so failsafe
-recovery uses eth1, matching the LAN mapping in 02_network and the
-gmac1 assignment, and is reachable through the LAN port.
-
-Signed-off-by: soap man <soapmans@icloud.com>
-Link: https://www.cudy.com/zh-cn/pages/download-center/tr3600-1-0
-Link: https://github.com/openwrt/openwrt/pull/24581
-(cherry picked from commit 6065ef938cb5df700526e0ae409a83ea69d3b8ff)
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
+ .../uboot-envtools/files/mediatek_filogic     |  13 +-
  .../lib/preinit/05_set_preinit_iface          |   1 +
- .../mediatek/dts/mt7987b-cudy-tr3600-v1.dts   | 279 ++++++++++++++++++
+ .../mediatek/dts/mt7987b-cudy-tr3600-v1.dts   | 237 ++++++++++++++++++
  .../filogic/base-files/etc/board.d/02_network |   1 +
  target/linux/mediatek/image/filogic.mk        |  19 ++
- 4 files changed, 300 insertions(+)
+ 5 files changed, 265 insertions(+), 6 deletions(-)
  create mode 100644 target/linux/mediatek/dts/mt7987b-cudy-tr3600-v1.dts
 
+diff --git a/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic b/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
+index 5fe5752ebab365..d19289d1aed942 100644
+--- a/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
++++ b/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
+@@ -141,6 +141,13 @@ comfast,cf-e393ax|\
+ iptime,ax3000m)
+ 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x20000" "0x80000"
+ 	;;
++cudy,tr3600-v1|\
++ltc,vl7m19k)
++	. /lib/upgrade/nand.sh
++	envubi=$(nand_find_ubi ubi)
++	envdev=/dev/$(nand_find_volume "$envubi" u-boot-env)
++	ubootenv_add_uci_config "$envdev" "0x0" "0x80000" "0x80000" "1"
++	;;
+ dlink,aquila-pro-ai-e30-a1|\
+ dlink,aquila-pro-ai-m30-a1|\
+ dlink,aquila-pro-ai-m60-a1)
+@@ -159,12 +166,6 @@ jiorouter,ax6000-jidu6j01)
+ 	envdev=/dev/$(nand_find_volume "$envubi" u-boot-env)
+ 	ubootenv_add_uci_config "$envdev" "0x0" "0x80000" "0x1f000" "5"
+ 	;;
+-ltc,vl7m19k)
+-	. /lib/upgrade/nand.sh
+-	envubi=$(nand_find_ubi ubi)
+-	envdev=/dev/$(nand_find_volume "$envubi" u-boot-env)
+-	ubootenv_add_uci_config "$envdev" "0x0" "0x80000" "0x80000" "1"
+-	;;
+ openembed,som7981)
+ 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x80000" "0x80000"
+ 	ubootenv_add_uci_sys_config "/dev/mtd3" "0x0" "0x100000" "0x100000"
 diff --git a/target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface b/target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface
-index 40b9a926c25c0c..970436866de727 100644
+index 007fb5463f23c7..40618963b9a1f3 100644
 --- a/target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface
 +++ b/target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface
 @@ -6,6 +6,7 @@ set_preinit_iface() {
@@ -83,159 +81,135 @@ index 40b9a926c25c0c..970436866de727 100644
  	glinet,gl-mt3000|\
 diff --git a/target/linux/mediatek/dts/mt7987b-cudy-tr3600-v1.dts b/target/linux/mediatek/dts/mt7987b-cudy-tr3600-v1.dts
 new file mode 100644
-index 00000000000000..11eca3512895cf
+index 00000000000000..d47e58414f631a
 --- /dev/null
 +++ b/target/linux/mediatek/dts/mt7987b-cudy-tr3600-v1.dts
-@@ -0,0 +1,279 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+@@ -0,0 +1,192 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 +
 +/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
++#include "mt7987b.dtsi"
 +#include <dt-bindings/input/input.h>
 +#include <dt-bindings/leds/common.h>
 +
-+#include "mt7987b.dtsi"
-+
 +/ {
 +	model = "Cudy TR3600 v1";
-+	compatible = "cudy,tr3600-v1", "mediatek,mt7987b", "mediatek,mt7987";
++	compatible = "cudy,tr3600-v1", "mediatek,mt7987";
 +
 +	aliases {
++		led-boot = &led_sys_red;
++		led-failsafe = &led_sys_red;
++		led-running = &led_sys_white;
++		led-upgrade = &led_sys_white;
 +		label-mac-device = &gmac1;
-+		led-boot = &led_status_white;
-+		led-failsafe = &led_status_blue;
-+		led-running = &led_status_blue;
-+		led-upgrade = &led_status_blue;
-+		serial0 = &uart0;
 +	};
 +
 +	chosen {
-+		bootargs = "console=ttyS0,115200n1 earlycon=uart8250,mmio32,0x11000000 pci=pcie_bus_perf";
 +		stdout-path = "serial0:115200n8";
++		bootargs = "console=ttyS0,115200n1 earlycon=uart8250,mmio32,0x11000000";
 +	};
 +
-+	/* Cudy TR3600 v1 has 512 MiB DDR4 at 0x40000000. */
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x20000000>;
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		led_status_blue: led-0 {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&pio 48 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led_status_white: led-1 {
-+			color = <LED_COLOR_ID_WHITE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&pio 46 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	gpio-keys {
++	keys {
 +		compatible = "gpio-keys";
 +
-+		button-mode {
++		reset {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
++			debounce-interval = <10>;
++		};
++
++		mode {
 +			label = "mode";
 +			linux,code = <BTN_0>;
 +			linux,input-type = <EV_SW>;
 +			gpios = <&pio 0 GPIO_ACTIVE_LOW>;
 +			debounce-interval = <10>;
 +		};
++	};
 +
-+		button-reset {
-+			label = "reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <10>;
++	leds {
++		compatible = "gpio-leds";
++
++		led_sys_red: led-0 {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_RED>;
++			gpios = <&pio 46 GPIO_ACTIVE_LOW>;
++		};
++
++		led_sys_white: led-1 {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_WHITE>;
++			gpios = <&pio 48 GPIO_ACTIVE_LOW>;
 +		};
 +	};
-+
-+	fan_3p3v: regulator-fan-3p3v {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpios = <&pio 6 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "fan";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&eth {
-+	status = "okay";
 +};
 +
 +&fan {
-+	fan-supply = <&fan_3p3v>;
-+	pwms = <&pwm 1 50000 0>;
++	pwms = <&pwm 0 50000 0>;
++	cooling-levels = <0 64 128 192 255>;
 +	status = "okay";
 +};
 +
 +&gmac0 {
-+	nvmem-cells = <&macaddr_bdinfo_de00 1>;
 +	nvmem-cell-names = "mac-address";
-+	phy-handle = <&phy1>;
++	nvmem-cells = <&macaddr_bdinfo_de00 1>;
++
 +	phy-mode = "2500base-x";
++	phy-handle = <&phy1>;
 +	status = "okay";
 +};
 +
 +&gmac1 {
-+	nvmem-cells = <&macaddr_bdinfo_de00 0>;
 +	nvmem-cell-names = "mac-address";
-+	phy-handle = <&phy15>;
++	nvmem-cells = <&macaddr_bdinfo_de00 0>;
++
 +	phy-mode = "internal";
++	phy-handle = <&phy15>;
 +	status = "okay";
 +};
 +
 +&mdio {
 +	phy1: phy@1 {
-+		compatible = "ethernet-phy-id001c.c849";
++		compatible = "ethernet-phy-ieee802.3-c45";
 +		reg = <1>;
-+		reset-gpios = <&pio 42 GPIO_ACTIVE_LOW>;
 +		reset-assert-us = <100000>;
-+		reset-deassert-us = <120000>;
++		reset-deassert-us = <100000>;
++		reset-gpios = <&pio 42 GPIO_ACTIVE_LOW>;
++		interrupts = <41 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-parent = <&pio>;
 +	};
 +
-+	phy15: phy@f {
++	phy15: phy@15 {
 +		compatible = "ethernet-phy-ieee802.3-c45";
 +		reg = <15>;
-+		pinctrl-names = "i2p5gbe-led";
-+		pinctrl-0 = <&i2p5gbe_led0_pins>;
 +	};
 +};
 +
 +&pcie0 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pcie0_pins>;
-+	reset-gpios = <&pio 38 GPIO_ACTIVE_HIGH>;
 +	status = "okay";
 +
 +	pcie@0,0 {
 +		reg = <0x0000 0 0 0 0>;
++		device_type = "pci";
 +		#address-cells = <3>;
 +		#size-cells = <2>;
-+		device_type = "pci";
 +
 +		wifi@0,0 {
 +			compatible = "mediatek,mt76";
 +			reg = <0x0000 0 0 0 0>;
 +
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			ieee80211-freq-limit = <2400000 2500000>,
-+					       <5170000 5835000>;
-+
 +			nvmem-cells = <&eeprom_factory_0>;
 +			nvmem-cell-names = "eeprom";
 +
-+			/* Offset 3 keeps the 2.4 GHz MAC distinct from LAN. */
++			#address-cells = <1>;
++			#size-cells = <0>;
++
 +			band@0 {
 +				reg = <0>;
-+				nvmem-cells = <&macaddr_bdinfo_de00 3>;
++				nvmem-cells = <&macaddr_bdinfo_de00 0>;
 +				nvmem-cell-names = "mac-address";
 +			};
 +
@@ -248,18 +222,9 @@ index 00000000000000..11eca3512895cf
 +	};
 +};
 +
-+&pio {
-+	pwm1_pins: pwm1-pins {
-+		mux {
-+			function = "pwm";
-+			groups = "pwm1_0";
-+		};
-+	};
-+};
-+
 +&pwm {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm1_pins>;
++	pinctrl-0 = <&pwm_pins>;
 +	status = "okay";
 +};
 +
@@ -271,13 +236,6 @@ index 00000000000000..11eca3512895cf
 +	flash@0 {
 +		compatible = "spi-nand";
 +		reg = <0>;
-+
-+		spi-cal-enable;
-+		spi-cal-mode = "read-data";
-+		spi-cal-datalen = <7>;
-+		spi-cal-data = /bits/ 8 <0x53 0x50 0x49 0x4e 0x41 0x4e 0x44>;
-+		spi-cal-addrlen = <5>;
-+		spi-cal-addr = /bits/ 32 <0x0 0x0 0x0 0x0 0x0>;
 +
 +		spi-max-frequency = <52000000>;
 +		spi-tx-bus-width = <4>;
@@ -294,19 +252,18 @@ index 00000000000000..11eca3512895cf
 +
 +			partition@0 {
 +				label = "BL2";
-+				reg = <0x0 0x100000>;
++				reg = <0x000000 0x0100000>;
 +				read-only;
 +			};
 +
-+			/* The official Cudy R126 layout names this writable partition "backup". */
 +			partition@100000 {
 +				label = "backup";
-+				reg = <0x100000 0x80000>;
++				reg = <0x100000 0x0080000>;
 +			};
 +
 +			partition@180000 {
 +				label = "Factory";
-+				reg = <0x180000 0x400000>;
++				reg = <0x180000 0x0400000>;
 +				read-only;
 +
 +				nvmem-layout {
@@ -322,7 +279,7 @@ index 00000000000000..11eca3512895cf
 +
 +			partition@580000 {
 +				label = "bdinfo";
-+				reg = <0x580000 0x40000>;
++				reg = <0x580000 0x0040000>;
 +				read-only;
 +
 +				nvmem-layout {
@@ -340,7 +297,7 @@ index 00000000000000..11eca3512895cf
 +
 +			partition@5c0000 {
 +				label = "FIP";
-+				reg = <0x5c0000 0x200000>;
++				reg = <0x5c0000 0x0200000>;
 +				read-only;
 +			};
 +
@@ -366,8 +323,62 @@ index 00000000000000..11eca3512895cf
 +	pinctrl-0 = <&uart0_pins>;
 +	status = "okay";
 +};
++
++&cpu_thermal {
++	trips {
++		cpu_trip_fan_low: fan-low {
++			temperature = <65000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++
++		cpu_trip_fan_med: fan-med {
++			temperature = <72000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++
++		cpu_trip_fan_high: fan-high {
++			temperature = <80000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++
++		cpu_trip_fan_max: fan-max {
++			temperature = <88000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu_trip_fan_low>;
++			cooling-device = <&fan 1 1>;
++			contribution = <1024>;
++		};
++
++		map1 {
++			trip = <&cpu_trip_fan_med>;
++			cooling-device = <&fan 2 2>;
++			contribution = <1024>;
++		};
++
++		map2 {
++			trip = <&cpu_trip_fan_high>;
++			cooling-device = <&fan 3 3>;
++			contribution = <1024>;
++		};
++
++		map3 {
++			trip = <&cpu_trip_fan_max>;
++			cooling-device = <&fan 4 4>;
++			contribution = <1024>;
++		};
++	};
++};
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index 38ae810d5968ad..c780b3079adce1 100644
+index bc26dc42ae2dc2..a320c769e9a042 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -149,6 +149,7 @@ mediatek_setup_interfaces()
@@ -379,7 +390,7 @@ index 38ae810d5968ad..c780b3079adce1 100644
  	glinet,gl-mt2500|\
  	glinet,gl-mt2500-airoha|\
 diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
-index f75a22d5c97ce1..f9fd7d166fa893 100644
+index 112b1decedcda7..49f5aac2d66cba 100644
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
 @@ -1298,6 +1298,25 @@ define Device/cudy_tr3000-mod
@@ -392,19 +403,56 @@ index f75a22d5c97ce1..f9fd7d166fa893 100644
 +  DEVICE_VARIANT := v1
 +  DEVICE_DTS := mt7987b-cudy-tr3600-v1
 +  DEVICE_DTS_DIR := ../dts
-+  SUPPORTED_DEVICES += R126
-+  DEVICE_PACKAGES := mt7987-2p5g-phy-firmware kmod-mt7990-firmware \
-+	kmod-hwmon-pwmfan kmod-usb3
-+  KERNEL_IN_UBI := 1
-+  KERNEL_LOADADDR := 0x40000000
 +  UBINIZE_OPTS := -E 5
 +  BLOCKSIZE := 128k
 +  PAGESIZE := 2048
++  KERNEL_IN_UBI := 1
 +  IMAGE_SIZE := 237824k
++  SUPPORTED_DEVICES += R126
++  KERNEL_LOADADDR := 0x40000000
 +  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
++  DEVICE_PACKAGES := kmod-hwmon-pwmfan kmod-mt7990-firmware \
++	kmod-phy-mediatek-2p5g kmod-usb3 mt7987-2p5g-phy-firmware
 +endef
 +TARGET_DEVICES += cudy_tr3600-v1
 +
  define Device/cudy_wr3000-v1
    DEVICE_VENDOR := Cudy
    DEVICE_MODEL := WR3000
+
+From 8bfda6a6632bdf06bff4015b2f97af42e5813192 Mon Sep 17 00:00:00 2001
+From: Chukun Pan <amadeus@jmu.edu.cn>
+Date: Wed, 9 Sep 2026 18:05:06 +0800
+Subject: [PATCH 2/2] wifi-scripts: iwinfo: add definition for MT7990
+
+Add iwinfo output for MT7990E devices.
+Fix capitalization and clean up whitespace.
+
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+---
+ .../wifi-scripts/files-ucode/usr/share/wifi_devices.json   | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/package/network/config/wifi-scripts/files-ucode/usr/share/wifi_devices.json b/package/network/config/wifi-scripts/files-ucode/usr/share/wifi_devices.json
+index 7c46dfc86f5b8e..24664f9f5cfc0b 100644
+--- a/package/network/config/wifi-scripts/files-ucode/usr/share/wifi_devices.json
++++ b/package/network/config/wifi-scripts/files-ucode/usr/share/wifi_devices.json
+@@ -1,5 +1,5 @@
+ {
+-	"pci": [		
++	"pci": [
+ 		[ "0x0777", "0x11ac", "0x0777", "0xe7f9", 0, 0, "Ubiquiti", "LiteBeam, 5AC" ],
+ 		[ "0xffff", "0xffff", "0xffff", "0xb102", 0, 0, "Ubiquiti", "PowerStation2, (18V)" ],
+ 		[ "0xffff", "0xffff", "0xffff", "0xb202", 0, 0, "Ubiquiti", "PowerStation2, (16D)" ],
+@@ -190,8 +190,9 @@
+ 		[ "0x14c3", "0x7662", "0x14c3", "0x7662", 0, 0, "MediaTek", "MT76x2E" ],
+ 		[ "0x14c3", "0x7915", "0x14c3", "0x7915", 0, 0, "MediaTek", "MT7915E" ],
+ 		[ "0x14c3", "0x7906", "0x14c3", "0x7906", 0, 0, "MediaTek", "MT7916AN" ],
+-		[ "0x14c3", "0x7990", "0x14C3", "0x6639", 0, 0, "MediaTek", "MT7996E" ],
+-		[ "0x14c3", "0x7992", "0x14C3", "0x7992", 0, 0, "MediaTek", "MT7992E" ],
++		[ "0x14c3", "0x7990", "0x14c3", "0x6639", 0, 0, "MediaTek", "MT7996E" ],
++		[ "0x14c3", "0x7992", "0x14c3", "0x7992", 0, 0, "MediaTek", "MT7992E" ],
++		[ "0x14c3", "0x7993", "0x14c3", "0x7993", 0, 0, "MediaTek", "MT7990E" ],
+ 		[ "0x14e4", "0xaa52", "0x14e4", "0xaa52", 0, 0, "Broadcom", "BCM43602" ],
+ 		[ "0x02d0", "0xa9a6", "0x0000", "0x0000", 0, 0, "Cypress", "CYW43455" ],
+ 		[ "0x02d0", "0x4345", "0x0000", "0x0000", 0, 0, "Cypress", "CYW43455" ],

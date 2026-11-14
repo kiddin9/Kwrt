@@ -1,2 +1,20 @@
 #!/bin/bash
 shopt -s extglob
+
+rm -rf package/boot package/firmware/ipq-wifi target/linux/generic target/linux/qualcommax package/firmware/ath11k-firmware package/kernel/mac80211 package/kernel/nat46
+
+git_clone_path 25.12-nss https://github.com/LiBwrt/openwrt-6.x target/linux/generic target/linux/qualcommax package/boot package/firmware/ipq-wifi package/firmware/ath11k-firmware package/kernel/mac80211 package/kernel/nat46
+
+wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/include/image-commands.mk -P include/
+wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/config/Config-ipq.in -P config/
+wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/Config.in -P ./
+
+rm -rf feeds/kiddin9/shortcut-fe 
+
+git clone https://github.com/laipeng668/nss-packages.git -b NSS-LibWrt package/nss-packages
+git clone https://github.com/qosmio/sqm-scripts-nss.git package/sqm-scripts-nss
+
+sed -i "/ECM_INTERFACE_RAWIP_ENABLE/d"  package/nss-packages/qca-nss-ecm/Makefile
+rm -rf package/nss-packages/nss-userspace-oss
+
+sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" target/linux/qualcommax/Makefile

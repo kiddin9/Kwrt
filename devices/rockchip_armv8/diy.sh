@@ -9,7 +9,7 @@ sed -i 's/Os/O2/g' include/target.mk
 
 rm -rf package/boot target/linux/rockchip
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot package/firmware/pcat-firmware
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot
 
 git_clone_path main https://github.com/SlAlot/ImmortalWrt_Photonicat1 package/luci-app-swrt-power package/swrt-pcat-manager
 
@@ -35,7 +35,7 @@ sed -i -e 's,wpad-openssl,wpad-basic-mbedtls,g' target/linux/rockchip/image/armv
 sed -i -e '/KERNEL_TESTING_PATCHVER/d' -e 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip luci-app-diskman/' -e 's/autocore-arm/autocore/' target/linux/rockchip/Makefile
 
 sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
-sed -i 's/\bpcat-manager\b/swrt-pcat-manager luci-app-swrt-power/g' target/linux/rockchip/image/armv8.mk
+sed -i 's/\bpcat-firmware pcat-manager\b/swrt-pcat-manager luci-app-swrt-power ath10k-firmware-qca9377-sdio kmod-usb-net-cdc-mbim kmod-usb-net-qmi-wwan kmod-usb-serial-option uqmi/g' target/linux/rockchip/image/armv8.mk
 
 sed -i 's/6.18/6.12/' target/linux/rockchip/Makefile
 
