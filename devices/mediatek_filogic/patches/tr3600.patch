@@ -37,15 +37,14 @@ Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
  create mode 100644 target/linux/mediatek/dts/mt7987b-cudy-tr3600-v1.dts
 
 diff --git a/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic b/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
-index 5fe5752ebab365..d19289d1aed942 100644
+index fac81e7d69aaef..9a1e5b39617946 100644
 --- a/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
 +++ b/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
-@@ -141,6 +141,13 @@ comfast,cf-e393ax|\
+@@ -130,6 +130,12 @@ comfast,cf-e393ax|\
  iptime,ax3000m)
  	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x20000" "0x80000"
  	;;
-+cudy,tr3600-v1|\
-+ltc,vl7m19k)
++cudy,tr3600-v1)
 +	. /lib/upgrade/nand.sh
 +	envubi=$(nand_find_ubi ubi)
 +	envdev=/dev/$(nand_find_volume "$envubi" u-boot-env)
@@ -54,19 +53,6 @@ index 5fe5752ebab365..d19289d1aed942 100644
  dlink,aquila-pro-ai-e30-a1|\
  dlink,aquila-pro-ai-m30-a1|\
  dlink,aquila-pro-ai-m60-a1)
-@@ -159,12 +166,6 @@ jiorouter,ax6000-jidu6j01)
- 	envdev=/dev/$(nand_find_volume "$envubi" u-boot-env)
- 	ubootenv_add_uci_config "$envdev" "0x0" "0x80000" "0x1f000" "5"
- 	;;
--ltc,vl7m19k)
--	. /lib/upgrade/nand.sh
--	envubi=$(nand_find_ubi ubi)
--	envdev=/dev/$(nand_find_volume "$envubi" u-boot-env)
--	ubootenv_add_uci_config "$envdev" "0x0" "0x80000" "0x80000" "1"
--	;;
- openembed,som7981)
- 	ubootenv_add_uci_config "/dev/mtd1" "0x0" "0x80000" "0x80000"
- 	ubootenv_add_uci_sys_config "/dev/mtd3" "0x0" "0x100000" "0x100000"
 diff --git a/target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface b/target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface
 index 007fb5463f23c7..40618963b9a1f3 100644
 --- a/target/linux/mediatek/base-files/lib/preinit/05_set_preinit_iface
