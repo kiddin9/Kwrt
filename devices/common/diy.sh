@@ -40,7 +40,7 @@ git_clone_path openwrt-25.12 https://github.com/immortalwrt/immortalwrt package/
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advancedplus luci-app-sysctl luci-app-firewall luci-app-package-manager luci-app-upnp luci-app-syscontrol \
-luci-app-wizard luci-base luci-compat luci-lib-ipkg luci-lib-fs \
+luci-app-wizard luci-base luci-compat luci-lib-ipkg luci-lib-fs luci-app-crontab-wizard \
 coremark wget-ssl curl autocore htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash openssh-sftp-server block-mount resolveip ds-lite swconfig luci-app-fan luci-app-footstrap-files luci-app-wifihistory /" include/target.mk
 
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
@@ -59,7 +59,6 @@ wget -N https://raw.githubusercontent.com/openwrt/packages/master/lang/golang/go
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic/hack-6.12
 
-rm -rf target/linux/generic/hack-6.12/767-net-phy-realtek-add-led*
 wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.12/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.12/
 
 # find target/linux/x86 -name "config*" -exec bash -c 'cat kernel.conf >> "{}"' \;
@@ -83,4 +82,4 @@ sed -i "s/OpenWrt/Kwrt/g" package/base-files/files/bin/config_generate package/b
 
 sed -i -e "s/set \${s}.country='\${country || ''}'/set \${s}.country='\${country || \"CN\"}'/g" -e "s/set \${s}.disabled=.*/set \${s}.disabled='0'/" package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
 
-rm -rf package/feeds/packages/jool
+rm -rf package/feeds/packages/jool package/feeds/routing/batman-adv

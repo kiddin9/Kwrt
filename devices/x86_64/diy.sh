@@ -11,8 +11,8 @@ git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/file
 wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/x86/base-files/etc/board.d/02_network -P target/linux/x86/base-files/etc/board.d/
 wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/target/linux/x86/Makefile -P target/linux/x86/
 sed -i -e "s/ autocore-x86//" \
-	   -e "s/ usb-net-rtl8152-vendor/usb-net-rtl8152/" \
-       -e "s/ automount//" \
+	   -e "s/kmod-usb-net-rtl8152-vendor/kmod-usb-net-rtl8152/" \
+	   -e "s/kmod-usb-audio/kmod-usb-audio kmod-usb3/" \
 	   -e "s/6.18/6.12/" target/linux/x86/Makefile
 
 sed -i 's/kmod-r8169/kmod-r8168/' target/linux/x86/image/64.mk
