@@ -4,12 +4,12 @@
  
  define Device/Default
    FILESYSTEMS := ext4
--  IMAGES := emmc.img
-+  IMAGES := emmc_burn.img
+-  IMAGES := emmc.img$(if $(CONFIG_TARGET_IMAGES_GZIP),.gz)
++  IMAGES := emmc_burn.img$(if $(CONFIG_TARGET_IMAGES_GZIP),.gz)
    DEVICE_DTS_DIR := $(DTS_DIR)/amlogic
    KERNEL_DEPENDS = $$(wildcard $(DEVICE_DTS_DIR)/$$(DEVICE_DTS).dts)
    KERNEL_LOADADDR := 0x01080000
-@@ -10,10 +10,18 @@ define Device/Default
+@@ -10,11 +10,19 @@ define Device/Default
    PROFILES = Default $$(DEVICE_NAME)
  endef
  
@@ -27,6 +27,8 @@
 +  DEVICE_PACKAGES += kmod-usb-net-rtl8152
    KERNEL_LOADADDR := 0x00208000
 -  IMAGE/emmc.img := boot-script onecloud | emmc-common $$(DEVICE_NAME)
+-  IMAGE/emmc.img.gz := $$(IMAGE/emmc.img) | gzip
 +  IMAGE/emmc_burn.img := boot-script onecloud | emmc-common $$(DEVICE_NAME) | run-host-script
++  IMAGE/emmc_burn.img.gz := $$(IMAGE/emmc_burn.img) | gzip
  endef
  TARGET_DEVICES += thunder-onecloud
