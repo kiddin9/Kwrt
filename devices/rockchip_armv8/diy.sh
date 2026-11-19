@@ -5,8 +5,6 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 #bash $SHELL_FOLDER/../common/kernel_6.6.sh
 
-sed -i 's/Os/O2/g' include/target.mk
-
 rm -rf package/boot target/linux/rockchip
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot

@@ -8,10 +8,6 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 #rm -rf package/kernel/mac80211
 
-#git_clone_path c640f7b93736621b4d56627e4f6ab824093f9c3d https://github.com/openwrt/openwrt package/kernel/mac80211
-
-sed -i 's/Os/O2/g' include/target.mk
-
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/amlogic
 
 mv -f target/linux/amlogic/patches-6.18 target/linux/amlogic/patches-6.12
