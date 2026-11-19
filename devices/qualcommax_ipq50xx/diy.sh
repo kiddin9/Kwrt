@@ -2,9 +2,9 @@
 
 shopt -s extglob
 
-rm -rf target/linux/generic target/linux/airoha package/kernel package/firmware package/boot
+rm -rf target/linux/generic target/linux/qualcommax package/kernel package/firmware package/boot
 
-git_clone_path main https://github.com/openwrt/openwrt target/linux/generic target/linux/airoha package/boot package/firmware package/kernel
+git_clone_path main https://github.com/openwrt/openwrt target/linux/generic target/linux/qualcommax package/boot package/firmware package/kernel
 
 git_clone_path master https://github.com/coolsnowwolf/lede mv target/linux/generic/hack-6.18
 
