@@ -12,4 +12,6 @@ wget -N https://github.com/openwrt/openwrt/raw/refs/heads/main/include/kernel.mk
 
 wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.18/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.18/
 
+wget -N https://github.com/openwrt/openwrt/raw/refs/heads/main/scripts/fit-add-avm-header.sh scripts/
+
 rm -rf package/feeds/kiddin9/{quectel_QMI_WWAN,simcom_QMI_WWAN,fibocom_QMI_WWAN,quectel_MHI,rkp-ipid} package/feeds/packages/{v4l2loopback,libpfring,xtables-addons}
