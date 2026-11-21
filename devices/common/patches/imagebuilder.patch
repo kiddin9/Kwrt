@@ -105,7 +105,7 @@
 
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -144,6 +144,33 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+@@ -144,6 +144,28 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
  # "-pkgname" in the package list means remove "pkgname" from the package list
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
@@ -116,11 +116,6 @@
 +	endif
 +	ifeq ($(shell test $(IMAGE_SIZE_VALUE) -le 20480 && echo true),true)
 +		XSMALL_FLASH := true
-+	endif
-+endif
-+ifneq ($(findstring usb,$(BUILD_PACKAGES)),)
-+	ifneq ($(XSMALL_FLASH),true)
-+		BUILD_PACKAGES += automount luci-app-diskman
 +	endif
 +endif
 +ifeq ($(SMALL_FLASH),true)

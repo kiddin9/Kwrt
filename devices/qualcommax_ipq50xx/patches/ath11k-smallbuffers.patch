@@ -1,30 +1,92 @@
-From 2858400d263dae0d476f88a7cb7c4540eeb7783f Mon Sep 17 00:00:00 2001
+From 5ff1a51a7522bfa85fc9fc1e97148f255baa5590 Mon Sep 17 00:00:00 2001
 From: Ziyang Huang <hzyitc@outlook.com>
-Date: Fri, 9 Jan 2026 23:15:13 +0800
-Subject: [PATCH] mac80211: ath11k: provide smallbuffers variant
+Date: Mon, 5 Oct 2026 16:46:32 +0800
+Subject: [PATCH 1/3] mac80211: fix extra cflags
+
+kbuild dropped EXTRA_CFLAGS in e966ad0edd00 ("kbuild: remove
+EXTRA_*FLAGS support"). So the flags can't be passed to the compiler.
+
+Let's convert to use CFLAGS_MODULE and move the driver special cflags to
+the driver's makefile.
 
 Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
 ---
- package/kernel/mac80211/Makefile              |  1 +
- package/kernel/mac80211/ath.mk                | 23 ++++++++--
- ...introduct-CONFIG_ATH11K_SMALLBUFFERS.patch | 43 +++++++++++++++++++
- 3 files changed, 63 insertions(+), 4 deletions(-)
- create mode 100644 package/kernel/mac80211/patches/ath11k/951-wifi-ath11k-introduct-CONFIG_ATH11K_SMALLBUFFERS.patch
+ package/kernel/mac80211/Makefile | 10 +++-------
+ package/kernel/mac80211/ath.mk   |  7 ++++++-
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/package/kernel/mac80211/Makefile b/package/kernel/mac80211/Makefile
-index 0beb264db16c38..864b0af8a6cebf 100644
+index 40aac6fd26bbc3..334265a292af47 100644
 --- a/package/kernel/mac80211/Makefile
 +++ b/package/kernel/mac80211/Makefile
-@@ -280,6 +280,7 @@ C_DEFINES=
+@@ -90,6 +90,8 @@ config-$(CONFIG_PACKAGE_CFG80211_TESTMODE) += NL80211_TESTMODE
+ config-$(call config_package,mac80211,$(ALL_VARIANTS)) += MAC80211
+ config-$(CONFIG_PACKAGE_MAC80211_MESH) += MAC80211_MESH
  
- ifeq ($(BUILD_VARIANT),smallbuffers)
- 	C_DEFINES+= -DCONFIG_ATH10K_SMALLBUFFERS
-+	C_DEFINES+= -DCONFIG_ATH11K_SMALLBUFFERS
++cflags-y:=
++
+ include ath.mk
+ include broadcom.mk
+ include intel.mk
+@@ -277,15 +279,9 @@ config-$(call config_package,rsi91x-sdio) += RSI_SDIO
+ 
+ config-$(CONFIG_LEDS_TRIGGERS) += MAC80211_LEDS
+ 
+-C_DEFINES=
+-
+-ifeq ($(BUILD_VARIANT),smallbuffers)
+-	C_DEFINES+= -DCONFIG_ATH10K_SMALLBUFFERS
+-endif
+-
+ MAKE_OPTS:= \
+ 	$(subst -C $(LINUX_DIR),-C "$(PKG_BUILD_DIR)",$(KERNEL_MAKEOPTS)) \
+-	EXTRA_CFLAGS="-I$(PKG_BUILD_DIR)/include $(IREMAP_CFLAGS) $(C_DEFINES)" \
++	CFLAGS_MODULE="-I$(PKG_BUILD_DIR)/include $(IREMAP_CFLAGS) $(cflags-y)" \
+ 	KLIB_BUILD="$(LINUX_DIR)" \
+ 	MODPROBE=true \
+ 	KLIB=$(TARGET_MODULES_DIR) \
+diff --git a/package/kernel/mac80211/ath.mk b/package/kernel/mac80211/ath.mk
+index 9b50c6a848d734..4a83a809266886 100644
+--- a/package/kernel/mac80211/ath.mk
++++ b/package/kernel/mac80211/ath.mk
+@@ -40,6 +40,11 @@ ifdef CONFIG_PACKAGE_MAC80211_TRACING
+ 	WIL6210_TRACING
  endif
  
- MAKE_OPTS:= \
++ifeq ($(BUILD_VARIANT),smallbuffers)
++  cflags-y += \
++	-DCONFIG_ATH10K_SMALLBUFFERS
++endif
++
+ config-$(call config_package,qcom-qmi-helpers) += QCOM_QMI_HELPERS
+ config-$(call config_package,ath,regular smallbuffers) += ATH_CARDS ATH_COMMON
+ config-$(CONFIG_PACKAGE_ATH_DEBUG) += ATH_DEBUG ATH10K_DEBUG ATH11K_DEBUG ATH12K_DEBUG ATH9K_STATION_STATISTICS
+@@ -64,7 +69,7 @@ config-$(CONFIG_ATH12K_THERMAL) += ATH12K_THERMAL
+ 
+ config-$(call config_package,ath9k-htc) += ATH9K_HTC
+ config-$(call config_package,ath10k,regular) += ATH10K ATH10K_PCI
+-config-$(call config_package,ath10k-smallbuffers,smallbuffers) += ATH10K ATH10K_PCI ATH10K_SMALLBUFFERS
++config-$(call config_package,ath10k-smallbuffers,smallbuffers) += ATH10K ATH10K_PCI
+ config-$(call config_package,ath11k) += ATH11K
+ config-$(call config_package,ath11k-ahb) += ATH11K_AHB
+ config-$(call config_package,ath11k-pci) += ATH11K_PCI
+
+From d99e7803ff034f11a60e1adc3095940ae5b1bba5 Mon Sep 17 00:00:00 2001
+From: Ziyang Huang <hzyitc@outlook.com>
+Date: Fri, 9 Jan 2026 23:15:13 +0800
+Subject: [PATCH 2/3] mac80211: ath11k: provide smallbuffers variant
+
+Give 256MB device a chance to run WiFi.
+
+Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
+---
+ package/kernel/mac80211/ath.mk                | 26 +++++++++---
+ ...introduct-CONFIG_ATH11K_SMALLBUFFERS.patch | 40 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 5 deletions(-)
+ create mode 100644 package/kernel/mac80211/patches/ath11k/951-wifi-ath11k-introduct-CONFIG_ATH11K_SMALLBUFFERS.patch
+
 diff --git a/package/kernel/mac80211/ath.mk b/package/kernel/mac80211/ath.mk
-index 9adb8914cd5829..e87cef5600e75b 100644
+index 4a83a809266886..b42559be63080b 100644
 --- a/package/kernel/mac80211/ath.mk
 +++ b/package/kernel/mac80211/ath.mk
 @@ -1,6 +1,6 @@
@@ -35,17 +97,27 @@ index 9adb8914cd5829..e87cef5600e75b 100644
  
  PKG_CONFIG_DEPENDS += \
  	CONFIG_PACKAGE_ATH_DEBUG \
-@@ -65,7 +65,8 @@ config-$(CONFIG_ATH12K_THERMAL) += ATH12K_THERMAL
+@@ -42,7 +42,8 @@ endif
+ 
+ ifeq ($(BUILD_VARIANT),smallbuffers)
+   cflags-y += \
+-	-DCONFIG_ATH10K_SMALLBUFFERS
++	-DCONFIG_ATH10K_SMALLBUFFERS \
++	-DCONFIG_ATH11K_SMALLBUFFERS
+ endif
+ 
+ config-$(call config_package,qcom-qmi-helpers) += QCOM_QMI_HELPERS
+@@ -70,7 +71,8 @@ config-$(CONFIG_ATH12K_THERMAL) += ATH12K_THERMAL
  config-$(call config_package,ath9k-htc) += ATH9K_HTC
  config-$(call config_package,ath10k,regular) += ATH10K ATH10K_PCI
- config-$(call config_package,ath10k-smallbuffers,smallbuffers) += ATH10K ATH10K_PCI ATH10K_SMALLBUFFERS
+ config-$(call config_package,ath10k-smallbuffers,smallbuffers) += ATH10K ATH10K_PCI
 -config-$(call config_package,ath11k) += ATH11K
 +config-$(call config_package,ath11k,regular) += ATH11K
-+config-$(call config_package,ath11k-smallbuffers,smallbuffers) += ATH11K ATH11K_SMALLBUFFERS
++config-$(call config_package,ath11k-smallbuffers,smallbuffers) += ATH11K
  config-$(call config_package,ath11k-ahb) += ATH11K_AHB
  config-$(call config_package,ath11k-pci) += ATH11K_PCI
  config-$(call config_package,ath12k) += ATH12K
-@@ -312,16 +313,24 @@ define KernelPackage/ath10k-smallbuffers
+@@ -317,16 +319,24 @@ define KernelPackage/ath10k-smallbuffers
    PROVIDES:=@kmod-ath10k-any
  endef
  
@@ -71,7 +143,7 @@ index 9adb8914cd5829..e87cef5600e75b 100644
  define KernelPackage/ath11k/description
  This module adds support for Qualcomm Technologies 802.11ax family of
  chipsets.
-@@ -331,11 +340,17 @@ define KernelPackage/ath11k/config
+@@ -336,11 +346,17 @@ define KernelPackage/ath11k/config
  
         config ATH11K_THERMAL
                 bool "Enable thermal sensors and throttling support"
@@ -92,25 +164,25 @@ index 9adb8914cd5829..e87cef5600e75b 100644
    TITLE:=Qualcomm 802.11ax AHB wireless chipset support
 diff --git a/package/kernel/mac80211/patches/ath11k/951-wifi-ath11k-introduct-CONFIG_ATH11K_SMALLBUFFERS.patch b/package/kernel/mac80211/patches/ath11k/951-wifi-ath11k-introduct-CONFIG_ATH11K_SMALLBUFFERS.patch
 new file mode 100644
-index 00000000000000..aa56ac0600f370
+index 00000000000000..80b3ed5bb067d8
 --- /dev/null
 +++ b/package/kernel/mac80211/patches/ath11k/951-wifi-ath11k-introduct-CONFIG_ATH11K_SMALLBUFFERS.patch
-@@ -0,0 +1,43 @@
-+From 4032fbc94b8cde0ff761b6dd6a278420e6f052b4 Mon Sep 17 00:00:00 2001
+@@ -0,0 +1,40 @@
++From 9e92b8fcd0861927c0e62467483cf2950f00bf25 Mon Sep 17 00:00:00 2001
 +From: Ziyang Huang <hzyitc@outlook.com>
 +Date: Sun, 8 Sep 2024 16:52:04 +0800
 +Subject: [PATCH 1/1] wifi: ath11k: introduct CONFIG_ATH11K_SMALLBUFFERS
++
++Reduce buffer size so we can run on small RAM device.
 +
 +Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
 +---
 + drivers/net/wireless/ath/ath11k/dp.h | 10 +++++-----
 + 1 file changed, 5 insertions(+), 5 deletions(-)
 +
-+diff --git a/drivers/net/wireless/ath/ath11k/dp.h b/drivers/net/wireless/ath/ath11k/dp.h
-+index 7a55afd33be8..d3d3b2aa800c 100644
 +--- a/drivers/net/wireless/ath/ath11k/dp.h
 ++++ b/drivers/net/wireless/ath/ath11k/dp.h
-+@@ -206,7 +206,7 @@ struct ath11k_pdev_dp {
++@@ -205,7 +205,7 @@ struct ath11k_pdev_dp {
 + #define DP_WBM_RELEASE_RING_SIZE	64
 + #define DP_TCL_DATA_RING_SIZE		512
 + #define DP_TCL_DATA_RING_SIZE_WCN6750	2048
@@ -119,7 +191,7 @@ index 00000000000000..aa56ac0600f370
 + #define DP_TX_IDR_SIZE			DP_TX_COMP_RING_SIZE
 + #define DP_TCL_CMD_RING_SIZE		32
 + #define DP_TCL_STATUS_RING_SIZE		32
-+@@ -217,12 +217,12 @@ struct ath11k_pdev_dp {
++@@ -216,12 +216,12 @@ struct ath11k_pdev_dp {
 + #define DP_REO_EXCEPTION_RING_SIZE	128
 + #define DP_REO_CMD_RING_SIZE		256
 + #define DP_REO_STATUS_RING_SIZE		2048
@@ -136,6 +208,112 @@ index 00000000000000..aa56ac0600f370
 + #define DP_RXDMA_MONITOR_DESC_RING_SIZE	4096
 + 
 + #define DP_RX_RELEASE_RING_NUM	3
-+-- 
-+2.40.1
-+
+
+From 24ca694d587fbdb7f63f2521840d4805b0e53d32 Mon Sep 17 00:00:00 2001
+From: Ziyang Huang <hzyitc@outlook.com>
+Date: Fri, 9 Jan 2026 23:16:09 +0800
+Subject: [PATCH 3/3] qualcommax: ipq50xx: pz-l8: enable WiFi
+
+With previous commit, we can run WiFi now.
+
+Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
+---
+ package/firmware/ipq-wifi/Makefile                |  2 ++
+ target/linux/qualcommax/dts/ipq5018-pz-l8.dts     | 15 +++++++--------
+ target/linux/qualcommax/image/ipq50xx.mk          |  1 +
+ .../etc/hotplug.d/firmware/11-ath11k-caldata      |  4 ++++
+ 4 files changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/package/firmware/ipq-wifi/Makefile b/package/firmware/ipq-wifi/Makefile
+index a1eb14e775ec01..cec9ace774c4c7 100644
+--- a/package/firmware/ipq-wifi/Makefile
++++ b/package/firmware/ipq-wifi/Makefile
+@@ -38,6 +38,7 @@ ALLWIFIBOARDS:= \
+ 	buffalo_wxr-5950ax12 \
+ 	cambiumnetworks_xe34 \
+ 	cmcc_mr3000d-ci \
++	cmcc_pz-l8 \
+ 	cmcc_rm2-6 \
+ 	compex_wpq873 \
+ 	dynalink_dl-wrx36 \
+@@ -253,6 +254,7 @@ $(eval $(call generate-ipq-wifi-package,avm_fritzbox-4050,AVM FRITZ!Box 4050))
+ $(eval $(call generate-ipq-wifi-package,buffalo_wxr-5950ax12,Buffalo WXR-5950AX12))
+ $(eval $(call generate-ipq-wifi-package,cambiumnetworks_xe34,Cambium Networks XE3-4))
+ $(eval $(call generate-ipq-wifi-package,cmcc_mr3000d-ci,CMCC MR3000D-CI))
++$(eval $(call generate-ipq-wifi-package,cmcc_pz-l8,CMCC PZ-L8))
+ $(eval $(call generate-ipq-wifi-package,cmcc_rm2-6,CMCC RM2-6))
+ $(eval $(call generate-ipq-wifi-package,compex_wpq873,Compex WPQ-873))
+ $(eval $(call generate-ipq-wifi-package,dynalink_dl-wrx36,Dynalink DL-WRX36))
+diff --git a/target/linux/qualcommax/dts/ipq5018-pz-l8.dts b/target/linux/qualcommax/dts/ipq5018-pz-l8.dts
+index cd3515cc09de95..990529f4030097 100644
+--- a/target/linux/qualcommax/dts/ipq5018-pz-l8.dts
++++ b/target/linux/qualcommax/dts/ipq5018-pz-l8.dts
+@@ -328,13 +328,12 @@
+ 	};
+ };
+ 
+-/*
+- * ath11k Wi-Fi consumes too large memory spaces and too few spaces are
+- * available for users. To prevent OOM when using LuCI or other softwares,
+- * disable Wi-Fi related peripherals at the moment.
+- */
+ &q6v5_wcss {
+-	status = "disabled";
++	boot-args = </*       type:	*/ 0x2 /* PCIE1	*/
++		     /*     length:	*/ 4
++		     /*     UPD ID:	*/ 2
++		     /* reset GPIO:	*/ 27
++		     /*   reserved:	*/ 0 0>;
+ };
+ 
+ &wifi {
+@@ -346,7 +345,7 @@
+ 
+ 	ieee80211-freq-limit = <2400000 2483000>;
+ 
+-	status = "disabled";
++	status = "okay";
+ };
+ 
+ &wifi1 {
+@@ -360,5 +359,5 @@
+ 
+ 	ieee80211-freq-limit = <5150000 5730000>;
+ 
+-	status = "disabled";
++	status = "okay";
+ };
+diff --git a/target/linux/qualcommax/image/ipq50xx.mk b/target/linux/qualcommax/image/ipq50xx.mk
+index 3848efadb77659..c2d25d702e2ef7 100644
+--- a/target/linux/qualcommax/image/ipq50xx.mk
++++ b/target/linux/qualcommax/image/ipq50xx.mk
+@@ -105,6 +105,7 @@ define Device/cmcc_pz-l8
+ 	PAGESIZE := 2048
+ 	IMAGE_SIZE := 59392k
+ 	NAND_SIZE := 128m
++	DEVICE_PACKAGES := kmod-ath11k-smallbuffers ath11k-firmware-ipq5018-qcn6122 ipq-wifi-cmcc_pz-l8
+ endef
+ TARGET_DEVICES += cmcc_pz-l8
+ 
+diff --git a/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata b/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
+index e72707967b300b..5230bdd0f39dc4 100644
+--- a/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
++++ b/target/linux/qualcommax/ipq50xx/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
+@@ -90,6 +90,7 @@ case "$FIRMWARE" in
+ 		caldata_extract "0:ART" 0x1000 0x20000
+ 		ath11k_set_macflag
+ 		;;
++	cmcc,pz-l8|\
+ 	xiaomi,ax6000|\
+ 	xiaomi,redmi-ax5400)
+ 		caldata_extract "0:art" 0x1000 0x20000
+@@ -121,6 +122,9 @@ case "$FIRMWARE" in
+ 		ath11k_remove_regdomain
+ 		ath11k_set_macflag
+ 		;;
++	cmcc,pz-l8)
++		caldata_extract "0:art" 0x26800 0x20000
++		;;
+ 	elecom,wrc-x3000gs2|\
+ 	elecom,wrc-x3000gst2|\
+ 	iodata,wn-dax3000gr|\

@@ -1,6 +1,6 @@
 --- a/target/linux/ramips/image/mt7621.mk
 +++ b/target/linux/ramips/image/mt7621.mk
-@@ -157,6 +157,55 @@ define Device/nand
+@@ -157,6 +157,45 @@ define Device/nand
    IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
  endef
  
@@ -13,16 +13,6 @@
 +  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
 +endef
 +TARGET_DEVICES += phicomm_k2p-32m
-+
-+define Device/jdcloud_luban
-+  $(Device/dsa-migration)
-+  $(Device/uimage-lzma-loader)
-+  IMAGE_SIZE := 15808k
-+  DEVICE_VENDOR := JDCloud
-+  DEVICE_MODEL := Luban 鲁班
-+  DEVICE_PACKAGES += kmod-mt7915e kmod-mt7915-firmware uboot-envtools kmod-mmc kmod-sdhci kmod-sdhci-mt7620 kmod-fs-ext4 wpad-mini -wpad-basic-mbedtls -coremark -htop -bash -openssh-sftp-server
-+endef
-+TARGET_DEVICES += jdcloud_luban
 +
 +define Device/zte_e8820s
 +  $(Device/dsa-migration)

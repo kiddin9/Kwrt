@@ -5,8 +5,6 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 #bash $SHELL_FOLDER/../common/kernel_6.6.sh
 
-sed -i 's/Os/O2/g' include/target.mk
-
 rm -rf package/boot target/linux/rockchip
 
 git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip package/boot
@@ -40,7 +38,6 @@ sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
 sed -i 's/\bpcat-firmware pcat-manager\b/swrt-pcat-manager luci-app-swrt-power wlmb-server luci-app-wlmbstart ath10k-firmware-qca9377-sdio kmod-usb-net-cdc-mbim kmod-usb-net-qmi-wwan kmod-usb-serial-option uqmi/g' target/linux/rockchip/image/armv8.mk
 
 sed -i -e 's/6.18/6.12/' \
-       -e 's/ usb-modeswitch//' \
 	   target/linux/rockchip/Makefile
 
 echo "
